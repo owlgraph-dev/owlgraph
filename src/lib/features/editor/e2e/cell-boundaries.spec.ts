@@ -33,16 +33,41 @@ async function inText(page: Page, text: string, share: number) {
   }, share);
 }
 
-// Settled once the editor has written its clamped selection back.
-async function dragSelect(page: Page, from: string, to: string) {
-  const a = await inText(page, from, 0.3);
-  const b = await inText(page, to, 0.5);
-  await page.mouse.move(a.x, a.y);
-  await page.mouse.down();
-  await page.mouse.move((a.x + b.x) / 2, (a.y + b.y) / 2, { steps: 4 });
-  await page.mouse.move(b.x, b.y, { steps: 4 });
-  await page.mouse.up();
-  await expect.poll(() => page.evaluate(() => getSelection()?.toString() ?? '')).not.toBe('');
+interface EditorView {
+  state: { selection: { anchor: number; head: number } };
+  posAtDOM(node: Node, offset: number): number;
+}
+
+// The browser's selection from a third into `from` to the middle of `to`, as a
+// drag makes it, but through the Selection API: where a drag's path runs
+// depends on where the fonts set the text. The editor takes it as it takes a
+// drag's, and it is settled once the editor has written its clamped selection
+// back; a key pressed before that would replace the browser's, across the cells.
+async function selectAcross(page: Page, from: string, to: string) {
+  await page.locator('.ProseMirror').evaluate((editor, [from, to]) => {
+    // In the innermost element holding exactly the text, as getByText's exact match.
+    const point = (text: string, share: number): [Node, number] => {
+      const el = [...editor.querySelectorAll('*')].find((e) => e.textContent === text && ![...e.children].some((c) => c.textContent === text));
+      if (!el) throw new Error(`No "${text}" in the editor`);
+      let offset = Math.round(text.length * share);
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let t = walker.nextNode(); t; t = walker.nextNode()) {
+        if (offset <= t.textContent!.length) return [t, offset];
+        offset -= t.textContent!.length;
+      }
+      throw new Error(`No text node in "${text}"`);
+    };
+    const [a, b] = [point(from, 0.3), point(to, 0.5)];
+    (editor as HTMLElement).focus();
+    getSelection()!.setBaseAndExtent(a[0], a[1], b[0], b[1]);
+  }, [from, to]);
+  await expect.poll(() => page.locator('.ProseMirror').evaluate((el) => {
+    const { view } = (el as unknown as { editor: { view: EditorView } }).editor;
+    const dom = getSelection();
+    if (!dom?.anchorNode || !dom.focusNode || dom.isCollapsed) return false;
+    const { anchor, head } = view.state.selection;
+    return view.posAtDOM(dom.anchorNode, dom.anchorOffset) === anchor && view.posAtDOM(dom.focusNode, dom.focusOffset) === head;
+  })).toBe(true);
 }
 
 // Two frames: the browser has reported a key's selection change, and the
@@ -63,10 +88,10 @@ const selected = (page: Page) => page.evaluate(() => getSelection()?.toString().
 test.describe('a text selection stays in its cell', () => {
   test.use({ storageState: authState('admin'), viewport: { width: 1280, height: 900 } });
 
-  test('a drag from one flex cell into the next selects to the end of the first; typing changes only that cell', async ({ page }) => {
+  test('a selection from one flex cell into the next ends at the end of the first; typing changes only that cell', async ({ page }) => {
     const { slug } = await createPage(page.request, { doc: doc(para('intro'), row, para('outro')) });
     await page.goto(`/${slug}/edit`);
-    await dragSelect(page, 'alpha one', 'bravo one');
+    await selectAcross(page, 'alpha one', 'bravo one');
     await expect.poll(() => selected(page)).toMatch(/alpha two$/);
     await page.keyboard.type('X');
     await expect.poll(() => cells(page, '.flex-cell')).toEqual([expect.stringMatching(/^al[^/]*X$/), 'bravo one', 'charlie one']);
@@ -109,17 +134,17 @@ test.describe('a text selection stays in its cell', () => {
     await expect(page.locator('.ProseMirror > p')).toHaveText(['intro', 'outro']);
   });
 
-  test('a drag from a paragraph into a row stops before the row; one across the row takes it whole', async ({ page }) => {
+  test('a selection from a paragraph into a row stops before the row; one across the row takes it whole', async ({ page }) => {
     const { slug } = await createPage(page.request, { doc: doc(para('intro text'), row, para('outro text')) });
     await page.goto(`/${slug}/edit`);
-    await dragSelect(page, 'intro text', 'bravo one');
+    await selectAcross(page, 'intro text', 'bravo one');
     await expect.poll(() => selected(page)).toMatch(/text$/);
     await page.keyboard.type('X');
     const intro = page.locator('.ProseMirror > p').first();
     await expect(intro).toHaveText(/^in\w*X$/);
     await expect.poll(() => cells(page, '.flex-cell')).toEqual(['alpha one/alpha two', 'bravo one', 'charlie one']);
 
-    await dragSelect(page, (await intro.textContent())!, 'outro text');
+    await selectAcross(page, (await intro.textContent())!, 'outro text');
     await page.keyboard.press('Backspace');
     await expect(page.locator('.ProseMirror [data-block-id="box"]')).toHaveCount(0);
     await expect(page.locator('.ProseMirror > p')).toHaveCount(1);
@@ -130,10 +155,10 @@ test.describe('a text selection stays in its cell', () => {
     const grid = { type: 'grid', attrs: { blockId: 'box', columnWidths: [1, 1, 1] }, content: [gcell(para('alpha one')), gcell(para('bravo one')), gcell(para('charlie one'))] };
     const { slug } = await createPage(page.request, { doc: doc(para('intro'), grid, para('outro')) });
     await page.goto(`/${slug}/edit`);
-    await dragSelect(page, 'alpha one', 'charlie one');
+    await selectAcross(page, 'alpha one', 'charlie one');
     await page.keyboard.type('X');
     await expect.poll(() => cells(page, '.grid-cell')).toEqual([expect.stringMatching(/^al\w*X$/), 'bravo one', 'charlie one']);
-    await dragSelect(page, 'bravo one', 'outro');
+    await selectAcross(page, 'bravo one', 'outro');
     await page.keyboard.type('Y');
     await expect.poll(() => cells(page, '.grid-cell')).toEqual([expect.stringMatching(/^al\w*X$/), expect.stringMatching(/^br\w*Y$/), 'charlie one']);
     await expect(page.locator('.ProseMirror > p').last()).toHaveText('outro');
@@ -145,7 +170,7 @@ test.describe('a text selection stays in its cell', () => {
       doc: { type: 'doc', attrs: { layout: ARTIKEL }, content: [section('box', gcell(para('alpha one')), gcell(para('bravo one'))), section('next', gcell(para('outro')), gcell(para('aside')))] },
     });
     await page.goto(`/${slug}/edit`);
-    await dragSelect(page, 'alpha one', 'bravo one');
+    await selectAcross(page, 'alpha one', 'bravo one');
     await page.keyboard.press('Delete');
     await page.keyboard.type('X');
     await expect.poll(() => cells(page, '.grid-cell')).toEqual([expect.stringMatching(/^al\w*X$/), 'bravo one']);
@@ -156,7 +181,7 @@ test.describe('a text selection stays in its cell', () => {
     const table = { type: 'table', attrs: { blockId: 'box' }, content: [{ type: 'tableRow', attrs: { isHeader: true }, content: [tcell('Head one', true), tcell('Head two', true)] }, { type: 'tableRow', attrs: { isHeader: false }, content: [tcell('alpha one'), tcell('bravo one')] }] };
     const { slug } = await createPage(page.request, { doc: doc(para('intro'), table, para('outro')) });
     await page.goto(`/${slug}/edit`);
-    await dragSelect(page, 'alpha one', 'bravo one');
+    await selectAcross(page, 'alpha one', 'bravo one');
     await page.keyboard.type('X');
     await expect.poll(() => cells(page, 'td, th')).toEqual(['Head one', 'Head two', expect.stringMatching(/^al\w*X$/), 'bravo one']);
   });

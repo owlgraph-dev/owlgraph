@@ -77,7 +77,7 @@
   .list-heading { font-size: var(--ds-text-lg); margin: 0 0 var(--ds-space-sm); }
   .index { list-style: none; padding: 0; margin: 0; }
   .index li { border-bottom: 1px solid var(--ds-color-border); }
-  /* The whole row, a 44px target. */
-  .index a { display: block; padding: 0.7rem 0; font-weight: 500; font-size: 1.05rem; text-decoration: none; color: var(--ds-color-link); }
+  /* The whole row, a 44px target on touch whatever the font's line height. */
+  .index a { display: block; min-height: var(--ds-target-min); padding: 0.7rem 0; font-weight: 500; font-size: 1.05rem; text-decoration: none; color: var(--ds-color-link); }
   .index a:hover { text-decoration: underline; }
 </style>

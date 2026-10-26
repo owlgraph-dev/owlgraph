@@ -628,6 +628,18 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
     reports the caret where it should be;
   - then extend the selection, and wait until `editorSelection()` shows the
     expected text before acting on it.
+- **Expect other fonts than your own.** The browser sets text in the
+  machine's system font, and CI's (DejaVu Sans on Ubuntu) has other metrics
+  than a developer's, so text lands elsewhere and lines are of another height:
+  - a size the specs measure, such as a 44px touch target, holds for every font
+    only when the app sets it by token (`min-height: var(--ds-target-min)`),
+    not by padding around a line of text;
+  - a selection across blocks is made with `getSelection().setBaseAndExtent()`,
+    not by a drag between two points of text, whose path runs over whatever
+    the fonts put there. The editor takes it as it takes a drag's; wait until
+    it has written its own selection back (`selectAcross()` in
+    `src/lib/features/editor/e2e/cell-boundaries.spec.ts`). A drag stays the
+    tool where the pointer is what is tested: a grip, a divider, a block moved.
 - **Rows a test creates get unique names** (`unique()` in `tests/e2e/api.ts`),
   so the test can run twice against the same seed.
 - **Keep a test's own rows out of other tests' site-wide queries.** A page
@@ -731,6 +743,12 @@ npx playwright show-trace test-results/<test>/trace.zip
 What the server said while a test ran is in its worker's log,
 `tests/e2e/.servers/w<n>.log`, and what it stored stays in that worker's
 database, `<base>_e2e_w<n>`, until the next run.
+
+A failure that only CI shows is most often the fonts. It reproduces in
+Playwright's Linux image, of the version `package.json` pins, with the
+`fonts-dejavu-core` package installed and a Postgres beside it: a clone of
+the branch inside the container, then `npm ci`, `npm run build` and the spec
+through `node scripts/e2e.mjs app --skip-build -- <spec>`.
 
 ## CI contract
 

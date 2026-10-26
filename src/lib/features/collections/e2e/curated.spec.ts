@@ -79,7 +79,7 @@ test.describe('a curated collection in its editor', () => {
     const again = picker.getByRole('option', { name: new RegExp(`^${pg.title}`) });
     await expect(again).toContainText('In this collection');
     await again.click();
-    await expect(page.getByText(`“${pg.title}” is in this collection already.`)).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Notifications' }).getByText(`“${pg.title}” is in this collection already.`)).toBeVisible();
     await expect(section).toContainText('3 entries');
   });
 
