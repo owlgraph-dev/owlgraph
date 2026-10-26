@@ -131,7 +131,7 @@ jobs:
         run: node scripts/e2e.mjs branded --skip-build
       - name: Keep the reports of a failed run
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-results-shard-${{ matrix.shard }}
           path: |
