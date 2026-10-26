@@ -1,0 +1,879 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* The base layer (src/lib/platform/cssLayers.ts): the theme and the custom
+   stylesheet sit above it, and the unlayered per-page overrides beat all
+   three. Every participating sheet repeats the order statement. */
+@layer base, theme, custom;
+@layer base {
+
+/* No colour here: every colour-dependent token is a scheme token
+   (lib/design-system/theme/tokens.ts; docs/architecture/theming.md). */
+:root {
+  --appbar-h: 54px; /* the phone's bottom bar */
+  --appbar-top-h: 56px; /* the desktop's top bar */
+  /* What the fixed app bar covers of the viewport's edges; the scroll padding
+     and sticky offsets read these (docs/architecture/responsive.md, "What scrolls"). */
+  --appbar-top-inset: var(--appbar-top-h);
+  --appbar-bottom-inset: 0px;
+}
+@media (max-width: 640px), (pointer: coarse) and (max-height: 500px) {
+  :root {
+    --appbar-top-inset: 0px;
+    --appbar-bottom-inset: calc(var(--appbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* app.html's wrapper: a class, not a style attribute, because the reader's
+   routes ship a strict style-src (src/lib/platform/csp.ts). */
+.app-root { display: contents; }
+
+/* SvelteKit's route announcer hides itself with a style attribute the strict
+   style-src allows by hash (src/lib/platform/csp.ts); these rules keep it
+   hidden should an upgrade change that string before the hash follows. */
+#svelte-announcer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 1px;
+  height: 1px;
+}
+
+/* The document is the app's scroller (docs/architecture/responsive.md, "What scrolls"); its
+   scroll padding keeps the fixed app bar off whatever is scrolled into view.
+   The scrollbar is hidden: it would stand right of the local-graph panel and
+   shift the page's width between short and long pages. */
+html {
+  height: 100%;
+  scroll-padding-top: var(--appbar-top-inset);
+  scroll-padding-bottom: var(--appbar-bottom-inset);
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar { display: none; }
+body { min-height: 100%; }
+
+html, body {
+  margin: 0;
+  background: var(--ds-color-bg);
+  color: var(--ds-color-fg);
+  /* The token, not a literal: UI font branding overrides it in one place. */
+  font-family: var(--ds-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+/* Mermaid appends this tooltip to <body> on every render, with no option to
+   prevent it, and even invisible it adds to the document's scroll overflow.
+   The app doesn't use Mermaid's tooltip syntax. */
+.mermaidTooltip { display: none !important; }
+/* The Mermaid render frame (features/content/blocks/diagram/mermaidFrame.ts):
+   off screen, never display:none, because a document that isn't laid out
+   measures every label as empty. */
+.mermaid-frame {
+  position: fixed;
+  left: -12000px;
+  top: 0;
+  width: 1600px;
+  height: 1200px;
+  border: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+h1 { font-size: 1.6rem; font-weight: 650; letter-spacing: -0.01em; }
+
+a { color: var(--ds-color-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* A reset, not a look: the look is always the component's own. */
+button { font: inherit; }
+
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
+
+/* The one focus ring; primitives never restate it (docs/architecture/design-system/tokens.md,
+   "Focus and selection rings"). The negative offset keeps it inside the box,
+   where a dialog can't clip it. It reads the parts, not the composed
+   --ds-focus-ring, which resolves at :root and would miss a filled surface's
+   own ring colour. */
+:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color);
+  outline-offset: var(--ds-focus-ring-offset);
+}
+
+/* A near-zero duration, not `none`: Bits UI waits for animationend and
+   transitionend to unmount a closed layer. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* highlight.js token colours, for the dark code ground of both views. */
+.hljs-comment, .hljs-quote { color: #6b7280; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-section { color: #c792ea; }
+.hljs-string, .hljs-attr, .hljs-template-tag, .hljs-addition, .hljs-meta-string { color: #c3e88d; }
+.hljs-number, .hljs-built_in, .hljs-builtin-name, .hljs-type, .hljs-params { color: #f78c6c; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: #82aaff; }
+.hljs-attribute, .hljs-name, .hljs-tag, .hljs-selector-id, .hljs-selector-class { color: #ffcb6b; }
+.hljs-variable, .hljs-regexp, .hljs-link { color: #f07178; }
+.hljs-symbol, .hljs-bullet, .hljs-meta { color: #89ddff; }
+.hljs-deletion { color: #ff5370; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+/* The page canvas, shared by the editor (.editor, blocks in .ProseMirror) and
+   the public renderer (article.prose, blocks in div.canvas-blocks). The canvas
+   is the `canvas` query container, which it can't query itself, so the
+   per-tier insets live on the blocks container. The --canvas-* vars are the site's
+   width and gutter tokens unless the page overrides them (pageLayout.ts). */
+.page-canvas {
+  --canvas-read: var(--content-width-read);
+  --canvas-wide: var(--content-width-wide);
+  --canvas-w: var(--content-width-max);
+  --canvas-gutter-d: var(--content-gutter-d);
+  --canvas-gutter-t: var(--content-gutter-t);
+  --canvas-gutter-p: var(--content-gutter-p);
+  max-width: var(--canvas-w);
+  margin-inline: auto;
+  box-sizing: border-box;
+  background: var(--page-bg, var(--content-bg));
+  color: var(--content-fg);
+  /* Not var(--ds-font-sans): that is the brandable UI font, which content
+     without a Typography override must not inherit. */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Blocks respond to the canvas width, not the viewport, so the editor
+     previews a device by shrinking the canvas. Print turns it off (below). */
+  container-type: inline-size;
+  container-name: canvas;
+}
+/* The editor's viewport preview; a public canvas never carries these. */
+.page-canvas.vp-tablet { max-width: 820px; transition: max-width 0.18s ease; }
+.page-canvas.vp-phone { max-width: 390px; transition: max-width 0.18s ease; }
+.canvas-blocks > * { max-width: var(--canvas-read); margin-inline: auto; }
+/* Never narrower than the reading column: a page that widens its reading
+   column past the wide band keeps wide blocks at least as wide as the text. */
+.canvas-blocks > [data-width='wide'] { max-width: max(var(--canvas-read), var(--canvas-wide)); }
+/* Full width: the surface bleeds through the gutter to the canvas edge, and
+   the content keeps the gutter as its side padding unless the author pads it.
+   A query block keeps its flush result container (query.css). */
+.canvas-blocks > [data-width='full'] {
+  max-width: none;
+  margin-inline: calc(-1 * var(--canvas-gutter));
+}
+.canvas-blocks > [data-width='full']:not(.query-block),
+.canvas-blocks > [data-width='full'] > .flex,
+.canvas-blocks > [data-width='full'] > .grid {
+  --default-pad-x: var(--canvas-gutter);
+}
+
+/* --canvas-gutter is the current tier's, which the full-bleed rule reads too.
+   `bleed-top` (pageCanvasClass()) drops the top padding at every tier, for a
+   first block with bleedToTop. */
+.canvas-blocks {
+  --canvas-gutter: var(--canvas-gutter-d);
+  padding: 64px var(--canvas-gutter) 0;
+}
+@container canvas (max-width: 900px) {
+  .canvas-blocks { --canvas-gutter: var(--canvas-gutter-t); padding-top: 48px; }
+}
+@container canvas (max-width: 640px) {
+  .canvas-blocks { --canvas-gutter: var(--canvas-gutter-p); padding-top: 32px; }
+}
+.page-canvas.bleed-top .canvas-blocks { padding-top: 0; }
+
+/* Placement (capabilities/placement/placement.ts): start/center/end make a
+   block fit-content and move it by its margins. --placement-edge is the column's
+   inset, so "start" is the column's edge, not the canvas's. Non-inheriting,
+   so a placed container's values never reach a block inside it. */
+@property --placement-w-d { syntax: '*'; inherits: false; }
+@property --placement-w-t { syntax: '*'; inherits: false; }
+@property --placement-w-p { syntax: '*'; inherits: false; }
+@property --placement-ml-d { syntax: '*'; inherits: false; }
+@property --placement-ml-t { syntax: '*'; inherits: false; }
+@property --placement-ml-p { syntax: '*'; inherits: false; }
+@property --placement-mr-d { syntax: '*'; inherits: false; }
+@property --placement-mr-t { syntax: '*'; inherits: false; }
+@property --placement-mr-p { syntax: '*'; inherits: false; }
+@property --placement-edge { syntax: '*'; inherits: false; }
+
+.cap-placement {
+  width: var(--placement-w-d, auto);
+  margin-inline-start: var(--placement-ml-d, var(--placement-edge, 0px));
+  margin-inline-end: var(--placement-mr-d, var(--placement-edge, 0px));
+}
+@container canvas (max-width: 900px) {
+  .cap-placement {
+    width: var(--placement-w-t, var(--placement-w-d, auto));
+    margin-inline-start: var(--placement-ml-t, var(--placement-ml-d, var(--placement-edge, 0px)));
+    margin-inline-end: var(--placement-mr-t, var(--placement-mr-d, var(--placement-edge, 0px)));
+  }
+}
+@container canvas (max-width: 640px) {
+  .cap-placement {
+    width: var(--placement-w-p, var(--placement-w-t, var(--placement-w-d, auto)));
+    margin-inline-start: var(--placement-ml-p, var(--placement-ml-t, var(--placement-ml-d, var(--placement-edge, 0px))));
+    margin-inline-end: var(--placement-mr-p, var(--placement-mr-t, var(--placement-mr-d, var(--placement-edge, 0px))));
+  }
+}
+.canvas-blocks > .cap-placement { --placement-edge: max(0px, calc((100% - var(--canvas-read)) / 2)); }
+.canvas-blocks > .cap-placement[data-width='wide'] { --placement-edge: max(0px, calc((100% - max(var(--canvas-read), var(--canvas-wide))) / 2)); }
+.canvas-blocks > .cap-placement[data-width='full'] { width: auto; }
+
+/* Spacing: each side's chain reads side, shorthand, the tiers above, then the
+   group default (--default-pad). Non-inheriting, so a nested cell with no
+   override falls through to its own base, not its container's tier. */
+@property --pad-d { syntax: '*'; inherits: false; }
+@property --pad-t { syntax: '*'; inherits: false; }
+@property --pad-p { syntax: '*'; inherits: false; }
+@property --pad-d-top { syntax: '*'; inherits: false; }
+@property --pad-d-right { syntax: '*'; inherits: false; }
+@property --pad-d-bottom { syntax: '*'; inherits: false; }
+@property --pad-d-left { syntax: '*'; inherits: false; }
+@property --pad-t-top { syntax: '*'; inherits: false; }
+@property --pad-t-right { syntax: '*'; inherits: false; }
+@property --pad-t-bottom { syntax: '*'; inherits: false; }
+@property --pad-t-left { syntax: '*'; inherits: false; }
+@property --pad-p-top { syntax: '*'; inherits: false; }
+@property --pad-p-right { syntax: '*'; inherits: false; }
+@property --pad-p-bottom { syntax: '*'; inherits: false; }
+@property --pad-p-left { syntax: '*'; inherits: false; }
+
+/* The group defaults every chain bottoms out in, set per block-type group by
+   the theme stylesheet (capabilities/defaults/emitDefaults.ts). Non-inheriting:
+   a card inside a container takes the cards' defaults. A host that pins a
+   field sets the default var itself. */
+@property --default-pad { syntax: '*'; inherits: false; }
+/* A full-width band's side padding (the gutter), before the group's default. */
+@property --default-pad-x { syntax: '*'; inherits: false; }
+@property --default-radius { syntax: '*'; inherits: false; }
+@property --default-shadow { syntax: '*'; inherits: false; }
+@property --default-border { syntax: '*'; inherits: false; }
+@property --default-bg { syntax: '*'; inherits: false; }
+@property --default-fg { syntax: '*'; inherits: false; }
+
+.cap-spacing {
+  padding-top: var(--pad-d-top, var(--pad-d, var(--default-pad, 0px)));
+  padding-right: var(--pad-d-right, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))));
+  padding-bottom: var(--pad-d-bottom, var(--pad-d, var(--default-pad, 0px)));
+  padding-left: var(--pad-d-left, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))));
+}
+@container canvas (max-width: 900px) {
+  .cap-spacing {
+    padding-top: var(--pad-t-top, var(--pad-t, var(--pad-d-top, var(--pad-d, var(--default-pad, 0px)))));
+    padding-right: var(--pad-t-right, var(--pad-t, var(--pad-d-right, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))))));
+    padding-bottom: var(--pad-t-bottom, var(--pad-t, var(--pad-d-bottom, var(--pad-d, var(--default-pad, 0px)))));
+    padding-left: var(--pad-t-left, var(--pad-t, var(--pad-d-left, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))))));
+  }
+}
+@container canvas (max-width: 640px) {
+  .cap-spacing {
+    padding-top: var(--pad-p-top, var(--pad-p, var(--pad-t-top, var(--pad-t, var(--pad-d-top, var(--pad-d, var(--default-pad, 0px)))))));
+    padding-right: var(--pad-p-right, var(--pad-p, var(--pad-t-right, var(--pad-t, var(--pad-d-right, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))))))));
+    padding-bottom: var(--pad-p-bottom, var(--pad-p, var(--pad-t-bottom, var(--pad-t, var(--pad-d-bottom, var(--pad-d, var(--default-pad, 0px)))))));
+    padding-left: var(--pad-p-left, var(--pad-p, var(--pad-t-left, var(--pad-t, var(--pad-d-left, var(--pad-d, var(--default-pad-x, var(--default-pad, 0px))))))));
+  }
+}
+
+/* Block rhythm: the space above a block (spaceAbove ?? its type's default ??
+   the flow's rhythm), on margin-top only, so a flow's first block is flush.
+   `~`, not `+`: ProseMirror puts elements between blocks. [data-block-id], not
+   `*`: only blocks are spaced. --block-space-* is unregistered because it must
+   inherit; blockSpaceVars() emits a complete triple so tiers never mix. */
+@property --space-above-d { syntax: '*'; inherits: false; }
+@property --space-above-t { syntax: '*'; inherits: false; }
+@property --space-above-p { syntax: '*'; inherits: false; }
+/* A block type's default, as a multiple of the flow's rhythm. Non-inheriting,
+   so a callout's larger default doesn't reach the paragraphs inside it. */
+@property --space-scale { syntax: '*'; inherits: false; }
+
+/* The rhythm relay: a container publishes --flow-space-* and its cells turn it
+   into the --block-space-* their blocks read, so the rhythm a container gives
+   and the space above it never collide on one element. The page always
+   publishes a rhythm: an undefined var() here is guaranteed-invalid and would
+   wipe the ambient rhythm instead of passing it through. */
+.canvas-blocks .grid-cell,
+.canvas-blocks .flex-cell,
+.canvas-blocks .table-block-table td,
+.canvas-blocks .table-block-table th,
+.canvas-blocks .query-block > * {
+  --block-space-d: var(--flow-space-d);
+  --block-space-t: var(--flow-space-t);
+  --block-space-p: var(--flow-space-p);
+}
+
+.canvas-blocks [data-block-id]:not(li):not(.ph-row) { margin-block: 0; }
+
+.canvas-blocks [data-block-id]:not(li):not(.ph-row) ~ [data-block-id]:not(li):not(.ph-row) {
+  margin-top: var(--space-above-d, calc(var(--block-space-d, 24px) * var(--space-scale, 1)));
+}
+@container canvas (max-width: 900px) {
+  .canvas-blocks [data-block-id]:not(li):not(.ph-row) ~ [data-block-id]:not(li):not(.ph-row) {
+    margin-top: var(--space-above-t, var(--space-above-d, calc(var(--block-space-t, var(--block-space-d, 24px)) * var(--space-scale, 1))));
+  }
+}
+@container canvas (max-width: 640px) {
+  .canvas-blocks [data-block-id]:not(li):not(.ph-row) ~ [data-block-id]:not(li):not(.ph-row) {
+    margin-top: var(--space-above-p, var(--space-above-t, var(--space-above-d, calc(var(--block-space-p, var(--block-space-t, var(--block-space-d, 24px))) * var(--space-scale, 1)))));
+  }
+}
+
+/* The block-type defaults: the one place to tune a page's vertical rhythm.
+   A heading gets more space before it than paragraphs get between them, so it
+   reads as the start of a section. */
+.canvas-blocks h1 { --space-scale: 2; }
+.canvas-blocks h2 { --space-scale: 1.75; }
+.canvas-blocks h3 { --space-scale: 1.5; }
+.canvas-blocks h4,
+.canvas-blocks h5,
+.canvas-blocks h6 { --space-scale: 1.25; }
+.canvas-blocks blockquote,
+.canvas-blocks pre,
+.canvas-blocks .callout,
+.canvas-blocks .table-block,
+.canvas-blocks .page-image-frame,
+.canvas-blocks .diagram-block { --space-scale: 1.25; }
+.canvas-blocks hr { --space-scale: 1.5; }
+.canvas-blocks .quick-link-block { --space-scale: 0.75; }
+/* On the shell: the element whose space above is set, in both views. */
+.canvas-blocks .grid-block,
+.canvas-blocks .flex-block,
+.canvas-blocks .query-block { --space-scale: 1.5; }
+
+/* The canvas's insets are the blocks container's, where the tiers apply. */
+.page-canvas { padding: 0; }
+
+/* Surface (capabilities/surface/surface.ts): no initial values, so an unset
+   field falls through to the group default and then the property's own
+   initial value, never an ancestor's. */
+@property --surface-bg-d { syntax: '*'; inherits: false; }
+@property --surface-bg-t { syntax: '*'; inherits: false; }
+@property --surface-bg-p { syntax: '*'; inherits: false; }
+@property --surface-border-d { syntax: '*'; inherits: false; }
+@property --surface-border-t { syntax: '*'; inherits: false; }
+@property --surface-border-p { syntax: '*'; inherits: false; }
+@property --surface-radius-d { syntax: '*'; inherits: false; }
+@property --surface-radius-t { syntax: '*'; inherits: false; }
+@property --surface-radius-p { syntax: '*'; inherits: false; }
+@property --surface-shadow-d { syntax: '*'; inherits: false; }
+@property --surface-shadow-t { syntax: '*'; inherits: false; }
+@property --surface-shadow-p { syntax: '*'; inherits: false; }
+@property --surface-fg-d { syntax: '*'; inherits: false; }
+@property --surface-fg-t { syntax: '*'; inherits: false; }
+@property --surface-fg-p { syntax: '*'; inherits: false; }
+/* The image layer (surfaceImage.ts): the overlay gradient over the url. */
+@property --surface-img-d { syntax: '*'; inherits: false; }
+@property --surface-img-t { syntax: '*'; inherits: false; }
+@property --surface-img-p { syntax: '*'; inherits: false; }
+@property --surface-img-size-d { syntax: '*'; inherits: false; }
+@property --surface-img-size-t { syntax: '*'; inherits: false; }
+@property --surface-img-size-p { syntax: '*'; inherits: false; }
+@property --surface-img-repeat-d { syntax: '*'; inherits: false; }
+@property --surface-img-repeat-t { syntax: '*'; inherits: false; }
+@property --surface-img-repeat-p { syntax: '*'; inherits: false; }
+@property --surface-img-pos-d { syntax: '*'; inherits: false; }
+@property --surface-img-pos-t { syntax: '*'; inherits: false; }
+@property --surface-img-pos-p { syntax: '*'; inherits: false; }
+
+/* color is the default text on the block's own background (docs/architecture/theming.md,
+   "Scheme regions"); with none it inherits. The image properties follow the
+   `background` shorthand, which resets them. */
+.cap-surface {
+  background: var(--surface-bg-d, var(--default-bg));
+  background-image: var(--surface-img-d, none);
+  background-size: var(--surface-img-size-d, auto);
+  background-repeat: var(--surface-img-repeat-d, repeat);
+  background-position: var(--surface-img-pos-d, 0% 0%);
+  border: var(--surface-border-d, var(--default-border));
+  border-radius: var(--surface-radius-d, var(--default-radius, 0px));
+  box-shadow: var(--surface-shadow-d, var(--default-shadow));
+  color: var(--surface-fg-d, var(--default-fg));
+}
+@container canvas (max-width: 900px) {
+  .cap-surface {
+    color: var(--surface-fg-t, var(--surface-fg-d, var(--default-fg)));
+    background: var(--surface-bg-t, var(--surface-bg-d, var(--default-bg)));
+    background-image: var(--surface-img-t, var(--surface-img-d, none));
+    background-size: var(--surface-img-size-t, var(--surface-img-size-d, auto));
+    background-repeat: var(--surface-img-repeat-t, var(--surface-img-repeat-d, repeat));
+    background-position: var(--surface-img-pos-t, var(--surface-img-pos-d, 0% 0%));
+    border: var(--surface-border-t, var(--surface-border-d, var(--default-border)));
+    border-radius: var(--surface-radius-t, var(--surface-radius-d, var(--default-radius, 0px)));
+    box-shadow: var(--surface-shadow-t, var(--surface-shadow-d, var(--default-shadow)));
+  }
+}
+@container canvas (max-width: 640px) {
+  .cap-surface {
+    color: var(--surface-fg-p, var(--surface-fg-t, var(--surface-fg-d, var(--default-fg))));
+    background: var(--surface-bg-p, var(--surface-bg-t, var(--surface-bg-d, var(--default-bg))));
+    background-image: var(--surface-img-p, var(--surface-img-t, var(--surface-img-d, none)));
+    background-size: var(--surface-img-size-p, var(--surface-img-size-t, var(--surface-img-size-d, auto)));
+    background-repeat: var(--surface-img-repeat-p, var(--surface-img-repeat-t, var(--surface-img-repeat-d, repeat)));
+    background-position: var(--surface-img-pos-p, var(--surface-img-pos-t, var(--surface-img-pos-d, 0% 0%)));
+    border: var(--surface-border-p, var(--surface-border-t, var(--surface-border-d, var(--default-border))));
+    border-radius: var(--surface-radius-p, var(--surface-radius-t, var(--surface-radius-d, var(--default-radius, 0px))));
+    box-shadow: var(--surface-shadow-p, var(--surface-shadow-t, var(--surface-shadow-d, var(--default-shadow))));
+  }
+}
+
+/* Height (capabilities/height/height.ts): an unset tier means no minimum. A
+   grid's auto rows stretch into the extra height. */
+@property --min-height-d { syntax: '*'; inherits: false; }
+@property --min-height-t { syntax: '*'; inherits: false; }
+@property --min-height-p { syntax: '*'; inherits: false; }
+.cap-height { min-height: var(--min-height-d, auto); }
+@container canvas (max-width: 900px) {
+  .cap-height { min-height: var(--min-height-t, var(--min-height-d, auto)); }
+}
+@container canvas (max-width: 640px) {
+  .cap-height { min-height: var(--min-height-p, var(--min-height-t, var(--min-height-d, auto))); }
+}
+
+/* Typography (capabilities/typography/typography.ts): these properties
+   inherit, so an unset var means the ambient value. A component with its own
+   leading sets --typography-lineheight-base, not line-height, which would win
+   or lose to this rule by stylesheet order. */
+@property --typography-family-d { syntax: '*'; inherits: false; }
+@property --typography-family-t { syntax: '*'; inherits: false; }
+@property --typography-family-p { syntax: '*'; inherits: false; }
+@property --typography-color-d { syntax: '*'; inherits: false; }
+@property --typography-color-t { syntax: '*'; inherits: false; }
+@property --typography-color-p { syntax: '*'; inherits: false; }
+@property --typography-weight-d { syntax: '*'; inherits: false; }
+@property --typography-weight-t { syntax: '*'; inherits: false; }
+@property --typography-weight-p { syntax: '*'; inherits: false; }
+@property --typography-size-d { syntax: '*'; inherits: false; }
+@property --typography-size-t { syntax: '*'; inherits: false; }
+@property --typography-size-p { syntax: '*'; inherits: false; }
+@property --typography-lineheight-d { syntax: '*'; inherits: false; }
+@property --typography-lineheight-t { syntax: '*'; inherits: false; }
+@property --typography-lineheight-p { syntax: '*'; inherits: false; }
+@property --typography-letterspacing-d { syntax: '*'; inherits: false; }
+@property --typography-letterspacing-t { syntax: '*'; inherits: false; }
+@property --typography-letterspacing-p { syntax: '*'; inherits: false; }
+
+.cap-typography {
+  font-family: var(--typography-family-d);
+  font-size: var(--typography-size-d);
+  /* A cell with its own background reads without the page's text colour. */
+  color: var(--typography-color-d, var(--surface-fg-d));
+  font-weight: var(--typography-weight-d);
+  line-height: var(--typography-lineheight-d, var(--typography-lineheight-base));
+  letter-spacing: var(--typography-letterspacing-d);
+  /* Inherited by a nested quick-link card (quickLink.css); unset, the card
+     falls back to the accent. */
+  --quick-link-color: var(--typography-color-d);
+}
+@container canvas (max-width: 900px) {
+  .cap-typography {
+    font-family: var(--typography-family-t, var(--typography-family-d));
+    font-size: var(--typography-size-t, var(--typography-size-d));
+    color: var(--typography-color-t, var(--typography-color-d, var(--surface-fg-t, var(--surface-fg-d))));
+    font-weight: var(--typography-weight-t, var(--typography-weight-d));
+    line-height: var(--typography-lineheight-t, var(--typography-lineheight-d, var(--typography-lineheight-base)));
+    letter-spacing: var(--typography-letterspacing-t, var(--typography-letterspacing-d));
+    --quick-link-color: var(--typography-color-t, var(--typography-color-d));
+  }
+}
+@container canvas (max-width: 640px) {
+  .cap-typography {
+    font-family: var(--typography-family-p, var(--typography-family-t, var(--typography-family-d)));
+    font-size: var(--typography-size-p, var(--typography-size-t, var(--typography-size-d)));
+    color: var(--typography-color-p, var(--typography-color-t, var(--typography-color-d, var(--surface-fg-p, var(--surface-fg-t, var(--surface-fg-d))))));
+    font-weight: var(--typography-weight-p, var(--typography-weight-t, var(--typography-weight-d)));
+    line-height: var(--typography-lineheight-p, var(--typography-lineheight-t, var(--typography-lineheight-d, var(--typography-lineheight-base))));
+    letter-spacing: var(--typography-letterspacing-p, var(--typography-letterspacing-t, var(--typography-letterspacing-d)));
+    --quick-link-color: var(--typography-color-p, var(--typography-color-t, var(--typography-color-d)));
+  }
+}
+
+/* Layout (capabilities/layout/layout.ts): the properties' initial values
+   aren't a flex container's defaults (display must stay flex), so every chain
+   ends in an explicit default. Keep them in sync with LAYOUT_DEFAULTS. */
+@property --layout-display-d { syntax: '*'; inherits: false; }
+@property --layout-display-t { syntax: '*'; inherits: false; }
+@property --layout-display-p { syntax: '*'; inherits: false; }
+@property --layout-direction-d { syntax: '*'; inherits: false; }
+@property --layout-direction-t { syntax: '*'; inherits: false; }
+@property --layout-direction-p { syntax: '*'; inherits: false; }
+@property --layout-wrap-d { syntax: '*'; inherits: false; }
+@property --layout-wrap-t { syntax: '*'; inherits: false; }
+@property --layout-wrap-p { syntax: '*'; inherits: false; }
+@property --layout-justify-d { syntax: '*'; inherits: false; }
+@property --layout-justify-t { syntax: '*'; inherits: false; }
+@property --layout-justify-p { syntax: '*'; inherits: false; }
+@property --layout-align-items-d { syntax: '*'; inherits: false; }
+@property --layout-align-items-t { syntax: '*'; inherits: false; }
+@property --layout-align-items-p { syntax: '*'; inherits: false; }
+@property --layout-align-content-d { syntax: '*'; inherits: false; }
+@property --layout-align-content-t { syntax: '*'; inherits: false; }
+@property --layout-align-content-p { syntax: '*'; inherits: false; }
+@property --layout-gap-d { syntax: '*'; inherits: false; }
+@property --layout-gap-t { syntax: '*'; inherits: false; }
+@property --layout-gap-p { syntax: '*'; inherits: false; }
+
+.cap-layout {
+  display: var(--layout-display-d, flex);
+  flex-direction: var(--layout-direction-d, row);
+  flex-wrap: var(--layout-wrap-d, nowrap);
+  justify-content: var(--layout-justify-d, flex-start);
+  align-items: var(--layout-align-items-d, stretch);
+  align-content: var(--layout-align-content-d, flex-start);
+  gap: var(--layout-gap-d, 0px);
+}
+@container canvas (max-width: 900px) {
+  .cap-layout {
+    display: var(--layout-display-t, var(--layout-display-d, flex));
+    flex-direction: var(--layout-direction-t, var(--layout-direction-d, row));
+    flex-wrap: var(--layout-wrap-t, var(--layout-wrap-d, nowrap));
+    justify-content: var(--layout-justify-t, var(--layout-justify-d, flex-start));
+    align-items: var(--layout-align-items-t, var(--layout-align-items-d, stretch));
+    align-content: var(--layout-align-content-t, var(--layout-align-content-d, flex-start));
+    gap: var(--layout-gap-t, var(--layout-gap-d, 0px));
+  }
+}
+@container canvas (max-width: 640px) {
+  .cap-layout {
+    display: var(--layout-display-p, var(--layout-display-t, var(--layout-display-d, flex)));
+    flex-direction: var(--layout-direction-p, var(--layout-direction-t, var(--layout-direction-d, row)));
+    flex-wrap: var(--layout-wrap-p, var(--layout-wrap-t, var(--layout-wrap-d, nowrap)));
+    justify-content: var(--layout-justify-p, var(--layout-justify-t, var(--layout-justify-d, flex-start)));
+    align-items: var(--layout-align-items-p, var(--layout-align-items-t, var(--layout-align-items-d, stretch)));
+    align-content: var(--layout-align-content-p, var(--layout-align-content-t, var(--layout-align-content-d, flex-start)));
+    gap: var(--layout-gap-p, var(--layout-gap-t, var(--layout-gap-d, 0px)));
+  }
+}
+
+/* flexWrap 'scroll' (layout.ts): at the tiers in `data-scroll` the row keeps
+   its cells in one line and scrolls them in its own box. Each rule covers its
+   tier's range only; print has no container, so nothing scrolls on paper. */
+@container canvas (width > 900px) {
+  .cap-layout[data-scroll~='d'] { overflow-x: auto; scroll-snap-type: x proximity; mask-image: var(--scroll-cue-mask); }
+  .cap-layout[data-scroll~='d'] > * { flex-shrink: 0; scroll-snap-align: start; }
+}
+@container canvas (640px < width <= 900px) {
+  .cap-layout[data-scroll~='t'] { overflow-x: auto; scroll-snap-type: x proximity; mask-image: var(--scroll-cue-mask); }
+  .cap-layout[data-scroll~='t'] > * { flex-shrink: 0; scroll-snap-align: start; }
+}
+@container canvas (width <= 640px) {
+  .cap-layout[data-scroll~='p'] { overflow-x: auto; scroll-snap-type: x proximity; mask-image: var(--scroll-cue-mask); }
+  .cap-layout[data-scroll~='p'] > * { flex-shrink: 0; scroll-snap-align: start; }
+}
+
+/* Scroll cues (docs/architecture/responsive.md, "Scroll cues"): a sideways scroller fades
+   the edge where more waits, driven by its own scroll timeline. The mask is
+   set only where the box scrolls: a standing mask would clip a card's shadow. */
+@property --scroll-cue-start { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --scroll-cue-end { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --scroll-cue-mask { syntax: '*'; inherits: false; }
+@keyframes scroll-cue-start { from { --scroll-cue-start: 0px; } to { --scroll-cue-start: 2rem; } }
+@keyframes scroll-cue-end { from { --scroll-cue-end: 2rem; } to { --scroll-cue-end: 0px; } }
+@supports (animation-timeline: scroll(self x)) {
+  .scroll-cue,
+  .table-block,
+  .canvas-blocks pre,
+  .canvas-blocks .html-block,
+  .cap-layout[data-scroll] {
+    --scroll-cue-mask: linear-gradient(to right, transparent, #000 var(--scroll-cue-start), #000 calc(100% - var(--scroll-cue-end)), transparent);
+    animation: scroll-cue-start linear both, scroll-cue-end linear both;
+    animation-timeline: scroll(self x);
+    animation-range: 0 3rem, calc(100% - 3rem) 100%;
+  }
+}
+.scroll-cue,
+.table-block,
+.canvas-blocks pre { mask-image: var(--scroll-cue-mask); }
+@container canvas (max-width: 900px) {
+  .canvas-blocks .html-block { mask-image: var(--scroll-cue-mask); }
+}
+
+/* Design-system tokens: flat :root constants, since the chrome isn't page
+   content and portalled layers sit outside any container query. The space,
+   radius and weight scales match PAD_PRESETS, RADIUS_PRESETS and
+   WEIGHT_PRESETS by convention: CSS can't import them. */
+
+/* Registered for its initial-value, so UI font branding's :root override is
+   the only real declaration and wins whatever order Vite's dev mode injects
+   the sheets in. It inherits, unlike the capability vars. */
+@property --ds-font-sans {
+  syntax: '*';
+  inherits: true;
+  initial-value: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --ds-opacity-disabled: 0.6;
+
+  /* A floating layer sits above a modal: Select, Popover, DropdownMenu and
+     Tooltip open inside one. */
+  --ds-z-nav: 150;
+  --ds-z-scrim: 200;
+  --ds-z-modal: 201;
+  --ds-z-floating: 300;
+
+  /* The focus ring's width and offsets; its colour is a scheme token. */
+  --ds-focus-ring-width: 2px;
+  --ds-focus-ring-offset: calc(-1 * var(--ds-focus-ring-width));
+  /* On a filled surface the ring sits one width further in, so the fill shows
+     on both sides; flush, it would read as the control shrinking. */
+  --ds-focus-ring-offset-filled: calc(-2 * var(--ds-focus-ring-width));
+
+  --ds-space-none: 0px;
+  --ds-space-sm: 8px;
+  --ds-space-md: 16px;
+  --ds-space-lg: 24px;
+
+  --ds-radius-none: 0px;
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 12px;
+  /* Chrome-only: chips, switch and slider tracks. */
+  --ds-radius-pill: 999px;
+
+  /* One height per size for every bordered control, so a row of them lines
+     up: `sm` the block settings row, `md` the form row, `lg` a call to action. A
+     composite frame takes the height on the frame, border included. */
+  --ds-control-h-sm: 1.75rem;
+  --ds-control-h-md: 2.25rem;
+  --ds-control-h-lg: 2.75rem;
+  /* `sm` is the in-canvas block-tools overlay, `md` the editor's toolbar. */
+  --ds-toolbar-h-sm: 1.5rem;
+  --ds-toolbar-h-md: 2rem;
+  /* The least a target that isn't a sized control measures (a menu item, a
+     swatch, a remove "x"): nothing on a mouse, 44px on touch (below). */
+  --ds-target-min: 0px;
+
+  /* The app's own page widths; page content has --content-width-*. */
+  --ds-width-reading: 760px;
+  --ds-width-browse: 72rem;
+  /* The backdrop strip above a tall bottom sheet, the phone bar's height, so
+     a tap above the sheet closes it. */
+  --ds-sheet-gap: 3.375rem;
+
+  /* sm/md/lg are scheme tokens (theme/tokens.ts). */
+  --ds-shadow-none: none;
+
+  --ds-weight-normal: 400;
+  --ds-weight-medium: 500;
+  --ds-weight-semibold: 600;
+  --ds-weight-bold: 700;
+
+  --ds-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Static, not a scheme token: the .hljs-* palette is one dark set, so code
+     reads the same in either scheme. The rendered code block reads the
+     content tokens instead. */
+  --ds-code-bg: #0f1115;
+  --ds-code-fg: #e6e6e6;
+  --ds-code-border: #2a2e39;
+
+  /* The chrome's text ladder, separate from the content type scale. `xs` is
+     secondary text beside a control, never the control's own text. */
+  --ds-text-xs: 0.75rem;
+  --ds-text-sm: 0.8125rem;
+  --ds-text-md: 0.9375rem;
+  --ds-text-lg: 1.0625rem;
+  /* A field's typed text and a picker's value: 16px on touch (below). */
+  --ds-text-field-sm: var(--ds-text-sm);
+  --ds-text-field-md: var(--ds-text-md);
+}
+
+/* The touch scale (docs/architecture/responsive.md, "Touch"): 44px targets and 16px field
+   text, which also keeps iOS from zooming into a focused field. */
+@media (pointer: coarse) {
+  :root {
+    --ds-control-h-sm: 2.75rem;
+    --ds-control-h-md: 2.75rem;
+    --ds-toolbar-h-sm: 2.75rem;
+    --ds-toolbar-h-md: 2.75rem;
+    --ds-target-min: 2.75rem;
+    --ds-text-field-sm: 1rem;
+    --ds-text-field-md: 1rem;
+  }
+}
+
+/* The content type scale (docs/architecture/typography.md), generated by typeScaleCss in
+   typeScale.ts; a unit test keeps the two identical. Unregistered: a
+   registered <length> would compute its cqi at :root, against no container. */
+:root {
+  --type-xs: 0.75rem;
+  --type-s: 0.875rem;
+  --type-m: 1rem;
+  --type-l: 1.125rem;
+  --type-xl: 1.25rem;
+  --type-2xl: 1.5rem;
+  --type-3xl: clamp(1.625rem, 1.475rem + 0.667cqi, 1.875rem);
+  --type-4xl: clamp(1.75rem, 1.45rem + 1.333cqi, 2.25rem);
+  --type-5xl: clamp(2.125rem, 1.6rem + 2.333cqi, 3rem);
+  --type-6xl: clamp(2.5rem, 1.75rem + 3.333cqi, 3.75rem);
+}
+
+/* The steps a capability default is set in (docs/architecture/blocks/capabilities.md, "Capability
+   defaults"), generated by contentStepTokensCss in capabilities/defaults/
+   tokens.ts; a unit test keeps the two identical. */
+:root {
+  --content-pad-none: 0px;
+  --content-pad-sm: 8px;
+  --content-pad-md: 16px;
+  --content-pad-lg: 24px;
+  --content-radius-none: 0px;
+  --content-radius-sm: 4px;
+  --content-radius-md: 8px;
+  --content-radius-lg: 12px;
+  --content-rhythm-none: 0px;
+  --content-rhythm-sm: 16px;
+  --content-rhythm-md: 24px;
+  --content-rhythm-lg: 40px;
+  --content-gutter-none: 0px;
+  --content-gutter-sm: 16px;
+  --content-gutter-md: 24px;
+  --content-gutter-lg: 40px;
+}
+
+/* Canvas widths (BUILTIN_WIDTHS, kept identical by a unit test); the theme
+   stylesheet re-declares one the admin moved in capability defaults. */
+:root {
+  --content-width-read: 760px;
+  --content-width-wide: 1200px;
+  --content-width-max: 1800px;
+}
+
+/* Page gutters per canvas tier (BUILTIN_GUTTERS, likewise). */
+:root {
+  --content-gutter-d: var(--content-gutter-lg);
+  --content-gutter-t: var(--content-gutter-md);
+  --content-gutter-p: var(--content-gutter-sm);
+}
+
+/* Images, shared by both renderers. With no width set an image is its own
+   width (--img-w, imageSources.ts), not the width `sizes` named for a srcset
+   copy; its height is the stored aspect ratio, inline, since `sizes="auto"`
+   contains an image's size. */
+/* A transparent image's backdrop: its pinned scheme's content ground. */
+.page-image[data-backdrop] { background: var(--content-bg); }
+.page-image { display: block; max-width: 100%; height: auto; margin-inline: var(--placement-ml-d, auto) var(--placement-mr-d, auto); width: var(--image-width-d, var(--img-w, auto)); }
+/* Placement moves the image within its frame; a data-align holds until the
+   author places the image. */
+.page-image[data-align='left'] { margin-inline: 0 auto; }
+.page-image[data-align='right'] { margin-inline: auto 0; }
+/* Each tier falls back to the next-larger; print has no container, so it gets
+   the desktop base. */
+@container canvas (max-width: 900px) {
+  .page-image { width: var(--image-width-t, var(--image-width-d, var(--img-w, auto))); margin-inline: var(--placement-ml-t, var(--placement-ml-d, auto)) var(--placement-mr-t, var(--placement-mr-d, auto)); }
+}
+@container canvas (max-width: 640px) {
+  .page-image { width: var(--image-width-p, var(--image-width-t, var(--image-width-d, var(--img-w, auto)))); margin-inline: var(--placement-ml-p, var(--placement-ml-t, var(--placement-ml-d, auto))) var(--placement-mr-p, var(--placement-mr-t, var(--placement-mr-d, auto))); }
+}
+
+/* Fitted box 'fill': the frame claims 100% height to fill an ancestor that
+   offers one (a stretched cell); without one it computes to auto. The other
+   modes are inline styles (imageBox.ts). */
+.page-image-frame[data-box='fill'] { height: 100%; }
+.page-image-frame[data-box='fill'] > .page-image { width: 100%; height: 100%; }
+
+/* PDF export is browser print of the app's own rendering, so it can't drift
+   from the page: the chrome goes, blocks paginate, visual blocks stay whole. */
+@media print {
+  @page { size: A4; margin: 18mm 16mm; }
+
+  html, body { background: #fff !important; }
+
+  /* Print is always light (docs/architecture/theming.md, "Emission"), so a background
+     image would put dark text on a photo. */
+  .cap-surface { background-image: none !important; }
+
+  .site-footer,
+  .appbar,
+  .ust-tab,
+  .lg-panel,
+  .settings-side,
+  .settings-compactbar,
+  .page-after { display: none !important; }
+  .settings-shell { display: block !important; }
+
+  /* The offsets that made room for the app bar and the graph panel. */
+  .content.with-bar { margin-top: 0 !important; }
+  .content { padding-right: 0 !important; }
+  main.canvas-route { margin: 0 !important; padding: 0 !important; }
+
+  /* Block flow is what the browser's pagination breaks across sheets. */
+  .page-shell,
+  .content { display: block !important; min-height: 0 !important; }
+
+  .page-canvas {
+    max-width: none !important;
+    padding: 0 !important;
+    /* No container: the tier rules fall back to the desktop base. */
+    container-type: normal !important;
+  }
+  /* Without the container cqi reads the sheet's viewport: pin the fluid steps
+     to their full size (TYPE_SCALE's rem). */
+  :root {
+    --type-3xl: 1.875rem;
+    --type-4xl: 2.25rem;
+    --type-5xl: 3rem;
+    --type-6xl: 3.75rem;
+  }
+  .canvas-blocks > * { max-width: none !important; }
+  .canvas-blocks > [data-width='full'] { margin-inline: 0 !important; }
+  /* No reading column on the sheet: a placed block's edge is the sheet's. */
+  .canvas-blocks > .cap-placement { --placement-edge: 0px; }
+  /* The sheet's margins are the gutter; a band's sides take the group's padding. */
+  .canvas-blocks { padding: 0 !important; }
+  .canvas-blocks > [data-width='full'],
+  .canvas-blocks > [data-width='full'] > .flex,
+  .canvas-blocks > [data-width='full'] > .grid { --default-pad-x: initial; }
+  /* The width reset above clears the image cap too; images would overflow. */
+  .prose img { max-width: 100% !important; height: auto !important; }
+
+  /* Breaks fall between blocks: visual blocks stay whole (one taller than a
+     sheet still splits), text breaks with orphan and widow control. */
+  .canvas-blocks > .callout,
+  .canvas-blocks > .quick-link-block,
+  .canvas-blocks > blockquote,
+  .canvas-blocks > pre,
+  .canvas-blocks > table,
+  .canvas-blocks > .table-block,
+  .canvas-blocks > .page-image-frame,
+  .canvas-blocks > .diagram-block,
+  .canvas-blocks > .grid-block { break-inside: avoid; }
+  .canvas-blocks > h1,
+  .canvas-blocks > h2,
+  .canvas-blocks > h3,
+  .canvas-blocks > h4,
+  .canvas-blocks > h5,
+  .canvas-blocks > h6 { break-after: avoid; }
+  .canvas-blocks > p,
+  .canvas-blocks > ul,
+  .canvas-blocks > ol { orphans: 3; widows: 3; }
+
+  /* Link URLs aren't printed inline: that breaks button and card links. */
+
+  /* Browsers drop backgrounds in print, which would leave the code block's
+     light text near-invisible: print it dark on light. */
+  .prose pre {
+    background: #f6f6f4 !important;
+    color: #1a1a1a !important;
+    border: 1px solid #ddd;
+    /* Paper can't scroll: long lines wrap. */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow: visible;
+    mask-image: none;
+  }
+  .prose pre code,
+  .prose pre [class^='hljs'],
+  .prose pre [class*=' hljs'] { color: #1a1a1a !important; background: none !important; }
+}
+
+}

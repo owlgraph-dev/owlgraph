@@ -1,0 +1,71 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* The grid, the same markup in the editor and on the page: the row
+   `.grid` inside its block wrapper (view.ts), which `.canvas-blocks > *`
+   centres and spaces. Editor-only affordances live in the editor. */
+/* Non-inheriting, so a nested grid never takes the outer grid's tablet or
+   phone columns. At a `data-reflow` tier merges and row heights reset
+   (gridColumns.ts). */
+@property --cols-t { syntax: '*'; inherits: false; }
+@property --cols-p { syntax: '*'; inherits: false; }
+@property --gap-d { syntax: '*'; inherits: false; }
+@property --gap-t { syntax: '*'; inherits: false; }
+@property --gap-p { syntax: '*'; inherits: false; }
+.grid {
+  display: grid;
+  gap: var(--gap-d, 1rem);
+  align-items: stretch;
+  grid-template-columns: var(--cols, 1fr 1fr);
+  grid-template-rows: var(--rows, auto);
+}
+.grid-cell { min-width: 0; }
+@container canvas (max-width: 900px) {
+  .grid {
+    grid-template-columns: var(--cols-t, var(--cols, 1fr 1fr));
+    gap: var(--gap-t, var(--gap-d, 1rem));
+  }
+  .grid[data-reflow~='t'] { grid-template-rows: auto; }
+  .grid[data-reflow~='t'] > .grid-cell { grid-column: auto !important; grid-row: auto !important; }
+}
+@container canvas (max-width: 640px) {
+  .grid {
+    grid-template-columns: var(--cols-p, minmax(0, 1fr));
+    gap: var(--gap-p, var(--gap-t, var(--gap-d, 1rem)));
+  }
+  .grid[data-reflow~='p'] { grid-template-rows: auto; }
+  .grid[data-reflow~='p'] > .grid-cell { grid-column: auto !important; grid-row: auto !important; }
+}
+
+/* A page section's tracks and gap are the page's (--page-columns-*, pageColumns.ts).
+   Where a tier has fewer columns the cells wrap, and in one column they stack
+   in document order, so a phone reads paragraph → its image → next paragraph. */
+.grid.page-section {
+  grid-template-columns: var(--page-columns-cols-d, none);
+  grid-auto-flow: var(--page-columns-flow, column);
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-rows: none;
+  gap: var(--page-columns-gap-d, 1rem);
+}
+@container canvas (max-width: 900px) {
+  .grid.page-section {
+    grid-template-columns: var(--page-columns-cols-t, var(--page-columns-cols-d, none));
+    gap: var(--page-columns-gap-t, var(--page-columns-gap-d, 1rem));
+  }
+}
+@container canvas (max-width: 640px) {
+  .grid.page-section {
+    grid-template-columns: var(--page-columns-cols-p, minmax(0, 1fr));
+    grid-auto-flow: row;
+    gap: var(--page-columns-gap-p, var(--page-columns-gap-t, var(--page-columns-gap-d, 1rem)));
+  }
+}
+.grid.page-section[data-columns='single'] { grid-template-columns: minmax(0, 1fr); grid-auto-flow: row; }
+
+}

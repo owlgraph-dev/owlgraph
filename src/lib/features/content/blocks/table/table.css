@@ -1,0 +1,104 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* The corner radius is resolved once on the table, as inheriting properties
+   its box and its four corner cells share. */
+/* The narrowest column is never under --table-col-min; a table wider than its
+   column scrolls inside its block, and nothing else moves (docs/architecture/responsive.md). */
+.table-block {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.table-block-table {
+  --table-col-min: 6.5rem;
+  min-width: max(100%, calc(var(--table-span, 1) * var(--table-col-min)));
+  --table-corner-radius-d: var(--surface-radius-d, var(--default-radius, 0px));
+  --table-corner-radius-t: var(--surface-radius-t, var(--surface-radius-d, var(--default-radius, 0px)));
+  --table-corner-radius-p: var(--surface-radius-p, var(--surface-radius-t, var(--surface-radius-d, var(--default-radius, 0px))));
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 1px;
+  width: 100%;
+  background: var(--surface-bg-d, var(--default-bg));
+  border-radius: var(--table-corner-radius-d);
+  box-shadow: var(--surface-shadow-d, var(--default-shadow));
+}
+}
+
+/* A cell's corners are square whatever the group default. A pin sets a
+   default, so it lives in the theme layer, where this selector outranks the
+   theme's group rule. */
+@layer theme {
+.canvas-blocks .table-block-table td,
+.canvas-blocks .table-block-table th {
+  --default-radius: 0px;
+}
+}
+
+@layer base {
+/* The editor and the page render every row in one <tbody>, so :first-child and
+   :last-child are the whole table's edge. */
+.table-block-table th {
+  background: var(--surface-bg-d, var(--table-header-bg-d, var(--content-table-header)));
+  font-weight: 600;
+}
+.table-block-table td {
+  background: var(--surface-bg-d, var(--content-raised));
+}
+.table-block-table tr:first-child > :first-child { border-top-left-radius: var(--table-corner-radius-d); }
+.table-block-table tr:first-child > :last-child { border-top-right-radius: var(--table-corner-radius-d); }
+.table-block-table tr:last-child > :first-child { border-bottom-left-radius: var(--table-corner-radius-d); }
+.table-block-table tr:last-child > :last-child { border-bottom-right-radius: var(--table-corner-radius-d); }
+
+@container canvas (max-width: 900px) {
+  .table-block-table {
+    background: var(--surface-bg-t, var(--surface-bg-d, var(--default-bg)));
+    border-radius: var(--table-corner-radius-t);
+    box-shadow: var(--surface-shadow-t, var(--surface-shadow-d, var(--default-shadow)));
+  }
+  .table-block-table th {
+    background: var(--surface-bg-t, var(--surface-bg-d, var(--table-header-bg-t, var(--table-header-bg-d, var(--content-table-header)))));
+  }
+  .table-block-table td {
+    background: var(--surface-bg-t, var(--surface-bg-d, var(--content-raised)));
+  }
+  .table-block-table tr:first-child > :first-child { border-top-left-radius: var(--table-corner-radius-t); }
+  .table-block-table tr:first-child > :last-child { border-top-right-radius: var(--table-corner-radius-t); }
+  .table-block-table tr:last-child > :first-child { border-bottom-left-radius: var(--table-corner-radius-t); }
+  .table-block-table tr:last-child > :last-child { border-bottom-right-radius: var(--table-corner-radius-t); }
+}
+@container canvas (max-width: 640px) {
+  .table-block-table {
+    background: var(--surface-bg-p, var(--surface-bg-t, var(--surface-bg-d, var(--default-bg))));
+    border-radius: var(--table-corner-radius-p);
+    box-shadow: var(--surface-shadow-p, var(--surface-shadow-t, var(--surface-shadow-d, var(--default-shadow))));
+  }
+  .table-block-table th {
+    background: var(--surface-bg-p, var(--surface-bg-t, var(--surface-bg-d, var(--table-header-bg-p, var(--table-header-bg-t, var(--table-header-bg-d, var(--content-table-header)))))));
+  }
+  .table-block-table td {
+    background: var(--surface-bg-p, var(--surface-bg-t, var(--surface-bg-d, var(--content-raised))));
+  }
+  .table-block-table tr:first-child > :first-child { border-top-left-radius: var(--table-corner-radius-p); }
+  .table-block-table tr:first-child > :last-child { border-top-right-radius: var(--table-corner-radius-p); }
+  .table-block-table tr:last-child > :first-child { border-bottom-left-radius: var(--table-corner-radius-p); }
+  .table-block-table tr:last-child > :last-child { border-bottom-right-radius: var(--table-corner-radius-p); }
+}
+
+.table-block--header-hidden .table-block-table tr[data-header-row] {
+  opacity: 0.5;
+}
+
+/* Paper does not scroll: in print the table fits the sheet's column. */
+@media print {
+  .table-block { overflow: visible; }
+  .table-block-table { min-width: 0; }
+}
+
+}

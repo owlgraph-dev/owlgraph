@@ -1,0 +1,44 @@
+# Production override — layered on docker-compose.yml:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# or set COMPOSE_FILE in the server's .env (see .env.production.example) so a
+# plain `docker compose …` picks up both files. Assumes a TLS-terminating
+# reverse proxy on the same host (nginx, Caddy) forwarding to 127.0.0.1 —
+# see docs/guides/deployment.md, "Production".
+
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    mem_limit: 1g
+
+  migrate:
+    environment:
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD in .env}
+    mem_limit: 512m
+
+  app:
+    environment:
+      # The public https:// origin. SvelteKit rejects form POSTs whose Origin
+      # header differs, and builds absolute URLs (share links) from it.
+      ORIGIN: ${ORIGIN:?set ORIGIN to the public https:// origin in .env}
+      # The proxy appends the client address to X-Forwarded-For; trust exactly
+      # one hop. Without this every visitor shares the proxy's address, and
+      # the per-IP login limit becomes a site-wide lockout.
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-X-Forwarded-For}
+      XFF_DEPTH: ${XFF_DEPTH:-1}
+    # Loopback only: reachable through the proxy, never directly — a direct
+    # client could otherwise bypass TLS and forge X-Forwarded-For.
+    ports: !override
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+    mem_limit: 1g
+
+  mcp:
+    environment:
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-X-Forwarded-For}
+      XFF_DEPTH: ${XFF_DEPTH:-1}
+    # Bearer tokens must only travel over TLS: expose /mcp through the proxy.
+    ports: !override
+      - "127.0.0.1:${MCP_PORT:-3030}:3030"
+    mem_limit: 512m

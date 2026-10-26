@@ -1,0 +1,133 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* Quick-link cards. The variant class (variants.ts) enforces which Surface
+   fields a card carries: it pins the defaults it must not take and supplies
+   the built-in look, which the theme's cards defaults and then the card's own
+   values override. */
+/* color is !important: RenderedContent's `.prose :global(a)` rule outranks a
+   plain class on the page. */
+.quick-link {
+  position: relative; /* the destination hint's anchor (.quick-link-dest) */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-weight: 500;
+  /* Read by .cap-typography's line-height (app.css) as the fallback. */
+  --typography-lineheight-base: 1.3;
+  vertical-align: top;
+  padding: 0.5rem 0.85rem;
+  text-decoration-line: var(--quick-link-underline, underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  color: var(--quick-link-color, var(--content-accent)) !important;
+  transition: background-color 0.12s, border-color 0.12s, color 0.12s;
+}
+.quick-link-icon { display: inline-flex; flex: none; }
+.quick-link-icon svg { display: block; }
+.quick-link-label { min-width: 0; }
+.quick-link--icon-top { flex-direction: column; align-items: center; text-align: center; gap: 0.4rem; }
+/* A finger's target (docs/architecture/responsive.md#touch). */
+@media (pointer: coarse) {
+  .quick-link { min-height: 2.75rem; }
+}
+
+/* The built-in looks, in the base layer below the theme's cards defaults. */
+.quick-link--outlined {
+  --default-border: 1px solid var(--content-theme-border-strong);
+  text-decoration-line: none;
+}
+.quick-link--button {
+  --default-bg: var(--content-theme-accent);
+  --default-fg: var(--content-theme-on-accent);
+  text-decoration-line: none;
+}
+/* A filled card draws the focus ring in its text colour, further inside, like
+   a filled chrome button. */
+.quick-link--button:focus-visible {
+  --ds-focus-ring-color: currentColor;
+  --ds-focus-ring-offset: var(--ds-focus-ring-offset-filled);
+}
+}
+
+/* The pins: what a variant never takes, whatever the theme says. In the theme
+   layer, where three classes outrank `.canvas-blocks .grp-cards`; `initial` is
+   guaranteed-invalid, so `.cap-surface`'s chain falls through to nothing. */
+@layer theme {
+.canvas-blocks .quick-link.quick-link--link {
+  --default-bg: initial;
+  --default-fg: initial;
+  --default-border: initial;
+  --default-shadow: initial;
+}
+.canvas-blocks .quick-link.quick-link--outlined {
+  --default-bg: initial;
+  --default-fg: initial;
+}
+}
+
+@layer base {
+
+/* A button's text is its fill's readable partner unless the card's typography
+   sets a colour (--quick-link-color). */
+.quick-link--button { color: var(--quick-link-color, var(--surface-fg-d, var(--default-fg, var(--content-filled-fg)))) !important; }
+
+/* The innermost currentColor covers a fill set only at another tier, so
+   a button's hover never goes transparent. */
+.quick-link:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+.quick-link--button:hover { background: color-mix(in srgb, var(--surface-bg-d, var(--default-bg, currentColor)), var(--content-mix-target) 8%); }
+@container canvas (max-width: 900px) {
+  .quick-link--button { color: var(--quick-link-color, var(--surface-fg-t, var(--surface-fg-d, var(--default-fg, var(--content-filled-fg))))) !important; }
+  .quick-link--button:hover { background: color-mix(in srgb, var(--surface-bg-t, var(--surface-bg-d, var(--default-bg, currentColor))), var(--content-mix-target) 8%); }
+}
+@container canvas (max-width: 640px) {
+  .quick-link--button { color: var(--quick-link-color, var(--surface-fg-p, var(--surface-fg-t, var(--surface-fg-d, var(--default-fg, var(--content-filled-fg)))))) !important; }
+  .quick-link--button:hover { background: color-mix(in srgb, var(--surface-bg-p, var(--surface-bg-t, var(--surface-bg-d, var(--default-bg, currentColor)))), var(--content-mix-target) 8%); }
+}
+
+/* The destination hint (QuickLinkCard.svelte): an off-site link's host, under
+   the card while it is focused or hovered. */
+.quick-link-dest {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75em;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--content-fg);
+  background: var(--content-bg);
+  border: 1px solid var(--content-theme-border-strong);
+  border-radius: 0.25rem;
+  box-shadow: var(--content-shadow-sm);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* The wrapper is the placed box; a stretched card's link fills it.
+   --quick-link-fill-* is the wrapper's, inherited by the link. */
+.quick-link-block.cap-placement > .quick-link { width: var(--quick-link-fill-d, auto); }
+@container canvas (max-width: 900px) {
+  .quick-link-block.cap-placement > .quick-link { width: var(--quick-link-fill-t, var(--quick-link-fill-d, auto)); }
+}
+@container canvas (max-width: 640px) {
+  .quick-link-block.cap-placement > .quick-link { width: var(--quick-link-fill-p, var(--quick-link-fill-t, var(--quick-link-fill-d, auto))); }
+}
+
+/* In a stretching cell the link fills the box too, so the whole tile is clickable. */
+.grid-cell[data-stretch] > .quick-link-block { height: 100%; }
+.grid-cell[data-stretch] > .quick-link-block > .quick-link { display: flex; width: 100%; height: 100%; justify-content: var(--quick-link-justify, flex-start); align-items: var(--quick-link-align, flex-start); }
+/* icon-top is a column, so the axes swap. */
+.grid-cell[data-stretch] > .quick-link-block > .quick-link.quick-link--icon-top { justify-content: var(--quick-link-align, flex-start); align-items: var(--quick-link-justify, flex-start); }
+
+}

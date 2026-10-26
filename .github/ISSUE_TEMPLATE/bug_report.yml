@@ -1,0 +1,26 @@
+name: Bug report
+description: Something does not work as it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen
+      description: The steps, against a fresh install if you can.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release or commit. The About page (/-/about, behind the info icon in the footer) names both.
+  - type: input
+    id: environment
+    attributes:
+      label: Where it runs
+      description: The browser, and whether owlgraph runs in Docker Compose or otherwise.

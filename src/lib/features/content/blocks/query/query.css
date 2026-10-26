@@ -1,0 +1,50 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* The same markup in the editor and on the page, with no editor-only
+   decoration. .query-block is the result container (formats.ts): its layout,
+   gap and padding come from the capability rules, and like the layout
+   containers it has no outer margin, so its surface meets its neighbours. */
+.query-block {
+  position: relative;
+}
+/* In a row an instance shrinks to fit rather than push the page sideways
+   (docs/architecture/responsive.md). */
+.query-block > * {
+  max-width: 100%;
+}
+}
+
+/* Kind pins (formats.ts): flush, since the instances are padded blocks, and a
+   column. A pin sets a default, so it sits in the theme layer, where the
+   element selector outranks the theme's group rule; an authored value wins. */
+@layer theme {
+.canvas-blocks div.query-block {
+  --default-pad: 0px;
+  --layout-direction-d: column;
+}
+}
+
+@layer base {
+.query-block-state {
+  color: var(--content-muted);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px dashed var(--content-border);
+  border-radius: 6px;
+}
+.query-block--error .query-block-state,
+.query-block--timeout .query-block-state {
+  color: var(--content-warning);
+  border-style: solid;
+  border-color: var(--content-warning-border);
+  background: var(--content-warning-soft);
+}
+
+}

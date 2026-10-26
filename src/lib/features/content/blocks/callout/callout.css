@@ -1,0 +1,21 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+.callout {
+  border-left: 3px solid var(--content-accent);
+  background: var(--content-accent-soft);
+  padding: 0.6rem 0.9rem;
+  border-radius: 0 6px 6px 0;
+}
+/* A variant retints the whole subtree: a card inside a warning callout turns warning too. */
+.callout-warn { --content-accent: var(--content-warning); --content-accent-soft: var(--content-warning-soft); }
+.callout-tip { --content-accent: var(--content-success); --content-accent-soft: var(--content-success-soft); }
+.callout-error { --content-accent: var(--content-danger); --content-accent-soft: var(--content-danger-soft); }
+
+}

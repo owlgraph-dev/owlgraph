@@ -1,0 +1,26 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* Dashed like a placeholder: something held here, never content. */
+.unknown-block-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--content-border);
+  border-radius: 0.5rem;
+  color: var(--content-muted);
+  min-width: 0;
+}
+.unknown-block-glyph { flex: none; display: block; }
+.unknown-block-text { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.unknown-block-title { color: var(--content-fg); font-weight: 600; overflow-wrap: anywhere; }
+.unknown-block-note { font-size: 0.85em; overflow-wrap: anywhere; }
+
+}

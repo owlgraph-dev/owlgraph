@@ -1,0 +1,140 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* A document entry (DocumentEntry.svelte, docs/architecture/blocks/anatomy.md "Shared
+   listings"): authored elements the capability cascade styles. The box is a
+   card, so the cards defaults apply; no margin, since the flow's rhythm places it. */
+.de {
+  --default-border: 1px solid var(--content-border);
+  --default-radius: 0.5rem;
+  --typography-lineheight-base: 1.4;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.de-entry {
+  min-width: 0;
+  display: flex;
+  margin: 0;
+  color: inherit;
+}
+/* Two classes and an attribute, to outrank the page's link colour and the
+   underline every link gets under the pointer: the entry reads as the file,
+   and only its title says it is a link. */
+.de .de-entry[href],
+.de .de-entry[href]:hover { color: inherit; text-decoration: none; }
+.de .de-entry[href] .de-title-text { text-decoration: underline transparent; text-underline-offset: 2px; }
+.de .de-entry[href]:hover .de-title-text { text-decoration-color: currentColor; }
+.de-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.de-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0.5rem; font-weight: 600; }
+.de-title-text { overflow-wrap: anywhere; }
+.de-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.4em;
+  font-size: 0.85em;
+  color: var(--content-muted);
+  overflow-wrap: anywhere;
+}
+.de-location { display: inline-flex; align-items: center; gap: 0.25em; min-width: 0; }
+.de-location svg { display: block; flex: none; }
+/* In the editor: the block shows a document of the graph. */
+.de-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--content-accent);
+  background: var(--content-accent-soft);
+}
+.de-chip svg { display: block; }
+.de-actions { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.5rem; }
+.de-download-compact { display: none; }
+
+/* A row: the entry, then its actions. */
+.de-row { display: flex; align-items: center; gap: 0.5rem; padding-inline-end: 0.75rem; min-width: 0; }
+.de--row .de-entry { flex: 1 1 auto; align-items: center; gap: 0.75rem; padding: 0.6rem 0 0.6rem 0.75rem; }
+.de-icon { flex: none; display: inline-flex; color: var(--content-muted); }
+.de-icon svg { display: block; }
+
+/* A card: its preview on top — the image, or the file's type as a tile —
+   then its title and details, then its actions. */
+/* Rounded as the box is at the top, which the preview fills. */
+.de--card .de-entry { flex-direction: column; border-start-start-radius: inherit; border-start-end-radius: inherit; }
+.de--card .de-text { padding: 0.75rem 0.85rem; }
+.de--card .de-actions { padding: 0 0.85rem 0.75rem; }
+.de-preview {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+  border-bottom: 1px solid var(--content-border);
+  background: var(--content-raised);
+}
+.de-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.de-tile { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; color: var(--content-muted); }
+.de-tile svg { display: block; }
+.de-tile-type { font-size: 0.8em; font-weight: 600; letter-spacing: 0.04em; }
+
+/* On its way, in the editor: a row of a skeleton. */
+.de-row--skeleton { min-height: 3rem; gap: 0.75rem; padding-inline-start: 0.75rem; }
+.de-skeleton {
+  display: block;
+  height: 0.85em;
+  border-radius: 0.25rem;
+  background: var(--content-border);
+  animation: de-pulse 1.4s ease-in-out infinite;
+}
+.de-skeleton--icon { flex: none; width: 1.25rem; height: 1.25rem; }
+.de-skeleton--line { width: 45%; }
+@keyframes de-pulse {
+  50% { opacity: 0.45; }
+}
+
+/* What a block shows when there is no file to show: the reader a neutral
+   line, the editor why, and the ways to repair it. */
+.de-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  color: var(--content-muted);
+}
+.de-placeholder-icon { display: inline-flex; color: var(--content-muted); }
+.de-placeholder-icon svg { display: block; }
+.de-placeholder-icon--warning { color: var(--content-warning); }
+.de-placeholder-title { margin: 0; font-weight: 600; color: var(--content-fg); overflow-wrap: anywhere; }
+.de-placeholder-name { margin: 0; overflow-wrap: anywhere; }
+.de-placeholder-body { margin: 0; max-width: 36rem; font-size: 0.9em; overflow-wrap: anywhere; }
+.de-placeholder-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding-top: 0.35rem; }
+
+@media (pointer: coarse) {
+  .de--row .de-entry { min-height: 3rem; }
+}
+
+/* A phone's canvas: a row is at least 48px tall and its download an icon. */
+@container canvas (max-width: 640px) {
+  .de--row .de-entry { min-height: 3rem; }
+  .de--row .de-download-wide { display: none; }
+  .de--row .de-download-compact { display: inline-flex; }
+}
+}

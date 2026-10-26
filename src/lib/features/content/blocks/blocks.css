@@ -1,0 +1,20 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Every block's stylesheet. The editor and the page both import this file, so
+   a block's CSS reaches both or neither. The listing sheets come just before
+   the plugins' sheet, since a plugin's blocks draw on them; the order decides
+   between rules of equal specificity within a layer. */
+@import './callout/callout.css';
+@import './table/table.css';
+@import './grid/grid.css';
+@import './flex/flex.css';
+@import './quickLink/quickLink.css';
+@import './query/query.css';
+@import './unknown/unknown.css';
+@import './canvasContent.css';
+@import '../listing/entryList.css';
+@import '../listing/documentEntry.css';
+@import '../../../plugins/blocks.css';

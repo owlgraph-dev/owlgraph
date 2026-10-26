@@ -1,0 +1,56 @@
+{
+  "lib/design-system/ColorField.svelte": {
+    "inline-style": 1
+  },
+  "lib/design-system/ColorPickerField.svelte": {
+    "inline-style": 1
+  },
+  "lib/design-system/playground/sections/Tokens.svelte": {
+    "inline-style": 9
+  },
+  "lib/features/editor/capabilities/typography/TypographyField.svelte": {
+    "inline-style": 2
+  },
+  "lib/features/editor/desktop/CanvasOverlay.svelte": {
+    "inline-style": 4
+  },
+  "lib/features/editor/desktop/DesktopEditor.svelte": {
+    "inline-style": 2
+  },
+  "lib/features/editor/desktop/PlaceholderInsertMenu.svelte": {
+    "inline-style": 1
+  },
+  "lib/features/editor/desktop/toolbar/EditorToolbar.svelte": {
+    "inline-style": 2
+  },
+  "lib/features/editor/desktop/toolbar/PropertyPicker.svelte": {
+    "inline-style": 1
+  },
+  "lib/features/editor/meta/TagsPopover.svelte": {
+    "inline-style": 1
+  },
+  "lib/features/editor/phone/PhoneCanvasOverlay.svelte": {
+    "inline-style": 1
+  },
+  "lib/features/editor/shared/EditorCanvas.svelte": {
+    "inline-style": 1
+  },
+  "lib/features/semantic/components/PagePropertiesDialog.svelte": {
+    "inline-style": 2
+  },
+  "routes/settings/branding/+page.svelte": {
+    "inline-style": 1
+  },
+  "routes/settings/branding/ThemeColors.svelte": {
+    "inline-style": 1
+  },
+  "routes/settings/branding/ThemePreview.svelte": {
+    "inline-style": 1
+  },
+  "routes/settings/schema/relationships/+page.svelte": {
+    "inline-style": 1
+  },
+  "routes/settings/styles/[id]/+page.svelte": {
+    "inline-style": 1
+  }
+}

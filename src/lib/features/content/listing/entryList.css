@@ -1,0 +1,241 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* A listing of entries (EntryList.svelte, docs/architecture/blocks/anatomy.md "Shared
+   listings"): authored elements the capability cascade styles. The box is a
+   card, so the cards defaults apply; no margin, since the flow's rhythm places it. */
+.el {
+  --default-border: 1px solid var(--content-border);
+  --default-radius: 0.5rem;
+  --typography-lineheight-base: 1.4;
+  /* The trailing slot's width, the same on every row and in the column header, so the columns line up. */
+  --entry-list-trail: 2rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.el[data-mode='editor'],
+.el--trail-wide { --entry-list-trail: 10rem; }
+
+/* The header: where in the share the listing is, and the controls. */
+.el-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--content-border);
+}
+.el-crumbs {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.35rem;
+  overflow-wrap: anywhere;
+}
+.el-crumb {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: var(--content-muted);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+button.el-crumb {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.el-crumb--current { color: inherit; font-weight: 600; }
+.el-sep { color: var(--content-muted); }
+/* A phone's header: back, and the folder's name (below). */
+.el-head-compact { display: none; flex: 1 1 auto; min-width: 0; align-items: center; gap: 0.25rem; }
+.el-current { font-weight: 600; overflow-wrap: anywhere; }
+.el-controls { flex: none; display: flex; align-items: center; gap: 0.25rem; }
+.el-sort-compact { display: none; }
+
+/* The column header: muted labels over the columns the block shows. */
+.el-cols {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+  border-bottom: 1px solid var(--content-border);
+  font-size: 0.75em;
+  color: var(--content-muted);
+}
+.el-col-name { flex: 1 1 auto; min-width: 0; padding-inline-start: 2.25rem; }
+.el-cols::after { content: ''; flex: none; width: var(--entry-list-trail); }
+
+/* Two classes, to outrank the content's own list rules (`.canvas-blocks ul`,
+   `li + li`): these are rows, not a list an author wrote. */
+.el .el-rows { list-style: none; margin: 0; padding: 0; }
+.el .el-row {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-end: 0.5rem;
+  border-top: 1px solid var(--content-border);
+}
+.el-row:first-child { border-top: 0; }
+/* A tint of the row's own text colour, which reads on whatever fills the box.
+   A scheme surface wouldn't: on a theme-colour fill it stays the page's while
+   the text turns the fill's partner (white on white). */
+.el[data-mode='editor'] .el-row:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+.el-entry {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0 0.55rem 0.75rem;
+  margin: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  text-decoration: none;
+}
+.el--compact .el-entry { padding-block: 0.3rem; }
+button.el-entry, a.el-entry { cursor: pointer; }
+/* app.css underlines every hovered link, unlayered; only the row's name should.
+   !important lifts this layered rule over the unlayered one. */
+a.el-entry,
+a.el-entry:hover { text-decoration: none !important; }
+/* The link's one affordance on the page: its name underlines under the pointer. */
+a.el-entry .el-name-text, button.el-entry .el-name-text { text-decoration: underline transparent; text-underline-offset: 2px; }
+a.el-entry:hover .el-name-text, button.el-entry:hover .el-name-text { text-decoration-color: currentColor; }
+.el-icon { flex: none; display: inline-flex; width: 1.5rem; justify-content: center; color: var(--content-muted); }
+.el-row--folder .el-icon { color: var(--content-accent); }
+.el-icon svg { display: block; }
+.el-name { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0.5rem; }
+.el-name-text { overflow-wrap: anywhere; }
+.el-meta { display: none; flex-basis: 100%; font-size: 0.85em; color: var(--content-muted); }
+/* A line under the name: the entry's own title, where the listing calls it otherwise (a member's label). */
+.el-note { flex-basis: 100%; font-size: 0.85em; color: var(--content-muted); overflow-wrap: anywhere; }
+.el-size,
+.el-modified {
+  flex: none;
+  font-size: 0.9em;
+  color: var(--content-muted);
+  font-variant-numeric: tabular-nums;
+}
+.el-size { width: 5.5rem; text-align: end; }
+.el-modified { width: 7.5rem; }
+/* What kind of entry it is (a document, and the integration its source is in), where a listing holds several kinds. */
+.el-kind { flex: none; width: 11rem; font-size: 0.9em; color: var(--content-muted); overflow-wrap: anywhere; }
+.el--no-size .el-size,
+.el--no-modified .el-modified { display: none; }
+
+/* A file that is a document of the collection: the chip after its name, the node's arrow in the trailing slot. */
+.el-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75em;
+  line-height: 1.5;
+  color: var(--content-accent);
+  background: var(--content-accent-soft);
+}
+.el-chip svg { display: block; }
+.el-trail { flex: none; width: var(--entry-list-trail); display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem; }
+.el-node,
+.el-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  border-radius: 0.25rem;
+  color: var(--content-accent);
+}
+.el-node svg, .el-download svg, .el-chevron svg { display: block; }
+.el-chevron { display: none; color: var(--content-muted); }
+.el-download { display: none; }
+/* The editor's create action: on the row the pointer is on, or once it has
+   focus — and always for a finger, which has no hover. */
+.el-create { opacity: 0; }
+.el-row:hover .el-create,
+.el-create:focus-within { opacity: 1; }
+@media (pointer: coarse) {
+  .el-create { opacity: 1; }
+  .el-entry { min-height: 2.75rem; }
+  .el-node, .el-download { min-width: 2.75rem; min-height: 2.75rem; }
+}
+
+/* Nothing to list yet: three rows of a skeleton. */
+.el-row--skeleton { padding: 0.8rem 0.75rem; }
+.el-skeleton {
+  display: block;
+  height: 0.85em;
+  width: 60%;
+  border-radius: 0.25rem;
+  background: var(--content-border);
+  animation: el-pulse 1.4s ease-in-out infinite;
+}
+.el-row--skeleton:nth-child(2) .el-skeleton { width: 42%; }
+.el-row--skeleton:nth-child(3) .el-skeleton { width: 70%; }
+@keyframes el-pulse {
+  50% { opacity: 0.45; }
+}
+.el-empty { margin: 0; padding: 1rem 0.75rem; color: var(--content-muted); }
+
+/* The footer: how many of how many, from where, how fresh — and "load more". */
+.el-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.5rem 0.45rem 0.75rem;
+  border-top: 1px solid var(--content-border);
+  font-size: 0.85em;
+  color: var(--content-muted);
+}
+.el-provenance { min-width: 0; overflow-wrap: anywhere; }
+
+/* What a block shows when there is no listing: the reader a neutral line,
+   the editor why, and the way to repair it. */
+.el-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.75rem 1rem;
+  text-align: center;
+  color: var(--content-muted);
+}
+.el-placeholder-icon { display: inline-flex; color: var(--content-muted); }
+.el-placeholder-icon svg { display: block; }
+.el-placeholder-icon--warning { color: var(--content-warning); }
+.el-placeholder-title { margin: 0; font-weight: 600; color: var(--content-fg); }
+.el-placeholder-body { margin: 0; max-width: 36rem; font-size: 0.9em; }
+
+/* A phone's canvas: a row is two lines, at least 48px tall; the columns don't apply. */
+@container canvas (max-width: 640px) {
+  .el { --entry-list-trail: auto; }
+  .el-crumbs, .el-sort-wide, .el-cols, .el-size, .el-modified, .el-kind { display: none; }
+  .el-head-compact { display: flex; }
+  .el-sort-compact { display: inline-flex; }
+  .el-meta { display: block; }
+  .el-entry { min-height: 3rem; }
+  .el-chevron, .el-download { display: inline-flex; }
+  .el-create { opacity: 1; }
+}
+}

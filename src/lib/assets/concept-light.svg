@@ -1,0 +1,73 @@
+<svg viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+  <title id="t">owlgraph concept</title>
+  <desc id="d">People in the browser and AI agents over MCP read and write one graph of typed nodes, under the same permissions.</desc>
+  <rect width="1200" height="460" rx="20" fill="#F5F3EE"/>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#131A2C"/></marker>
+  </defs>
+  <g font-family="Schibsted Grotesk, Inter, -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif" fill="#131A2C">
+    <ellipse cx="600" cy="234" rx="300" ry="176" fill="none" stroke="#131A2C" stroke-width="1.6" stroke-dasharray="7 8" opacity=".5"/>
+    <rect x="556" y="48" width="88" height="20" rx="10" fill="#F5F3EE"/>
+    <text x="600" y="62" text-anchor="middle" font-size="12" fill="#5B6275" letter-spacing=".04em">permissions</text>
+    <g stroke="#131A2C" stroke-width="1.8" fill="none" opacity=".8">
+      <line x1="480" y1="154" x2="600" y2="234"/><line x1="600" y1="234" x2="720" y2="154"/>
+      <line x1="600" y1="234" x2="530" y2="324"/><line x1="600" y1="234" x2="690" y2="324"/>
+      <line x1="480" y1="154" x2="530" y2="324"/><line x1="720" y1="154" x2="790" y2="254"/>
+      <line x1="690" y1="324" x2="790" y2="254"/><line x1="410" y1="244" x2="480" y2="154"/>
+      <line x1="410" y1="244" x2="530" y2="324"/>
+    </g>
+    <g font-size="12" fill="#5B6275">
+      <text x="530" y="184" text-anchor="middle">part of</text>
+      <text x="672" y="184" text-anchor="middle">describes</text>
+      <text x="656" y="292" text-anchor="middle">contains</text>
+      <text x="768" y="194" text-anchor="middle">cites</text>
+    </g>
+    <circle cx="600" cy="234" r="26" fill="#131A2C"/>
+    <text x="600" y="239" text-anchor="middle" font-size="13" fill="#F5F3EE" font-weight="600">Page</text>
+    <text x="600" y="276" text-anchor="middle" font-size="12.5" fill="#5B6275">Project</text>
+    <circle cx="480" cy="154" r="21" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="480" y="159" text-anchor="middle" font-size="12" font-weight="600">Page</text>
+    <text x="480" y="124" text-anchor="middle" font-size="12.5" fill="#5B6275">Topic</text>
+    <circle cx="720" cy="154" r="21" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="720" y="159" text-anchor="middle" font-size="11.5" font-weight="600">Doc</text>
+    <text x="720" y="124" text-anchor="middle" font-size="12.5" fill="#5B6275">Paper</text>
+    <circle cx="530" cy="324" r="21" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="530" y="329" text-anchor="middle" font-size="12" font-weight="600">Page</text>
+    <text x="530" y="360" text-anchor="middle" font-size="12.5" fill="#5B6275">Person</text>
+    <circle cx="690" cy="324" r="21" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="690" y="329" text-anchor="middle" font-size="11" font-weight="600">Coll.</text>
+    <text x="690" y="360" text-anchor="middle" font-size="12.5" fill="#5B6275">Dataset</text>
+    <circle cx="790" cy="254" r="18" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="790" y="258" text-anchor="middle" font-size="11" font-weight="600">Doc</text>
+    <circle cx="410" cy="244" r="18" fill="#F5F3EE" stroke="#131A2C" stroke-width="2.2"/>
+    <text x="410" y="248" text-anchor="middle" font-size="11" font-weight="600">Page</text>
+    <g transform="translate(124,158)">
+      <path d="M8 0 h52 l20 20 v68 a8 8 0 0 1 -8 8 h-64 a8 8 0 0 1 -8 -8 v-80 a8 8 0 0 1 8 -8 z" fill="none" stroke="#131A2C" stroke-width="2.4"/>
+      <path d="M60 0 v20 h20" fill="none" stroke="#131A2C" stroke-width="2.4"/>
+      <rect x="14" y="36" width="38" height="6" rx="2" fill="#131A2C" opacity=".85"/>
+      <rect x="14" y="50" width="46" height="4.5" rx="2" fill="#5B6275" opacity=".6"/>
+      <rect x="14" y="61" width="40" height="4.5" rx="2" fill="#5B6275" opacity=".6"/>
+      <rect x="14" y="72" width="46" height="4.5" rx="2" fill="#5B6275" opacity=".6"/>
+    </g>
+    <text x="160" y="300" text-anchor="middle" font-size="15" font-weight="600">People</text>
+    <text x="160" y="320" text-anchor="middle" font-size="12.5" fill="#5B6275">in the browser</text>
+    <g transform="translate(992,158) scale(1.5)">
+      <g fill="none" stroke="#131A2C" stroke-width="3.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 11 L7.5 30 A24.5 24.5 0 0 0 56.5 30 L53 11 L32 22 Z"/>
+        <line x1="32" y1="23" x2="32" y2="42" stroke-width="3"/>
+      </g>
+      <g fill="#131A2C"><circle cx="11" cy="11" r="4.25"/><circle cx="53" cy="11" r="4.25"/></g>
+      <g fill="#D2AE66"><circle cx="23.5" cy="30" r="4.75"/><circle cx="40.5" cy="30" r="4.75"/></g>
+    </g>
+    <text x="1040" y="300" text-anchor="middle" font-size="15" font-weight="600">AI agents</text>
+    <text x="1040" y="320" text-anchor="middle" font-size="12.5" fill="#5B6275">over MCP, as a person</text>
+    <path d="M388 222 L222 222" fill="none" stroke="#131A2C" stroke-width="2" marker-end="url(#arr)" opacity=".55"/>
+    <path d="M222 246 L388 246" fill="none" stroke="#131A2C" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="305" y="214" text-anchor="middle" font-size="11.5" fill="#5B6275">read</text>
+    <text x="305" y="262" text-anchor="middle" font-size="11.5" fill="#5B6275">write</text>
+    <path d="M812 222 L978 222" fill="none" stroke="#131A2C" stroke-width="2" marker-end="url(#arr)" opacity=".55"/>
+    <path d="M978 246 L812 246" fill="none" stroke="#131A2C" stroke-width="2" marker-end="url(#arr)"/>
+    <text x="895" y="214" text-anchor="middle" font-size="11.5" fill="#5B6275">read</text>
+    <text x="895" y="262" text-anchor="middle" font-size="11.5" fill="#5B6275">write</text>
+  </g>
+</svg>

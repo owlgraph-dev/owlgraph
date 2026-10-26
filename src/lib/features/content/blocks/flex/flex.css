@@ -1,0 +1,63 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* The flex row, the same markup in the editor and on the page. No phone
+   linearization, unlike the grid: the Layout capability's own per-tier
+   vars (.cap-layout, app.css) are the row's whole responsiveness. */
+/* A cell is as large as its content but never wider than its row, so its
+   text wraps instead of the row pushing the page sideways (docs/architecture/responsive.md).
+   The flex cell capability's --flex-item-* vars (Fill, Fixed, alignment) override
+   that; non-inheriting, so they never reach a nested container's cells. */
+@property --flex-item-flex-d { syntax: '*'; inherits: false; }
+@property --flex-item-flex-t { syntax: '*'; inherits: false; }
+@property --flex-item-flex-p { syntax: '*'; inherits: false; }
+@property --flex-item-minw-d { syntax: '*'; inherits: false; }
+@property --flex-item-minw-t { syntax: '*'; inherits: false; }
+@property --flex-item-minw-p { syntax: '*'; inherits: false; }
+@property --flex-item-maxw-d { syntax: '*'; inherits: false; }
+@property --flex-item-maxw-t { syntax: '*'; inherits: false; }
+@property --flex-item-maxw-p { syntax: '*'; inherits: false; }
+@property --flex-item-self-d { syntax: '*'; inherits: false; }
+@property --flex-item-self-t { syntax: '*'; inherits: false; }
+@property --flex-item-self-p { syntax: '*'; inherits: false; }
+@property --flex-item-w-d { syntax: '*'; inherits: false; }
+@property --flex-item-w-t { syntax: '*'; inherits: false; }
+@property --flex-item-w-p { syntax: '*'; inherits: false; }
+.flex-cell {
+  flex: var(--flex-item-flex-d, 0 1 auto);
+  min-width: var(--flex-item-minw-d, auto);
+  max-width: var(--flex-item-maxw-d, 100%);
+  align-self: var(--flex-item-self-d, auto);
+}
+/* A fixed cell's size is also its width where the container runs as a row: a
+   row that sizes to its cells measures them by width, not flex-basis. Each
+   tier's rules come after the tier above's, at equal specificity, so they win. */
+.flex:not([data-column~='d']) > .flex-cell { width: var(--flex-item-w-d, auto); }
+@container canvas (max-width: 900px) {
+  .flex-cell {
+    flex: var(--flex-item-flex-t, var(--flex-item-flex-d, 0 1 auto));
+    min-width: var(--flex-item-minw-t, var(--flex-item-minw-d, auto));
+    max-width: var(--flex-item-maxw-t, var(--flex-item-maxw-d, 100%));
+    align-self: var(--flex-item-self-t, var(--flex-item-self-d, auto));
+  }
+  .flex:not([data-column~='t']) > .flex-cell { width: var(--flex-item-w-t, var(--flex-item-w-d, auto)); }
+  .flex[data-column~='t'] > .flex-cell { width: auto; }
+}
+@container canvas (max-width: 640px) {
+  .flex-cell {
+    flex: var(--flex-item-flex-p, var(--flex-item-flex-t, var(--flex-item-flex-d, 0 1 auto)));
+    min-width: var(--flex-item-minw-p, var(--flex-item-minw-t, var(--flex-item-minw-d, auto)));
+    max-width: var(--flex-item-maxw-p, var(--flex-item-maxw-t, var(--flex-item-maxw-d, 100%)));
+    align-self: var(--flex-item-self-p, var(--flex-item-self-t, var(--flex-item-self-d, auto)));
+  }
+  .flex:not([data-column~='p']) > .flex-cell { width: var(--flex-item-w-p, var(--flex-item-w-t, var(--flex-item-w-d, auto))); }
+  .flex[data-column~='p'] > .flex-cell { width: auto; }
+}
+
+}

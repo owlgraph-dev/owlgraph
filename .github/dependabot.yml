@@ -1,0 +1,28 @@
+# Dependency updates as pull requests, once a week. The titles are
+# Conventional Commits (docs/guides/branches-and-releases.md), so a squash
+# merge keeps them. Security updates are a repository setting, not this file.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # The test runner and the browsers it drives move together.
+      playwright:
+        patterns: ['playwright', 'playwright-core', '@playwright/*']
+      # One pull request for the week's minor and patch updates; a major
+      # update comes on its own.
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

@@ -1,0 +1,16 @@
+name: Feature request
+description: Something owlgraph could do, or do differently.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: Who needs what, and why. What do you do today instead?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: An idea for it
+      description: Optional — how it could work.

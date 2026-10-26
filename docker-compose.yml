@@ -1,0 +1,145 @@
+# Pinned explicitly rather than inherited from the directory name, because the
+# project name prefixes the named volume (`owlgraph_pgdata`) — so leaving it
+# implicit means renaming or cloning the checkout directory silently points the
+# stack at a different, empty volume. Data identity shouldn't depend on what the
+# folder is called.
+name: owlgraph
+
+# Container names are pinned too (`owlgraph-app`, not `owlgraph-app-1`): a
+# reverse proxy on a shared network addresses this container by name, and
+# compose's positional `-1` suffix is an implementation detail to hang that
+# configuration on. CONTAINER_PREFIX only exists so a second, parallel stack
+# (a throwaway verification run under its own project name) can sidestep the
+# host-global uniqueness a fixed container_name otherwise demands.
+
+# Rotate container logs (the json-file driver keeps them unbounded otherwise).
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: '5'
+
+# One image for app, mcp and migrate, built knowing where its source code is
+# offered (AGPL-3.0 §13; docs/guides/deployment.md, "Source code for network users"):
+# SOURCE_URL and SOURCE_REVISION from .env, empty meaning the upstream
+# repository and `dev`.
+x-build: &build
+  context: .
+  args:
+    SOURCE_URL: ${SOURCE_URL:-}
+    SOURCE_REVISION: ${SOURCE_REVISION:-}
+
+services:
+  postgres:
+    container_name: ${CONTAINER_PREFIX:-owlgraph}-postgres
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging: *logging
+    # No `ports:` — Postgres is never published to the host, only reachable
+    # from other services on the compose network.
+
+  migrate:
+    container_name: ${CONTAINER_PREFIX:-owlgraph}-migrate
+    build: *build
+    command: ["npx", "tsx", "--tsconfig", "tsconfig.tsx.json", "scripts/migrate.ts"]
+    environment:
+      # Superuser (POSTGRES_USER) connection — runs schema migrations and
+      # bootstraps/rotates the least-privilege app_user role app/mcp use below.
+      # Built from the POSTGRES_* values rather than .env's DATABASE_URL, which
+      # is the host-side URL for `npm run` scripts (host `localhost`).
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD}
+      # Checked here, with the passwords: a key that is set has to be fit.
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    logging: *logging
+
+  app:
+    container_name: ${CONTAINER_PREFIX:-owlgraph}-app
+    build: *build
+    command: ["node", "build"]
+    environment:
+      # app_user: least-privilege role created by migrations/0001_baseline.sql
+      # (DML only, no CREATEDB/CREATEROLE/SUPERUSER) — not POSTGRES_USER.
+      DATABASE_URL: postgres://app_user:${APP_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PORT: 3000
+      HOST: 0.0.0.0
+      ORIGIN: ${ORIGIN}
+      # adapter-node's default is 512K; uploads go up to 25 MB (documents).
+      BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-26M}
+      # Client address from the reverse proxy's header — set in production
+      # (docker-compose.prod.yml), empty (= socket address) otherwise.
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-}
+      XFF_DEPTH: ${XFF_DEPTH:-1}
+      # Structured log verbosity (docs/architecture/logging.md). Unset = info in this image,
+      # which sets NODE_ENV=production. `debug` is for diagnosing, not running.
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      # The database pool's size (docs/guides/deployment.md); unset, 10.
+      DB_POOL_MAX: ${DB_POOL_MAX:-}
+      # The key an integration's credentials are sealed with at rest
+      # (docs/architecture/authorization.md, "Secrets"); the previous one during a rotation.
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-}
+      APP_SECRET_KEY_PREVIOUS: ${APP_SECRET_KEY_PREVIOUS:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    logging: *logging
+
+  mcp:
+    container_name: ${CONTAINER_PREFIX:-owlgraph}-mcp
+    build: *build
+    # --import: the Svelte loader hook (scripts/lib/svelte-hooks.mjs) — the
+    # page renderer the MCP tools share with the app holds Svelte components.
+    command: ["npx", "tsx", "--tsconfig", "tsconfig.tsx.json", "--import", "./scripts/lib/register-svelte.mjs", "src/mcp/server.ts"]
+    environment:
+      # app_user, same rationale as the app service above.
+      DATABASE_URL: postgres://app_user:${APP_DB_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      # The container always listens on 3030; MCP_PORT only picks the host port.
+      MCP_PORT: 3030
+      ADDRESS_HEADER: ${ADDRESS_HEADER:-}
+      XFF_DEPTH: ${XFF_DEPTH:-1}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      # The database pool's size (docs/guides/deployment.md); unset, 10.
+      DB_POOL_MAX: ${DB_POOL_MAX:-}
+      # The same key as the app's — the MCP tools read what the app sealed.
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-}
+      APP_SECRET_KEY_PREVIOUS: ${APP_SECRET_KEY_PREVIOUS:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${MCP_PORT:-3030}:3030"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3030/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    logging: *logging
+
+volumes:
+  pgdata:

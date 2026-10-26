@@ -1,0 +1,30 @@
+# The build context is an allowlist: what an image is built from, and nothing
+# else, so no local material — a backup, an editor's or an agent's files —
+# ever reaches a build stage's layers.
+*
+!package.json
+!package-lock.json
+!.npmrc
+!svelte.config.js
+!vite.config.ts
+!tsconfig.json
+!tsconfig.tsx.json
+!src
+!static
+!messages
+!project.inlang
+!scripts
+!migrations
+!schema.sql
+!LICENSE
+!PLUGIN-EXCEPTION.md
+!THIRD-PARTY-NOTICES.md
+
+# Within those: what the build generates itself (paraglide's compiled
+# messages, so a local build behaves like a clean clone's), and the tests
+# beside the code (docs/architecture/overview.md), which never belong in an
+# image.
+src/lib/paraglide
+project.inlang/cache
+**/*.test.ts
+**/e2e/

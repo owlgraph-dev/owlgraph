@@ -1,0 +1,66 @@
+/*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Copyright (C) 2026 Alexander Rensch
+ * This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
+ */
+/* Base layer (src/lib/platform/cssLayers.ts): consumes capability variables, sets no default. */
+@layer base, theme, custom;
+@layer base {
+
+/* Page-content rules for the elements the StarterKit and the marks emit, one
+   copy scoped to `.canvas-blocks`, which the public article and the editor
+   root both carry: parity by construction. Content reads the --content-*
+   tokens, never the chrome's --ds-* (docs/architecture/theming.md). */
+
+/* Unitless, so it scales with whatever size a block or mark resolves to. */
+.canvas-blocks { line-height: 1.65; }
+
+/* Text never pushes the page sideways (docs/architecture/responsive.md). `break-word`, not
+   `anywhere`, so a word's width stays its box's minimum and a flex cell
+   shrinks no further than its longest word. Only long words hyphenate. */
+.canvas-blocks {
+  overflow-wrap: break-word;
+  hyphens: auto;
+  hyphenate-limit-chars: 10 4 4;
+}
+.canvas-blocks code,
+.canvas-blocks pre { hyphens: manual; }
+
+.canvas-blocks ul,
+.canvas-blocks ol { padding-left: 1.4rem; }
+.canvas-blocks li > :first-child { margin-top: 0; }
+.canvas-blocks li > :last-child { margin-bottom: 0; }
+.canvas-blocks li + li { margin-top: var(--list-gap, 0.25rem); }
+
+.canvas-blocks blockquote { padding-left: 1rem; border-left: 3px solid var(--content-border); color: var(--content-muted); }
+.canvas-blocks code { background: var(--content-code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+.canvas-blocks pre { background: var(--content-pre-bg); color: var(--content-pre-fg); padding: 0.8rem 1rem; border-radius: 6px; overflow-x: auto; }
+.canvas-blocks pre code { background: none; padding: 0; }
+
+.canvas-blocks .page-link { color: var(--content-link); text-decoration: underline; text-decoration-style: dotted; }
+/* `a…[href]` outranks RenderedContent's scoped `.prose a` without relying on stylesheet order. */
+.canvas-blocks a.doc-link[href] { color: var(--content-doc-link); text-decoration: underline; text-decoration-style: solid; }
+
+/* The drawing's element is no box, so the block's width caps the drawing. */
+.canvas-blocks .mermaid { display: flex; justify-content: center; }
+.canvas-blocks .diagram-drawing { display: contents; }
+.canvas-blocks .mermaid svg { max-width: 100%; height: auto; }
+.canvas-blocks .diagram-waiting { color: var(--content-muted); }
+.canvas-blocks .diagram-error { color: var(--content-warning); background: var(--content-warning-soft); padding: 0.5rem 0.7rem; border-radius: 6px; white-space: pre-wrap; font-size: 0.85rem; }
+
+/* An HTML block that pins a scheme sits on that scheme's ground, so inline
+   colours picked for it read in any page scheme. */
+.canvas-blocks .html-block[data-scheme] { background: var(--content-bg); color: var(--content-fg); padding: 0.75rem 1rem; border-radius: 6px; }
+
+/* Authored markup can be wider than its column. On a tablet or phone canvas
+   the block scrolls rather than push the page; not on desktop, where a scroll
+   box would clip an authored shadow and stop its edge children's margins from
+   collapsing through, which is why the scroll box drops those margins. */
+.canvas-blocks .html-block img { max-width: 100%; height: auto; }
+@container canvas (max-width: 900px) {
+  .canvas-blocks .html-block { max-width: 100%; overflow-x: auto; }
+  .canvas-blocks .html-block > :first-child { margin-top: 0; }
+  .canvas-blocks .html-block > :last-child { margin-bottom: 0; }
+}
+
+}
