@@ -6,6 +6,7 @@
 // The kinds are invented: a plugin merely turned off keeps its kinds known.
 import type { APIRequestContext, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { endOfLine } from '$tests/e2e/editor';
 import { createPage } from '$tests/e2e/api';
 import { authState } from '$tests/e2e/seed-data';
 import { db } from '../../../platform/db.server';
@@ -58,7 +59,7 @@ test.describe('the unknown-block guard', () => {
     const now = await storedDoc(id);
     await db`update pages set doc = ${db.json(JSON.parse(JSON.stringify({ ...now, content: [...now.content, retiredWidget('w-late')] })))} where id = ${id}`;
     await editor.getByText('First paragraph').click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type(' (edited)');
     expect((await clickSave(page, id)).status()).toBe(409);
     await expect(page.locator('.ds-toaster-live[aria-live="assertive"]')).toHaveText(/can’t show/);

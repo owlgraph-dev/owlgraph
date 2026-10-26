@@ -4,6 +4,7 @@
 
 import type { BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { endOfLine } from '$tests/e2e/editor';
 import { authState } from '$tests/e2e/seed-data';
 import { createPage } from '$tests/e2e/api';
 import { doc, para } from '$tests/e2e/doc';
@@ -45,7 +46,7 @@ test.describe('editing a page in two tabs', () => {
     const a = await openEditor(context, slug);
     await editing(a);
     await a.locator('.ProseMirror p').first().click();
-    await a.keyboard.press('End');
+    await endOfLine(a, a.locator('.ProseMirror'));
     await a.keyboard.type(' unsaved');
     await expect(a.locator('.ProseMirror')).toContainText('first unsaved');
 

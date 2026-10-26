@@ -7,7 +7,7 @@ import { authState } from '$tests/e2e/seed-data';
 import { createPage } from '$tests/e2e/api';
 import { doc, para, cell } from '$tests/e2e/doc';
 import { layoutFingerprint } from '$tests/e2e/responsive';
-import { stepUpTo } from '$tests/e2e/editor';
+import { endOfLine, stepUpTo } from '$tests/e2e/editor';
 import type { Page } from '@playwright/test';
 
 // docs/architecture/blocks/layout.md, "Grid columns per tier".
@@ -203,7 +203,7 @@ test.describe('editing a grid', () => {
     expect(s.rowDividers).toHaveLength(0);
     await expect(page.locator('.ProseMirror [data-block-id="s1"] .grid-handle-select-layer')).toHaveCount(0);
     await page.locator('.ProseMirror').getByText('main', { exact: true }).click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type(' text');
     await expect(page.locator('.ProseMirror [data-block-id="main"]')).toHaveText('main text');
 
@@ -214,7 +214,7 @@ test.describe('editing a grid', () => {
     await page.goto(`/${queryPage}/edit`);
     await expect.poll(async () => (await geometry(page, '.ProseMirror', 'tpl-grid')).cells.length).toBe(1);
     await page.locator('.ProseMirror').getByText('tpl', { exact: true }).click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type('X');
     await expect(page.locator('.ProseMirror [data-block-id="tpl"]')).toHaveText('tplX');
   });
@@ -268,7 +268,7 @@ test.describe('a grid in the phone editor', () => {
     await page.goto(`/${slug}/edit`);
     const target = page.locator('.ProseMirror').getByText('right', { exact: true });
     await target.tap();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type('!');
     await expect(page.locator('.ProseMirror [data-block-id="right"]')).toHaveText('right!');
     await expect(page.locator('.ProseMirror [data-block-id="g"] .grid-handle-select-layer.active')).toHaveCount(0);

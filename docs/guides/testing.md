@@ -614,18 +614,25 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
 - **Await a save before leaving the page.** Closing a page or context cancels
   its requests in flight, so a test that asserts on text already on screen
   and then closes the page can abort the very save it checked.
+- **A form action is done once SvelteKit has applied it,** not at its
+  response. An enhanced form then reloads the page's data and moves the focus
+  to the page, so a field typed into meanwhile loses the focus, and what is
+  typed next goes nowhere. `posting()` (`tests/e2e/api.ts`) waits for all of it.
 - **Drive the UI for what the test is about; set up the rest through the
   API** (`tests/e2e/api.ts`). A request costs a fraction of a modal
   round-trip and cannot race the page. Each UI flow stays covered by at least
   one test that drives it.
 - **Select in the editor by the editor's own selection.** The toolbar and
   the block settings panel act on the editor's selection, which follows the browser's a
-  moment later. The editor also settles a click's selection after the mouse
-  events, so a key pressed meanwhile (End, Home, Shift+arrows) can be undone.
-  To make a keyboard selection reliable:
+  moment later. A key pressed just after a click (End, Home, Shift+arrows) can
+  also be undone: when the click focuses the editor, ProseMirror writes its
+  own selection back to the page a moment later. A spec that is not about the
+  keyboard selects with `selectText()` (`tests/e2e/editor.ts`), through the
+  Selection API, which returns once the editor's selection is the text. To
+  make a keyboard selection reliable:
   - retry the click until the editor has focus;
   - press the positioning key until `editorSelection()` (`tests/e2e/editor.ts`)
-    reports the caret where it should be;
+    reports the caret where it should be, as `endOfLine()` does for End;
   - then extend the selection, and wait until `editorSelection()` shows the
     expected text before acting on it.
 - **Expect other fonts than your own.** The browser sets text in the
