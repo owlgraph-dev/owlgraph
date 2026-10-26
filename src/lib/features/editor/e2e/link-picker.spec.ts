@@ -8,6 +8,7 @@ import { authState } from '$tests/e2e/seed-data';
 import { createPage, unique } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { horizontalOverflow } from '$tests/e2e/responsive';
+import { selectText } from '$tests/e2e/editor';
 import { db } from '../../../platform/db.server';
 
 test.describe('the link picker', () => {
@@ -18,9 +19,7 @@ test.describe('the link picker', () => {
     const targetTitle = (await db<{ title: string }[]>`select title from nodes where id = ${target.id}`)[0].title;
     const { slug } = await createPage(page.request, { visibility: null, doc: doc({ type: 'paragraph', content: [txt('Hello world')] }) });
     await page.goto(`/${slug}/edit`);
-    await page.getByText('Hello world').click();
-    await page.keyboard.press('End');
-    await page.keyboard.press('Shift+Home');
+    await selectText(page.locator('.ProseMirror'), 'Hello world');
 
     await page.getByRole('button', { name: 'Link', exact: true }).click();
     const field = page.getByPlaceholder('Search pages & documents…');
@@ -71,9 +70,7 @@ test.describe('the link picker on a phone', () => {
     const targetTitle = (await db<{ title: string }[]>`select title from nodes where id = ${target.id}`)[0].title;
     const { slug } = await createPage(page.request, { visibility: null, doc: doc({ type: 'paragraph', content: [txt('Tap here')] }) });
     await page.goto(`/${slug}/edit`);
-    await page.getByText('Tap here').tap();
-    await page.keyboard.press('End');
-    await page.keyboard.press('Shift+Home');
+    await selectText(page.locator('.ProseMirror'), 'Tap here');
     await page.getByRole('button', { name: 'Link', exact: true }).tap();
     const sheet = page.getByRole('dialog', { name: 'Link to a page or document' });
     await expect(sheet).toBeVisible();

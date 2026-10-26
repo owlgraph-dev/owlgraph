@@ -626,7 +626,9 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
   the block settings panel act on the editor's selection, which follows the browser's a
   moment later. The editor also settles a click's selection after the mouse
   events, so a key pressed meanwhile (End, Home, Shift+arrows) can be undone.
-  To make a keyboard selection reliable:
+  A spec that is not about the keyboard selects with `selectText()`
+  (`tests/e2e/editor.ts`), through the Selection API, which returns once the
+  editor's selection is the text. To make a keyboard selection reliable:
   - retry the click until the editor has focus;
   - press the positioning key until `editorSelection()` (`tests/e2e/editor.ts`)
     reports the caret where it should be;

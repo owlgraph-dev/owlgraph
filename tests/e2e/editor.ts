@@ -38,6 +38,28 @@ export function editorSelection(editor: Locator): Promise<EditorSelection> {
 }
 
 /**
+ * Selects `text`, which lies in one text node of the editor, through the
+ * Selection API, as a drag over it would, and waits until the editor's
+ * selection is it. A click or a tap and keys get there only once the click's
+ * selection has settled, after the pointer events; a spec that isn't about the
+ * keyboard selects this way.
+ */
+export async function selectText(editor: Locator, text: string): Promise<void> {
+  await editor.evaluate((root, text) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const at = node.textContent!.indexOf(text);
+      if (at < 0) continue;
+      (root as HTMLElement).focus();
+      getSelection()!.setBaseAndExtent(node, at, node, at + text.length);
+      return;
+    }
+    throw new Error(`No "${text}" in a text node of the editor`);
+  }, text);
+  await expect.poll(async () => (await editorSelection(editor)).text).toBe(text);
+}
+
+/**
  * Steps the selection up with Escape, by the breadcrumb's names
  * (`['Paragraph', 'Cell', 'Grid']`), from what a click selected to the
  * last. A press before the click's selection settled is repeated, never doubled.
