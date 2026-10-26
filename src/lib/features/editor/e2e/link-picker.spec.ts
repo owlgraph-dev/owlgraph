@@ -8,7 +8,7 @@ import { authState } from '$tests/e2e/seed-data';
 import { createPage, unique } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { horizontalOverflow } from '$tests/e2e/responsive';
-import { selectText } from '$tests/e2e/editor';
+import { endOfLine, selectText } from '$tests/e2e/editor';
 import { db } from '../../../platform/db.server';
 
 test.describe('the link picker', () => {
@@ -46,7 +46,7 @@ test.describe('the link picker', () => {
     const { slug } = await createPage(page.request, { visibility: null, doc: doc({ type: 'paragraph', content: [txt('Before ')] }) });
     await page.goto(`/${slug}/edit`);
     await page.getByText('Before').click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
 
     await page.getByRole('button', { name: 'Link', exact: true }).click();
     await page.getByPlaceholder('Search pages & documents…').fill(title);

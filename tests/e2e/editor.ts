@@ -60,6 +60,19 @@ export async function selectText(editor: Locator, text: string): Promise<void> {
 }
 
 /**
+ * Presses End until the editor's caret is at the end of its line. A key just
+ * after a click can be undone: on the editor's first focus ProseMirror writes
+ * its own selection back to the page a moment later. Once the editor reports
+ * the caret at the end, it has read it, and that write-back changes nothing.
+ */
+export async function endOfLine(page: Page, editor: Locator): Promise<void> {
+  await expect(async () => {
+    await page.keyboard.press('End');
+    expect(await editorSelection(editor)).toMatchObject({ text: '', atLineEnd: true });
+  }).toPass({ timeout: 10_000 });
+}
+
+/**
  * Steps the selection up with Escape, by the breadcrumb's names
  * (`['Paragraph', 'Cell', 'Grid']`), from what a click selected to the
  * last. A press before the click's selection settled is repeated, never doubled.

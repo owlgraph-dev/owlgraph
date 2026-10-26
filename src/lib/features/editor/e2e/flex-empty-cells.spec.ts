@@ -3,6 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { test, expect } from '$tests/e2e/fixtures';
+import { endOfLine } from '$tests/e2e/editor';
 import { authState } from '$tests/e2e/seed-data';
 import { createPage } from '$tests/e2e/api';
 import { doc, para } from '$tests/e2e/doc';
@@ -63,7 +64,7 @@ test.describe('empty flex cells and short blocks in the editor', () => {
 
     await page.mouse.click(w.left + w.width / 2, (w.top + w.bottom) / 2);
     await expect.poll(() => page.evaluate(() => getSelection()?.anchorNode?.textContent)).toBe('Go');
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type('!');
     await expect(page.locator(word)).toHaveText('Go!');
     await expect(page.locator('.ProseMirror [data-block-id="mixed"] .flex-cell').first().locator('[data-block-id="Go"]')).toHaveCount(1);

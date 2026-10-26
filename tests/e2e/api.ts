@@ -194,12 +194,14 @@ const frames = (page: Page) => page.evaluate(() => new Promise<void>((r) => requ
  * Waits for the form action a click posts, and for SvelteKit to have applied
  * its result. An enhanced form reloads the page's data after the response, and
  * then moves the focus to the page as a navigation does: a field typed into
- * meanwhile loses the focus, and what is typed next goes nowhere.
+ * meanwhile loses the focus, and what is typed next goes nowhere. A reload is
+ * waited for to its answer, not its end: the data streams, and the end of a
+ * stream is not always reported.
  */
 export async function posting(page: Page, action: string, click: () => Promise<void>): Promise<void> {
   const reloads: Promise<unknown>[] = [];
   const onRequest = (r: Request) => {
-    if (r.method() === 'GET' && new URL(r.url()).pathname.endsWith('/__data.json')) reloads.push(r.response().then((res) => res?.finished()));
+    if (r.method() === 'GET' && new URL(r.url()).pathname.endsWith('/__data.json')) reloads.push(r.response());
   };
   const done = page.waitForResponse((r) => r.request().method() === 'POST' && r.url().includes(`?/${action}`));
   page.on('request', onRequest);

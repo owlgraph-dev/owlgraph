@@ -624,14 +624,15 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
   one test that drives it.
 - **Select in the editor by the editor's own selection.** The toolbar and
   the block settings panel act on the editor's selection, which follows the browser's a
-  moment later. The editor also settles a click's selection after the mouse
-  events, so a key pressed meanwhile (End, Home, Shift+arrows) can be undone.
-  A spec that is not about the keyboard selects with `selectText()`
-  (`tests/e2e/editor.ts`), through the Selection API, which returns once the
-  editor's selection is the text. To make a keyboard selection reliable:
+  moment later. A key pressed just after a click (End, Home, Shift+arrows) can
+  also be undone: when the click focuses the editor, ProseMirror writes its
+  own selection back to the page a moment later. A spec that is not about the
+  keyboard selects with `selectText()` (`tests/e2e/editor.ts`), through the
+  Selection API, which returns once the editor's selection is the text. To
+  make a keyboard selection reliable:
   - retry the click until the editor has focus;
   - press the positioning key until `editorSelection()` (`tests/e2e/editor.ts`)
-    reports the caret where it should be;
+    reports the caret where it should be, as `endOfLine()` does for End;
   - then extend the selection, and wait until `editorSelection()` shows the
     expected text before acting on it.
 - **Expect other fonts than your own.** The browser sets text in the

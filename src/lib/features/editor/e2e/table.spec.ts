@@ -3,6 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { test, expect } from '$tests/e2e/fixtures';
+import { endOfLine } from '$tests/e2e/editor';
 import { authState, seed } from '$tests/e2e/seed-data';
 import { createPage } from '$tests/e2e/api';
 import { doc, para, txt } from '$tests/e2e/doc';
@@ -78,7 +79,7 @@ test.describe('a table in the editor', () => {
     // The table's keymap reads the editor's selection, which follows a click
     // only once the browser reports it: each such key comes after typing.
     await cellAt(t, 1, 0).click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type('x');
     await expect(cellAt(t, 1, 0)).toHaveText('a1x');
     await page.keyboard.press('Tab');
@@ -94,7 +95,7 @@ test.describe('a table in the editor', () => {
     await expect(linkCell.locator(`a[data-page-id="${seed.publicId}"]`)).toHaveText('Public');
     await expect(cellAt(t, 2, 2).locator('span[data-prop="core:status"]')).toHaveText('active');
     await cellAt(t, 2, 0).click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type(' and more');
     await expect(cellAt(t, 2, 0)).toHaveText('a2 and more');
     await expect(linkCell.locator('a[data-page-id]')).toHaveCount(1);

@@ -11,7 +11,7 @@ import { authState } from '$tests/e2e/seed-data';
 import { db } from '../../../platform/db.server';
 import { textPara } from '$tests/e2e/doc';
 import { storedDoc } from '$tests/support/storedDoc';
-import { savePage } from '$tests/e2e/editor';
+import { endOfLine, savePage } from '$tests/e2e/editor';
 
 test.use({ storageState: authState('admin') });
 
@@ -72,7 +72,7 @@ test.describe('unknown blocks', () => {
     await expect(editor).not.toContainText('Text inside the tabs');
 
     await editor.getByText('A web link').click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     await page.keyboard.type(' (edited)');
     await savePage(page, id);
     const first = await storedDoc(id);
@@ -119,7 +119,7 @@ test.describe('unknown blocks', () => {
     const editor = page.locator('.ProseMirror');
     await expect(editor.locator('.unknown-block')).toHaveCount(5);
     await editor.getByText('First paragraph').click();
-    await page.keyboard.press('End');
+    await endOfLine(page, page.locator('.ProseMirror'));
     const smuggled = JSON.stringify({ type: 'paragraph', content: [{ type: 'text', text: 'Smuggled', marks: [{ type: 'link', attrs: { href: 'https://evil.example/' } }] }] });
     await page.evaluate((original) => {
       const data = new DataTransfer();
