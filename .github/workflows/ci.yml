@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -69,7 +69,7 @@ jobs:
       # connects), and the integration tests derive their databases from it.
       DATABASE_URL: postgres://user:password@localhost:5432/owlgraph_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -116,7 +116,7 @@ jobs:
       CI: 'true'
       DATABASE_URL: postgres://user:password@localhost:5432/owlgraph_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
