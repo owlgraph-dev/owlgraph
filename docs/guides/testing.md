@@ -614,6 +614,10 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
 - **Await a save before leaving the page.** Closing a page or context cancels
   its requests in flight, so a test that asserts on text already on screen
   and then closes the page can abort the very save it checked.
+- **A form action is done once SvelteKit has applied it,** not at its
+  response. An enhanced form then reloads the page's data and moves the focus
+  to the page, so a field typed into meanwhile loses the focus, and what is
+  typed next goes nowhere. `posting()` (`tests/e2e/api.ts`) waits for all of it.
 - **Drive the UI for what the test is about; set up the rest through the
   API** (`tests/e2e/api.ts`). A request costs a fraction of a modal
   round-trip and cannot race the page. Each UI flow stays covered by at least

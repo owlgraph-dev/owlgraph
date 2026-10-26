@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { expect, type APIRequestContext, type Page } from '@playwright/test';
+import { expect, type APIRequestContext, type Page, type Request } from '@playwright/test';
 import sharp from 'sharp';
 import { db } from '../../src/lib/platform/db.server';
 import { sameOrigin } from './fixtures';
@@ -187,9 +187,31 @@ export async function formAction(request: APIRequestContext, path: string, form:
   return (await res.json()) as ActionResult;
 }
 
-/** Waits for the form action a click posts. */
+// Two frames: the page has done what it does with a response it has read.
+const frames = (page: Page) => page.evaluate(() => new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r()))));
+
+/**
+ * Waits for the form action a click posts, and for SvelteKit to have applied
+ * its result. An enhanced form reloads the page's data after the response, and
+ * then moves the focus to the page as a navigation does: a field typed into
+ * meanwhile loses the focus, and what is typed next goes nowhere.
+ */
 export async function posting(page: Page, action: string, click: () => Promise<void>): Promise<void> {
+  const reloads: Promise<unknown>[] = [];
+  const onRequest = (r: Request) => {
+    if (r.method() === 'GET' && new URL(r.url()).pathname.endsWith('/__data.json')) reloads.push(r.response().then((res) => res?.finished()));
+  };
   const done = page.waitForResponse((r) => r.request().method() === 'POST' && r.url().includes(`?/${action}`));
-  await click();
-  expect((await done).ok(), action).toBe(true);
+  page.on('request', onRequest);
+  try {
+    await click();
+    const response = await done;
+    expect(response.ok(), action).toBe(true);
+    await response.finished();
+    await frames(page);
+    await Promise.all(reloads);
+    await frames(page);
+  } finally {
+    page.off('request', onRequest);
+  }
 }
