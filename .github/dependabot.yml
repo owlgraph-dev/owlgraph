@@ -26,3 +26,13 @@ updates:
       interval: weekly
     commit-message:
       prefix: ci
+
+  # The Dockerfile's base image. Its tag names a Node major version, so an
+  # update proposes a newer major, odd ones included: take an LTS (even) one,
+  # together with .nvmrc and package.json's `engines`.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
