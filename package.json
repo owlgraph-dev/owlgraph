@@ -1,6 +1,6 @@
 {
   "name": "owlgraph",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A semantic knowledge graph to foster collaboration — for people and AI alike.",
   "license": "AGPL-3.0-only",
   "author": "Alexander Rensch <rensch.alexander@gmail.com>",
