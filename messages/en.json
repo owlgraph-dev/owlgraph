@@ -1720,6 +1720,7 @@
 	"capability_spacing_side_bottom": "Bottom",
 	"capability_spacing_side_left": "Left",
 	"capability_spacing_customize_sides": "Customize sides",
+	"capability_spacing_customize_sides_count": "Customize sides · {count}",
 	"capability_spacing_block_space_label": "Block spacing",
 	"capability_spacing_block_space_hint": "Default space above every block in this area.",
 	"capability_spacing_gutter_label": "Page margin",

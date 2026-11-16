@@ -1720,6 +1720,7 @@
 	"capability_spacing_side_bottom": "Unten",
 	"capability_spacing_side_left": "Links",
 	"capability_spacing_customize_sides": "Seiten einzeln anpassen",
+	"capability_spacing_customize_sides_count": "Seiten einzeln anpassen · {count}",
 	"capability_spacing_block_space_label": "Blockabstand",
 	"capability_spacing_block_space_hint": "Standardabstand über jedem Block in diesem Bereich.",
 	"capability_spacing_gutter_label": "Seitenrand",

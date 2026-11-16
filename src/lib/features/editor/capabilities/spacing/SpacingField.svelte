@@ -50,6 +50,11 @@
   const resolved = $derived(resolvedPad(value, bp, padFallback));
   const autoLabel = $derived(bp === 'desktop' ? m.capability_common_auto() : m.capability_common_inherit());
   const sideOverrideCount = $derived(sides.filter((s) => value?.[bp]?.[s] != null).length);
+  // The count on the trigger's face is part of its name (docs/architecture/design-system/patterns.md,
+  // "A trigger that shows a value").
+  const sidesName = $derived(
+    sideOverrideCount > 0 ? m.capability_spacing_customize_sides_count({ count: sideOverrideCount }) : m.capability_spacing_customize_sides()
+  );
   const hint = $derived(
     ownPad == null
       ? bp === 'desktop'
@@ -72,7 +77,7 @@
       onOpenChange={(o) => onOverlayOpenChange?.(o)}
       side="bottom"
       align="end"
-      triggerProps={{ 'aria-label': m.capability_spacing_customize_sides(), title: m.capability_spacing_customize_sides() }}
+      triggerProps={{ 'aria-label': sidesName, title: sidesName }}
     >
       {#snippet trigger()}
         <!-- Tinted while any side is overridden. -->

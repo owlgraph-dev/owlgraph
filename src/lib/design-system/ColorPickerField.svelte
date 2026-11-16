@@ -51,10 +51,13 @@
   const themeOf = (v: string | null) => (v ? themeColors?.find((t) => t.value === v) : undefined);
   const shownPaint = $derived(themeOf(shown)?.css ?? shown);
   const valueText = $derived(value ? (themeOf(value)?.label ?? value) : noneLabel);
+  // The trigger shows the value, so its name holds it too (WCAG 2.5.3):
+  // docs/architecture/design-system/patterns.md, "A trigger that shows a value".
+  const triggerName = $derived(`${ariaLabel}: ${valueText}`);
 </script>
 
 <span class="ds-colorpick {className}">
-  <Popover bind:open {onOpenChange} side="bottom" align="end" triggerProps={{ 'aria-label': ariaLabel, title: ariaLabel }}>
+  <Popover bind:open {onOpenChange} side="bottom" align="end" triggerProps={{ 'aria-label': triggerName, title: triggerName }}>
     {#snippet trigger()}
       <span class="ds-colorpick-trigger" class:ds-colorpick-trigger-open={open}>
         <span
