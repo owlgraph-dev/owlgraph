@@ -30,9 +30,9 @@ function at(pathname: string) {
   page.url = new URL(pathname, 'http://localhost') as typeof page.url;
 }
 
-function settings(pathname: string) {
+async function settings(pathname: string) {
   at(pathname);
-  render(Layout, { data: { permissions: requiredActions(SETTINGS_TREE) } as unknown as LayoutData, children: section });
+  await render(Layout, { data: { permissions: requiredActions(SETTINGS_TREE) } as unknown as LayoutData, children: section });
   return screen.getByRole('navigation', { name: 'Settings sections' });
 }
 
@@ -47,7 +47,7 @@ afterEach(() => {
 
 describe('the settings sidebar', () => {
   it('lists the four schema areas as one Semantic schema group, the current one marked as the current page', async () => {
-    const nav = settings('/settings/schema/properties');
+    const nav = await settings('/settings/schema/properties');
     const schema = nav.getByRole('list', { name: 'Semantic schema' });
     await expect.element(schema).toBeVisible();
     expect(schema.getByRole('link').elements().map((a) => a.textContent?.trim())).toEqual(['Properties', 'Property groups', 'Relationship types', 'Classes']);
@@ -62,7 +62,7 @@ describe('the settings sidebar', () => {
   });
 
   it('finds a schema area by a word of its name, and Enter opens it', async () => {
-    const nav = settings('/settings/schema/properties');
+    const nav = await settings('/settings/schema/properties');
     const search = nav.getByRole('searchbox', { name: 'Search settings …' });
     await search.fill('groups');
     // A hit is named "<group> <section>", unlike the sidebar's own link.

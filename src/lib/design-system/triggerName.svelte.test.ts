@@ -28,29 +28,29 @@ const ICON = { noneLabel: 'None', noneTitle: 'No icon', ariaLabel: 'Icon' };
 
 describe('a colour picker’s trigger', () => {
   it('is named by its field and a theme colour’s name', async () => {
-    render(ColorPickerField, { ...COLOR, themeColors: ACCENT, value: 'accent' });
+    await render(ColorPickerField, { ...COLOR, themeColors: ACCENT, value: 'accent' });
     await trigger('Background: Accent');
   });
 
   it('is named by its field and a custom colour’s value', async () => {
-    render(ColorPickerField, { ...COLOR, value: '#123456' });
+    await render(ColorPickerField, { ...COLOR, value: '#123456' });
     await trigger('Background: #123456');
   });
 
   it('is named by its field and the none label when unset', async () => {
-    render(ColorPickerField, { ...COLOR, value: null });
+    await render(ColorPickerField, { ...COLOR, value: null });
     await trigger('Background: Default');
   });
 });
 
 describe('an icon picker’s trigger', () => {
   it('is named by its field and the none label when unset', async () => {
-    render(IconPickerField, { ...ICON, value: null });
+    await render(IconPickerField, { ...ICON, value: null });
     await trigger('Icon: None');
   });
 
   it('is named by its field and the icon it shows', async () => {
-    render(IconPickerField, { ...ICON, value: 'link' });
+    await render(IconPickerField, { ...ICON, value: 'link' });
     await trigger('Icon: link');
   });
 });

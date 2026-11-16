@@ -83,7 +83,7 @@ describe('the class catalog', () => {
   const data = (classes: Row[]) => ({ classes, groups: [CORE, DOCUMENTS] }) as unknown as ClassesData;
 
   it('posts a new class’s key, English label, parent and property group to the save action, and its row’s Delete posts its id', async () => {
-    const view = render(ClassesPage, { data: data([ROOT, PAGE, DOCUMENT]), form: null });
+    const view = await render(ClassesPage, { data: data([ROOT, PAGE, DOCUMENT]), form: null });
     // The save reloads the catalogue: the class is listed under its parent.
     forms.applied = (result) => view.rerender({ data: data([ROOT, PAGE, WORK_PACKAGE, DOCUMENT]), form: result.type === 'success' ? { saved: true } : null });
 
@@ -122,7 +122,7 @@ describe('the properties catalog', () => {
   const STATUS: Row = { name: 'core:status', group_slug: 'core', label: { en: 'Status', de: 'Status' }, datatype: 'text', description: {} };
 
   it('keeps the modal open on a rejected save and shows the server’s error inside it', async () => {
-    const view = render(PropertiesPage, { data: { definitions: [STATUS], groups: [CORE, DOCUMENTS] } as unknown as PropertiesData, form: null });
+    const view = await render(PropertiesPage, { data: { definitions: [STATUS], groups: [CORE, DOCUMENTS] } as unknown as PropertiesData, form: null });
     const refusal = 'Invalid property name: not a valid name';
     forms.answer = () => ({ type: 'failure', status: 400, data: { error: { code: 'invalid_key', message: refusal } } });
     forms.applied = (result) => view.rerender({ form: result.type === 'failure' ? (result.data as { error: { code: string; message: string } }) : null });
@@ -151,7 +151,7 @@ describe('the property groups catalog', () => {
 
   it('opens the modal empty to add and loaded to edit, the label in place before it is typed over, and posts the key and the label', async () => {
     let groups: Row[] = [CORE, DOCUMENTS];
-    const view = render(GroupsPage, { data: data(groups), form: null });
+    const view = await render(GroupsPage, { data: data(groups), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();
@@ -200,7 +200,7 @@ describe('the property groups catalog', () => {
 
   it('marks the row missing a translation, narrows to such rows, matches a label in any language, and drops the mark once translated', async () => {
     let groups: Row[] = [DOCUMENTS, mine({ en: 'Labels English' })];
-    const view = render(GroupsPage, { data: data(groups), form: null });
+    const view = await render(GroupsPage, { data: data(groups), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();
@@ -272,7 +272,7 @@ describe('the relationship types catalog', () => {
   it('posts slug and label, locks the slug when editing, and its properties dialog commits a searched definition as a chip on Enter and posts it', async () => {
     let types: Row[] = [];
     let properties: Properties = {};
-    const view = render(RelationshipsPage, { data: data(types), form: null });
+    const view = await render(RelationshipsPage, { data: data(types), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();

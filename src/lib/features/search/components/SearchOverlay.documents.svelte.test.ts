@@ -35,7 +35,7 @@ afterEach(() => {
 describe('the search overlay', () => {
   it('lists a link document found by its metadata as a document, as it does an upload', async () => {
     const asked = api();
-    render(SearchOverlay);
+    await render(SearchOverlay);
     searchOverlayOpen.set(true);
     const dialog = screen.getByRole('dialog', { name: 'Search' });
     await expect.element(dialog).toBeVisible();
@@ -52,7 +52,7 @@ describe('the search overlay', () => {
       [upload, 'survey, page one'],
       [link, 'Society annual census'],
     ] as const) {
-      await expect.element(row).toHaveTextContent(/^\s*document/);
+      await expect.element(row).toMatchTextContent(/^\s*document/);
       await expect.element(row).toHaveTextContent(rest);
       expect(row.element().querySelector('mark')?.textContent?.toLowerCase()).toBe('heron');
     }

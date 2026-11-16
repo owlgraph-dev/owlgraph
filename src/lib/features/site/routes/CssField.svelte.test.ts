@@ -13,7 +13,7 @@ import { contentTokens } from '../customStyles/contentTokens';
 
 describe('the CSS field’s token picker', () => {
   it('finds a token by its family and inserts it at the caret', async () => {
-    render(CssField, { tokens: contentTokens(), id: 'free-css', name: 'css', ariaLabel: 'Free CSS' });
+    await render(CssField, { tokens: contentTokens(), id: 'free-css', name: 'css', ariaLabel: 'Free CSS' });
     const css = screen.getByRole('textbox', { name: 'Free CSS' });
 
     await userEvent.fill(css, '.lead { color:  }');

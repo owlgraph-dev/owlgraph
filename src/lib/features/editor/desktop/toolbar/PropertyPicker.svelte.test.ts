@@ -24,13 +24,13 @@ afterEach(() => {
   core = null;
 });
 
-function picker(...content: JSONContent[]) {
+async function picker(...content: JSONContent[]) {
   core = createEditorCore();
   const host = document.createElement('div');
   document.body.append(host);
   core.mount(host, { doc: { type: 'doc', content } });
   const c = core;
-  render(PropertyPicker, { core: c, overlays: new EditorOverlays(() => false), propertyGroups: GROUPS, toolbarProps: {} });
+  await render(PropertyPicker, { core: c, overlays: new EditorOverlays(() => false), propertyGroups: GROUPS, toolbarProps: {} });
   /** The text in the block with this id, selected whole. */
   const select = (blockId: string) => {
     c.editor!.state.doc.descendants((node, pos) => {
@@ -54,7 +54,7 @@ const para = (blockId: string, text: string): JSONContent => ({ type: 'paragraph
 
 describe("the toolbar's property picker", () => {
   it('marks the selected text as the named property, in the group picked, which it keeps for the next', async () => {
-    const { core, select, marks } = picker(para('p-1', 'Friday'), para('p-2', 'Ada'));
+    const { core, select, marks } = await picker(para('p-1', 'Friday'), para('p-2', 'Ada'));
     select('p-1');
     await screen.getByRole('button', { name: 'Add semantic property' }).click();
     await userEvent.fill(screen.getByPlaceholder('property name (e.g. deadline)'), 'deadline');
@@ -79,7 +79,7 @@ describe("the toolbar's property picker", () => {
   });
 
   it("refuses a query template's parameter name with a space, says why, and marks nothing", async () => {
-    const { select, marks } = picker({
+    const { select, marks } = await picker({
       type: 'queryBlock',
       attrs: { blockId: 'q-1', format: 'template' },
       content: [{ type: 'grid', attrs: { blockId: 'g-1', columnWidths: [1] }, content: [{ type: 'gridCell', content: [para('p-1', 'Name')] }] }],

@@ -29,7 +29,7 @@ afterEach(() => {
 
 describe('the app bar’s Create button', () => {
   it('is not drawn without a signed-in user, and is for an editor', async () => {
-    const { rerender } = render(AppBar, { user: null });
+    const { rerender } = await render(AppBar, { user: null });
     await expect.element(appbar()).toBeVisible();
     await expect.element(appbar().getByRole('button', { name: 'Create' })).not.toBeInTheDocument();
 
@@ -38,7 +38,7 @@ describe('the app bar’s Create button', () => {
   });
 
   it('is not drawn for a viewer', async () => {
-    render(AppBar, { user: user('viewer') });
+    await render(AppBar, { user: user('viewer') });
     await expect.element(appbar()).toBeVisible();
     await expect.element(appbar().getByRole('button', { name: 'Account' })).toBeVisible();
     await expect.element(appbar().getByRole('button', { name: 'Create' })).not.toBeInTheDocument();

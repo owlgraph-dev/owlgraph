@@ -19,7 +19,7 @@ const posted = (formId: string) => new FormData(document.getElementById(formId) 
 
 describe('a paragraph style’s name', () => {
   it('is edited in every language and posted per language, and Save waits for English', async () => {
-    render(ParagraphStyleModal, { open: true, onOpenChange: vi.fn(), mode: 'edit', style: SUBTITLE, tokens: [], error: null, onSaved: vi.fn() });
+    await render(ParagraphStyleModal, { open: true, onOpenChange: vi.fn(), mode: 'edit', style: SUBTITLE, tokens: [], error: null, onSaved: vi.fn() });
     const dialog = screen.getByRole('dialog');
     await expect.element(dialog.getByRole('textbox', { name: 'Name English', exact: true })).toHaveValue('Subtitle');
     expect(posted('paragraph-style-form').get('label.en')).toBe('Subtitle');
@@ -35,7 +35,7 @@ describe('a paragraph style’s name', () => {
 describe('a page layout’s name and description', () => {
   it('are edited in every language and posted per language', async () => {
     const standard = SEED_PAGE_LAYOUT_PRESETS.find((p) => p.id === 'standard')!;
-    render(PageLayoutPresetModal, { open: true, onOpenChange: vi.fn(), mode: 'edit', preset: standard, error: null, onSaved: vi.fn() });
+    await render(PageLayoutPresetModal, { open: true, onOpenChange: vi.fn(), mode: 'edit', preset: standard, error: null, onSaved: vi.fn() });
     const dialog = screen.getByRole('dialog');
     await expect.element(dialog.getByRole('textbox', { name: 'Description English', exact: true })).toHaveValue('Blocks one after another in the reading column.');
     const form = posted('page-layout-form');

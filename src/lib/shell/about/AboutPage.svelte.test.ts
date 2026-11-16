@@ -23,8 +23,8 @@ const INSTALLATION: InstallationInfo = {
   secretKey: 'set',
 };
 
-function renderSchema(schema: InstallationInfo['schema']) {
-  render(AboutPage, {
+async function renderSchema(schema: InstallationInfo['schema']) {
+  await render(AboutPage, {
     data: { version: '0.1.0', revision: null, sourceHref: '/-/source', installation: { ...INSTALLATION, schema }, footer: { branding: null } },
   });
   return screen.getByRole('group', { name: 'Database schema' });
@@ -32,7 +32,7 @@ function renderSchema(schema: InstallationInfo['schema']) {
 
 describe('the About page’s database schema', () => {
   it('says what the next migrate adopts in place of the migrations a baseline replaces', async () => {
-    const row = renderSchema({
+    const row = await renderSchema({
       applied: 59,
       latest: '0059_node_versions_node.sql',
       pending: ['0001_baseline.sql'],
@@ -46,7 +46,7 @@ describe('the About page’s database schema', () => {
   });
 
   it('says that migrate refuses a database from before the baseline, and through which release it upgrades', async () => {
-    const row = renderSchema({
+    const row = await renderSchema({
       applied: 41,
       latest: '0041_localized_schema_labels.sql',
       pending: [],
@@ -61,13 +61,13 @@ describe('the About page’s database schema', () => {
   });
 
   it('says that migrate refuses one whose records are not what the baseline replaces', async () => {
-    const row = renderSchema({ applied: 3, latest: '0003_c.sql', pending: [], adopts: null, refused: { cause: 'mismatch', baseline: '0001_baseline.sql', tag: 'pre-baseline' } });
+    const row = await renderSchema({ applied: 3, latest: '0003_c.sql', pending: [], adopts: null, refused: { cause: 'mismatch', baseline: '0001_baseline.sql', tag: 'pre-baseline' } });
     await expect.element(row).toHaveTextContent('Cannot be migrated');
     await expect.element(row).toHaveTextContent('what it records is not the migrations 0001_baseline.sql replaces');
   });
 
   it('says nothing waits on a database that is current', async () => {
-    const row = renderSchema(INSTALLATION.schema);
+    const row = await renderSchema(INSTALLATION.schema);
     await expect.element(row).toHaveTextContent('Migrations applied: 1, the latest 0001_baseline.sql');
     await expect.element(row).toHaveTextContent('Nothing waiting to be applied');
     await expect.element(row).not.toHaveTextContent('Behind this version');

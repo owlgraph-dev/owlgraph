@@ -14,7 +14,7 @@ import type { SurfaceData } from '$lib/features/content';
 describe('the surface field’s background', () => {
   it('offers the theme’s colours before the custom ones and stores the one picked as a reference, shown by name', async () => {
     const onChange = vi.fn();
-    const view = render(SurfaceField, {
+    const view = await render(SurfaceField, {
       value: undefined,
       onChange: (field: 'bg' | 'border' | 'radius' | 'shadow', value: string | number | null) => {
         onChange(field, value);

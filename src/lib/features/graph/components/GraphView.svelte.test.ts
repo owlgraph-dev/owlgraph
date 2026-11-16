@@ -37,8 +37,8 @@ const node = (title: string) => screen.getByRole('img', { name: 'Page network' }
 const drawnOnce = (title: string) => expect.poll(() => node(title).elements().length).toBe(1);
 const svg = () => document.querySelector('svg.graph')!;
 
-function graph() {
-  render(GraphView, { nodes: NODES, edges: EDGES, storageKey: STORAGE_KEY });
+async function graph() {
+  await render(GraphView, { nodes: NODES, edges: EDGES, storageKey: STORAGE_KEY });
 }
 
 beforeEach(async () => {
@@ -58,7 +58,7 @@ describe('the graph view', () => {
   it('draws a typed edge once as typed, its tooltip giving the relationship’s label and the edge’s property values, while the untyped edges stay plain and each node is drawn once', async () => {
     // Settle the layout first, so the edge stays where the pointer finds it.
     vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
-    graph();
+    await graph();
     vi.advanceTimersByTime(20_000);
     vi.useRealTimers();
 
@@ -83,7 +83,7 @@ describe('the graph view', () => {
   });
 
   it('hides every page and keeps the documents with the Document type filter, marks the stats filtered, and Reset filters brings the pages back', async () => {
-    graph();
+    await graph();
     await drawnOnce('Graph Test Page');
     await screen.getByRole('button', { name: 'Display options', exact: true }).click();
     const panel = screen.getByRole('group', { name: 'Display options' });
@@ -104,7 +104,7 @@ describe('the graph view', () => {
   });
 
   it('keeps each node drawn exactly once switching between Standard and Cluster and back', async () => {
-    graph();
+    await graph();
     await drawnOnce('Graph Test Page');
     await screen.getByRole('button', { name: 'Display options', exact: true }).click();
     const modes = screen.getByRole('group', { name: 'Layout mode' });

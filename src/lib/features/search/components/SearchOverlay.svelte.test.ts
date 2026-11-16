@@ -45,7 +45,7 @@ afterEach(() => {
 describe('the search overlay’s results', () => {
   it('closes the overlay and goes to a result’s address when it is clicked', async () => {
     const asked = api();
-    render(SearchOverlay);
+    await render(SearchOverlay);
     searchOverlayOpen.set(true);
     const dialog = screen.getByRole('dialog', { name: 'Search' });
     await expect.element(dialog).toBeVisible();

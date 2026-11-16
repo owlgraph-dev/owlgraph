@@ -55,7 +55,7 @@ describe('the Nextcloud integration', () => {
       return password === 'neu-e2e' ? Response.json({ ok: true }) : Response.json({ error: { code: 'refused', message: t('connect_unauthorized') } }, { status: 400 });
     });
     const onSourceConnected = vi.fn(() => void view.rerender({ source: source(null) }));
-    const view = render(CollectionEditor, {
+    const view = await render(CollectionEditor, {
       collectionId: COLLECTION_ID,
       title: 'Intern',
       slug: 'intern',

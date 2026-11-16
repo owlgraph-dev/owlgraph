@@ -9,14 +9,14 @@ import PropertyGroupModal from './PropertyGroupModal.svelte';
 
 // The site default language is English here.
 
-function modal() {
-  render(PropertyGroupModal, { open: true, onOpenChange: vi.fn(), mode: 'create', row: null, error: null, onSaved: vi.fn() });
+async function modal() {
+  await render(PropertyGroupModal, { open: true, onOpenChange: vi.fn(), mode: 'create', row: null, error: null, onSaved: vi.fn() });
   return screen.getByRole('dialog');
 }
 
 describe('the property group dialog’s label', () => {
   it('keeps Save disabled while only a language other than English is filled, and marks English required in its language picker', async () => {
-    const dialog = modal();
+    const dialog = await modal();
     const save = dialog.getByRole('button', { name: 'Save' });
     await dialog.getByLabelText('Key', { exact: true }).fill('e2egrp');
     await expect.element(save).toBeDisabled();

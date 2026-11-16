@@ -54,7 +54,7 @@ const WITH_FINDINGS: Readiness = { inheriting: 2, pinned: 0, pages: [FIELD_NOTES
 const data = (schemeDefault: 'light' | 'dark' | 'adaptive', readiness: Readiness) =>
   ({ schemeDefault, readiness, themeColorShortfalls: [] }) as unknown as PageData;
 
-const colorScheme = (start: PageData) => render(ColorSchemePage, { data: start });
+const colorScheme = async (start: PageData) => await render(ColorSchemePage, { data: start });
 
 const lastPost = () => forms.posts[forms.posts.length - 1];
 
@@ -66,7 +66,7 @@ afterEach(() => {
 
 describe('the default colour scheme', () => {
   it('lets pages adapt only through the checklist, whose confirm waits for every box, then posts adaptive', async () => {
-    const view = colorScheme(data('light', WITH_FINDINGS));
+    const view = await colorScheme(data('light', WITH_FINDINGS));
     forms.applied = (result) => view.rerender({ data: data(result.type === 'success' ? 'adaptive' : 'light', WITH_FINDINGS) });
 
     const adapts = screen.getByRole('radio', { name: "Adapts to the reader's scheme" });
@@ -98,7 +98,7 @@ describe('the default colour scheme', () => {
 
   it.each([['Dark', 'dark'], ['Light', 'light']] as const)('applies %s at once, with no checklist', async (name, scheme) => {
     const other = scheme === 'dark' ? 'light' : 'dark';
-    const view = colorScheme(data(other, WITH_FINDINGS));
+    const view = await colorScheme(data(other, WITH_FINDINGS));
     forms.applied = (result) => view.rerender({ data: data(result.type === 'success' ? scheme : other, WITH_FINDINGS) });
 
     const radio = screen.getByRole('radio', { name, exact: true });
@@ -114,7 +114,7 @@ describe('the default colour scheme', () => {
 
 describe('the readiness table', () => {
   it('lists a page that may not read with what it picks, and Keep these pages light pins it and its row leaves', async () => {
-    const view = colorScheme(data('light', WITH_FINDINGS));
+    const view = await colorScheme(data('light', WITH_FINDINGS));
     forms.answer = () => ({ type: 'success', status: 200, data: { pinned: 1 } });
     // Pinned light, the page no longer follows the default.
     forms.applied = (result) =>

@@ -25,8 +25,8 @@ function api() {
   return calls;
 }
 
-function picker(onPick = vi.fn()) {
-  render(NodePickerPanel, {
+async function picker(onPick = vi.fn()) {
+  await render(NodePickerPanel, {
     title: 'Link a page',
     placeholder: 'Search pages…',
     types: ['page'],
@@ -46,7 +46,7 @@ describe('the node picker’s create row', () => {
   it('offers a term nobody’s title is as a new page, makes it in the consumer’s namespace and picks it', async () => {
     page.data = { user: { id: 'u-1', role: 'editor' } };
     const calls = api();
-    const onPick = picker();
+    const onPick = await picker();
 
     await userEvent.type(screen.getByPlaceholder('Search pages…'), 'Field notes');
     const row = screen.getByRole('option', { name: /New page “Field notes”/ });
@@ -61,7 +61,7 @@ describe('the node picker’s create row', () => {
   it('offers no new page to a viewer, who may not make one', async () => {
     page.data = { user: { id: 'u-2', role: 'viewer' } };
     api();
-    picker();
+    await picker();
 
     await userEvent.type(screen.getByPlaceholder('Search pages…'), 'Field notes');
     await expect.element(screen.getByText('No title contains “Field notes”.')).toBeVisible();

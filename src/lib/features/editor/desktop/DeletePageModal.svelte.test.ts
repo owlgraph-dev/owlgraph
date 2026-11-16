@@ -14,7 +14,7 @@ describe('the delete-page dialog', () => {
   it('closes on Cancel without confirming', async () => {
     const onConfirm = vi.fn();
     const onOpenChange = vi.fn();
-    const view = render(DeletePageModal, {
+    const view = await render(DeletePageModal, {
       open: true,
       isHomePage: false,
       busy: false,

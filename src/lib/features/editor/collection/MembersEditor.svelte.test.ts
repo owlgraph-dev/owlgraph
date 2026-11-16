@@ -29,8 +29,8 @@ function node(id: string, title: string, type: NodeSearchResult['type'] = 'colle
 const membersAnswer = (members: CollectionMember[], basis = 'b2') => Response.json({ members, basis, existed: false });
 const searchParams = (call: Call) => new URL(call.url, 'http://localhost').searchParams;
 
-function editor(members: CollectionMember[]) {
-  render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', namespace: NAMESPACE });
+async function editor(members: CollectionMember[]) {
+  await render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', namespace: NAMESPACE });
   return screen.getByRole('region', { name: 'Contents' });
 }
 
@@ -56,7 +56,7 @@ describe('a curated collection in its editor', () => {
       if (call.method === 'DELETE' && call.url === `/api/collections/${COLLECTION}/members/p-b`)
         return membersAnswer([{ ...a, label: 'Chapter one', labelText: { en: 'Chapter one' } }]);
     });
-    const section = editor([a, b]);
+    const section = await editor([a, b]);
 
     await section.getByRole('button', { name: 'Actions for Alpha page' }).click();
     await screen.getByRole('menuitem', { name: 'Label…' }).click();
@@ -85,7 +85,7 @@ describe("the members editor's picker", () => {
       const offset = Number(searchParams(call).get('offset') ?? 0);
       return offset === 0 ? Response.json({ results: all.slice(0, 12), more: true, exact: [] }) : Response.json({ results: all.slice(12), more: false, exact: [] });
     });
-    editor([]);
+    await editor([]);
     const { picker, field } = await openPicker();
 
     await expect.element(field).toHaveFocus();
@@ -141,7 +141,7 @@ describe("the members editor's picker", () => {
         return membersAnswer(members);
       }
     });
-    const section = editor([]);
+    const section = await editor([]);
     const { picker, field } = await openPicker();
     const newRows = picker.getByRole('option', { name: /^New / });
 

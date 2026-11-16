@@ -22,7 +22,7 @@ const MADE = 'c0000000-0000-4000-8000-000000000003';
 const MIRRORED = 'c0000000-0000-4000-8000-000000000004';
 
 /** The panel for a collection block, its target following each update as the block settings panel's does. */
-function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
+async function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
   const updates: Record<string, unknown>[] = [];
   const overlay = vi.fn();
   const swapEmbed = vi.fn();
@@ -43,7 +43,7 @@ function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
   });
   // `target` is a mount option's name too: the props go under `props`, beside the element to mount into.
   const mountEl = document.body.appendChild(document.createElement('div'));
-  const view = render(CollectionSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
+  const view = await render(CollectionSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
   return { updates, overlay, swapEmbed };
 }
 
@@ -74,7 +74,7 @@ describe('the collection block', () => {
       }
       if (call.url === `/api/collections/${SECOND}`) return embed(SECOND, title);
     });
-    const { updates } = panel();
+    const { updates } = await panel();
     const picker = await openPicker();
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), title);
@@ -101,7 +101,7 @@ describe('the collection block', () => {
       if (call.method === 'POST' && call.url === '/api/collections') return Response.json({ id: MADE, slug: 'made-in-the-picker', namespaceSlug: null }, { status: 201 });
       if (call.url === `/api/collections/${MADE}`) return embed(MADE, title);
     });
-    const { updates, overlay } = panel();
+    const { updates, overlay } = await panel();
     const picker = await openPicker();
     expect(overlay).toHaveBeenLastCalledWith(true);
 
@@ -133,7 +133,7 @@ describe('a plugin’s collections in the collection block’s picker', () => {
     const label = pluginLabel(source);
     const mirrored = { type: 'collection', id: MIRRORED, title: 'Ablage', slug: 'ablage', href: '/ablage', namespace: NAMESPACE.name, plugin: source, pluginLabel: label };
     stubFetch((call) => (call.url.startsWith('/api/node-search') ? Response.json({ results: [mirrored], more: false, exact: ['collection'] }) : undefined));
-    const { updates, swapEmbed } = panel(new Set());
+    const { updates, swapEmbed } = await panel(new Set());
     const picker = await openPicker();
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), 'Ablage');

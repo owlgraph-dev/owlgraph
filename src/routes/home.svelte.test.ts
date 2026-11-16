@@ -34,8 +34,8 @@ afterEach(() => {
 
 describe('the empty home page, for an admin', () => {
   it('asks for a home page, lists the pages, and its Create page opens the shared Create dialog', async () => {
-    render(AppBar, { user: ADMIN });
-    render(HomePage, { data });
+    await render(AppBar, { user: ADMIN });
+    await render(HomePage, { data });
 
     await expect.element(screen.getByRole('heading', { level: 1, name: 'No home page yet' })).toBeVisible();
     await expect.element(screen.getByRole('link', { name: 'Choose home page' })).toHaveAttribute('href', '/settings/home');

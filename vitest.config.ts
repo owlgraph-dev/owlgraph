@@ -3,6 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { configDefaults, defineConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { randomBytes } from 'node:crypto';
 import path from 'node:path';
@@ -57,7 +58,7 @@ export default defineConfig({
           // Threads: a forked process fetches every module over IPC. Four at a
           // time bounds the connections.
           pool: 'threads',
-          poolOptions: { threads: { maxThreads: 4, minThreads: 1 } },
+          maxWorkers: 4,
           globalSetup: ['tests/integration/global-setup.ts'],
           setupFiles: ['tests/integration/database.ts'],
           testTimeout: 30_000,
@@ -97,7 +98,7 @@ export default defineConfig({
           // Playwright's Chromium, no download of its own.
           browser: {
             enabled: true,
-            provider: 'playwright',
+            provider: playwright(),
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],

@@ -33,7 +33,7 @@ afterEach(() => {
 
 describe('a form field', () => {
   it('reaches its control with its label, puts its hint and error in the control’s aria-describedby, sets aria-invalid only with an error, and names a group', async () => {
-    const view = render(FormFieldSpecimens);
+    const view = await render(FormFieldSpecimens);
     const fields = [...view.container.querySelectorAll<HTMLElement>('.ds-form-field')];
     expect(fields.length, 'the form-field specimens').toBeGreaterThanOrEqual(8);
     const problems: string[] = [];
@@ -87,10 +87,10 @@ function control(component: Component<Record<string, unknown>>, props: Record<st
 describe('a field row', () => {
   it('puts its error in its control’s aria-describedby and sets the control aria-invalid', async () => {
     // The playground's rows, and one each around an input, a select and a textarea.
-    render(FieldRowSpecimens);
-    render(FieldRow, { label: 'Target', layout: 'stack', error: 'Enter a full URL.', children: control(Input as Component<Record<string, unknown>>, { size: 'sm', value: 'example' }) });
-    render(FieldRow, { label: 'Align', error: 'Pick one of the three.', children: control(Select as Component<Record<string, unknown>>, { items: [{ value: 'start', label: 'Start' }], value: 'start', size: 'sm' }) });
-    render(FieldRow, { label: 'Notes', layout: 'stack', error: 'At most 200 characters.', children: control(Textarea as Component<Record<string, unknown>>, { value: 'x'.repeat(201) }) });
+    await render(FieldRowSpecimens);
+    await render(FieldRow, { label: 'Target', layout: 'stack', error: 'Enter a full URL.', children: control(Input as Component<Record<string, unknown>>, { size: 'sm', value: 'example' }) });
+    await render(FieldRow, { label: 'Align', error: 'Pick one of the three.', children: control(Select as Component<Record<string, unknown>>, { items: [{ value: 'start', label: 'Start' }], value: 'start', size: 'sm' }) });
+    await render(FieldRow, { label: 'Notes', layout: 'stack', error: 'At most 200 characters.', children: control(Textarea as Component<Record<string, unknown>>, { value: 'x'.repeat(201) }) });
     await tick();
 
     const rows = [...document.querySelectorAll<HTMLElement>('.ds-field-row')].filter((r) => r.querySelector(':scope > .ds-field-row-error > .ds-field-error'));
@@ -117,8 +117,8 @@ describe('a field row', () => {
 describe('the toasts', () => {
   it('are announced in the assertive or polite live region with no alert role, run an action and close, close the newest on Escape, do not stack the same message, hold a fourth back, and pause every timer on hover', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
-    render(ToastSpecimens);
-    render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
+    await render(ToastSpecimens);
+    await render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
     const region = screen.getByRole('region', { name: 'Notifications' });
     const toasts = () => document.querySelectorAll('.ds-toaster .ds-toast').length;
     const show = (state: string) => specimen(state).getByRole('button').click();
@@ -168,7 +168,7 @@ describe('the toasts', () => {
 
 describe('a command search', () => {
   it('names the list it controls and the option the arrows reach, skips a disabled row, clears and keeps focus, and in a popover clears a typed term before Escape closes the layer', async () => {
-    render(CommandSearchSpecimens);
+    await render(CommandSearchSpecimens);
     const cell = specimen('list');
     const field = cell.getByRole('combobox');
     const list = cell.getByRole('listbox', { name: 'Matches' });
@@ -209,7 +209,7 @@ describe('a command search', () => {
 
 describe('a bottom sheet’s page', () => {
   it('replaces the content, and Back or Escape returns to the content as it was with focus on the button that opened it, while a pick there closes it', async () => {
-    render(DialogSpecimens);
+    await render(DialogSpecimens);
     await screen.getByRole('button', { name: 'Open sheet with a page' }).click();
     const settings = screen.getByRole('dialog', { name: 'Settings' });
     await settings.getByRole('textbox', { name: 'Name' }).fill('Kept');

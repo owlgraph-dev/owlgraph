@@ -78,7 +78,7 @@ describe('the search page’s filter row, on a wide window', () => {
   });
 
   it('writes a picked class, its exact match and an added tag to the URL', async () => {
-    const view = render(SearchPage, { data: data({}, 2) });
+    const view = await render(SearchPage, { data: data({}, 2) });
     const filters = screen.getByRole('group', { name: 'Filters' });
 
     await filters.getByRole('combobox', { name: 'Class' }).click();
@@ -97,7 +97,7 @@ describe('the search page’s filter row, on a wide window', () => {
   });
 
   it('offers Relevance only with a term, and picking Title A–Z writes sort=title', async () => {
-    const view = render(SearchPage, { data: data({}, 2) });
+    const view = await render(SearchPage, { data: data({}, 2) });
     const sort = screen.getByRole('group', { name: 'Filters' }).getByRole('combobox', { name: 'Sort' });
     await expect.element(sort).toHaveTextContent('Last updated');
     await sort.click();
@@ -121,7 +121,7 @@ describe('the search page’s compact filters, on a phone', () => {
 
   it('counts the sheet’s pending filters live, leaves the list and the URL alone, and applies them all on confirm', async () => {
     const asked = counts((url) => (url.searchParams.getAll('tag').length === 2 ? 4 : url.searchParams.get('type') === 'page' ? 3 : 4));
-    const view = render(SearchPage, { data: data({ tags: ['sheet'] }, 4) });
+    const view = await render(SearchPage, { data: data({ tags: ['sheet'] }, 4) });
     await expect.element(countLine()).toHaveTextContent('4 results · tagged sheet');
 
     await filterButton(1).click();
@@ -155,7 +155,7 @@ describe('the search page’s compact filters, on a phone', () => {
 
   it('drops the sheet’s changes when it closes without confirming, and opens again on the applied state', async () => {
     counts(() => 0);
-    render(SearchPage, { data: data({ tags: ['sheet'] }, 1) });
+    await render(SearchPage, { data: data({ tags: ['sheet'] }, 1) });
     await filterButton(1).click();
     await sheet().getByRole('radio', { name: 'Document', exact: true }).click();
     await expect.element(sheet().getByRole('radio', { name: 'Document', exact: true })).toHaveAttribute('data-state', 'on');
@@ -170,7 +170,7 @@ describe('the search page’s compact filters, on a phone', () => {
 
   it('clears every filter with Reset and keeps the term', async () => {
     counts(() => 1);
-    const view = render(SearchPage, { data: data({ q: 'zqterm', tags: ['sheet'], type: 'page' }, 1) });
+    const view = await render(SearchPage, { data: data({ q: 'zqterm', tags: ['sheet'], type: 'page' }, 1) });
     await filterButton(2).click();
     await sheet().getByRole('button', { name: 'Reset' }).click();
     await sheet().getByRole('button', { name: /^Show \d+ results?$/ }).click();
@@ -181,7 +181,7 @@ describe('the search page’s compact filters, on a phone', () => {
   });
 
   it('applies a new sort and layout at once from the compact row’s buttons, and names the current one', async () => {
-    const view = render(SearchPage, { data: data({ tags: ['sheet'] }, 1) });
+    const view = await render(SearchPage, { data: data({ tags: ['sheet'] }, 1) });
     await screen.getByRole('button', { name: 'Sort: Last updated' }).click();
     await screen.getByRole('dialog', { name: 'Sort' }).getByRole('button', { name: 'Title A–Z' }).click();
     expect(navigation.goto).toEqual(['/search?tag=sheet&sort=title']);

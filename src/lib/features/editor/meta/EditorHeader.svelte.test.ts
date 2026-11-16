@@ -13,9 +13,9 @@ import EditorHeader from './EditorHeader.svelte';
 
 type Props = Parameters<typeof EditorHeader>[1];
 
-function header(props: Partial<Props> = {}) {
+async function header(props: Partial<Props> = {}) {
   const sent: string[][] = [];
-  const view = render(EditorHeader, {
+  const view = await render(EditorHeader, {
     title: 'Plans',
     slug: 'plans',
     namespaceSlug: null,
@@ -43,7 +43,7 @@ afterEach(() => {
 describe("a node editor's head row", () => {
   it('adds a tag once whatever its case, removes one, and sends the whole list each time', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
-    const { sent } = header();
+    const { sent } = await header();
     await screen.getByRole('button', { name: 'Tags' }).click();
     const add = screen.getByPlaceholder('Add a tag…');
     await expect.element(add).toBeVisible();
@@ -64,7 +64,7 @@ describe("a node editor's head row", () => {
 
   it('draws the block settings toggle only for an editor that has the panel', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
-    const { view } = header();
+    const { view } = await header();
     await expect.element(screen.getByRole('button', { name: 'Toggle block settings' })).toBeVisible();
     await view.rerender({ blockSettingsOpen: undefined });
     await expect.element(screen.getByRole('button', { name: 'Toggle block settings' })).not.toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("a node editor's head row", () => {
   it('shows a refused rename under the row, the field kept open on what was typed', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     const onRename = vi.fn(async () => ({ ok: false, error: 'That title is taken' }));
-    header({ onRename });
+    await header({ onRename });
 
     await screen.getByRole('button', { name: 'Plans', exact: true }).click();
     const field = screen.getByRole('textbox', { name: 'Page title' });

@@ -81,7 +81,7 @@ beforeEach(() => {
 
 describe('the namespaces list', () => {
   it('offers no Delete for the default namespace, its root row', async () => {
-    render(NamespacesPage, { data: data([DEFAULT, namespace({ id: 'ns-a', name: 'Project A' })]), form: null });
+    await render(NamespacesPage, { data: data([DEFAULT, namespace({ id: 'ns-a', name: 'Project A' })]), form: null });
 
     const root = rowOf('(root)');
     await expect.element(root).toBeVisible();
@@ -94,7 +94,7 @@ describe('the namespaces list', () => {
 
 describe('the Add namespace dialog', () => {
   it('left untouched, starts on Internal and posts it (secure by default)', async () => {
-    const view = render(NamespacesPage, { data: data([DEFAULT]), form: null });
+    const view = await render(NamespacesPage, { data: data([DEFAULT]), form: null });
     const made = namespace({ id: 'ns-new', name: 'Default Select NS', slug: 'default-select-ns', access_level: 'internal' });
     forms.applied = async () => view.rerender({ data: data([DEFAULT, made]) });
 
@@ -119,7 +119,7 @@ describe('the Add namespace dialog', () => {
 describe('the Edit namespace dialog', () => {
   it('warns how many inheriting pages and documents a wider access level would open, before it is saved', async () => {
     const team = namespace({ id: 'ns-team', name: 'Team', access_level: 'restricted', node_count: 5, inheriting_count: 3 });
-    render(NamespacesPage, { data: data([DEFAULT, team], { [team.id]: [] }), form: null });
+    await render(NamespacesPage, { data: data([DEFAULT, team], { [team.id]: [] }), form: null });
 
     await rowOf('/team').getByRole('button', { name: 'Edit' }).click();
     const dialog = screen.getByRole('dialog', { name: 'Edit namespace' });
@@ -147,7 +147,7 @@ describe('the Edit namespace dialog', () => {
   it('says nothing of a narrower level, nor of a namespace no page inherits from', async () => {
     const open = namespace({ id: 'ns-open', name: 'Open', access_level: 'public', node_count: 4, inheriting_count: 4 });
     const empty = namespace({ id: 'ns-empty', name: 'Empty', access_level: 'restricted', node_count: 2, inheriting_count: 0 });
-    render(NamespacesPage, { data: data([DEFAULT, empty, open], { [empty.id]: [] }), form: null });
+    await render(NamespacesPage, { data: data([DEFAULT, empty, open], { [empty.id]: [] }), form: null });
 
     await rowOf('/open').getByRole('button', { name: 'Edit' }).click();
     let dialog = screen.getByRole('dialog', { name: 'Edit namespace' });
@@ -168,7 +168,7 @@ describe('the Edit namespace dialog', () => {
 describe('the Manage members dialog', () => {
   it("posts the members checked in it, and the namespace's row then counts them", async () => {
     const team = namespace({ id: 'ns-team', name: 'Team', access_level: 'restricted', node_count: 2 });
-    const view = render(NamespacesPage, { data: data([DEFAULT, team], { [team.id]: ['u-ada'] }), form: null });
+    const view = await render(NamespacesPage, { data: data([DEFAULT, team], { [team.id]: ['u-ada'] }), form: null });
     forms.applied = async () => view.rerender({ data: data([DEFAULT, team], { [team.id]: ['u-ada', 'u-cy'] }) });
 
     const manage = rowOf('/team').getByRole('button', { name: /^Manage members/ });

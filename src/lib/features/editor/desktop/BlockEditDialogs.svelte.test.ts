@@ -24,7 +24,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function dialogs(...content: JSONContent[]) {
+async function dialogs(...content: JSONContent[]) {
   stubFetch(({ url }) => (url.startsWith('/api/relationship-types') ? Response.json({ results: RELATIONSHIP_TYPES }) : undefined));
   core = createEditorCore();
   const host = document.createElement('div');
@@ -32,7 +32,7 @@ function dialogs(...content: JSONContent[]) {
   core.mount(host, { doc: { type: 'doc', content } });
   const c = core;
   const edit = new BlockEdit(() => c.editor);
-  render(BlockEditDialogs, { edit });
+  await render(BlockEditDialogs, { edit });
   const attrsOf = (id: string) => {
     let attrs: Record<string, unknown> | null = null;
     c.editor!.state.doc.descendants((node) => {
@@ -48,7 +48,7 @@ function dialogs(...content: JSONContent[]) {
 describe('the block Edit dialogs', () => {
   it("edit a query block's limit, and leave its result's format options alone", async () => {
     const formatOptions = { spacing: { desktop: { pad: 'md' } } };
-    const { edit, attrsOf, open } = dialogs({
+    const { edit, attrsOf, open } = await dialogs({
       type: 'queryBlock',
       attrs: { blockId: 'q-1', format: 'template', first: 20, formatOptions },
       content: [{ type: 'grid', attrs: { blockId: 'g-1', columnWidths: [1] }, content: [{ type: 'gridCell', content: [{ type: 'paragraph', attrs: { blockId: 'p-1' } }] }] }],
@@ -67,7 +67,7 @@ describe('the block Edit dialogs', () => {
   });
 
   it("edit a quick link's typed edge, starting from the one it stores", async () => {
-    const { attrsOf, open } = dialogs({
+    const { attrsOf, open } = await dialogs({
       type: 'quickLink',
       attrs: { blockId: 'r-1', refType: 'url', url: 'https://example.com', label: 'Docs', relationshipType: 'cites', properties: { page: '12' } },
     });

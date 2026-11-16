@@ -28,7 +28,7 @@ describe('a classified page’s properties dialog', () => {
       await view.rerender({ nodeClassId: id, classDefinitions: id === WORK_PACKAGE.id ? CORE_FIELDS : [], classGroups: id === WORK_PACKAGE.id ? [CORE_GROUP] : [] });
       return { ok: true };
     });
-    const view = render(PagePropertiesDialog, {
+    const view = await render(PagePropertiesDialog, {
       open: true,
       manualProperties: [{ name: 'core:status', value: STATUS }],
       onSetManualProperties: vi.fn(),

@@ -137,7 +137,7 @@ describe("a person's Nextcloud connection", () => {
     const calls = api((call) =>
       call.method === 'DELETE' && call.url === `/api/connections/${nextcloud.id}` ? Response.json({ removed: true, remoteRevoked }) : undefined
     );
-    const view = render(ConnectionsPage, { data: connectionsData(true) });
+    const view = await render(ConnectionsPage, { data: connectionsData(true) });
     // invalidateAll reloads the connection as the server now holds it.
     navigation.onInvalidate = () => view.rerender({ data: connectionsData(false) });
 
@@ -165,8 +165,8 @@ describe("a person's Nextcloud connection", () => {
 
 describe("the Nextcloud settings page's people's connections", () => {
   it('asks before Disconnect everyone, and its toast says how many connections it could not ask the service to forget', async () => {
-    render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
-    const view = render(IntegrationSettingsPage, { data: settingsData({ active: 3, total: 3 }), form: null });
+    await render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
+    const view = await render(IntegrationSettingsPage, { data: settingsData({ active: 3, total: 3 }), form: null });
     forms.answer = () => ({ type: 'success', status: 200, data: { cleared: 3, notAsked: 1 } });
     forms.applied = () => view.rerender({ data: settingsData({ active: 0, total: 0 }) });
 
@@ -191,8 +191,8 @@ describe("the Nextcloud settings page's people's connections", () => {
   });
 
   it('says how many it removed when the service forgot every one of them', async () => {
-    render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
-    render(IntegrationSettingsPage, { data: settingsData({ active: 2, total: 2 }), form: null });
+    await render(Toaster, { regionLabel: 'Notifications', closeLabel: 'Dismiss' });
+    await render(IntegrationSettingsPage, { data: settingsData({ active: 2, total: 2 }), form: null });
     forms.answer = () => ({ type: 'success', status: 200, data: { cleared: 2, notAsked: 0 } });
 
     await screen.getByRole('button', { name: 'Disconnect everyone' }).click();

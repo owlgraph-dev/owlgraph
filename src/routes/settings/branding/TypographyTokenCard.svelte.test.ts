@@ -35,7 +35,7 @@ const LEGACY = { id: 'tok-1', name: 'Legacy px', family: null, size: 44, weight:
 
 describe('a typography token card', () => {
   it('shows a px size as the literal it is, and a save of the untouched card posts it back', async () => {
-    render(TypographyTokenCard, { token: LEGACY, customFonts: [] });
+    await render(TypographyTokenCard, { token: LEGACY, customFonts: [] });
 
     await expect.element(screen.getByRole('combobox', { name: 'Size' })).toHaveTextContent('44px (custom)');
 

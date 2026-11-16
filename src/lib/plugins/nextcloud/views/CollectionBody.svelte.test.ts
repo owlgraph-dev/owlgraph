@@ -89,7 +89,7 @@ afterEach(() => {
 describe("a Nextcloud collection's own page", () => {
   it('lets a writer make a document of a file, and counts it among the linked documents', async () => {
     const calls = api();
-    const view = render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: true });
+    const view = await render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: true });
     navigation.onInvalidate = () => view.rerender({ members: [linkedDocument] });
 
     await expect.element(screen.getByRole('tab', { name: 'Contents' })).toHaveAttribute('aria-selected', 'true');
@@ -117,7 +117,7 @@ describe("a Nextcloud collection's own page", () => {
 
   it('offers a reader who may not write no way to make a document', async () => {
     api();
-    render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: false });
+    await render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: false });
     const row = screen.getByRole('tabpanel').getByRole('listitem').filter({ hasText: 'Bericht.pdf' });
     await expect.element(row).toBeVisible();
     await expect.element(row.getByRole('button', { name: 'Create as document' })).not.toBeInTheDocument();

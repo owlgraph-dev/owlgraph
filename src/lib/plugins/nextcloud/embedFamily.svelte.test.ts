@@ -13,7 +13,7 @@ import { DesktopEditor } from '$lib/features/editor/components';
 
 const DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
 
-function editor(enabledPlugins: string[]) {
+async function editor(enabledPlugins: string[]) {
   vi.stubGlobal(
     'fetch',
     vi.fn(async () => new Response('not found', { status: 404 }))
@@ -58,7 +58,7 @@ afterEach(() => {
 describe('the Nextcloud blocks in the embedding family', () => {
   it('are listed under Collection and Document beside the core’s kinds while the plugin is on', async () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
-    editor(['nextcloud']);
+    await editor(['nextcloud']);
     await openInsert();
 
     expect(await itemsOf('Collection')).toEqual([expect.stringMatching(/Curated collection$/), expect.stringMatching(/Nextcloud folder$/)]);
@@ -68,7 +68,7 @@ describe('the Nextcloud blocks in the embedding family', () => {
 
   it('are not listed at all while the plugin is off', async () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
-    editor([]);
+    await editor([]);
     await openInsert();
 
     expect(await itemsOf('Collection')).toEqual([expect.stringMatching(/Curated collection$/)]);

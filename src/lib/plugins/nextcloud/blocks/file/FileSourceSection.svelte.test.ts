@@ -46,8 +46,8 @@ function turnedOff(id: string) {
 }
 
 // Under `props`, with a mount target: the section's `target` prop shares its name with the mount option.
-const section = (documentId: string | null) =>
-  render(FileSourceSection, {
+const section = async (documentId: string | null) =>
+  await render(FileSourceSection, {
     target: document.body.appendChild(document.createElement('div')),
     props: {
       target: { type: 'nextcloudFile', id: 'block-1', attrs: { documentId }, update: vi.fn() },
@@ -64,7 +64,7 @@ afterEach(() => {
 describe("the file block's Source section while the plugin is turned off", () => {
   it('offers no file to choose from a folder or from the editor’s own Nextcloud, and says why', async () => {
     turnedOff('d0000000-0000-4000-8000-0000000000f1');
-    section(null);
+    await section(null);
 
     await expect.element(screen.getByText('The Nextcloud integration is turned off.')).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Choose from a folder …' })).not.toBeInTheDocument();
@@ -74,7 +74,7 @@ describe("the file block's Source section while the plugin is turned off", () =>
   it('shows a chosen document as its node and that the plugin is off — nothing of its file, no other file to choose', async () => {
     const id = 'd0000000-0000-4000-8000-0000000000f2';
     turnedOff(id);
-    const { container } = section(id);
+    const { container } = await section(id);
 
     await expect.element(screen.getByText('Integration turned off', { exact: true })).toBeVisible();
     await expect.element(screen.getByText('The Nextcloud integration is turned off.')).toBeVisible();
