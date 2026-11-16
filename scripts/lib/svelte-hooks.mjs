@@ -11,6 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve as resolvePath } from 'node:path';
+import { transformSync } from 'esbuild';
 import { compile, compileModule } from 'svelte/compiler';
 
 // The aliases, as the generated tsconfig's paths map them.
@@ -51,10 +52,18 @@ export function load(url, context, next) {
     const { js } = compile(readFileSync(filename, 'utf8'), { filename, generate: 'server', css: 'external' });
     return { format: 'module', source: js.code, shortCircuit: true };
   }
-  if (!RUNES_MODULE.test(url.split('?')[0])) return next(url, context);
+  const path = url.split('?')[0];
+  if (!RUNES_MODULE.test(path)) return next(url, context);
   const filename = fileURLToPath(url);
+  const typescript = path.endsWith('.ts');
   const finish = (loaded) => {
-    const source = typeof loaded.source === 'string' ? loaded.source : Buffer.from(loaded.source).toString('utf8');
+    let source = typeof loaded.source === 'string' ? loaded.source : Buffer.from(loaded.source).toString('utf8');
+    // The Svelte compiler reads JavaScript only, and a `.svelte.ts` module can
+    // arrive here still as TypeScript, whatever its format says: a TypeScript
+    // loader may leave it to Node's own type stripping, which comes after these
+    // hooks. Stripping its types here, as Vite does before compiling one, holds
+    // either way; on JavaScript it changes nothing.
+    if (typescript) source = transformSync(source, { loader: 'ts', format: 'esm', sourcefile: filename }).code;
     const { js } = compileModule(source, { filename, generate: 'server' });
     return { format: 'module', source: js.code, shortCircuit: true };
   };

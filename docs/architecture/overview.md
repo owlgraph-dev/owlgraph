@@ -267,7 +267,10 @@ component draws ([blocks/anatomy.md](blocks/anatomy.md#svelte-leaf-blocks)) — 
 entry point outside Vite loads them through one Node loader hook
 (`scripts/lib/svelte-hooks.mjs`: the Svelte compiler, server output — the
 components, and the modules with runes of their own, `*.svelte.js` and
-`*.svelte.ts`, that a block's design-system controls bring with them), which
+`*.svelte.ts`, that a block's design-system controls bring with them; a
+`*.svelte.ts` module's types are stripped there with esbuild first, since the
+TypeScript loader before the hook may leave that to Node, which strips them
+only after it), which
 the MCP server's command, the scripts that render pages and the Playwright
 config register; the unit tests compile them with the Svelte Vite plugin.
 
