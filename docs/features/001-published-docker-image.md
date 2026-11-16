@@ -1,5 +1,5 @@
 ---
-status: in-progress
+status: implemented
 issue:
 adrs: ['0014']
 updated: 2026-11-16
@@ -147,3 +147,36 @@ None blocks the work.
 
 ## Implementation notes
 
+- **The revision label names the commit.** A published image's
+  `org.opencontainers.image.revision` is the commit its tag points to, which
+  is what registries and tools expect there; the tag is its `SOURCE_REVISION`,
+  which the About page shows and links. Its `version` label is `X.Y.Z`.
+- **No tag for the major version alone, from 1.0 on either.** The scope names
+  none; adding one is a change to `scripts/lib/release-image.mjs`.
+- **Whether a version is published is asked of the registry** with the
+  publishing job's own token, and a refusal reads as not published: ghcr.io
+  answers a missing package and an unreadable one alike, and credentials that
+  cannot read a package cannot write it either, so the push then creates it or
+  is refused too. Its answer for the first release is only seen on a real tag.
+- **An upgrade from a published image also takes the release's compose
+  files.** [Upgrading](../guides/upgrading.md#from-a-published-image) replaces
+  them with the new tag's before naming the new version, since the stack an
+  image expects belongs to its release.
+- **The check covers more than the stack's start:** the About page's version
+  and source link, the licence texts, the first admin's creation and sign-in,
+  and sharp's native binding, without which sharp silently falls back to its
+  WebAssembly build. A release also loads the native modules of its arm64
+  build before publishing; the whole stack runs on amd64 only.
+- **The provenance is `actions/attest`'s signed attestation**
+  (`attest-build-provenance` is now a wrapper of it), without an artifact
+  storage record, so the publishing job needs no permission beyond
+  `packages`, `id-token` and `attestations`. BuildKit's own unsigned
+  provenance is off.
+- **A fork publishes to its own namespace:** the image is
+  `ghcr.io/<owner>/<repository>`, built with that repository as its source.
+- **A run whose push succeeded and whose attestation failed cannot be re-run:**
+  the already-published check stops it, and the version stays without an
+  attestation unless a patch release follows.
+- **The base image is not pinned by digest.** Its tag names a Node major
+  version, so Dependabot proposes newer majors, odd ones too; pinning a digest
+  would go beyond what building for two platforms needs of the `Dockerfile`.
