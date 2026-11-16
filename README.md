@@ -70,6 +70,23 @@ everyone else in the settings. [docs/guides/deployment.md](docs/guides/deploymen
 the stack in detail, including running it in production behind a reverse
 proxy, and [docs/guides/backup.md](docs/guides/backup.md) covers backups.
 
+Without a checkout, every release is published as an image,
+`ghcr.io/owlgraph-dev/owlgraph`, for amd64 and arm64. Take the compose files
+of the release you want (`vX.Y.Z` below) and name its image:
+
+```bash
+mkdir owlgraph && cd owlgraph
+for f in docker-compose.yml docker-compose.image.yml .env.example; do
+  curl -fsSLO "https://raw.githubusercontent.com/owlgraph-dev/owlgraph/vX.Y.Z/$f"
+done
+cp .env.example .env    # set the passwords, and COMPOSE_FILE and OWLGRAPH_IMAGE as it describes
+docker compose up -d
+```
+
+The first admin is created with the same command as above.
+[Running a published image](docs/guides/deployment.md#running-a-published-image)
+has the details.
+
 ## Connecting an AI agent
 
 The MCP server listens at <http://localhost:3030/mcp> (Streamable HTTP).

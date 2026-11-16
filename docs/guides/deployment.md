@@ -4,14 +4,16 @@ A self-contained Docker Compose stack that runs owlgraph on one host:
 Postgres → migrate (one-shot) → app + MCP, tied to no external
 infrastructure. Locally it runs as it is; on a server it runs behind a
 TLS-terminating reverse proxy with the production override
-([Production](#production)).
+([Production](#production)). It builds its image from a checkout, or runs a
+released one without any ([Running a published image](#running-a-published-image)).
 
 ## Prerequisites
 
-Docker and Docker Compose v2 (`docker compose`, not the standalone
-`docker-compose` v1 binary), with at least 6 GB of memory for its builds: the
-image's build stage runs the app's production build with a 4 GB Node heap,
-which the client bundle needs (Docker Desktop: Settings → Resources).
+Docker and Docker Compose v2.24.4 or newer (`docker compose`, not the
+standalone `docker-compose` v1 binary), with at least 6 GB of memory for its
+builds: the image's build stage runs the app's production build with a 4 GB
+Node heap, which the client bundle needs (Docker Desktop: Settings →
+Resources). A published image needs no build, and none of that memory.
 
 ## Project and container names
 
@@ -82,6 +84,91 @@ docker compose exec postgres psql -U "$POSTGRES_USER" -c "alter role \"$POSTGRES
 
 `APP_DB_PASSWORD` has no such problem: `migrate` sets that role's password from
 the current value on every run.
+
+## Running a published image
+
+Every release is published as an image, `ghcr.io/owlgraph-dev/owlgraph`, for
+`linux/amd64` and `linux/arm64`, and anyone may pull it without an account. A
+host that runs it needs Docker and the release's compose files: no checkout,
+no Node and no build.
+
+| Image tag | What it names |
+| --- | --- |
+| `X.Y.Z` | That release, and never anything else: a published version is not replaced. |
+| `X.Y` | The latest patch release of that minor version. |
+| `latest` | The highest stable release. |
+| `X.Y.Z-rc.N` | A pre-release, published under its own version only. |
+
+No tag names a major version alone. Name `X.Y.Z`, or `X.Y` to take that
+version's fixes, rather than `latest`: while the major version is 0, a minor
+release may break, and an upgrade should be a decision
+([upgrading.md](upgrading.md#from-a-published-image)).
+
+`docker-compose.image.yml` layers over the base file and makes `migrate`, `app`
+and `mcp` run the image `OWLGRAPH_IMAGE` names instead of building one;
+everything else on this page holds as it is. Without `OWLGRAPH_IMAGE`,
+compose stops and says to set it. Take the files from the release's tag,
+`vX.Y.Z`:
+
+```bash
+mkdir owlgraph && cd owlgraph
+for f in docker-compose.yml docker-compose.image.yml .env.example; do
+  curl -fsSLO "https://raw.githubusercontent.com/owlgraph-dev/owlgraph/vX.Y.Z/$f"
+done
+cp .env.example .env
+```
+
+Fill in the passwords as under [First run](#first-run), and in `.env` name both
+files and the image:
+
+```bash
+COMPOSE_FILE=docker-compose.yml:docker-compose.image.yml
+OWLGRAPH_IMAGE=ghcr.io/owlgraph-dev/owlgraph:X.Y.Z
+```
+
+`docker compose up -d` then pulls the image and starts the stack, and the
+first admin is created as under
+[Creating the first admin user](#creating-the-first-admin-user): the script is
+in the image. On a server, take `docker-compose.prod.yml` and
+`.env.production.example` from the tag too, and name all three files
+([Production](#production)):
+`COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml:docker-compose.image.yml`.
+
+What a published image holds and what it leaves to you:
+
+- **The repository's code and plugins, and nothing else.** A plugin is
+  compiled in ([plugins.md](../architecture/plugins.md#the-plugin-interface)),
+  so an installation with plugins of its own, or with changes to the code,
+  builds its own image from a checkout.
+- **Its source offer.** It links exactly the code it runs
+  ([Source code for network users](#source-code-for-network-users)).
+- **Not the backup, restore and search backfill scripts' place to run.** They
+  run on the host, from a checkout of the same release
+  ([backup.md](backup.md#where-to-run-this)).
+
+### What the image expects of a stack written by hand
+
+A stack that is not these compose files — another orchestrator, a compose
+file of one's own — gives the image what `docker-compose.yml` gives it, which
+is the reference:
+
+- **One image, three commands.** The image has no default command. `migrate`
+  runs `npx tsx --tsconfig tsconfig.tsx.json scripts/migrate.ts` once and must
+  exit 0 before the other two start; `app` runs `node build`; `mcp` runs
+  `npx tsx --tsconfig tsconfig.tsx.json --import ./scripts/lib/register-svelte.mjs src/mcp/server.ts`.
+- **A Postgres 16.** `migrate` connects as a role that may create roles and
+  extensions (the compose file uses the superuser) and gets `APP_DB_PASSWORD`,
+  the password it sets for `app_user`; `app` and `mcp` connect as `app_user`
+  with that password. Each gets its own `DATABASE_URL`.
+- **The rest of the environment.** `app` listens on `PORT` (3000) and `HOST`
+  (`0.0.0.0`), and needs `ORIGIN`, `BODY_SIZE_LIMIT` (26M) and, behind a proxy,
+  `ADDRESS_HEADER` and `XFF_DEPTH` ([Production](#production)). `mcp` listens
+  on `MCP_PORT` (3030) and takes the same two proxy values. All three get
+  `APP_SECRET_KEY` and `APP_SECRET_KEY_PREVIOUS` when they are set.
+- **Health checks.** `app` answers `/api/health` and `mcp` `/health`. The
+  image has no `curl`; the compose file's checks ask with `node -e "fetch(…)"`.
+- **No volumes.** All state is in Postgres ([backup.md](backup.md#the-model)),
+  and the containers run as the unprivileged user `app`.
 
 ## `DATABASE_URL`: host-side scripts only
 
@@ -396,9 +483,19 @@ A `SOURCE_URL` or `SOURCE_REVISION` in a container's own environment
 
 An unmodified owlgraph needs only the revision. If you change the code,
 publish your version and set `SOURCE_URL` to it — the default names the
-upstream project, which is not the source of your changes. The image's
-labels (`org.opencontainers.image.source`, `.revision`, `.licenses`) carry the
-same values, and the image contains `LICENSE`, `PLUGIN-EXCEPTION.md` and
+upstream project, which is not the source of your changes. An image you build
+carries the same values in its labels (`org.opencontainers.image.source`,
+`.revision`), beside `.licenses` (`AGPL-3.0-only`).
+
+A [published image](#running-a-published-image) needs nothing set: it is
+built with its release's tag as `SOURCE_REVISION` and the repository it is
+published from as `SOURCE_URL`, so its About page links exactly the code it
+runs, the repository at that tag. Its labels, and its index's annotations,
+name its version (`org.opencontainers.image.version`, `X.Y.Z`), the commit the
+tag points to (`.revision`), the repository (`.source`) and the licence
+(`.licenses`, `AGPL-3.0-only`).
+
+Every image contains `LICENSE`, `PLUGIN-EXCEPTION.md` and
 `THIRD-PARTY-NOTICES.md` beside the app.
 
 ## Rebuilding after code changes
@@ -412,7 +509,9 @@ rebuild is the whole upgrade. The exception is an installation from before
 the baseline that hasn't applied every migration the baseline replaces:
 `migrate` refuses it, changing nothing, and exits non-zero, so the app doesn't
 start. It upgrades in two hops
-([Across the baseline](upgrading.md#across-the-baseline)).
+([Across the baseline](upgrading.md#across-the-baseline)). With a published
+image there is nothing to rebuild: an upgrade is a newer image
+([upgrading.md](upgrading.md#from-a-published-image)).
 
 `app`, `mcp` and `migrate` build from the same `Dockerfile` (the shared
 `x-build` settings), differentiated only by `command:`; Compose builds an
@@ -421,6 +520,12 @@ image for each, the later ones from the first one's cached layers.
 The image has two stages: a build stage with the full dependency tree that
 produces the adapter-node output, and a runtime stage that installs
 production dependencies only (`npm ci --omit=dev --ignore-scripts`). The
+build stage runs on the building machine's own platform, whatever platform
+the image is for: its output is JavaScript and assets, the same for every
+platform, so an image built for `linux/amd64` and `linux/arm64` runs the Vite
+build once, natively, and only the runtime stage runs under emulation for the
+other platform. The server bundle loads its dependencies, sharp among them,
+from the runtime stage's install, which is the image's own platform's. The
 runtime install skips dependency install scripts on purpose: the production
 tree still pulls in vite through an optional peer chain (`bits-ui` → `runed`
 → `@sveltejs/kit` → `vite`), and vite's nested esbuild copy cannot complete
@@ -428,5 +533,8 @@ its postinstall there; no production dependency needs one (esbuild's only
 optimizes its command-line shim — tsx uses the API, which resolves the
 platform package itself). sharp, which reads and writes images
 ([media.md](../architecture/media.md)), ships libvips prebuilt per platform as optional
-packages (`@img/sharp-linux-x64` for this Debian image, glibc), so it installs
-without a script or build tools too.
+packages (`@img/sharp-linux-x64` or `@img/sharp-linux-arm64` for this Debian
+image, glibc), so it installs without a script or build tools too. Without the
+binding for its platform it would fall back to its slower WebAssembly build;
+the image's check requires the native one
+([testing.md](testing.md#ci-contract)).

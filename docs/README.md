@@ -28,8 +28,8 @@ The pages live in four folders:
 ## Run owlgraph
 
 - [Deployment](guides/deployment.md) — the self-contained Compose stack:
-  first run, production behind a reverse proxy, and the offer of the source
-  code.
+  first run, a published image without a checkout, production behind a
+  reverse proxy, and the offer of the source code.
 - [Backup and restore](guides/backup.md) — backing up the database, restoring
   it, and proving a backup works before you need it.
 - [Upgrading](guides/upgrading.md) — bringing an installation to a newer
