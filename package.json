@@ -82,7 +82,7 @@
     "graphql": "^16.9.0",
     "graphql-yoga": "^5.10.0",
     "htmlparser2": "^10.1.0",
-    "jsdom": "^29.1.1",
+    "jsdom": "^31.0.1",
     "lowlight": "^3.1.0",
     "mermaid": "^11.0.0",
     "pdfjs-dist": "4.10.38",
