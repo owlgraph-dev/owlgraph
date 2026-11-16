@@ -51,16 +51,25 @@ test.describe('the HTML block', () => {
     expect(await page.evaluate(() => (window as { __xss?: number }).__xss)).toBeUndefined();
   });
 
-  test("a click selects it, and the Edit dialog's change redraws it, sanitized before it is saved", async ({ page }) => {
-    const { slug } = await createPage(page.request, { doc: doc(para('intro'), html('h', '<p>Before</p>')) });
-    await page.goto(`/${slug}/edit`);
-    await expect(inEditor(page, 'h')).toHaveText('Before');
-    await edit(page, 'h', '<p>After <b>bold</b></p><img alt="x" onerror="window.__xss = 1"><script>window.__xss = 2</script>');
-    await expect(inEditor(page, 'h').locator('p')).toHaveText('After bold');
-    await expect(inEditor(page, 'h').locator('script')).toHaveCount(0);
-    await expect(inEditor(page, 'h').locator('img')).toHaveCount(1);
-    expect(await inEditor(page, 'h').locator('img').getAttribute('onerror')).toBeNull();
-    expect(await page.evaluate(() => (window as { __xss?: number }).__xss)).toBeUndefined();
+  test.describe('with a handler in the edited markup', () => {
+    // The preview's sanitizer (htmlBlockSanitize.ts) parses the markup into a
+    // document of its own, where nothing runs, and strips the handler there.
+    // Chromium checks the page's policy against that handler all the same and
+    // reports a script-src-attr violation, though it never runs: the last two
+    // assertions are the guard here.
+    test.use({ cspViolations: 'allowed' });
+
+    test("a click selects it, and the Edit dialog's change redraws it, sanitized before it is saved", async ({ page }) => {
+      const { slug } = await createPage(page.request, { doc: doc(para('intro'), html('h', '<p>Before</p>')) });
+      await page.goto(`/${slug}/edit`);
+      await expect(inEditor(page, 'h')).toHaveText('Before');
+      await edit(page, 'h', '<p>After <b>bold</b></p><img alt="x" onerror="window.__xss = 1"><script>window.__xss = 2</script>');
+      await expect(inEditor(page, 'h').locator('p')).toHaveText('After bold');
+      await expect(inEditor(page, 'h').locator('script')).toHaveCount(0);
+      await expect(inEditor(page, 'h').locator('img')).toHaveCount(1);
+      expect(await inEditor(page, 'h').locator('img').getAttribute('onerror')).toBeNull();
+      expect(await page.evaluate(() => (window as { __xss?: number }).__xss)).toBeUndefined();
+    });
   });
 
   test('an empty one says so in the editor, and draws nothing on the page', async ({ page }) => {
