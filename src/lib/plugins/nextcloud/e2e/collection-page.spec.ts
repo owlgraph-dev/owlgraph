@@ -6,6 +6,7 @@
 // collection, its sort and tabs under the strict style policy, on a phone too.
 import type { APIRequestContext, Browser, BrowserContext, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage, throwawayUserState } from '$tests/e2e/api';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
 import { authState } from '$tests/e2e/seed-data';
@@ -116,7 +117,7 @@ test.describe("a Nextcloud collection's own page", () => {
 });
 
 test.describe("a Nextcloud collection's own page on a phone", () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('folds its rows to two lines, sorts in a sheet, and nothing scrolls sideways', async ({ page }) => {
     await configure(page.request, mock.origin);

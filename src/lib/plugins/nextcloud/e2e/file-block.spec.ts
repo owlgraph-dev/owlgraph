@@ -8,6 +8,7 @@
 import type { APIRequestContext } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
@@ -184,7 +185,7 @@ test.describe('the Nextcloud file block', () => {
 });
 
 test.describe('the Nextcloud file block on a phone', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('reads as a row a finger can hit, its download an icon, and scrolls nothing sideways', async ({ page, browser }) => {
     await configure(page.request, mock.origin);
@@ -192,7 +193,7 @@ test.describe('the Nextcloud file block on a phone', () => {
     const pdf = await makeDocument(page.request, collection.id, 'Bericht.pdf', '401');
     const png = await makeDocument(page.request, collection.id, 'Plan.png', '402');
     const { slug } = await filePage(page.request, fileNode(pdf.id, { showNodeLink: true }), fileNode(png.id, { blockId: 'file-2', variant: 'card' }));
-    const reader = await browser.newContext({ storageState: { cookies: [], origins: [] }, viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    const reader = await browser.newContext({ storageState: { cookies: [], origins: [] }, ...PHONE });
     const view = await reader.newPage();
     await view.goto(`/${slug}`);
 

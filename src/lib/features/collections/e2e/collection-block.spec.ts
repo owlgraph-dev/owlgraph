@@ -4,6 +4,7 @@
 
 import type { APIRequestContext, Browser, Page } from '@playwright/test';
 import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage, unique } from '$tests/e2e/api';
 import { doc } from '$tests/e2e/doc';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
@@ -148,7 +149,7 @@ async function pixelAt(page: Page, at: { x: number; y: number }) {
 }
 
 test.describe('the collection block on a phone', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('reads in two-line rows a finger can hit, and scrolls nothing sideways', async ({ page }) => {
     const c = await curated(page.request);

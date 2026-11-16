@@ -4,8 +4,9 @@
 
 // E2E because: a reader is asked to connect and brought back to the page, each
 // island drawing their own listing; an editor chooses from their own Nextcloud.
-import type { APIRequestContext, Browser, BrowserContext, Page } from '@playwright/test';
+import type { APIRequestContext, Browser, BrowserContext, BrowserContextOptions, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage, throwawayUserState } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
@@ -69,9 +70,9 @@ interface Person {
   request: APIRequestContext;
 }
 
-async function person(browser: Browser, viewport?: { width: number; height: number }): Promise<Person> {
+async function person(browser: Browser, device: BrowserContextOptions = {}): Promise<Person> {
   const { userId, storageState } = await throwawayUserState('editor');
-  const context = await browser.newContext({ storageState, ...(viewport ? { viewport, hasTouch: true, isMobile: true } : {}) });
+  const context = await browser.newContext({ storageState, ...device });
   const page = await context.newPage();
   return { userId, context, page, request: context.request };
 }
@@ -199,7 +200,7 @@ test.describe('the placeholders on a phone', () => {
     const { document } = (await made.json()) as { document: { id: string } };
     const { slug } = await publicPage(alice.request, folderNode(collection.id), fileNode(document.id));
 
-    const carol = await person(browser, { width: 390, height: 844 });
+    const carol = await person(browser, PHONE);
     await carol.page.goto(`/${slug}`);
     await expect(carol.page.locator('.el')).toContainText('Connect your Nextcloud to see this folder');
     await expect(carol.page.locator('.de')).toContainText('Connect your Nextcloud to open this file');

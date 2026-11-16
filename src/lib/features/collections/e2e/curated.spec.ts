@@ -4,6 +4,7 @@
 
 import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
 import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createDocument, createPage, unique } from '$tests/e2e/api';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
 import { authState } from '$tests/e2e/seed-data';
@@ -160,7 +161,7 @@ test.describe("the members editor's picker", () => {
 });
 
 test.describe('a curated collection in its editor, on a phone', () => {
-  test.use({ storageState: authState('admin'), viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ storageState: authState('admin'), ...PHONE });
 
   test('picks a member from a sheet of its own, and nothing scrolls sideways', async ({ page }) => {
     const c = await curated(page.request);

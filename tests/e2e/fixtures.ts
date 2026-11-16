@@ -4,6 +4,7 @@
 
 import { test as base, expect, type Browser, type Page, type Response } from '@playwright/test';
 import { db } from '../../src/lib/platform/db.server';
+import { assertPhoneScreen } from './devices';
 
 // The `test` every spec imports (docs/guides/testing.md, "Isolation"): `siteWide`
 // takes an exclusive advisory lock every other test holds shared, `lock`
@@ -23,6 +24,8 @@ export type Resource = 'home' | 'logo' | 'seeded-pages' | 'integration-settings'
 // A CSP violation the page logs fails the test (docs/guides/testing.md, "The CSP
 // guard"); contexts a test opens itself aren't watched. goto() and reload()
 // resolve only once the app page has hydrated (docs/guides/testing.md, "Hydration").
+// Every context, its own or one a test opens, is refused as a phone whose
+// screen is not its own size (devices.ts).
 export const test = base.extend<
   { siteWide: boolean; lock: Resource | null; cspViolations: 'fail' | 'allowed'; isolation: void },
   { hydrationAware: void }
@@ -34,6 +37,8 @@ export const test = base.extend<
     async ({ browser }, use) => {
       const newContext = browser.newContext.bind(browser);
       browser.newContext = async (options) => {
+        // The project's screen applies unless the options name one.
+        assertPhoneScreen({ isMobile: options?.isMobile, viewport: options?.viewport, screen: options?.screen });
         const context = await newContext(options);
         context.on('page', awaitHydration);
         return context;
@@ -42,7 +47,8 @@ export const test = base.extend<
     },
     { scope: 'worker', auto: true },
   ],
-  context: async ({ context }, use) => {
+  context: async ({ context, isMobile, viewport, screen }, use) => {
+    assertPhoneScreen({ isMobile, viewport, screen });
     context.on('page', awaitHydration);
     await use(context);
   },

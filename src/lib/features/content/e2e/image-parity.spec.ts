@@ -4,6 +4,7 @@
 
 import type { Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { authState } from '$tests/e2e/seed-data';
 import { createPage, uploadImage } from '$tests/e2e/api';
 import { para, cell } from '$tests/e2e/doc';
@@ -69,7 +70,7 @@ const near = (actual: number, expected: number, label: string) =>
 
 const DEVICES = [
   { name: 'desktop', use: { viewport: { width: 1280, height: 900 } } },
-  { name: 'phone', use: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true } },
+  { name: 'phone', use: { ...PHONE, deviceScaleFactor: 3 } },
 ];
 
 for (const device of DEVICES) {
