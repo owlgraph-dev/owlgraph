@@ -47,7 +47,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "1.61.0",
     "@sveltejs/adapter-node": "^5.0.0",
-    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/kit": "^2.70.4",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@types/express": "^4.17.21",
     "@types/jsdom": "^28.0.3",
