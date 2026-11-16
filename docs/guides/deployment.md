@@ -134,15 +134,15 @@ in the image. On a server, take `docker-compose.prod.yml` and
 ([Production](#production)):
 `COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml:docker-compose.image.yml`.
 
-What a published image holds and what it leaves to you:
+What a published image is, and is not:
 
 - **The repository's code and plugins, and nothing else.** A plugin is
   compiled in ([plugins.md](../architecture/plugins.md#the-plugin-interface)),
   so an installation with plugins of its own, or with changes to the code,
   builds its own image from a checkout.
-- **Its source offer.** It links exactly the code it runs
+- **Its own source offer.** It links exactly the code it runs
   ([Source code for network users](#source-code-for-network-users)).
-- **Not the backup, restore and search backfill scripts' place to run.** They
+- **No place to run the backup, restore and search backfill scripts.** They
   run on the host, from a checkout of the same release
   ([backup.md](backup.md#where-to-run-this)).
 
@@ -163,8 +163,9 @@ is the reference:
 - **The rest of the environment.** `app` listens on `PORT` (3000) and `HOST`
   (`0.0.0.0`), and needs `ORIGIN`, `BODY_SIZE_LIMIT` (26M) and, behind a proxy,
   `ADDRESS_HEADER` and `XFF_DEPTH` ([Production](#production)). `mcp` listens
-  on `MCP_PORT` (3030) and takes the same two proxy values. All three get
-  `APP_SECRET_KEY` and `APP_SECRET_KEY_PREVIOUS` when they are set.
+  on `MCP_PORT` (3030) and takes the same two proxy values. Once set,
+  `APP_SECRET_KEY` goes to all three (`migrate` checks it), and
+  `APP_SECRET_KEY_PREVIOUS` to `app` and `mcp`.
 - **Health checks.** `app` answers `/api/health` and `mcp` `/health`. The
   image has no `curl`; the compose file's checks ask with `node -e "fetch(…)"`.
 - **No volumes.** All state is in Postgres ([backup.md](backup.md#the-model)),

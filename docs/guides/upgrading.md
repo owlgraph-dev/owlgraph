@@ -22,12 +22,13 @@ database, and how to go back if it goes wrong. Running a new installation is
 
 ## With Docker Compose
 
-Either way, the `migrate` service runs before `app` and `mcp` start, applies
-every migration the database has not applied yet, and checks the checksum of
-every one it already has. If it refuses, it changes nothing and exits
-non-zero, and the app does not start: `docker compose logs migrate` says why.
-Then check the result: the About page shows the new release, and nothing
-waiting to be applied.
+An installation built from a checkout upgrades by rebuilding, one that runs a
+published image by pulling a newer one. In both, the `migrate` service runs
+before `app` and `mcp` start, applies every migration the database has not
+applied yet, and checks the checksum of every one it already has. If it
+refuses, it changes nothing and exits non-zero, and the app does not start:
+`docker compose logs migrate` says why. Then check the result: the About page
+shows the new release, and nothing waiting to be applied.
 
 ### From a checkout
 
