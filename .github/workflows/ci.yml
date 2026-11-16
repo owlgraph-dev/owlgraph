@@ -2,8 +2,9 @@
 # change is merged, run on every pull request and on every push to main and to
 # a release branch — plus the checks that keep the tree fit to publish
 # (CONTRIBUTING.md). The gate's steps run in two
-# jobs: everything below the browser in one, the end-to-end lanes in two
-# shards beside it.
+# jobs: everything below the browser in one, the journeys beside it. The
+# component tests and the other end-to-end specs are not part of the gate
+# (docs/adr/0017-the-gate-runs-unit-integration-and-journeys.md).
 name: CI
 
 on:
@@ -42,7 +43,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=critical
 
   checks:
-    name: Check, unit, integration and component tests
+    name: Check, unit and integration tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     services:
@@ -75,8 +76,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      # The component tests run in Playwright's Chromium.
-      - run: npx playwright install --with-deps chromium
       # Before any build: a fresh clone checks and tests as it is.
       - run: npm run check
       - run: npm test
@@ -88,16 +87,11 @@ jobs:
       - run: npm run test:int
         env:
           PG_CONTAINER: ${{ job.services.postgres.id }}
-      - run: npm run test:component
 
-  e2e:
-    name: End-to-end, shard ${{ matrix.shard }} of 2
+  journeys:
+    name: Journeys
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2]
+    timeout-minutes: 30
     services:
       postgres:
         image: postgres:16
@@ -124,16 +118,13 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - name: The app lane, this shard's half
-        run: node scripts/e2e.mjs app --skip-build -- --shard=${{ matrix.shard }}/2
-      - name: The branded lane, on the first shard
-        if: ${{ matrix.shard == 1 && !cancelled() }}
-        run: node scripts/e2e.mjs branded --skip-build
+      - name: The journeys lane
+        run: node scripts/e2e.mjs journeys --skip-build
       - name: Keep the reports of a failed run
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-shard-${{ matrix.shard }}
+          name: playwright-results-journeys
           path: |
             playwright-report/
             test-results/
