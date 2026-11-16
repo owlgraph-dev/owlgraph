@@ -56,6 +56,14 @@ CLI and access to the Docker daemon running this compose project. Run them
 from the **host** (or any ops machine/CI runner with this repo checked out
 and `docker compose` available), from the repo root.
 
+An installation that runs a published image
+([deployment.md](deployment.md#running-a-published-image)) has no checkout of
+its own, and the image does not run these scripts. Run them from a checkout
+of the release the installation runs, after `npm ci`, with the installation's
+`.env` in it: its `docker compose` then reaches the same stack, and the
+restore's migrate runs the same image. The guards compare a dump with the
+checkout's migrations, so it has to be that release's.
+
 **Not** from inside `app`, `mcp`, or `postgres` — none of those containers
 have a Docker CLI or socket access, and shouldn't (giving the app container
 Docker socket access would be a real privilege escalation, undoing the

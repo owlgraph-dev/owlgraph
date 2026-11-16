@@ -103,10 +103,41 @@ A patch release works the same way: cherry-pick the fixes, then tag
 `v0.4.1`. Each release gets a GitHub Release whose notes list the commit
 titles since the previous tag.
 
+Pushing the tag publishes the release's image
+([deployment.md](deployment.md#running-a-published-image)), through
+`.github/workflows/image.yml`:
+
+- **What has to be true first.** The tagged commit's `package.json` names the
+  tag's version without its `v` (`0.4.0` for `v0.4.0`, `0.5.0-rc.1` for
+  `v0.5.0-rc.1`): the version is bumped before the release is tagged. A tag
+  whose version differs, or whose version is already published, publishes
+  nothing, and the run says why before it builds anything.
+- **The check.** The workflow builds the image for `linux/amd64` and starts
+  the stack from it, as a pull request's check does
+  ([testing.md](testing.md#ci-contract)), and loads the native modules of its
+  `linux/arm64` build. A failure publishes nothing.
+- **What it publishes.** `ghcr.io/owlgraph-dev/owlgraph` for both platforms,
+  built with the tag as its source revision, under `X.Y.Z`; under `X.Y` too
+  when it is the highest patch release of that minor version, and `latest`
+  when it is the highest stable release, both judged from the repository's
+  release tags. So a patch to an older minor version leaves `latest` where it
+  is, and a pre-release is published under its own version only. No tag names
+  a major version alone.
+- **Its provenance.** The workflow attests the build, which anyone can verify
+  against the repository:
+  `gh attestation verify oci://ghcr.io/owlgraph-dev/owlgraph:X.Y.Z --repo owlgraph-dev/owlgraph`.
+- **Its credentials.** The publishing job writes to the registry as the
+  workflow itself, with its own token: no secret, and no other job. The
+  package's visibility is a setting of the package, public, so that anyone
+  pulls the image without an account.
+
 ### Rules
 
 - Tags are annotated (`-a`) and never moved or deleted. A broken release is
   followed by a new patch release.
+- A published version is never replaced, just as its tag is never moved: a
+  broken image, too, is followed by a new patch release. A run that failed
+  before it pushed has published nothing, and can be re-run.
 - Release branches never receive features and are never merged back into
   `main`.
 - A release that needs no stabilization can be tagged on `main` directly. Its

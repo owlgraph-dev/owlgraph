@@ -1,0 +1,22 @@
+# Image override — layered on docker-compose.yml: migrate, app and mcp run a
+# published image instead of building one, so the host needs no checkout.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.image.yml up -d
+#
+# or name both files (and docker-compose.prod.yml on a server) in COMPOSE_FILE
+# in .env. OWLGRAPH_IMAGE names the image, a released version of
+# ghcr.io/owlgraph-dev/owlgraph or a fork's own; see docs/guides/deployment.md,
+# "Running a published image".
+
+services:
+  migrate:
+    image: ${OWLGRAPH_IMAGE:?set OWLGRAPH_IMAGE in .env to the image to run, such as ghcr.io/owlgraph-dev/owlgraph:X.Y.Z}
+    build: !reset null
+
+  app:
+    image: ${OWLGRAPH_IMAGE:?set OWLGRAPH_IMAGE in .env to the image to run, such as ghcr.io/owlgraph-dev/owlgraph:X.Y.Z}
+    build: !reset null
+
+  mcp:
+    image: ${OWLGRAPH_IMAGE:?set OWLGRAPH_IMAGE in .env to the image to run, such as ghcr.io/owlgraph-dev/owlgraph:X.Y.Z}
+    build: !reset null

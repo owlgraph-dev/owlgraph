@@ -10,6 +10,8 @@ database, and how to go back if it goes wrong. Running a new installation is
   ([backup.md](backup.md): `npm run db:backup`, then the restore test). An
   upgrade cannot be undone any other way: migrations only go forward
   ([decision 0001](../adr/0001-migrations-are-immutable-and-forward-only.md)).
+  The scripts run from a checkout, an installation from a published image's
+  too ([backup.md](backup.md#where-to-run-this)).
 - **Know where you are.** The About page (`/-/about`) names the running
   release; an admin's view of it (General → About) also shows how many
   migrations the database has applied, the latest of them, and whether any
@@ -20,6 +22,16 @@ database, and how to go back if it goes wrong. Running a new installation is
 
 ## With Docker Compose
 
+An installation built from a checkout upgrades by rebuilding, one that runs a
+published image by pulling a newer one. In both, the `migrate` service runs
+before `app` and `mcp` start, applies every migration the database has not
+applied yet, and checks the checksum of every one it already has. If it
+refuses, it changes nothing and exits non-zero, and the app does not start:
+`docker compose logs migrate` says why. Then check the result: the About page
+shows the new release, and nothing waiting to be applied.
+
+### From a checkout
+
 1. Check out the release you are upgrading to.
 2. Rebuild and restart:
 
@@ -27,13 +39,22 @@ database, and how to go back if it goes wrong. Running a new installation is
    docker compose up -d --build
    ```
 
-   The `migrate` service runs before `app` and `mcp` start, applies every
-   migration the database has not applied yet, and checks the checksum of
-   every one it already has. If it refuses, it
-   changes nothing and exits non-zero, and the app does not start:
-   `docker compose logs migrate` says why.
-3. Check the result: the About page shows the new release, and nothing
-   waiting to be applied.
+### From a published image
+
+An installation that runs a published image
+([deployment.md](deployment.md#running-a-published-image)) upgrades to a newer
+image:
+
+1. Take the new release's compose files from its tag, as when installing, and
+   keep `.env`: the stack the image expects belongs to the release too.
+2. Name the new version in `.env`'s `OWLGRAPH_IMAGE`. An installation that
+   names `X.Y` keeps it, and gets that version's latest patch release.
+3. Pull it and restart:
+
+   ```bash
+   docker compose pull
+   docker compose up -d
+   ```
 
 ## Without Docker
 
@@ -58,10 +79,13 @@ app stopped:
 2. **To this release.** Check out this release, and migrate again. It records
    the baseline in their place.
 
+With a published image, each hop is that release's image: name its version in
+`OWLGRAPH_IMAGE`, pull and start, and `migrate` runs with it.
+
 A backup from before the baseline restores the same way
 ([backup.md](backup.md#restoring-a-backup-from-before-the-baseline)). Keep a
-clone that has the tag for as long as such a database or backup exists: it is
-the only place the individual migrations live.
+clone that has the tag for as long as such a database or backup exists: it is,
+with that release's image, the only place the individual migrations live.
 
 ## Search text
 
@@ -79,4 +103,5 @@ language again, which brings back dismissed suggestions.
 
 There are no down-migrations. To go back, stop the app, restore the backup you
 took before the upgrade (`npm run db:restore`, [backup.md](backup.md#restore)),
-and start the release you came from.
+and start the release you came from: its checkout, or its image named in
+`OWLGRAPH_IMAGE` again.

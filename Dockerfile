@@ -1,7 +1,12 @@
 # syntax=docker/dockerfile:1
 
 # ---- build --------------------------------------------------------------
-FROM node:22-slim AS build
+# On the building machine's own platform, whatever platform the image is for:
+# what this stage hands on (build/, src/) is JavaScript and assets, the same
+# for every platform, and the runtime stage installs the dependencies for its
+# own. An image built for two platforms so runs the Vite build once, natively,
+# instead of once more under emulation.
+FROM --platform=$BUILDPLATFORM node:22-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 # --ignore-scripts: the package's own `prepare` (svelte-kit sync and the

@@ -796,3 +796,35 @@ own databases and seed their own users, sessions and tokens.
    (`tests/e2e/.servers/`).
 
 With `CI` set, a stray `test.only` fails the run.
+
+### The image's check
+
+`.github/workflows/image.yml` checks the Docker image beside the gate, and
+only for a pull request that touches what the image is built from: the files
+its build context admits, less the tests, and the check itself. A change
+elsewhere does not run it, and it never holds up the gate. It runs for a pull
+request from a fork too, signs in to no registry and publishes nothing.
+
+It builds the image for `linux/amd64` and runs `scripts/check-image.mjs` on
+it, which starts the stack from the image through `docker-compose.image.yml`,
+under a project name of its own, and requires:
+
+- `migrate` to exit 0, and `app` and `mcp` to become healthy and answer
+  `/api/health` and `/health`;
+- the About page to name the version and link the source at the build's
+  revision;
+- `/-/license`, `/licenses.txt` and the licence files to be there;
+- the first admin to be created with the script, and to sign in;
+- sharp to load its native binding for the platform, and esbuild to compile
+  TypeScript.
+
+A release runs the same check before it publishes, and loads the native
+modules of its `linux/arm64` build too
+([branches-and-releases.md](branches-and-releases.md#publishing-a-release)).
+The gate does not run it, as it needs Docker; it runs locally on an image
+built from the checkout:
+
+```bash
+docker build -t owlgraph:check .
+node scripts/check-image.mjs owlgraph:check
+```
