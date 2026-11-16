@@ -6,7 +6,7 @@
 # for every platform, and the runtime stage installs the dependencies for its
 # own. An image built for two platforms so runs the Vite build once, natively,
 # instead of once more under emulation.
-FROM --platform=$BUILDPLATFORM node:22-slim AS build
+FROM --platform=$BUILDPLATFORM node:26-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 # --ignore-scripts: the package's own `prepare` (svelte-kit sync and the
@@ -32,7 +32,7 @@ RUN npm run build
 # each just supplies a different `command:`. mcp/migrate run their
 # TypeScript entrypoints directly via tsx (a production dependency), since
 # they aren't part of the adapter-node build output.
-FROM node:22-slim AS runtime
+FROM node:26-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 RUN groupadd --system app && useradd --system --gid app --home /app app
