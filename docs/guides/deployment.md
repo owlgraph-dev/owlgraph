@@ -531,8 +531,8 @@ runtime install skips dependency install scripts on purpose: the production
 tree still pulls in vite through an optional peer chain (`bits-ui` → `runed`
 → `@sveltejs/kit` → `vite`), and vite's nested esbuild copy cannot complete
 its postinstall there; no production dependency needs one (esbuild's only
-optimizes its command-line shim — tsx uses the API, which resolves the
-platform package itself). sharp, which reads and writes images
+optimizes its command-line shim — tsx and the Svelte loader hook use the API,
+which resolves the platform package itself). sharp, which reads and writes images
 ([media.md](../architecture/media.md)), ships libvips prebuilt per platform as optional
 packages (`@img/sharp-linux-x64` or `@img/sharp-linux-arm64` for this Debian
 image, glibc), so it installs without a script or build tools too. Without the
