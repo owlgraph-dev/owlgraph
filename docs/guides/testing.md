@@ -231,10 +231,7 @@ for a seeded role's user). These files run in the Vitest project
   test may change site-wide state without a lock.
 - **One worker thread per file, isolated,** four at a time. A file's database
   pool, environment and module-level state (caches, rate limiters) start
-  fresh and are never shared. A file whose code loads PDF.js (extracting an
-  uploaded PDF) must run in a child process instead, in a project of its own
-  in `vitest.config.ts` with `pool: 'forks'`, since PDF.js's native canvas
-  binding can crash a worker thread as it exits on Windows.
+  fresh and are never shared.
 - **Hermetic:** a developer's `.env` is not read (`DOTENV_CONFIG_PATH`), the
   logger is silent, `APP_SECRET_KEY` is the run's own, and
   `MCP_DISABLE_LISTEN=1`.
