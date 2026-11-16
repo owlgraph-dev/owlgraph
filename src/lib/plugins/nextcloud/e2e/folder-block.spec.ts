@@ -7,6 +7,7 @@
 // test's cached reads answer for no other's.
 import type { APIRequestContext, Locator, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
@@ -188,13 +189,13 @@ test.describe('the Nextcloud folder block', () => {
 });
 
 test.describe('the Nextcloud folder block on a phone', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('reads in two-line rows a finger can hit, sorts through a sheet, and scrolls nothing sideways', async ({ page, browser }) => {
     await configure(page.request, mock.origin);
     const collection = await connect(page.request);
     const { slug } = await folderPage(page.request, collection.id);
-    const reader = await browser.newContext({ storageState: { cookies: [], origins: [] }, viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    const reader = await browser.newContext({ storageState: { cookies: [], origins: [] }, ...PHONE });
     const view = await reader.newPage();
     await view.goto(`/${slug}`);
     const listing = block(view);

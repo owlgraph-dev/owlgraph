@@ -3,6 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createDocument, createPage, unique } from '$tests/e2e/api';
 import { doc } from '$tests/e2e/doc';
 import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
@@ -63,7 +64,7 @@ test.describe('the document block', () => {
 });
 
 test.describe('the document block on a phone', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('fits a phone: a row a finger can hit, its download an icon, nothing sideways', async ({ page }) => {
     const minutes = await upload(page.request);

@@ -7,6 +7,7 @@
 // one step (docs/architecture/blocks/node-embeds.md, "One family in the editor").
 import type { APIRequestContext, Locator, Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage, unique } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
 import { authState } from '$tests/e2e/seed-data';
@@ -182,7 +183,7 @@ test.describe('a quick link to a Nextcloud document', () => {
 });
 
 test.describe('the Nextcloud blocks in the phone editor', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   /** Sets the option in the block's settings sheet and saves; returns the stored attrs. */
   async function setOnPhone(page: Page, pageId: string, slug: string, blockId: string, tapAt: string, option: string) {

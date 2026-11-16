@@ -5,6 +5,7 @@
 import sharp from 'sharp';
 import type { APIRequestContext } from '@playwright/test';
 import { test, expect, sameOrigin } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage } from '$tests/e2e/api';
 import { doc, para } from '$tests/e2e/doc';
 import { authState } from '$tests/e2e/seed-data';
@@ -79,7 +80,7 @@ test.describe('responsive images', () => {
 // the page settles, fetching the hero's desktop copy too. Nothing here reads the
 // layout while loading: that would force a layout and hide the faulty pass.
 test.describe('on a phone, while the page loads', () => {
-  test.use({ storageState: authState('editorA'), viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  test.use({ storageState: authState('editorA'), ...PHONE, deviceScaleFactor: 3 });
 
   test("the hero is fetched as the phone's copy only", async ({ page }) => {
     const { id: pageId, slug } = await createPage(page.request);

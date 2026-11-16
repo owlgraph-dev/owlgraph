@@ -4,6 +4,7 @@
 
 // docs/architecture/search.md, "The node picker".
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { authState } from '$tests/e2e/seed-data';
 import { createPage, unique } from '$tests/e2e/api';
 import { doc, txt } from '$tests/e2e/doc';
@@ -63,7 +64,7 @@ test.describe('the link picker', () => {
 });
 
 test.describe('the link picker on a phone', () => {
-  test.use({ storageState: authState('editorA'), viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ storageState: authState('editorA'), ...PHONE });
 
   test('is a sheet of its own that finds a page and links the selected text', async ({ page }) => {
     const target = await createPage(page.request, { visibility: null, title: unique('Phone target').name });

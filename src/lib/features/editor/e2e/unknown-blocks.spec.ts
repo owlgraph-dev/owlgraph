@@ -6,6 +6,7 @@
 // merely turned off keeps its kinds known.
 import type { Page } from '@playwright/test';
 import { test, expect } from '$tests/e2e/fixtures';
+import { PHONE } from '$tests/e2e/devices';
 import { createPage, uploadImage } from '$tests/e2e/api';
 import { authState } from '$tests/e2e/seed-data';
 import { db } from '../../../platform/db.server';
@@ -174,7 +175,7 @@ test.describe('a page the editor cannot read', () => {
 });
 
 test.describe('unknown blocks on a phone', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ ...PHONE });
 
   test('are shown in the phone editor and deleted from its toolbar', async ({ page }) => {
     const { id, slug } = await unknownPage(page);

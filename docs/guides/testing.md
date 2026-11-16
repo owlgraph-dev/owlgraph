@@ -750,6 +750,24 @@ sideways at 360, 390 and 768 px ([responsive.md](../architecture/responsive.md#t
   asserts `expect.poll(() => horizontalOverflow(page)).toEqual([])` at a phone
   width, which lists what overflows when it fails.
 
+### A phone
+
+A spec that runs as a phone spreads `PHONE` (`tests/e2e/devices.ts`) into its
+`test.use` or `browser.newContext`: a 390×844 viewport, touch, mobile, and a
+**screen of the same size**. The project runs as Desktop Chrome, whose
+1920×1080 screen Playwright gives every context, and a phone viewport on that
+screen is a device that does not exist. It also misbehaves like one: Chromium
+judges what a page preloads against the screen before the viewport meta
+applies, so such a phone fetches the desktop copy of a hero beside its own.
+
+- **A pixel ratio is the spec's own**, added beside `PHONE`
+  (`deviceScaleFactor: 3`) where what it checks depends on it.
+- **The fixtures refuse a mismatch:** a mobile context, the test's own or one
+  it opens, whose screen is not the size of its viewport fails at once, naming
+  `PHONE`.
+- **A narrow desktop window** (a 390 px viewport without `isMobile`) keeps the
+  project's screen: that device exists.
+
 ### Diagnosing a failure
 
 Full runs record nothing: tracing and video on every worker cost enough to
