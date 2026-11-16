@@ -16,21 +16,24 @@ export async function extractText(bytes: Buffer, mime: string): Promise<string> 
 async function extractPdfText(bytes: Buffer): Promise<string> {
   try {
     // The legacy build runs in Node without a worker thread. `any`: the
-    // subpath's bundled types don't always resolve.
+    // subpath's bundled types don't always resolve. PDF.js evaluates no code
+    // from a document since version 6, which dropped the option that turned
+    // that off.
     const pdfjs: any = await import('pdfjs-dist/legacy/build/pdf.mjs');
-    const doc = await pdfjs.getDocument({
-      data: new Uint8Array(bytes),
-      useSystemFonts: true,
-      isEvalSupported: false,
-    }).promise;
-    const parts: string[] = [];
-    for (let i = 1; i <= doc.numPages; i++) {
-      const page = await doc.getPage(i);
-      const content = await page.getTextContent();
-      parts.push(content.items.map((it: any) => ('str' in it ? it.str : '')).join(' '));
+    // The loading task releases the document, read or not.
+    const task = pdfjs.getDocument({ data: new Uint8Array(bytes), useSystemFonts: true });
+    try {
+      const doc = await task.promise;
+      const parts: string[] = [];
+      for (let i = 1; i <= doc.numPages; i++) {
+        const page = await doc.getPage(i);
+        const content = await page.getTextContent();
+        parts.push(content.items.map((it: any) => ('str' in it ? it.str : '')).join(' '));
+      }
+      return parts.join('\n\n').replace(/[ \t]+\n/g, '\n').trim();
+    } finally {
+      await task.destroy();
     }
-    await doc.destroy();
-    return parts.join('\n\n').replace(/[ \t]+\n/g, '\n').trim();
   } catch (err) {
     // An expected outcome, logged without a stack. The class only: the message
     // comes from bytes the user supplied.
