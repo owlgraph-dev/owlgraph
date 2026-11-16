@@ -40,7 +40,8 @@
     "test:component": "vitest run --project component",
     "test:watch": "vitest --project unit",
     "test:e2e": "node scripts/e2e.mjs",
-    "gate": "npm run build && npm run check && npm test && npm run test:int && npm run test:component && node scripts/e2e.mjs --skip-build"
+    "gate": "npm run build && npm run check && npm test && npm run test:int && node scripts/e2e.mjs journeys --skip-build",
+    "gate:full": "npm run build && npm run check && npm test && npm run test:int && npm run test:component && node scripts/e2e.mjs --skip-build"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

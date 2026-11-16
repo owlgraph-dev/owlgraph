@@ -2,18 +2,24 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-// The e2e runner behind `npm run test:e2e` and `npm run gate` (docs/guides/testing.md,
-// "Lanes"): one build, then each lane as its own Playwright run. Every lane
-// runs even after one failed, so a red lane never hides the next.
+// The e2e runner behind `npm run test:e2e`, `npm run gate` and `npm run gate:full`
+// (docs/guides/testing.md, "Lanes"): one build, then each lane as its own
+// Playwright run. Every lane runs even after one failed, so a red lane never
+// hides the next. Without a lane named, it runs every spec: `app` and `branded`.
 //
 //   node scripts/e2e.mjs [lane…] [--skip-build] [-- <playwright args>]
 import { spawnSync } from 'node:child_process';
 import postgres from 'postgres';
 
 const LANES = {
-  app: { project: 'app', env: {} },
-  branded: { project: 'branded-accent', env: { E2E_BRANDED_ACCENT: '1' } },
+  app: { project: 'app', env: {}, specs: [] },
+  branded: { project: 'branded-accent', env: { E2E_BRANDED_ACCENT: '1' }, specs: [] },
+  // The golden paths, which the gate runs (docs/guides/testing.md, "Journeys"): the
+  // harness's own and a plugin's `journey-<name>.spec.ts`. Playwright matches
+  // each against the spec's path. Part of `app`, so not run by default too.
+  journeys: { project: 'app', env: {}, specs: ['tests/e2e/journeys/', 'journey-'] },
 };
+const EVERY_SPEC = ['app', 'branded'];
 
 const argv = process.argv.slice(2);
 const split = argv.indexOf('--');
@@ -56,12 +62,12 @@ if (!skipBuild && run('npm', ['run', 'build']) !== 0) {
 }
 
 const results = [];
-for (const lane of requested.length ? requested : Object.keys(LANES)) {
-  const { project, env } = LANES[lane];
+for (const lane of requested.length ? requested : EVERY_SPEC) {
+  const { project, env, specs } = LANES[lane];
   console.log(`\n── e2e lane: ${lane} ──`);
   const started = Date.now();
   // A run clears its output folder, so a shared one would lose the earlier lane's failures.
-  const status = run('npx', ['playwright', 'test', `--project=${project}`, `--output=test-results/${lane}`, ...passthrough], {
+  const status = run('npx', ['playwright', 'test', `--project=${project}`, `--output=test-results/${lane}`, ...specs, ...passthrough], {
     ...env,
     E2E_SERVER: 'built',
     PLAYWRIGHT_HTML_OUTPUT_DIR: `playwright-report/${lane}`,

@@ -51,9 +51,11 @@ npm run mcp             # the MCP server at http://localhost:3030/mcp
   in [docs/guides/branches-and-releases.md](docs/guides/branches-and-releases.md).
 - **The gate is the definition of done.** `npm run gate` runs the build,
   `npm run check` (types, the architecture boundaries, the UI conventions,
-  no stray `console`, the paths the docs and comments name, the licence headers), the unit, integration and component tests and every
-  end-to-end lane against test databases it creates ([docs/guides/testing.md](docs/guides/testing.md)). It must be
-  green before a pull request is merged; CI runs the same.
+  no stray `console`, the paths the docs and comments name, the licence headers), the unit and integration tests and the
+  journeys against test databases it creates ([docs/guides/testing.md](docs/guides/testing.md)). It must be
+  green before a pull request is merged; CI runs the same. The component tests
+  and the other end-to-end specs are not in it: run the ones covering what you
+  change before you push, or all of them with `npm run gate:full`.
 - **Follow the rules in [AGENTS.md](AGENTS.md)** — they apply to people as much
   as to coding agents: migrations are forward-only and never edited once
   applied, authorization is enforced on the server for the current viewer,

@@ -95,10 +95,19 @@ A test asserts what can be seen at its layer: "an anonymous request gets a
 ## Running tests
 
 **The gate, `npm run gate`, is the definition of done.** It runs the build,
-`npm run check`, the unit tests, the integration tests (database and HTTP),
-the component tests and every e2e lane, in that order, and stops at the first
+`npm run check`, the unit tests, the integration tests (database and HTTP) and
+the journeys ([Journeys](#journeys)), in that order, and stops at the first
 step that fails. Green means every step passed. CI runs the same steps in
 parallel jobs ([CI contract](#ci-contract)).
+
+**The other tests are tools, not the gate**
+([decision 0017](../adr/0017-the-gate-runs-unit-integration-and-journeys.md)):
+the component tests, the end-to-end specs beside the journeys and the branded
+lane. A change runs the ones that cover what it touches before it is pushed,
+and `npm run gate:full` runs the gate with all of them. One that fails when it
+is next run is fixed, or deleted when it only pinned down how the code
+happened to work. What joins the gate are acceptance tests derived from a
+spec's acceptance criteria, at the lowest layer that can observe them.
 
 `npm run check` is the static half: svelte-check with warnings as errors, the
 architecture boundaries (`scripts/check-boundaries.mjs`), the UI conventions
@@ -108,12 +117,13 @@ header on every source file (`license-headers.mjs --check`).
 
 | Command | What it does |
 |---|---|
-| `npm run gate` | build → `npm run check` → unit → integration → component → every e2e lane |
+| `npm run gate` | build → `npm run check` → unit → integration → the journeys |
+| `npm run gate:full` | build → `npm run check` → unit → integration → component → every e2e spec (the `app` and `branded` lanes) |
 | `npm test` | unit tests (no database) |
 | `npm run test:int` | database and HTTP tests (a Postgres; HTTP tests need a current build) |
 | `npm run test:component` | component tests in Chromium |
-| `npm run test:e2e` | builds once, then every e2e lane against that build |
-| `node scripts/e2e.mjs app` | one lane (`app` or `branded`); add `--skip-build` to reuse the build |
+| `npm run test:e2e` | builds once, then every e2e spec: the `app` and `branded` lanes |
+| `node scripts/e2e.mjs journeys` | one lane (`journeys`, `app` or `branded`); add `--skip-build` to reuse the build |
 | `npx vitest run <file>` | one Vitest file, whatever its kind |
 | `npx playwright test <spec>` | one spec: builds, then runs it |
 | `E2E_SERVER=built npx playwright test <spec>` | one spec against the existing build: no rebuild |
@@ -294,7 +304,9 @@ proxy (`ADDRESS_HEADER`, set before the server is imported) is the request's
 
 A `*.svelte.test.ts` file renders one component in Chromium through Vitest's
 browser mode (the `component` project) with `vitest-browser-svelte`, and
-drives it with `@vitest/browser/context` (`page`, `userEvent`):
+drives it with `@vitest/browser/context` (`page`, `userEvent`). They are not
+part of the gate: a change to a component runs its tests
+([Running tests](#running-tests)).
 
 - **No SvelteKit.** `$app/state`, `$app/stores`, `$app/navigation`,
   `$app/environment` and `$app/forms` are stand-ins (`tests/component/app/`).
@@ -536,7 +548,9 @@ earlier: its port is taken, and the run stops before anything is built
 ### Lanes
 
 A run covers one lane:
-- **`app`:** every spec.
+- **`journeys`:** the journeys, the harness's (`tests/e2e/journeys/`) and the
+  plugins' (`journey-<name>.spec.ts`), which the gate runs.
+- **`app`:** every spec, the journeys among them.
 - **`branded`** (`E2E_BRANDED_ACCENT=1`): the design-system checks a brand
   accent can break (axe, focus rings, state steps), run a second time under a
   seeded, extreme accent. The tests it runs carry the tag `@branded`
@@ -544,15 +558,15 @@ A run covers one lane:
   database. The accent is site-wide for the whole lane, so the lane runs on
   its own.
 
-`npm run test:e2e` runs both, one after the other, and reports both even when
-the first fails. It checks the database server first and stops at once if it
-cannot reach it. Without that check, a stopped database would show up only as
-a server's health check timing out minutes later.
+`npm run test:e2e` runs every spec, the `app` and `branded` lanes, one after
+the other, and reports both even when the first fails. It checks the database
+server first and stops at once if it cannot reach it. Without that check, a
+stopped database would show up only as a server's health check timing out
+minutes later.
 
 **Shards.** A lane splits across machines with Playwright's own sharding:
 `node scripts/e2e.mjs app --skip-build -- --shard=1/2` runs the first half and
-`--shard=2/2` the second, each on its own databases and servers. CI runs the
-app lane in two shards.
+`--shard=2/2` the second, each on its own databases and servers.
 
 ### Isolation
 
@@ -775,25 +789,27 @@ own databases and seed their own users, sessions and tokens.
    it; the workflow sets the test database's for every step.
 2. **Install:** `npm ci`, whose `prepare` script prepares SvelteKit's types
    and compiles the interface messages (fetching two inlang plugins from
-   jsDelivr). Then `npx playwright install --with-deps chromium`, which the
-   component tests use too.
+   jsDelivr). Then, for the journeys, `npx playwright install --with-deps
+   chromium`.
 3. **Run:** three jobs side by side:
    - **hygiene:** the third-party notices match the lockfile, nothing that
      must not be published is tracked, and no critical advisory affects the
      production dependencies;
    - **checks:** `npm run check` (the licence headers among its checks) and
      `npm test`, both before any build, so a
-     fresh clone is shown to check and test as it is; then `npm run build`,
-     `npm run test:int` and `npm run test:component`. With `CI` set, the
-     HTTP tests fail rather than skip without a current build, and so do the
-     operations tests without `PG_CONTAINER`, which the step sets to the
-     service's container;
-   - **e2e,** in two shards: each builds, then runs its half of the app lane
-     (`node scripts/e2e.mjs app --skip-build -- --shard=<n>/2`); the first
-     also runs the branded lane.
+     fresh clone is shown to check and test as it is; then `npm run build`
+     and `npm run test:int`. With `CI` set, the HTTP tests fail rather than
+     skip without a current build, and so do the operations tests without
+     `PG_CONTAINER`, which the step sets to the service's container;
+   - **journeys:** builds, then runs the journeys lane
+     (`node scripts/e2e.mjs journeys --skip-build`).
 4. **On failure:** keep `playwright-report/` (HTML, written when `CI` is set),
    `test-results/` (one folder per lane, `<lane>/`) and the servers' logs
    (`tests/e2e/.servers/`).
+
+The repository's rules for `main` require these jobs by name ("Check, unit and
+integration tests", "Journeys", beside the hygiene job and the sign-off
+check), so renaming a job means changing the rules too.
 
 With `CI` set, a stray `test.only` fails the run.
 
