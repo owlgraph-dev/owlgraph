@@ -32,6 +32,10 @@
     class?: string;
   } = $props();
 
+  // The trigger shows the value, so its name holds it too (WCAG 2.5.3):
+  // docs/architecture/design-system/patterns.md, "A trigger that shows a value".
+  const triggerName = $derived(`${ariaLabel}: ${value ?? noneLabel}`);
+
   function pick(icon: string | null) {
     value = icon;
     onValueChange?.(icon);
@@ -41,7 +45,7 @@
 </script>
 
 <span class="ds-iconpick {className}">
-  <Popover bind:open {onOpenChange} side="bottom" align="end" triggerProps={{ 'aria-label': ariaLabel, title: ariaLabel }}>
+  <Popover bind:open {onOpenChange} side="bottom" align="end" triggerProps={{ 'aria-label': triggerName, title: triggerName }}>
     {#snippet trigger()}
       <span class="ds-iconpick-trigger" class:ds-iconpick-trigger-open={open}>
         {#if value}

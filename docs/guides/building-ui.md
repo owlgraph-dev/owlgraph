@@ -241,6 +241,9 @@ Also fixed:
   width, a compact picker) is a primitive prop (`Dialog size`, `Select size` /
   `width`), not a `class` plus an override rule — a scoped primitive rule wins.
 - **Icon-only controls** carry `title` and `aria-label` with the same string.
+- **A trigger that shows a value** (a colour, a count) is named by its field
+  and that value, so its visible text is part of its name
+  ([patterns.md](../architecture/design-system/patterns.md#a-trigger-that-shows-a-value)).
 
 ### 5. Writing
 

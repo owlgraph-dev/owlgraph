@@ -50,7 +50,8 @@
     </Popover>
   </Specimen>
   <Specimen label="toolbar sm (a breadcrumb, a row's trailing action) + active (a state the overlay doesn't know)" state="toolbar-sm" overlay>
-    <Popover triggerProps={{ 'aria-label': 'Per side', title: 'Per side' }}>
+    <!-- The count on its face is part of its name (docs/architecture/design-system/patterns.md, "A trigger that shows a value"). -->
+    <Popover triggerProps={{ 'aria-label': 'Per side · 2', title: 'Per side · 2' }}>
       {#snippet trigger()}<TriggerFace variant="toolbar" size="sm" active><Icon name="sliders" size={14} /><span>2</span></TriggerFace>{/snippet}
       <p class="panel">Per-side values.</p>
     </Popover>

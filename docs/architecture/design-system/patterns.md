@@ -108,6 +108,19 @@ class would lag one click behind the real state. `ToolbarGroupItem`'s own
 `e.preventDefault()` after invoking the caller's `onclick`, mirroring the
 `onkeydown` interceptor.
 
+## A trigger that shows a value
+
+A trigger whose face shows a value — ColorPickerField's colour, IconPickerField's
+"None", a count beside a sliders icon — is named by its field and that value,
+so the words on its face are part of its name (WCAG 2.5.3, Label in Name):
+voice control reaches it by what is on screen, and a screen reader hears the
+value without opening it. ColorPickerField and IconPickerField compose the
+name from their `ariaLabel` and the shown value (`Background: Accent`,
+`Icon: None`); a consumer that puts a count on a TriggerFace passes a message
+that carries it (`Customize sides · 2`). The `title` is the same string. A
+`combobox` trigger (Select) names its field alone: its name never comes from
+its content.
+
 ## Where an error goes
 
 An error sits next to what caused it.
