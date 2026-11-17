@@ -63,8 +63,11 @@ function highlightCode(code: string, lang: string | null | undefined): string {
 
 type SlugMap = Record<string, string>;
 
-function nodeHref(targetId: string | null | undefined, cachedSlug: string | undefined, slugMap: SlugMap): string {
-  const slug = (targetId && slugMap[targetId]) || cachedSlug || '';
+// The slug map is the only source of a node's address: it holds what this
+// reader may read. The slug stored with a link is never one, or a link would
+// show the address of a node its reader may not read.
+function nodeHref(targetId: string | null | undefined, slugMap: SlugMap): string {
+  const slug = (targetId && slugMap[targetId]) || '';
   return slug ? `/${esc(slug)}` : '#';
 }
 
@@ -94,7 +97,6 @@ function renderMarkWrap(
   attrs: Record<string, unknown> | undefined,
   html: string,
   slugMap: SlugMap,
-  trustCachedSlug: boolean,
   registry: TypographyRegistry,
   customStyles: CustomStyleClasses,
   styles: StyleCollector
@@ -104,8 +106,8 @@ function renderMarkWrap(
     case 'strike': return `<s>${html}</s>`;
     case 'code': return `<code>${html}</code>`;
     case 'link': return `<a href="${esc(safeLinkHref(attrs?.href))}" rel="noopener noreferrer nofollow">${html}</a>`;
-    case 'pageLink': return `<a class="page-link" href="${nodeHref(attrs?.targetPageId as string | null, trustCachedSlug ? (attrs?.targetSlug as string | undefined) : undefined, slugMap)}">${html}</a>`;
-    case 'docLink': return `<a class="doc-link" href="${nodeHref(attrs?.targetDocId as string | null, undefined, slugMap)}">${html}</a>`;
+    case 'pageLink': return `<a class="page-link" href="${nodeHref(attrs?.targetPageId as string | null, slugMap)}">${html}</a>`;
+    case 'docLink': return `<a class="doc-link" href="${nodeHref(attrs?.targetDocId as string | null, slugMap)}">${html}</a>`;
     case 'semanticProperty': {
       // A template parameter is a slot, not a property claim: plain text once bound.
       const propName = String(attrs?.propName ?? '');
@@ -157,16 +159,13 @@ export interface RenderedDoc {
   preloads: ImagePreload[];
 }
 
-// trustCachedSlug: whether a link may fall back to its authoring-time cached
-// slug when slugMap lacks the target. A share-link reader passes false, or a
-// raw href could name a hidden namespace's page. slugMap itself must already
-// be scoped to the viewer (publicLinkSlugMap); this closes the second leak.
+// slugMap: the current address of each node the doc links to that this reader
+// may read (linkSlugMap). A link to any other node renders without one.
 export function renderDoc(
   doc: JsonDoc | null | undefined,
   slugMap: SlugMap = {},
   queryResults: Record<string, QueryBlockResult> = {},
   opts: {
-    trustCachedSlug?: boolean;
     typographyRegistry?: TypographyRegistry;
     customStyles?: CustomStyleClasses;
     blockDefaults?: ResolvedBlockDefaults;
@@ -182,7 +181,6 @@ export function renderDoc(
     blockData?: Readonly<Record<string, unknown>>;
   } = {}
 ): RenderedDoc {
-  const trustCachedSlug = opts.trustCachedSlug ?? true;
   const styles = opts.styles ?? new StyleCollector();
   const blockDefaults = opts.blockDefaults ?? BUILTIN_BLOCK_DEFAULTS;
   const customStyles = opts.customStyles ?? {};
@@ -197,7 +195,7 @@ export function renderDoc(
     const marks: { type: string; attrs?: Record<string, unknown> }[] = node.marks ?? [];
     for (const type of MARK_RENDER_ORDER) {
       const mark = marks.find((m) => m.type === type);
-      if (mark) html = renderMarkWrap(type, mark.attrs, html, slugMap, trustCachedSlug, registry, customStyles, styles);
+      if (mark) html = renderMarkWrap(type, mark.attrs, html, slugMap, registry, customStyles, styles);
     }
     return html;
   }
@@ -237,7 +235,7 @@ export function renderDoc(
     registry,
     blockDefaults,
     customStyles,
-    nodeHref: (targetId, cachedSlug) => nodeHref(targetId, trustCachedSlug ? cachedSlug : undefined, slugMap),
+    nodeHref: (targetId) => nodeHref(targetId, slugMap),
     queryResults,
     blockData: opts.blockData ?? {},
     ssr: ssrBlock,

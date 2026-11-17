@@ -24,7 +24,8 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
   if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
   const body = await request.json().catch(() => ({}));
   const blocks = Array.isArray(body?.blocks) ? body.blocks : [];
-  const slugMap = await linkSlugMap(params.id);
+  // As the editor asking, like the page they are previewing a part of.
+  const slugMap = await linkSlugMap(params.id, locals.user);
   // The registries the reader's render uses, or the diff shows a difference
   // the reader never sees.
   const [customStacks, paragraphStyles, styleRefs, siteTheme] = await Promise.all([

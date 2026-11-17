@@ -168,12 +168,16 @@ different namespace, never breaks an inbound reference.
 
 What it does mean: anything that renders a *link* to another node must
 resolve that node's *current* namespace+slug fresh, at render/load time,
-rather than trusting a cached one. Three call sites do this:
+rather than trusting a cached one. Two call sites do this:
 
 - The public renderer's `slugMap` (built by `linkSlugMap` in the graph
-  feature's `graph.server.ts`, consumed in `render.server.ts`) — resolved once per page request, values are
+  feature's `graph.server.ts`, consumed in `render.server.ts`) — resolved
+  once per page request for that request's reader, values are
   already-namespaced paths (`{namespace-slug}/{slug}` or bare `{slug}` for
-  the default namespace).
+  the default namespace). It holds only the targets the reader may read. A
+  link to any other node, whether the reader may not read it or it is gone,
+  renders without an address (`#`), so the two cannot be told apart
+  ([authorization.md](authorization.md#what-a-link-shows)).
 - The editor's link-href resolvers — the inline `pageLink`/`docLink` marks
   (`content/inline/`) and the quick link (`blocks/quickLink/tiptap.ts`)
   each take a `resolveHref`-shaped option (TipTap `addOptions()`),
@@ -184,11 +188,11 @@ rather than trusting a cached one. Three call sites do this:
   data), and refreshed on the editor's next full load.
 
 A stored `targetSlug`/`data-slug` attribute (where one exists, e.g. on
-`pageLink`) is only ever a fallback for when no fresher map is available —
-never the primary source for a rendered href, and doesn't carry a
-namespace (a stale fallback after a cross-namespace move is a known,
-accepted edge case, same tier as the pre-existing staleness tolerance
-above).
+`pageLink`) is never the source of a rendered href, in the editor or on the
+page: it carries no namespace, it goes stale, and it would show the address
+of a node to a reader who may not read it. A quick link without a label
+shows it in the label's place — on the page only to a reader who may read
+the target.
 
 ## Reserved-word policy
 

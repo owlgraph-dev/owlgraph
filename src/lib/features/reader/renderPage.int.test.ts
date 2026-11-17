@@ -16,7 +16,7 @@ import { load as shareLoad } from './routes/share.server';
 import { connectAs, textOf, userOf, type Role } from '#tests/integration/mcp.ts';
 
 // One page holds what tells the readers apart: a link an anonymous reader may
-// not follow, a gone target with a cached slug, a hero image with copies, its
+// not follow, a gone target with a slug stored in its link, a hero image with copies, its
 // own widths and ground. The seed's query page (tests/support/seed.ts) matches
 // a public, an internal and a restricted page.
 
@@ -94,11 +94,17 @@ async function queryPageId(): Promise<string> {
 }
 
 describe('a page at its address (the read route)', () => {
-  it('resolves every link to its target’s current address, and a target gone to the slug cached with the link', async () => {
-    const data = await visit(page.slug, { user: null });
-    expect(hrefOf(data.html, 'to the open page')).toBe(`/${open.slug}`);
-    expect(hrefOf(data.html, 'to the secret page')).toBe(`/${secret.slug}`);
-    expect(hrefOf(data.html, 'to a page gone')).toBe('/gone-page');
+  it('resolves a link to its target’s current address for a reader who may read the target, and to none for one who may not, as for a target gone', async () => {
+    const anonymous = await visit(page.slug, { user: null });
+    expect(hrefOf(anonymous.html, 'to the open page')).toBe(`/${open.slug}`);
+    expect(hrefOf(anonymous.html, 'to the secret page')).toBe('#');
+    expect(hrefOf(anonymous.html, 'to a page gone')).toBe('#');
+    expect(anonymous.html).not.toContain(secret.slug);
+    expect(anonymous.html).not.toContain('gone-page');
+
+    const owner = await visit(page.slug, { user: await userOf('editorA') });
+    expect(hrefOf(owner.html, 'to the secret page')).toBe(`/${secret.slug}`);
+    expect(hrefOf(owner.html, 'to a page gone')).toBe('#');
   });
 
   it('runs the query block as the visitor: an anonymous one is shown no restricted row, an admin every row', async () => {
@@ -127,12 +133,15 @@ describe('a page at its address (the read route)', () => {
 });
 
 describe('a page through a share link (the share route)', () => {
-  it('resolves links only to what an anonymous reader may follow, and never to a cached slug', async () => {
+  it('resolves links only to what an anonymous reader may follow, whoever holds the link', async () => {
     const { data } = await viaShare(token, { user: null });
     expect(hrefOf(data.html, 'to the open page')).toBe(`/${open.slug}`);
     expect(hrefOf(data.html, 'to the secret page')).toBe('#');
     expect(hrefOf(data.html, 'to a page gone')).toBe('#');
     expect(data.html).not.toContain(secret.slug);
+    // The secret page's owner, holding the link, is shown the same.
+    const held = await viaShare(token, { user: await userOf('editorA') });
+    expect(hrefOf(held.data.html, 'to the secret page')).toBe('#');
   });
 
   it('runs the query block as nobody, even for a signed-in admin holding the link', async () => {
@@ -157,11 +166,16 @@ describe('a page through a share link (the share route)', () => {
 });
 
 describe('a page an agent reads (get_page_html)', () => {
-  it('resolves links as the read route does', async () => {
+  it('resolves links as the read route does, for the agent’s user', async () => {
     const html = await asAgent('admin', page.id);
     expect(hrefOf(html, 'to the open page')).toBe(`/${open.slug}`);
     expect(hrefOf(html, 'to the secret page')).toBe(`/${secret.slug}`);
-    expect(hrefOf(html, 'to a page gone')).toBe('/gone-page');
+    expect(hrefOf(html, 'to a page gone')).toBe('#');
+
+    const asViewer = await asAgent('viewer', page.id);
+    expect(hrefOf(asViewer, 'to the open page')).toBe(`/${open.slug}`);
+    expect(hrefOf(asViewer, 'to the secret page')).toBe('#');
+    expect(asViewer).not.toContain(secret.slug);
   });
 
   it('runs the query block as the agent’s user', async () => {

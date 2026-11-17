@@ -106,6 +106,11 @@ Addresses:
     namespace, a slug that is taken there gets a suffix, and the default
     namespace itself cannot be deleted.
 
+What a link shows:
+
+20. A link to a node its reader may not read is shown as a link to a node
+    that does not exist, and carries no address of it.
+
 ## Affected components
 
 - [Authorization and visibility](../architecture/authorization.md): the two
@@ -155,7 +160,7 @@ None blocks the work.
 - 002.4 holds for a collection with no one to share it with: a collection has
   no share list, so one set to restricted by itself is its owner's and
   admins' alone.
-- 002.5 does not hold in five cases, each pinned:
+- 002.5 does not hold in four cases, each pinned:
   - a signed-out visitor to a restricted document is sent to sign in;
   - the not-found answer for a page or document the asker may not read
     carries other words than a missing address's ("Page not found" for "Not
@@ -164,19 +169,16 @@ None blocks the work.
     page, where a missing address is not found;
   - a write to a page or document the caller may not read is answered as
     forbidden, where a write to a missing one is not found, and so is a
-    signed-out caller's write to a document's file;
-  - an agent's link to a page its user may not read is made, and with no
-    label of its own takes the page's title.
+    signed-out caller's write to a document's file.
 - 002.9 does not hold when a namespace is deleted while the default
   namespace is closer than it: its nodes move with their settings as they
   were. Pinned.
 - 002.10 has no acceptance test: only a browser shows it, and the gate runs
   no component test. The namespace journey sees the notice, and a component
   test holds it beside the silence when a namespace is narrowed.
-- 002.15 does not hold for a link: a page's link to a node in a restricted
-  namespace carries that namespace's slug in its address, for every reader.
-  Pinned. The address of a node the reader may not read, in a namespace they
-  can reach, shows the same way; no criterion covers that.
 - 002.18 does not hold when a namespace is deleted while one of its nodes is
   named as another namespace: the node arrives at the root under that name.
   Pinned.
+- 002.20 holds for a page as it is read: at its address, through a share
+  link, by an agent. In the editor a link still carries the slug it was made
+  with, for whoever may edit the page.
