@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { unknownKeys, type JsonDoc, type JsonNode } from '$lib/features/content';
+import { unknownKeys, type JsonDoc, type JsonNode } from '#lib/features/content/index.ts';
 import { assertNoUnknownDropped, describeDropped, isUnknownDropped, parseAcknowledged } from './unknownGuard';
 
 const widget = (blockId?: string): JsonNode => ({ type: 'retiredWidget', attrs: blockId ? { blockId } : { setting: 'no id' } });

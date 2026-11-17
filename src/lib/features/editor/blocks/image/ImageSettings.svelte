@@ -6,10 +6,10 @@
 <script lang="ts">
   // Box mode and object fit are selects: their word labels never fit a
   // segmented row.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Select, Input, NumberField, Button, PositionGrid } from '$lib/design-system';
-  import { editTier, WIDTH_ATTR, effectiveWidth, effectiveFit, effectivePosition, pinnedScheme } from '$lib/features/content';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Select, Input, NumberField, Button, PositionGrid } from '#lib/design-system/index.ts';
+  import { editTier, WIDTH_ATTR, effectiveWidth, effectiveFit, effectivePosition, pinnedScheme } from '#lib/features/content/index.ts';
   import { positionLabels } from '../../blockSettings/positionLabels';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';

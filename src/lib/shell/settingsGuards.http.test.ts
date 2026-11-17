@@ -4,14 +4,14 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createServer, type Server } from 'node:http';
-import { db } from '$lib/platform/db.server';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
-import { ROLES, type Action, type Role as AuthRole, type SessionUser } from '$lib/features/auth';
-import { can } from '$lib/features/auth/server';
-import { pluginOrigin, sealCredential, storeConnection } from '$lib/features/pluginHost/server';
-import { PLUGINS_WITH_SETTINGS } from '$lib/plugins';
-import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf, type Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
+import { ROLES, type Action, type Role as AuthRole, type SessionUser } from '#lib/features/auth/index.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { pluginOrigin, sealCredential, storeConnection } from '#lib/features/pluginHost/server.ts';
+import { PLUGINS_WITH_SETTINGS } from '#lib/plugins/index.ts';
+import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 import { SETTINGS_TREE } from './settings/tree';
 import { activeItemId, leavesSettings, type SettingsItem } from './settings/treeModel';
 

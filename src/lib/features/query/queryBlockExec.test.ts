@@ -7,17 +7,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 vi.mock('./graphql/nodes.server', () => ({ getNodes: vi.fn() }));
 // Partial: the semantic barrel also feeds traverse.server.ts; only the lookup
 // this test drives is stubbed.
-vi.mock('$lib/features/semantic/server', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('$lib/features/semantic/server')>()),
+vi.mock('#lib/features/semantic/server.ts', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('#lib/features/semantic/server.ts')>()),
   getNodeProperties: vi.fn(),
 }));
-vi.mock('$lib/features/namespaces/server', () => ({ resolveNamespaceLabels: vi.fn() }));
-vi.mock('$lib/features/auth/server', () => ({ resolveUserLabels: vi.fn() }));
+vi.mock('#lib/features/namespaces/server.ts', () => ({ resolveNamespaceLabels: vi.fn() }));
+vi.mock('#lib/features/auth/server.ts', () => ({ resolveUserLabels: vi.fn() }));
 
 import { getNodes } from './graphql/nodes.server';
-import { getNodeProperties } from '$lib/features/semantic/server';
-import { resolveNamespaceLabels } from '$lib/features/namespaces/server';
-import { resolveUserLabels } from '$lib/features/auth/server';
+import { getNodeProperties } from '#lib/features/semantic/server.ts';
+import { resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
+import { resolveUserLabels } from '#lib/features/auth/server.ts';
 import { collectQueryBlocks, resolveQueryBlocks } from './queryBlockExec.server';
 
 const mockedGetNodes = vi.mocked(getNodes);

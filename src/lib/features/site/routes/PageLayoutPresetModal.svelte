@@ -10,13 +10,13 @@
   // fields; Standard is the flow, so only its name and description show.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Select, Switch, Alert, FormField } from '$lib/design-system';
-  import { TIERS, GAP_STEPS, type ColumnGap, type ColumnTemplate, type Tier, type SectionDefaults, type SpaceToken } from '$lib/features/content';
-  import { type PageLayoutPreset } from '$lib/features/pages';
-  import { ColumnTemplateField, PageLayoutThumbnail } from '$lib/features/pages/components';
-  import { LocalizedField } from '$lib/features/semantic/components';
-  import { siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Select, Switch, Alert, FormField } from '#lib/design-system/index.ts';
+  import { TIERS, GAP_STEPS, type ColumnGap, type ColumnTemplate, type Tier, type SectionDefaults, type SpaceToken } from '#lib/features/content/index.ts';
+  import { type PageLayoutPreset } from '#lib/features/pages/index.ts';
+  import { ColumnTemplateField, PageLayoutThumbnail } from '#lib/features/pages/components.ts';
+  import { LocalizedField } from '#lib/features/semantic/components.ts';
+  import { siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

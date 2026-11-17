@@ -8,10 +8,10 @@
 import type { AnyExtension } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Document from '@tiptap/extension-document';
-import { blockExtensions, BlockId, BlockSpacing, CellBoundaries, SchemeRegions, PageLink, DocLink, LinkMark, SemanticProperty, CustomStyle } from '$lib/features/content/editor';
-import { TypographyFamilyMark, TypographySizeMark, TypographyColorMark, TypographyWeightMark, TypographyLineHeightMark, TypographyLetterSpacingMark } from '$lib/features/content/editor';
-import { spacingAttr, pageLayoutAttr, pageSurfaceAttr, type CollectionBlockData, type DocumentBlockData, type EmbedSource } from '$lib/features/content';
-import { pluginBlockExtensions } from '$lib/plugins/editor';
+import { blockExtensions, BlockId, BlockSpacing, CellBoundaries, SchemeRegions, PageLink, DocLink, LinkMark, SemanticProperty, CustomStyle } from '#lib/features/content/editor.ts';
+import { TypographyFamilyMark, TypographySizeMark, TypographyColorMark, TypographyWeightMark, TypographyLineHeightMark, TypographyLetterSpacingMark } from '#lib/features/content/editor.ts';
+import { spacingAttr, pageLayoutAttr, pageSurfaceAttr, type CollectionBlockData, type DocumentBlockData, type EmbedSource } from '#lib/features/content/index.ts';
+import { pluginBlockExtensions } from '#lib/plugins/editor.ts';
 
 export interface EditorExtensionOptions {
   /** The page being edited (a plugin block's sections create what the block needs beside it). */

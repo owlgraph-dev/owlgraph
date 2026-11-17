@@ -7,9 +7,9 @@
 // link's typed edge. Nothing reaches the block before Save. Public methods are
 // arrow fields: the block tools and the dialogs take them as callbacks.
 import type { Editor } from '@tiptap/core';
-import { blockNodeById, setBlockAttrsById, collectTemplateParams } from '$lib/features/content/editor';
-import type { TemplateParam } from '$lib/features/content';
-import type { QueryDefinition } from '$lib/features/query';
+import { blockNodeById, setBlockAttrsById, collectTemplateParams } from '#lib/features/content/editor.ts';
+import type { TemplateParam } from '#lib/features/content/index.ts';
+import type { QueryDefinition } from '#lib/features/query/index.ts';
 
 export type QuickLinkEdge = { relationshipType: string | null; properties: Record<string, string> };
 

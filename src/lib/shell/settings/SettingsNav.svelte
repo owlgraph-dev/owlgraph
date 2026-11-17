@@ -6,7 +6,7 @@
 <script lang="ts">
   // `groups` is the tree already filtered by the viewer's permissions. A link
   // out of the settings is a full navigation (leavesSettings).
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import SettingsSearch from './SettingsSearch.svelte';
   import { OVERVIEW } from './tree';
   import { OVERVIEW_ID, leavesSettings, type SettingsGroup } from './treeModel';

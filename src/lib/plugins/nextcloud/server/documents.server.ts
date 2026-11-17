@@ -7,7 +7,7 @@
 // for, or bound to, a file that exists with the requested id. An own-files
 // document stores only the file's facts: whether one viewer finds it among
 // their files says nothing to anyone else.
-import type { PluginFile, PluginHost, PluginNode, PluginRequest } from '$lib/plugins/api';
+import type { PluginFile, PluginHost, PluginNode, PluginRequest } from '#lib/plugins/api.ts';
 import { checkSharePath, parentOf } from '../sharePath';
 import { propfind, shareAccess, turnedOff, type DavAccess, type DavProblem } from './client.server';
 import { collectionRef, documentRef, hintFields, isFileId, type DocumentRef, type SourceStatus } from './refs';

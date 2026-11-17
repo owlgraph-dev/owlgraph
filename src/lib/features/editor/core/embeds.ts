@@ -5,9 +5,9 @@
 // The nodes the collection and document blocks embed, as the editor may read
 // them (docs/architecture/blocks/node-embeds.md, "Collection and document blocks"): loaded once per
 // node and shared by every block and block settings panel showing it.
-import { loadCollectionEmbed } from '$lib/features/collections';
-import { loadDocumentEmbed } from '$lib/features/documents';
-import type { CollectionBlockData, DocumentBlockData, EmbedSource } from '$lib/features/content';
+import { loadCollectionEmbed } from '#lib/features/collections/index.ts';
+import { loadDocumentEmbed } from '#lib/features/documents/index.ts';
+import type { CollectionBlockData, DocumentBlockData, EmbedSource } from '#lib/features/content/index.ts';
 
 export interface EmbedStore<D> extends EmbedSource<D> {
   /** Loads the node anew and tells every block showing it. */

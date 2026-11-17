@@ -2,8 +2,8 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-import type { NodeType } from '$lib/features/nodes';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 export interface CollectionMember {
   id: string;

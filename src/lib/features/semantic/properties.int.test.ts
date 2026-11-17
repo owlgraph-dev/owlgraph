@@ -4,8 +4,8 @@
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { schema } from '$lib/features/query/server';
-import { connectAs, jsonOf, textOf, userOf, type Role } from '$tests/integration/mcp';
+import { schema } from '#lib/features/query/server.ts';
+import { connectAs, jsonOf, textOf, userOf, type Role } from '#tests/integration/mcp.ts';
 import { getManualProperties, listPropertySuggestionOptions, setManualProperties, upsertPropertyDefinition } from './properties.server';
 
 // The restricted page is shared with editorB only.

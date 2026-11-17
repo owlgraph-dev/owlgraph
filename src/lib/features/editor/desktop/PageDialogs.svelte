@@ -6,8 +6,8 @@
 <script lang="ts">
   // The page's dialogs the head row opens: access, colour scheme, delete and
   // properties. Their open flags are the editor's (overlays.svelte.ts).
-  import { AccessControlPanel } from '$lib/features/nodes/components';
-  import { PagePropertiesDialog } from '$lib/features/semantic/components';
+  import { AccessControlPanel } from '#lib/features/nodes/components.ts';
+  import { PagePropertiesDialog } from '#lib/features/semantic/components.ts';
   import ContentSchemeDialog from './ContentSchemeDialog.svelte';
   import DeletePageModal from './DeletePageModal.svelte';
   import type { EditorCore } from '../core/editorCore.svelte';

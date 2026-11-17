@@ -7,7 +7,7 @@
 // one, so the editor wraps each verbatim in an `unknownBlock` on load and
 // unwraps it on the way out. Shared by server and editor, so both agree on
 // what is unknown.
-import { retiredBlockKind } from '$lib/plugins';
+import { retiredBlockKind } from '#lib/plugins/index.ts';
 import { BLOCK_KINDS } from '../blocks/catalog';
 import type { Attrs, JsonNode } from './doc';
 

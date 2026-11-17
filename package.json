@@ -13,6 +13,10 @@
     "node": ">=26"
   },
   "type": "module",
+  "imports": {
+    "#lib/*": "./src/lib/*",
+    "#tests/*": "./tests/*"
+  },
   "scripts": {
     "prepare": "svelte-kit sync && npm run messages",
     "messages": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide --strategy cookie baseLocale --emit-ts-declarations --silent",

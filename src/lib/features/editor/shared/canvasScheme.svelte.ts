@@ -7,8 +7,8 @@
 // the author views the app in, and follows the author's own on the phone.
 // Construct during a shell's init: the preview registers an effect.
 import { tick } from 'svelte';
-import { resolveContentScheme, canvasScheme, CONTENT_SCHEME_CHANGE_EVENT, type ContentScheme } from '$lib/features/content';
-import { currentColorPref } from '$lib/design-system/theme/applyColorPref';
+import { resolveContentScheme, canvasScheme, CONTENT_SCHEME_CHANGE_EVENT, type ContentScheme } from '#lib/features/content/index.ts';
+import { currentColorPref } from '#lib/design-system/theme/applyColorPref.ts';
 
 export class CanvasScheme {
   /** The page's scheme, else the site's. */

@@ -6,9 +6,9 @@
 // "Source code for network users"): the version and revision are what "the
 // source of the version you use" means.
 import type { ServerLoadEvent } from '@sveltejs/kit';
-import { can } from '$lib/features/auth/server';
-import { appVersion } from '$lib/platform/logger.server';
-import { sourceHref, sourceInfo } from '$lib/platform/source.server';
+import { can } from '#lib/features/auth/server.ts';
+import { appVersion } from '#lib/platform/logger.server.ts';
+import { sourceHref, sourceInfo } from '#lib/platform/source.server.ts';
 import { installationInfo } from './installation.server';
 
 export const load = async ({ setHeaders, locals, url }: ServerLoadEvent) => {

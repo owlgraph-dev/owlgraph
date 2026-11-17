@@ -7,8 +7,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import os from 'node:os';
 import path from 'node:path';
 import { migrationChecksums, readBaseline } from './baseline.server';
-import { pgContainer } from '$tests/integration/pg';
-import { runScript } from '$tests/integration/scripts';
+import { pgContainer } from '#tests/integration/pg.ts';
+import { runScript } from '#tests/integration/scripts.ts';
 
 // scripts/generate-baseline.ts as an operator runs it, on a folder of three
 // migrations: an extension, a table with a generated column and a seed that

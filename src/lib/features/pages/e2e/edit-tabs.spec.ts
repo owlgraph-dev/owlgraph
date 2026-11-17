@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { BrowserContext, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { endOfLine } from '$tests/e2e/editor';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { doc, para } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { endOfLine } from '#tests/e2e/editor.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, para } from '#tests/e2e/doc.ts';
 
 // editTabs.ts: the "taken over" reconcile shows only when a tab held unsaved work.
 

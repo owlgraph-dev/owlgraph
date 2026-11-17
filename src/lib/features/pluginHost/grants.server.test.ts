@@ -4,8 +4,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { randomBytes } from 'node:crypto';
-import { createSecretBox } from '$lib/platform/secretBox.server';
-import type { PluginOpenConnection } from '$lib/plugins/api';
+import { createSecretBox } from '#lib/platform/secretBox.server.ts';
+import type { PluginOpenConnection } from '#lib/plugins/api.ts';
 import { createGrants, GRANT_TTL_MS, type GrantDeps } from './grants.server';
 
 const box = createSecretBox(randomBytes(32).toString('base64'));

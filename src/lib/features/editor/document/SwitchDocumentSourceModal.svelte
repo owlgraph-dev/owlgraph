@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   // Switching to a link deletes the stored file, hence the danger dialog.
-  import { Dialog, Button, Alert } from '$lib/design-system';
-  import type { DocumentSource } from '$lib/features/documents';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Alert } from '#lib/design-system/index.ts';
+  import type { DocumentSource } from '#lib/features/documents/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

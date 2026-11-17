@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Client-safe: AboutPage.svelte imports these.
-import type { SiteLocaleConfig } from '$lib/platform/i18n/siteLocales';
+import type { SiteLocaleConfig } from '#lib/platform/i18n/siteLocales.ts';
 
 export interface IntegrationState {
   /** The plugin's id; the page names it (pluginLabel) in the reader's language. */

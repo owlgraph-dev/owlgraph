@@ -5,7 +5,7 @@
 // What a page's folder blocks show before their islands ask (docs/architecture/plugins.md,
 // "Block data"): the held listing's first rows, or `loading` with a fetch for
 // next time started, unawaited. The page waits for this, so it never waits on Nextcloud.
-import type { PluginBlockDataResolver } from '$lib/plugins/api';
+import type { PluginBlockDataResolver } from '#lib/plugins/api.ts';
 import { listingOf, type ListingView } from '../../server/listing.server';
 import { folderConfig } from './model';
 

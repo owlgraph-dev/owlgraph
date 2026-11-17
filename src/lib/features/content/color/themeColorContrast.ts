@@ -5,8 +5,8 @@
 // The pairs the content palette must pass in every scheme (docs/architecture/theming.md,
 // "Letting pages adapt"). The strong border is a 3:1 line colour, so no text
 // reaches 4.5:1 on it as a ground; the block settings panel warns where it fills a block.
-import { contrastRatio, parseColor } from '$lib/design-system/theme/color';
-import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
+import { contrastRatio, parseColor } from '#lib/design-system/theme/color.ts';
+import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
 import { CONTENT_COLOR_TOKENS, colorTokenProperty, readableOn } from './colorTokens';
 import { TEXT_MINIMUM } from './schemeRegions';
 

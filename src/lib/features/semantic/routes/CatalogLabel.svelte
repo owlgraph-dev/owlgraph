@@ -6,10 +6,10 @@
 <script lang="ts">
   // The missing-translations badge names the languages any of the row's names
   // lacks (docs/architecture/languages.md).
-  import { Badge } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import type { Locale } from '$lib/paraglide/runtime';
-  import { localeName } from '$lib/platform/i18n/localeNames';
+  import { Badge } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { Locale } from '#lib/paraglide/runtime.js';
+  import { localeName } from '#lib/platform/i18n/localeNames.ts';
 
   let {
     label,

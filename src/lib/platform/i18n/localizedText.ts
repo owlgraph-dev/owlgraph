@@ -6,7 +6,7 @@
 // localizes, and presentation reads it only through localize(). It may hold any
 // supported language, so a translation survives its language being disabled;
 // write-side validation is localizedText.server.ts.
-import { getLocale, type Locale } from '$lib/paraglide/runtime';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 import { SUPPORTED_LOCALES, enabledLocales, siteDefaultLocale } from './siteLocales';
 
 /** One string per locale; an absent key is the only way to say "not translated". */

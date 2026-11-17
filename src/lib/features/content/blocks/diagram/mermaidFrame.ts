@@ -8,7 +8,7 @@
 // frame returns markup with every inline declaration turned into a class, plus
 // the stylesheet as text, which the page inserts under its nonce. The editor
 // draws through the same frame, so it matches the page.
-import { styleNonceFor } from '$lib/platform/styleNonce';
+import { styleNonceFor } from '#lib/platform/styleNonce.ts';
 
 export const MERMAID_FRAME_PATH = '/api/embed/mermaid';
 

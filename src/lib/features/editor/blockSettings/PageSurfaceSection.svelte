@@ -7,9 +7,9 @@
   // Background only: the canvas has no corners to round or edge to shadow.
   // Only page-strength theme grounds, never a literal, so the page follows
   // every colour scheme and its text still reads. One value for every viewport.
-  import { ColorPickerField, FieldRow } from '$lib/design-system';
-  import { colorToken, pageGround, pageGroundOptions, setPageGround, type PageSurface } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { ColorPickerField, FieldRow } from '#lib/design-system/index.ts';
+  import { colorToken, pageGround, pageGroundOptions, setPageGround, type PageSurface } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
 
   let { value, onChange, onOverlayOpenChange }: {

@@ -7,22 +7,22 @@
   // The phone's tool strip and its sheets. It reads the editor core and
   // writes through it; only pure block operations (setBlockAttrsById) are
   // imported directly.
-  import { Button, BottomSheet, BottomSheetItem, Badge, FormField, Input } from '$lib/design-system';
-  import { NodePicker, type NodePickerCreate } from '$lib/features/search/picker';
+  import { Button, BottomSheet, BottomSheetItem, Badge, FormField, Input } from '#lib/design-system/index.ts';
+  import { NodePicker, type NodePickerCreate } from '#lib/features/search/picker.ts';
   import { linkPickerRows } from '../shared/linkPickerRows';
   import { IMAGE_ACCEPT } from '../desktop/imagePicker.svelte';
   import TypographyField from '../capabilities/typography/TypographyField.svelte';
   import TypographyMarkFields from '../capabilities/typography/TypographyMarkFields.svelte';
-  import { resolveParagraphStyle, PARAGRAPH_STYLE_TEXTBLOCKS, editTier } from '$lib/features/content';
-  import { getTypographyRegistry } from '$lib/features/content';
+  import { resolveParagraphStyle, PARAGRAPH_STYLE_TEXTBLOCKS, editTier } from '#lib/features/content/index.ts';
+  import { getTypographyRegistry } from '#lib/features/content/index.ts';
   import type { LinkResult } from '../core/links.svelte';
   import type { EditorCore } from '../core/editorCore.svelte';
   import type { SaveAction } from '../session/saveAction.svelte';
   import type { CanvasScheme } from '../shared/canvasScheme.svelte';
-  import { setBlockAttrsById } from '$lib/features/content/editor';
+  import { setBlockAttrsById } from '#lib/features/content/editor.ts';
   import type { SitePage } from '../shared/sitePages';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     core,

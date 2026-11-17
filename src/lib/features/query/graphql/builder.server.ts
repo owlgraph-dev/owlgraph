@@ -6,8 +6,8 @@
 // extends. Adapters import it by direct path, never through the query barrel:
 // the barrel re-exports the schema that imports them, a load-order cycle.
 import SchemaBuilder from '@pothos/core';
-import type { SessionUser } from '$lib/features/auth/server';
-import { NODE_TYPES } from '$lib/features/nodes';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { NODE_TYPES } from '#lib/features/nodes/index.ts';
 
 /** `user` comes from `locals.user`; every resolver scopes its data to it. */
 export interface GraphQLContext {

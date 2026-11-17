@@ -5,8 +5,8 @@
 // A host for the plugin's unit tests: the real pinned client, the given
 // settings, and the log lines kept. Every other part refuses, so a module
 // under test that reaches for one fails loudly.
-import { upstreamClient } from '$lib/platform/upstream.server';
-import type { PluginHost } from '$lib/plugins/api';
+import { upstreamClient } from '#lib/platform/upstream.server.ts';
+import type { PluginHost } from '#lib/plugins/api.ts';
 
 export interface FakeHostOptions {
   origin: string | null;

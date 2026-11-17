@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { setNodeTags } from '$lib/features/semantic/server';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '$tests/integration/http';
+import { setNodeTags } from '#lib/features/semantic/server.ts';
+import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 const app = await startApp();
 const seed = inject('seed');

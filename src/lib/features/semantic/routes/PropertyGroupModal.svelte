@@ -7,11 +7,11 @@
   // The key is the identity: editing it saves a new group.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Alert, FormField } from '$lib/design-system';
+  import { Dialog, Button, Input, Alert, FormField } from '#lib/design-system/index.ts';
   import LocalizedField from '../components/LocalizedField.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-  import { siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+  import { siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
 
   type Row = { slug: string; label: LocalizedText; description: LocalizedText };
 

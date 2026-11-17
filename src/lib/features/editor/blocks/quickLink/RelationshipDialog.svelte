@@ -7,9 +7,9 @@
   // A quick-link card's typed edge. Mounted fresh for each edit, so the draft
   // starts from the card's stored values.
   import { untrack } from 'svelte';
-  import { Button, Dialog } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { RelationshipPicker } from '$lib/features/semantic/components';
+  import { Button, Dialog } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { RelationshipPicker } from '#lib/features/semantic/components.ts';
 
   let {
     relationshipType,

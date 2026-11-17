@@ -6,9 +6,9 @@
 <script lang="ts">
   // The desktop's column count is the grid's structure, changed with the
   // block tools; a tablet or phone has Auto or a template of its own.
-  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import { editTier } from '$lib/features/content';
-  import type { Tier } from '$lib/features/content';
+  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import { editTier } from '#lib/features/content/index.ts';
+  import type { Tier } from '#lib/features/content/index.ts';
   import {
     desktopColumns,
     ownGridColumns,
@@ -19,9 +19,9 @@
     type GapStep,
     type GridColumnAttrs,
     type GridTier,
-  } from '$lib/features/content';
-  import { ColumnTemplateField } from '$lib/features/pages/components';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/features/content/index.ts';
+  import { ColumnTemplateField } from '#lib/features/pages/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { attrs, onWidths, onTierColumns, onGap }: {
     attrs: GridColumnAttrs;

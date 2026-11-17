@@ -6,8 +6,8 @@
 <script lang="ts">
   // Name only: variants are uploaded on the family's card afterwards.
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Alert, FormField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, Alert, FormField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

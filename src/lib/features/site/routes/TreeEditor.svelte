@@ -7,10 +7,10 @@
   // The nav and footer tree's editor, one per consumer via `allowTopLevelLinks`.
   // Buttons posting real forms, no drag-and-drop, so it works without JavaScript.
   import { enhance } from '$app/forms';
-  import { Button, EmptyState } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, EmptyState } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import TreeEntryModal from './TreeEntryModal.svelte';
-  import { nodePath } from '$lib/features/nodes';
+  import { nodePath } from '#lib/features/nodes/index.ts';
   import type { TreeNodeAdminRow, TreeNodeAdminWithChildren, TreeNodeKind } from '../types';
 
   let {

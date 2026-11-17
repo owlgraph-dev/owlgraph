@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { inject, type ProvidedContext } from 'vitest';
-import { getUserByToken } from '$lib/features/auth/server';
+import { getUserByToken } from '#lib/features/auth/server.ts';
 
 export type Role = keyof ProvidedContext['seed']['tokens'];
 

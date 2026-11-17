@@ -7,10 +7,10 @@
   // Block spacing or space above. Auto clears the field. Block spacing's Auto
   // shows the caller's `fallback`; space above resolves through the block-type
   // defaults in app.css, which have no JS copy to drift, so it shows no number.
-  import { editTier } from '$lib/features/content';
-  import { FieldRow, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { resolvedSpace, type SpaceField, type SpacingData } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { FieldRow, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { resolvedSpace, type SpaceField, type SpacingData } from '#lib/features/content/index.ts';
 
   let {
     value,

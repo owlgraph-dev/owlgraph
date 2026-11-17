@@ -9,7 +9,7 @@
   // layout: sections"). Switching between flow and columns rewrites the
   // content, so it asks first. A width caps a fluid column, so one value
   // serves every viewport.
-  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, Button, Dialog } from '$lib/design-system';
+  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, Button, Dialog } from '#lib/design-system/index.ts';
   import {
     convertPageWidth,
     formatLength,
@@ -29,10 +29,10 @@
     type PageLayout,
     type PageWidthKey,
     type SpaceToken,
-  } from '$lib/features/content';
-  import { presetName, presetSnapshot, resolvePageLayoutPreset, type PageLayoutPreset } from '$lib/features/pages';
-  import { ColumnTemplateField, PageLayoutThumbnail } from '$lib/features/pages/components';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/features/content/index.ts';
+  import { presetName, presetSnapshot, resolvePageLayoutPreset, type PageLayoutPreset } from '#lib/features/pages/index.ts';
+  import { ColumnTemplateField, PageLayoutThumbnail } from '#lib/features/pages/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
 
   let { value, presets, siteWidths, onChange, onColumns, onOverlayOpenChange }: {

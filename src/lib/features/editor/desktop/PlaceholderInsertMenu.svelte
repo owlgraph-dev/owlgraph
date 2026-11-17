@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   // A placeholder's "+" menu, whose picks replace the placeholder.
-  import { placeholderMenuTarget } from '$lib/features/content/editor';
-  import { DropdownMenu } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { placeholderMenuTarget } from '#lib/features/content/editor.ts';
+  import { DropdownMenu } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import InsertMenuItems from './InsertMenuItems.svelte';
   import type { InsertCommands } from '../commands/insert';
 

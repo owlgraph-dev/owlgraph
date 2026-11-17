@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { logger } from '$lib/platform/logger.server';
-import { createPluginHost, savePluginSettings } from '$lib/features/pluginHost/server';
-import { pluginManifest } from '$lib/plugins';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { logger } from '#lib/platform/logger.server.ts';
+import { createPluginHost, savePluginSettings } from '#lib/features/pluginHost/server.ts';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { decodeSecret, encodeSecret } from './server/client.server';
 
 // A share's credential at rest (docs/architecture/authorization.md, "Credentials at rest"):

@@ -4,7 +4,7 @@
 
 // The node picker's rules, apart from its markup so they test as a table.
 import type { NodeSearchResult } from '../types';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 /** What a consumer says about a row — never decided by the picker. */
 export interface NodeMark {

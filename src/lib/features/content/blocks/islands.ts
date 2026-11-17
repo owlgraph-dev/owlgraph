@@ -8,7 +8,7 @@
 import type { Component } from 'svelte';
 import QuickLinkCard from './quickLink/QuickLinkCard.svelte';
 import Diagram from './diagram/Diagram.svelte';
-import { PLUGIN_ISLANDS } from '$lib/plugins/islands';
+import { PLUGIN_ISLANDS } from '#lib/plugins/islands.ts';
 
 export const BLOCK_ISLANDS: Readonly<Record<string, Component<any>>> = {
   quickLink: QuickLinkCard,

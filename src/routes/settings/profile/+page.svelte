@@ -10,12 +10,12 @@
   import { enhance } from '$app/forms';
   import { browser } from '$app/env';
   import { refreshAll } from '$app/navigation';
-  import { Button, Input, Avatar, SettingsGroup, SettingsRow, SettingsWell, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import { applyColorPref, currentColorPref } from '$lib/design-system/theme/applyColorPref';
-  import { COLOR_PREFS, type ColorPref } from '$lib/design-system/theme/preference';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import LocaleSwitcher from '$lib/shell/LocaleSwitcher.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Input, Avatar, SettingsGroup, SettingsRow, SettingsWell, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import { applyColorPref, currentColorPref } from '#lib/design-system/theme/applyColorPref.ts';
+  import { COLOR_PREFS, type ColorPref } from '#lib/design-system/theme/preference.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import LocaleSwitcher from '#lib/shell/LocaleSwitcher.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

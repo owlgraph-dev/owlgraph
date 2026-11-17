@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { formAction } from '$tests/e2e/api';
-import { seed, authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { formAction } from '#tests/e2e/api.ts';
+import { seed, authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
 
 const SHEET = 'E2E stylesheet';

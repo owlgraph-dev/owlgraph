@@ -6,7 +6,7 @@
 // stable link redirects to a grant minted for this viewer and the way they read
 // the node; redeeming it reads the same way, matches the file id (a renamed or
 // replaced file is not the one granted) and streams under the core's served-file rules.
-import type { PluginHost, PluginNode, PluginOpenConnection, PluginRequest } from '$lib/plugins/api';
+import type { PluginHost, PluginNode, PluginOpenConnection, PluginRequest } from '#lib/plugins/api.ts';
 import { checkSharePath, joinPath } from '../sharePath';
 import { propfind, shareAccess, streamFile, userAccess, type DavAccess } from './client.server';
 import { documentRef, isFileId } from './refs';

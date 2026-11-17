@@ -6,7 +6,7 @@
 // strays in sections, placeholders back in (docs/architecture/blocks/anatomy.md, "Unknown blocks").
 import { getSchema, type Extensions } from '@tiptap/core';
 import type { Node as ProseMirrorNode, Schema } from '@tiptap/pm/model';
-import { rehydratePlaceholders, wrapUnknown, unwrapUnknown, normalizeStrays, pageColumnsOf, type JsonDoc, type PageLayout } from '$lib/features/content';
+import { rehydratePlaceholders, wrapUnknown, unwrapUnknown, normalizeStrays, pageColumnsOf, type JsonDoc, type PageLayout } from '#lib/features/content/index.ts';
 
 /** The doc-load preparation, before the schema reads it; `heldAs` repeats it. Mutates `doc`. */
 export function preparedForEditor(doc: JsonDoc): JsonDoc {

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // Through the routes the editor uses; which assets are stored is read from the database.
 

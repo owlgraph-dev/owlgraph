@@ -8,10 +8,10 @@
 // transaction. Public methods are arrow fields, as the core's are.
 import type { Editor } from '@tiptap/core';
 import { NodeSelection, TextSelection } from '@tiptap/pm/state';
-import { canRemoveLastTableColumn, canRemoveLastTableRow } from '$lib/features/content/editor';
-import { resolveSelectionChain, isPageEntry, type SelectionChainEntry } from '$lib/features/content/editor';
-import { canRemoveLastContainerColumn, canRemoveLastContainerRow } from '$lib/features/content/editor';
-import { canRemoveLastCell } from '$lib/features/content/editor';
+import { canRemoveLastTableColumn, canRemoveLastTableRow } from '#lib/features/content/editor.ts';
+import { resolveSelectionChain, isPageEntry, type SelectionChainEntry } from '#lib/features/content/editor.ts';
+import { canRemoveLastContainerColumn, canRemoveLastContainerRow } from '#lib/features/content/editor.ts';
+import { canRemoveLastCell } from '#lib/features/content/editor.ts';
 
 /** A node around the selection, and where it is. */
 export type SelectionContext = { type: string; attrs: Record<string, any>; pos: number };

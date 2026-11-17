@@ -5,7 +5,7 @@
 // Route adapter for /api/styles/site/[hash], re-exported by src/routes/api/styles/site/[hash]/+server.ts.
 import { getCompiledStyles } from '../customStyles.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { textError } from '$lib/platform/apiErrors';
+import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { hash: string };
 

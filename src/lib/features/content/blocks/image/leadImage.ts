@@ -9,7 +9,7 @@ import type { JsonNode } from '../../doc/doc';
 import { TIERS, type Tier } from '../../capabilities/cascade';
 import { SURFACE_IMAGE_TYPES, resolvedImageLayer, layerImageCandidates } from '../../capabilities/surface/surfaceImage';
 import type { SurfaceData } from '../../capabilities/surface/surface';
-import { isAssetId } from '$lib/features/media';
+import { isAssetId } from '#lib/features/media/index.ts';
 
 const OPENING_BLOCKS = 2;
 

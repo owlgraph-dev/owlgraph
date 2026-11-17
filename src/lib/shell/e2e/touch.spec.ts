@@ -3,13 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { doc, para } from '$tests/e2e/doc';
-import { seedProbePage } from '$tests/e2e/probe-doc';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { blockSettings } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, para } from '#tests/e2e/doc.ts';
+import { seedProbePage } from '#tests/e2e/probe-doc.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 // The touch scale (docs/architecture/responsive.md, "Touch"), in German, whose labels are
 // the longer ones.

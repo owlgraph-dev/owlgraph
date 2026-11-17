@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { createDocument, createLinkDocument } from '$lib/features/documents/server';
-import { parseExternalUrl } from '$lib/features/documents';
-import { can } from '$lib/features/auth/server';
-import { readFormData } from '$lib/platform/formData';
-import { logEvent } from '$lib/platform/logger.server';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { createDocument, createLinkDocument } from '#lib/features/documents/server.ts';
+import { parseExternalUrl } from '#lib/features/documents/index.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { readFormData } from '#lib/platform/formData.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import { readDocumentUpload, uploadTooLarge } from './documentUpload.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, apiErrorFrom } from '$lib/platform/apiErrors';
-import { isCodedError } from '$lib/platform/codedError';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
+import { isCodedError } from '#lib/platform/codedError.ts';
 
 // An uploaded file, or with `source=link` an external URL and a title.
 export const POST: RequestHandler = async ({ request, locals }) => {

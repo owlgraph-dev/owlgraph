@@ -5,12 +5,12 @@
 // Resolved for each reader before the page renders, never from the author's view:
 // a document the reader may not read, or a gone one, is `hidden` and the block
 // renders nothing (docs/architecture/blocks/node-embeds.md, "Collection and document blocks").
-import { db } from '$lib/platform/db.server';
-import { errorClass, logEvent, type Logger } from '$lib/platform/logger.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { nodePath } from '$lib/features/nodes';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
-import { collectBlocks, documentConfig, DOCUMENT_BLOCK, type DocumentBlockData } from '$lib/features/content';
+import { db } from '#lib/platform/db.server.ts';
+import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { collectBlocks, documentConfig, DOCUMENT_BLOCK, type DocumentBlockData } from '#lib/features/content/index.ts';
 import { documentContentPath } from './client';
 import { externalHost, safeExternalHref } from './externalUrl';
 

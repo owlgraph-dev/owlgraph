@@ -4,11 +4,11 @@
 
 import { describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { db } from '$lib/platform/db.server';
-import { createNamespace } from '$lib/features/namespaces/server';
-import { createPage } from '$lib/features/pages/server';
+import { db } from '#lib/platform/db.server.ts';
+import { createNamespace } from '#lib/features/namespaces/server.ts';
+import { createPage } from '#lib/features/pages/server.ts';
 import { schema } from './server';
-import { userOf, type Role } from '$tests/integration/users';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 // On this file's own database, so a result set is exactly the seed and what a
 // test makes. The public and internal pages carry status active, the restricted

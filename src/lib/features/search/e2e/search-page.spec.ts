@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIRequestContext, Page } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { unique, createPage, patchPage, createDocument } from '$tests/e2e/api';
-import { doc, para } from '$tests/e2e/doc';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { unique, createPage, patchPage, createDocument } from '#tests/e2e/api.ts';
+import { doc, para } from '#tests/e2e/doc.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
 
 // Every test lists rows of its own, scoped by a tag or a term no other test
 // uses. Pages made through the API start restricted, so each is opened to the

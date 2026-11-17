@@ -5,8 +5,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import type { JSONContent } from '@tiptap/core';
-import { setCustomStyles, type CustomStyleRef } from '$lib/features/content';
-import { diffDocs } from '$lib/features/pages';
+import { setCustomStyles, type CustomStyleRef } from '#lib/features/content/index.ts';
+import { diffDocs } from '#lib/features/pages/index.ts';
 import { createEditorCore, type EditorCore } from './editorCore.svelte';
 
 // The blocks' Svelte NodeViews mount with Svelte's client half — under

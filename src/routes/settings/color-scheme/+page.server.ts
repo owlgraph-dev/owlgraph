@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { load, actions } from '$lib/features/pages/routes/settings.colorScheme.server';
+export { load, actions } from '#lib/features/pages/routes/settings.colorScheme.server.ts';

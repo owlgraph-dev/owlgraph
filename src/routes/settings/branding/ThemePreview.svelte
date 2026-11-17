@@ -6,11 +6,11 @@
 <script lang="ts">
   // The unsaved colours in both schemes: each panel redefines its scheme's set
   // on itself, outranking the site's by one class, so everything inside shows the draft.
-  import { Button, Badge, SegmentedControl, SegmentedControlItem, Switch } from '$lib/design-system';
-  import { emitSchemeBlock } from '$lib/design-system/theme/emit';
-  import { SCHEME_NAMES, type SchemeSets } from '$lib/design-system/theme/tokens';
-  import { brandProperty, type BrandColor } from '$lib/design-system/theme/siteTheme';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Badge, SegmentedControl, SegmentedControlItem, Switch } from '#lib/design-system/index.ts';
+  import { emitSchemeBlock } from '#lib/design-system/theme/emit.ts';
+  import { SCHEME_NAMES, type SchemeSets } from '#lib/design-system/theme/tokens.ts';
+  import { brandProperty, type BrandColor } from '#lib/design-system/theme/siteTheme.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { sets, brand }: { sets: SchemeSets; brand: BrandColor[] } = $props();
 

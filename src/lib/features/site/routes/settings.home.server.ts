@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/home, re-exported by src/routes/settings/home/+page.server.ts.
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { getPage } from '$lib/features/pages/server';
-import { getHomePageId, setHomePage } from '$lib/features/site/server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage } from '#lib/features/pages/server.ts';
+import { getHomePageId, setHomePage } from '#lib/features/site/server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
 
 // docs/architecture/logging.md, "The audit subset".

@@ -7,14 +7,14 @@
   // Shared by the toolbar's "+" and a placeholder's "+": `target` says whether
   // a command inserts near the cursor or replaces a node in place. Embedding
   // blocks are grouped by family (docs/architecture/blocks/node-embeds.md, "One family in the editor").
-  import { DropdownMenuGroup, DropdownMenuGroupHeading, DropdownMenuItem, DropdownMenuSeparator } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import type { InsertTarget } from '$lib/features/content/editor';
-  import { embedKindOf, newCollectionNode, newDocumentNode, type EmbedFamily } from '$lib/features/content';
-  import { pluginOfBlockKind } from '$lib/plugins';
-  import { PLUGIN_INSERT_ITEMS } from '$lib/plugins/editor';
+  import { DropdownMenuGroup, DropdownMenuGroupHeading, DropdownMenuItem, DropdownMenuSeparator } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import type { InsertTarget } from '#lib/features/content/editor.ts';
+  import { embedKindOf, newCollectionNode, newDocumentNode, type EmbedFamily } from '#lib/features/content/index.ts';
+  import { pluginOfBlockKind } from '#lib/plugins/index.ts';
+  import { PLUGIN_INSERT_ITEMS } from '#lib/plugins/editor.ts';
   import type { InsertCommands } from '../commands/insert';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     target,

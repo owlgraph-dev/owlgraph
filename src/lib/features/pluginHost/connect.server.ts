@@ -4,10 +4,10 @@
 
 // What a person's connect runs against, per request (connectionFlow.server.ts),
 // and an administrator's removal of everyone's connections at once.
-import { errorClass, logEvent, type Logger } from '$lib/platform/logger.server';
-import { READ_METHODS, upstreamClient } from '$lib/platform/upstream.server';
-import { PLUGINS_WITH_CONNECTIONS, pluginManifest } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
+import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
+import { READ_METHODS, upstreamClient } from '#lib/platform/upstream.server.ts';
+import { PLUGINS_WITH_CONNECTIONS, pluginManifest } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
 import { pluginOrigin } from './settings.server';
 import { connectionStore, deleteConnections, openCredential, type ConnectionRow } from './connections.server';
 import type { FlowDeps } from './connectionFlow.server';

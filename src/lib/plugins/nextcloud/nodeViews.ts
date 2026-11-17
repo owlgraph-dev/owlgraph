@@ -4,7 +4,7 @@
 
 // The plugin's node views (docs/architecture/plugins.md, "Node views"); the server half's
 // nodeView (server/nodeView.server.ts) resolves what they start from.
-import { definePluginNodeViews } from '$lib/plugins/api';
+import { definePluginNodeViews } from '#lib/plugins/api.ts';
 import { nextcloud } from './index';
 import CollectionBody from './views/CollectionBody.svelte';
 

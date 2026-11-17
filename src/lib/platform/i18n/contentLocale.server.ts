@@ -7,7 +7,7 @@
 // getLocale() and messages need nothing threaded. Outside a request the context
 // is created as paraglideMiddleware would.
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { getServerAsyncLocalStorage, isLocale, overwriteServerAsyncLocalStorage } from '$lib/paraglide/runtime';
+import { getServerAsyncLocalStorage, isLocale, overwriteServerAsyncLocalStorage } from '#lib/paraglide/runtime.js';
 
 type LocaleStore = { locale?: string; origin?: string; messageCalls?: Set<string> };
 

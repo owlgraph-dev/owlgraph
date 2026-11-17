@@ -4,7 +4,7 @@
 
 // The server renders the waiting state; the source rides in the island's
 // props, never as visible text.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { attrsOf } from '../../doc/doc';
 import type { BlockRenderer } from '../blockRenderer';
 import { wrapperHtml } from '../scaffold/blockWrapper';

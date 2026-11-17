@@ -4,10 +4,10 @@
 
 // Route adapter for /, re-exported by src/routes/+page.server.ts.
 import { redirect } from '@sveltejs/kit';
-import { listPagesForUser, getPage, userCanReadPage } from '$lib/features/pages/server';
-import { getHomePageId } from '$lib/features/site/server';
-import { can } from '$lib/features/auth/server';
-import { nodePath } from '$lib/features/nodes';
+import { listPagesForUser, getPage, userCanReadPage } from '#lib/features/pages/server.ts';
+import { getHomePageId } from '#lib/features/site/server.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 // "/" redirects (temporarily) to the home page, so it renders through the one

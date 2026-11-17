@@ -5,17 +5,17 @@
 // E2E because: a reader is asked to connect and brought back to the page, each
 // island drawing their own listing; an editor chooses from their own Nextcloud.
 import type { APIRequestContext, Browser, BrowserContext, BrowserContextOptions, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage, throwawayUserState } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { authState } from '$tests/e2e/seed-data';
-import { db } from '$lib/platform/db.server';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage, throwawayUserState } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { db } from '#lib/platform/db.server.ts';
 import { startMockNextcloud, type MockNextcloud, type MockUser } from './mockNextcloud';
-import { anonymous } from '$tests/e2e/fixtures';
+import { anonymous } from '#tests/e2e/fixtures.ts';
 import { configure } from './settings';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const API = '/api/plugins/nextcloud';
 

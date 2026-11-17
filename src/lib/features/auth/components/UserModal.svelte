@@ -8,8 +8,8 @@
   // rename, so email and name show read-only. A refused save keeps it open.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Select, Alert, FormField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, Select, Alert, FormField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { MIN_PASSWORD_LENGTH } from '../passwordPolicy';
 
   type Row = { id: string; email: string; name: string; role: string };

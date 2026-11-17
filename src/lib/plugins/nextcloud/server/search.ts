@@ -6,7 +6,7 @@
 // file name, the file name without its extension (full-text search reads
 // "Report.pdf" as one token), and for a share's node the folders above it. An
 // own-files node is found by its name alone: where it lay for them is theirs.
-import type { PluginSearchNode } from '$lib/plugins/api';
+import type { PluginSearchNode } from '#lib/plugins/api.ts';
 import { nameOf, parentOf } from '../sharePath';
 import { collectionRef, documentRef } from './refs';
 

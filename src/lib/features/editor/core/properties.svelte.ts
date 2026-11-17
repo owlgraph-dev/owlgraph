@@ -7,7 +7,7 @@
 // are arrow fields, as the core's are.
 import type { Editor } from '@tiptap/core';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
-import { PARAMETER_GROUP, isParameterName } from '$lib/features/semantic';
+import { PARAMETER_GROUP, isParameterName } from '#lib/features/semantic/index.ts';
 
 /**
  * The page's properties in its content. Mirrors the server's

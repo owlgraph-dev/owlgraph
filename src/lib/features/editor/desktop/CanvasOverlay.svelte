@@ -6,15 +6,15 @@
 <script lang="ts">
   // Draws the hover and selection block tools, over the boxes the shell's
   // hover and selected box measure from the NodeView DOM.
-  import { ToolbarButton, ToolbarGroup, ToolbarGroupItem, Toolbar as DsToolbar } from '$lib/design-system';
-  import { addTableColumn, removeTableColumn, addTableRow, removeTableRow, toggleShowHeader as toggleTableHeader } from '$lib/features/content/editor';
-  import { addContainerColumn, removeContainerColumn, addContainerRow, removeContainerRow, setGap as setContainerGap, mergeSelectFor } from '$lib/features/content/editor';
-  import type { SpaceToken } from '$lib/features/content';
-  import { addCell as addFlexCell, removeCell as removeFlexCell, insertSection, sectionMovesAt, moveBlockInSections } from '$lib/features/content/editor';
+  import { ToolbarButton, ToolbarGroup, ToolbarGroupItem, Toolbar as DsToolbar } from '#lib/design-system/index.ts';
+  import { addTableColumn, removeTableColumn, addTableRow, removeTableRow, toggleShowHeader as toggleTableHeader } from '#lib/features/content/editor.ts';
+  import { addContainerColumn, removeContainerColumn, addContainerRow, removeContainerRow, setGap as setContainerGap, mergeSelectFor } from '#lib/features/content/editor.ts';
+  import type { SpaceToken } from '#lib/features/content/index.ts';
+  import { addCell as addFlexCell, removeCell as removeFlexCell, insertSection, sectionMovesAt, moveBlockInSections } from '#lib/features/content/editor.ts';
   import { shownMoves, moveTitle } from '../blockSettings/placementMoves';
   import { setFlexLayoutField, setSectionSpan } from '../commands/attrs';
-  import { resolvedFlexDirection, resolvedFlexWrap, resolvedGap, resolvedGridGap, GAP_PRESETS, type LayoutData } from '$lib/features/content';
-  import { editTier } from '$lib/features/content';
+  import { resolvedFlexDirection, resolvedFlexWrap, resolvedGap, resolvedGridGap, GAP_PRESETS, type LayoutData } from '#lib/features/content/index.ts';
+  import { editTier } from '#lib/features/content/index.ts';
   import type { EditorCore } from '../core/editorCore.svelte';
   import type { Box } from '../shared/selectedBox.svelte';
   import type { BlockHover } from './hover.svelte';
@@ -22,8 +22,8 @@
   import type { BlockEdit } from './blockEdit.svelte';
   import { blockIsEditable } from '../blocks/catalog';
   import type { QuickLinkEmbed } from '../blockSettings/types';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   // A page section's one layout knob on the canvas is its span; its columns
   // are the page's. Named with the block settings panel's span control's words.

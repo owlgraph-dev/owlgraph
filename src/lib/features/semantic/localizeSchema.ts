@@ -5,7 +5,7 @@
 // Every surface runs its rows through these before they leave the server, so a
 // picker gets a plain string in the request's locale; only the settings pages
 // get the maps (docs/architecture/languages.md). A label falls back to its identifier, never empty.
-import { localize, compareLabels, hasText, type LocalizedText } from '$lib/platform/i18n/localizedText';
+import { localize, compareLabels, hasText, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import type { RelationshipTypeOption } from './relationshipTypeCatalog';
 
 /** A property group as pickers and field captions show it. */

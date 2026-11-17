@@ -9,7 +9,7 @@ import { test, expect, waitForHydration } from '../fixtures';
 import { authState } from '../seed-data';
 import { createPage, unique } from '../api';
 import { doc, txt } from '../doc';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 /** The text of the block the editor's own caret is in (tests/e2e/editor.ts). */
 function caretBlock(editor: Locator): Promise<string> {

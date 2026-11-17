@@ -6,8 +6,8 @@
 import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text } from '../../../mcp/registry';
-import { searchContent } from '$lib/features/search/server';
-import { HL_START, HL_STOP } from '$lib/features/search';
+import { searchContent } from '#lib/features/search/server.ts';
+import { HL_START, HL_STOP } from '#lib/features/search/index.ts';
 
 export function registerSearchTools({ user, tool }: ToolRegistry): void {
   tool(

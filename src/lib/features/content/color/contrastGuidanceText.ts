@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The editor's wording for a contrast warning (contrastGuidance.ts).
-import * as m from '$lib/paraglide/messages';
-import { formatNumber } from '$lib/platform/i18n/format';
+import * as m from '#lib/paraglide/messages.js';
+import { formatNumber } from '#lib/platform/i18n/format.ts';
 import { markContrast, textContrast, type ContrastWarning } from './contrastGuidance';
 import type { Tier } from '../capabilities/cascade';
 import type { ContentScheme } from './contentScheme';

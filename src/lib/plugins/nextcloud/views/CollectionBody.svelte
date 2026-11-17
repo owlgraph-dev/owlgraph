@@ -7,7 +7,7 @@
   // A collection's contents on its own page (docs/architecture/plugins.md, "Node views"):
   // the folder block's component, server-rendered from what the plugin held
   // (nodeView.server.ts), its footer saying how this viewer reads it.
-  import type { PluginNodeBodyProps } from '$lib/plugins/api';
+  import type { PluginNodeBodyProps } from '#lib/plugins/api.ts';
   import FolderListing from '../blocks/folder/FolderListing.svelte';
   import { editingFor } from '../blocks/folder/editing';
   import { folderTexts } from '../blocks/folder/texts';

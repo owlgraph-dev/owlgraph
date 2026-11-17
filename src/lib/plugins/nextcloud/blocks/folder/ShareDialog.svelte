@@ -7,7 +7,7 @@
   // "New share …": connects a public share beside the page being edited. The
   // server keeps the token sealed; the dialog mounts fresh each time, so neither
   // the link nor the password is shown again.
-  import { Alert, Button, Dialog, FormField, Input } from '$lib/design-system';
+  import { Alert, Button, Dialog, FormField, Input } from '#lib/design-system/index.ts';
   import { t } from '../../messages';
   import { PLUGIN_ROUTES } from '../routes';
 

@@ -4,7 +4,7 @@
 
 // The editor's own Nextcloud, browsed through their connection to pick a folder
 // or file. Never cached or stored: it is theirs, and only for the picking.
-import type { PluginHost, PluginRequest } from '$lib/plugins/api';
+import type { PluginHost, PluginRequest } from '#lib/plugins/api.ts';
 import { propfind, turnedOff } from './client.server';
 import { listingQuery, sortEntries } from './listing.server';
 import { viewerAccess } from './resolve.server';

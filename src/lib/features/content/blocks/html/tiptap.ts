@@ -6,7 +6,7 @@
 // stored html is sanitized on save (render/sanitize.server.ts, the boundary);
 // the NodeView sanitizes too, since an applied edit renders before any save.
 import { Node } from '@tiptap/core';
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { pinnedScheme } from '../../color/contentScheme';
 import { placementAttr } from '../../capabilities/placement/placement';
 import { svelteNodeView } from '../scaffold/svelteNodeView.svelte';

@@ -9,12 +9,12 @@
   // removing the last step reverts with nothing lost. `formatOptions` is edited
   // in the block settings panel, not here.
   import { untrack } from 'svelte';
-  import { Dialog, Button, Input, Select, SegmentedControl, SegmentedControlItem, AccordionItem, Accordion, Alert, FormField } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, Select, SegmentedControl, SegmentedControlItem, AccordionItem, Accordion, Alert, FormField } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import type { WireOrderDirection } from '../nodeFilter';
-  import type { TemplateParam } from '$lib/features/content';
-  import { getRelationshipTypeCatalog, type NodeClassOption, type RelationshipTypeOption } from '$lib/features/semantic';
+  import type { TemplateParam } from '#lib/features/content/index.ts';
+  import { getRelationshipTypeCatalog, type NodeClassOption, type RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import {
     filterToGroup,
     groupToFilter,

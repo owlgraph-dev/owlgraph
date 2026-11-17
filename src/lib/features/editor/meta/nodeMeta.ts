@@ -5,11 +5,11 @@
 // The prop contract for editing a node's metadata, shared by every editor
 // shell. State props come from the edit route's load; action props are wired
 // to the typed API clients (features/nodes/client.ts and friends).
-import type { NodeClassOption, ClassFields } from '$lib/features/semantic';
-import type { ContentScheme } from '$lib/features/content';
-import type { DocumentSource } from '$lib/features/documents';
-import type { CollectionMember } from '$lib/features/collections';
-import type { CollectionSourceView } from '$lib/features/pluginHost';
+import type { NodeClassOption, ClassFields } from '#lib/features/semantic/index.ts';
+import type { ContentScheme } from '#lib/features/content/index.ts';
+import type { DocumentSource } from '#lib/features/documents/index.ts';
+import type { CollectionMember } from '#lib/features/collections/index.ts';
+import type { CollectionSourceView } from '#lib/features/pluginHost/index.ts';
 
 export interface NodeProperty {
   name: string;

@@ -6,7 +6,7 @@
 <script lang="ts">
   // Nothing to set: only what the block is and what keeping or deleting it
   // means (docs/architecture/blocks/anatomy.md, "Unknown blocks").
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { labelFor } from '../../blockSettings/blockLabels';
   import type { BlockSettingsProps } from '../../blockSettings/types';

@@ -6,11 +6,11 @@
 <script lang="ts">
   // The uniform picker writes `pad` and clears the per-side overrides under it
   // (setSpacingField), so the two never disagree.
-  import { editTier } from '$lib/features/content';
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Popover, NumberField, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { resolvedPad, resolvedSide, type SpacingData, type Side } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Popover, NumberField, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import { resolvedPad, resolvedSide, type SpacingData, type Side } from '#lib/features/content/index.ts';
 
   let {
     value,

@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { EditTabs, LockStatus } from '$lib/features/pages';
+import type { EditTabs, LockStatus } from '#lib/features/pages/index.ts';
 import { EditLock, type LockClient } from './editLock.svelte';
 
 const PAGE = 'p-1';

@@ -4,9 +4,9 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { Button } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import type { ClassFields } from '$lib/features/semantic';
+  import { Button } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { ClassFields } from '#lib/features/semantic/index.ts';
   import OpenExternalButton from './OpenExternalButton.svelte';
   import { externalHost, type DocumentSource } from '../externalUrl';
   import { formatFileSize, documentContentPath } from '../client';

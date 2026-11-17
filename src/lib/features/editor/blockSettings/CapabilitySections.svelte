@@ -7,14 +7,14 @@
   // A target's capability sections, each wired to where the host keeps it: the
   // page, a query block (its result container's format options), a flex row,
   // any other block or cell.
-  import * as m from '$lib/paraglide/messages';
-  import { blockSupportsCapability, pageGutterPx, setPageGutter, setLayoutField, setLayoutArrangement, setSpacingField, setSurfaceField, queryFormat, setTemplateFormatOption, TEMPLATE_RESULT_LAYOUT_DEFAULTS, defaultsFor, getBlockDefaults, NO_DEFAULTS, pageRhythmPx, resolvedSpace, clearTier, FLOW_BLOCK_TYPES, editTier, backgroundContrast, contrastWarningText, clearSurfaceImage, SURFACE_IMAGE_TYPES, type HeightData } from '$lib/features/content';
-  import type { ContentScheme } from '$lib/features/content';
-  import type { SelectionChainEntry } from '$lib/features/content/editor';
-  import { PAGE_TYPE, applyPageColumns, moveBlockInSections, setBlockAttrsById, type sectionMovesAt } from '$lib/features/content/editor';
-  import { imagePlacement, gridTierAttrs, withGridTierColumns, withGridTierGap, type PageColumns, type PlacementData, type PlacementKind, type FlexItemData } from '$lib/features/content';
-  import { getPageLayoutPresets } from '$lib/features/pages';
-  import { toast } from '$lib/design-system';
+  import * as m from '#lib/paraglide/messages.js';
+  import { blockSupportsCapability, pageGutterPx, setPageGutter, setLayoutField, setLayoutArrangement, setSpacingField, setSurfaceField, queryFormat, setTemplateFormatOption, TEMPLATE_RESULT_LAYOUT_DEFAULTS, defaultsFor, getBlockDefaults, NO_DEFAULTS, pageRhythmPx, resolvedSpace, clearTier, FLOW_BLOCK_TYPES, editTier, backgroundContrast, contrastWarningText, clearSurfaceImage, SURFACE_IMAGE_TYPES, type HeightData } from '#lib/features/content/index.ts';
+  import type { ContentScheme } from '#lib/features/content/index.ts';
+  import type { SelectionChainEntry } from '#lib/features/content/editor.ts';
+  import { PAGE_TYPE, applyPageColumns, moveBlockInSections, setBlockAttrsById, type sectionMovesAt } from '#lib/features/content/editor.ts';
+  import { imagePlacement, gridTierAttrs, withGridTierColumns, withGridTierGap, type PageColumns, type PlacementData, type PlacementKind, type FlexItemData } from '#lib/features/content/index.ts';
+  import { getPageLayoutPresets } from '#lib/features/pages/index.ts';
+  import { toast } from '#lib/design-system/index.ts';
   import type { Editor } from '@tiptap/core';
   import { blockDefaultsOf, placementKindOf, surfaceFieldsOf } from '../blocks/catalog';
   import LayoutSection from './LayoutSection.svelte';

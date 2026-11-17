@@ -10,8 +10,8 @@
   // pages; the server stays the authority.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Select, Alert, FormField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, Select, Alert, FormField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { styleClass } from '../customStyles/slug';
   import { loadCustomStyleTools, type CustomStyleTools } from '../customStyles/load';
   import type { CssIssue } from '../customStyles/compile';

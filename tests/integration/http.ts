@@ -11,8 +11,8 @@ import { createServer, type Server } from 'node:http';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parse as parseDevalue } from 'devalue';
-import { db } from '$lib/platform/db.server';
-import { createSession } from '$lib/features/auth/server';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession } from '#lib/features/auth/server.ts';
 import { buildState } from './build';
 import { userOf, type Role } from './users';
 

@@ -7,8 +7,8 @@
 // tier on the grounds scheme regions.ts decides. A pair that is the same in
 // both schemes isn't flagged: that is an authoring question, which the
 // block settings panel's contrast guidance answers.
-import type { Rgba } from '$lib/design-system/theme/color';
-import { SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
+import type { Rgba } from '#lib/design-system/theme/color.ts';
+import { SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
 import { TIERS, type Tier } from '../capabilities/cascade';
 import { brandColorId, colorToken, colorTokenName, readableOn } from './colorTokens';
 import { pinnedScheme } from './contentScheme';

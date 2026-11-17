@@ -5,10 +5,10 @@
 // The site-wide adaptive readiness report (docs/architecture/theming.md, "Letting pages
 // adapt"). Viewer-scoped: only pages they can read are listed, only pages they
 // can write are pinned.
-import { db } from '$lib/platform/db.server';
-import { checkAdaptiveReadiness, type ContentScheme, type JsonDoc } from '$lib/features/content';
-import type { SessionUser } from '$lib/features/auth/server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
+import { db } from '#lib/platform/db.server.ts';
+import { checkAdaptiveReadiness, type ContentScheme, type JsonDoc } from '#lib/features/content/index.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { getPage, setPageContentScheme, userCanWritePage } from './pages.server';
 
 export interface PageReadiness {

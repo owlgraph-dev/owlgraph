@@ -14,7 +14,7 @@ import { tableInputShape } from './table/input.server';
 import { flexInputShape } from './flex/input.server';
 import { collectionInputShape } from './collection/input.server';
 import { documentInputShape } from './document/input.server';
-import { PLUGIN_INPUT_SHAPES } from '$lib/plugins/inputs.server';
+import { PLUGIN_INPUT_SHAPES } from '#lib/plugins/inputs.server.ts';
 
 // Re-exported for the MCP tools.
 export { columnsByTierShape, containerSurfaceShape, gapByTierShape, minHeightShape, placementShape, spacingShape, surfaceShape, typographyShape };

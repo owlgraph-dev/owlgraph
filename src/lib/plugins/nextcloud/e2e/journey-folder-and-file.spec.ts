@@ -6,12 +6,12 @@
 // its files on a page; an anonymous reader browses the one and downloads the other.
 import type { Locator, Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, formAction, unique } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, formAction, unique } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
 import { startMockNextcloud, type MockNextcloud } from './mockNextcloud';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const API = '/api/plugins/nextcloud';
 const PDF = '%PDF-1.4\n% the journey report\n';

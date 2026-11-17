@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The `search` query field; the host schema registers it.
-import { builder, NodeTypeEnum } from '$lib/features/query/graphql/builder.server';
-import { searchContent, type SearchHit } from '$lib/features/search/server';
-import type { NodeType } from '$lib/features/nodes';
+import { builder, NodeTypeEnum } from '#lib/features/query/graphql/builder.server.ts';
+import { searchContent, type SearchHit } from '#lib/features/search/server.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 const SearchResult = builder.objectRef<SearchHit>('SearchResult').implement({
   description: 'A single content item matching a search, scoped to the requesting user.',

@@ -5,16 +5,16 @@
 // Property values, groups and definitions; compiling a filter over them is
 // features/query/filterSql.server.ts's. A value comes from a page's content
 // (source='inline') or is set on any node directly (source='manual').
-import { db, type TxSql } from '$lib/platform/db.server';
-import { timed } from '$lib/platform/logger.server';
-import { readableNodes } from '$lib/features/nodes/server';
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-import { localizedJson, parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { timed } from '#lib/platform/logger.server.ts';
+import { readableNodes } from '#lib/features/nodes/server.ts';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { localizedJson, parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
 import { PARAMETER_GROUP, isParameterName } from './propertyGroups';
 import { MEMBERSHIP_PROPERTY_GROUP } from './membership';
 import { localizeGroup, localizeSuggestion, byLabel, type PropertyGroupOption, type PropertySuggestion } from './localizeSchema';
-import { isUnknownType, type JsonNode } from '$lib/features/content';
-import { CodedError } from '$lib/platform/codedError';
+import { isUnknownType, type JsonNode } from '#lib/features/content/index.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 export { DEFAULT_PROPERTY_GROUP } from './propertyGroups';
 
 // A queryBlock's marks are template parameters, not facts about this page:

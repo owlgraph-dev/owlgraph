@@ -6,11 +6,11 @@
 <script lang="ts">
   // /api/locale stores the explicit choice in its cookie and, when signed in,
   // on the account; then the page reloads in it (docs/architecture/languages.md).
-  import { Select, toast } from '$lib/design-system';
-  import { getLocale } from '$lib/paraglide/runtime';
-  import * as m from '$lib/paraglide/messages';
-  import { enabledLocales } from '$lib/platform/i18n/siteLocales';
-  import { localeName } from '$lib/platform/i18n/localeNames';
+  import { Select, toast } from '#lib/design-system/index.ts';
+  import { getLocale } from '#lib/paraglide/runtime.js';
+  import * as m from '#lib/paraglide/messages.js';
+  import { enabledLocales } from '#lib/platform/i18n/siteLocales.ts';
+  import { localeName } from '#lib/platform/i18n/localeNames.ts';
 
   const items = enabledLocales().map((locale) => ({ value: locale, label: localeName(locale) }));
 

@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import sharp from 'sharp';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { textPara } from '$tests/e2e/doc';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { textPara } from '#tests/e2e/doc.ts';
 
 // docs/architecture/blocks/anatomy.md, "Unknown blocks". The kinds are invented: a plugin that is
 // merely turned off keeps its kinds known.

@@ -7,11 +7,11 @@
   // Stylesheets are emitted in this order, so a later one overrides an earlier
   // one. Switched off, a stylesheet leaves the served CSS on the next render.
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState, Switch, Dialog } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import StylesheetModal from '$lib/features/site/routes/StylesheetModal.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState, Switch, Dialog } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import StylesheetModal from '#lib/features/site/routes/StylesheetModal.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

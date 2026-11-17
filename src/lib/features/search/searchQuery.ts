@@ -4,7 +4,7 @@
 
 // The resolved URL state in the query model's shape: a wire filter, as a query
 // block stores it, plus the sort, the term and the page's window.
-import type { WireNodeFilter, WireOrderByInput } from '$lib/features/query';
+import type { WireNodeFilter, WireOrderByInput } from '#lib/features/query/index.ts';
 import { SEARCH_PAGE_SIZE, effectiveSort, type SearchParams, type SearchSort } from './searchUrl';
 
 /** Null when the parameter is absent or was dropped. */

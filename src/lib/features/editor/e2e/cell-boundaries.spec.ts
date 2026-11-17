@@ -2,10 +2,10 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { doc, para, txt } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, para, txt } from '#tests/e2e/doc.ts';
 import type { Page } from '@playwright/test';
 
 // docs/architecture/blocks/layout.md, "Cell boundaries".

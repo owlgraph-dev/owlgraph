@@ -9,35 +9,17 @@
 // module.registerHooks() Playwright uses alike. The scoped class hash is the
 // compiler's default, the same the app's build gives, so the classes match.
 import { readFileSync } from 'node:fs';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-import { resolve as resolvePath } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { transformSync } from 'esbuild';
 import { compile, compileModule } from 'svelte/compiler';
 
-// The aliases, as the generated tsconfig's paths map them.
-const ALIASES = [
-  ['$lib', pathToFileURL(resolvePath(process.cwd(), 'src/lib') + '/').href],
-  ['$tests', pathToFileURL(resolvePath(process.cwd(), 'tests') + '/').href],
-];
 /** A format a TypeScript loader beside this one doesn't know, so it leaves the module alone. */
 const FORMAT = 'svelte';
 
+// #lib/… and #tests/… are package.json's subpath imports, which Node resolves.
 export function resolve(specifier, context, next) {
-  // `$lib/…` and `$tests/…` through the loader beside this one where it maps the tsconfig's paths, else here.
-  const alias = ALIASES.find(([name]) => specifier === name || specifier.startsWith(name + '/'));
-  const lib = !!alias;
-  const attempt = (spec) => {
-    const resolved = next(spec, context);
-    return typeof resolved?.then === 'function' ? resolved.then(mark) : mark(resolved);
-  };
-  const fallback = () => attempt(alias[1] + specifier.slice(alias[0].length + 1) + (/\.[a-z]+$/.test(specifier) ? '' : '.ts'));
-  try {
-    const resolved = attempt(specifier);
-    return lib && typeof resolved?.then === 'function' ? resolved.catch(fallback) : resolved;
-  } catch (error) {
-    if (!lib) throw error;
-    return fallback();
-  }
+  const resolved = next(specifier, context);
+  return typeof resolved?.then === 'function' ? resolved.then(mark) : mark(resolved);
 }
 
 function mark(resolved) {

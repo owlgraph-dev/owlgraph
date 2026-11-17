@@ -9,9 +9,9 @@
   // content stylesheets carry documentEntry.css, and the public renderer's
   // Node loader can't load one.
   import type { Snippet } from 'svelte';
-  import { Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { glyphSvg } from '$lib/design-system/icons';
+  import { Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { glyphSvg } from '#lib/design-system/icons.ts';
   import type { DocumentEntryFile, DocumentPlaceholder } from './types';
 
   interface Props {

@@ -13,21 +13,21 @@ import {
   errorClass,
   appVersion,
   SLOW_REQUEST_MS,
-} from '$lib/platform/logger.server';
-import { db } from '$lib/platform/db.server';
-import { getSessionUser, hashToken } from '$lib/features/auth/server';
-import { RateLimiter } from '$lib/platform/rateLimit';
-import { apiError, type ApiErrorCode } from '$lib/platform/apiErrors';
-import { secretKeySummary } from '$lib/platform/secretBox.server';
-import { allowSelfFraming, applyStylePolicy, generateNonce, CSP_REPORT_PATH, STYLE_SRC_PHASE } from '$lib/platform/csp';
-import { PUBLIC_ROUTES } from '$lib/shell/publicRoutes';
-import { styleRouteKind } from '$lib/platform/cspRoutes';
-import { refreshNamespaceCache } from '$lib/features/namespaces/server';
-import { paraglideMiddleware } from '$lib/paraglide/server';
-import { getTextDirection } from '$lib/paraglide/runtime';
-import { currentSiteLocaleConfig, loadSiteLocaleConfig } from '$lib/platform/i18n/siteLocales.server';
-import { resolveUiLocale, UI_LOCALE_COOKIE } from '$lib/platform/i18n/negotiate';
-import { COLOR_PREF_COOKIE, resolveColorPref } from '$lib/design-system/theme/preference';
+} from '#lib/platform/logger.server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { getSessionUser, hashToken } from '#lib/features/auth/server.ts';
+import { RateLimiter } from '#lib/platform/rateLimit.ts';
+import { apiError, type ApiErrorCode } from '#lib/platform/apiErrors.ts';
+import { secretKeySummary } from '#lib/platform/secretBox.server.ts';
+import { allowSelfFraming, applyStylePolicy, generateNonce, CSP_REPORT_PATH, STYLE_SRC_PHASE } from '#lib/platform/csp.ts';
+import { PUBLIC_ROUTES } from '#lib/shell/publicRoutes.ts';
+import { styleRouteKind } from '#lib/platform/cspRoutes.ts';
+import { refreshNamespaceCache } from '#lib/features/namespaces/server.ts';
+import { paraglideMiddleware } from '#lib/paraglide/server.js';
+import { getTextDirection } from '#lib/paraglide/runtime.js';
+import { currentSiteLocaleConfig, loadSiteLocaleConfig } from '#lib/platform/i18n/siteLocales.server.ts';
+import { resolveUiLocale, UI_LOCALE_COOKIE } from '#lib/platform/i18n/negotiate.ts';
+import { COLOR_PREF_COOKIE, resolveColorPref } from '#lib/design-system/theme/preference.ts';
 
 // Warms the [namespace] param matcher's registry at startup, unawaited so a
 // slow database doesn't block boot: a namespaced URL in the first instant may

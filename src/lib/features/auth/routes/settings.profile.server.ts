@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/profile, re-exported by src/routes/settings/profile/+page.server.ts.
-import { setOwnName } from '$lib/features/auth/server';
-import { replaceAvatar, removeAvatar } from '$lib/features/media/server';
-import { avatarUrl } from '$lib/features/media';
+import { setOwnName } from '#lib/features/auth/server.ts';
+import { replaceAvatar, removeAvatar } from '#lib/features/media/server.ts';
+import { avatarUrl } from '#lib/features/media/index.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 export const load = async ({ locals, parent }: ServerLoadEvent) => {
   // The root layout has already resolved avatarVersion for this render.

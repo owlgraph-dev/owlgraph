@@ -6,10 +6,10 @@
 <script lang="ts">
   // Cards, not a table: variants are uploaded per family.
   import FontFamilyCard from './FontFamilyCard.svelte';
-  import { Button, EmptyState } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import FontFamilyModal from '$lib/features/content/routes/FontFamilyModal.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, EmptyState } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import FontFamilyModal from '#lib/features/content/routes/FontFamilyModal.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
   let adding = $state(false);

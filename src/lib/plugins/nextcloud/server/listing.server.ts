@@ -6,7 +6,7 @@
 // and paged here, since WebDAV pages nothing. It never carries a share's token, a
 // person's id or a WebDAV address. A reader may list any folder below the root:
 // a block's start folder is presentation, not a boundary.
-import type { PluginHost, PluginNode, PluginRequest } from '$lib/plugins/api';
+import type { PluginHost, PluginNode, PluginRequest } from '#lib/plugins/api.ts';
 import { checkSharePath } from '../sharePath';
 import { decodeSecret, type DavProblem, type ShareSecret } from './client.server';
 import { peekListing, peekOwnListing, readListing, readOwnListing, type Listing, type ListResult } from './cache.server';

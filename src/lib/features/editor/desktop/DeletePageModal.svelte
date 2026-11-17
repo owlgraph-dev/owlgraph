@@ -4,8 +4,8 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { Dialog, Button, Alert } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Alert } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

@@ -4,8 +4,8 @@
 
 // Each result is bound into a clone of the template before the ordinary walker
 // renders it, so the walker never knows about templating.
-import { esc } from '$lib/platform/htmlEscape';
-import * as m from '$lib/paraglide/messages';
+import { esc } from '#lib/platform/htmlEscape.ts';
+import * as m from '#lib/paraglide/messages.js';
 import { attrsOf } from '../../doc/doc';
 import type { QueryBlockNodeAttrs } from './model';
 import { bindTemplate } from '../../template/templateBinding';

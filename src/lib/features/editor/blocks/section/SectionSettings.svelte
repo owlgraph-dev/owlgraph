@@ -6,14 +6,14 @@
 <script lang="ts">
   // A section's columns are the page's, set in the page's Layout; the hint
   // takes the author there.
-  import { Button, FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';
   import type { BlockSettingsProps } from '../../blockSettings/types';
   import MinHeightField from '../../capabilities/height/MinHeightField.svelte';
-  import { hasAnyOwnValue, type HeightData } from '$lib/features/content';
+  import { hasAnyOwnValue, type HeightData } from '#lib/features/content/index.ts';
 
   let { target, editor, actions }: BlockSettingsProps = $props();
 

@@ -4,34 +4,34 @@
 
 // Route adapter, re-exported by src/routes/[[namespace=namespace]]/[slug]/edit/+page.server.ts.
 import { error, redirect } from '@sveltejs/kit';
-import { getNodeBySlug } from '$lib/features/nodes/server';
-import { resolveNamespaceParam, listNamespacesForUser, getNamespaceMembers } from '$lib/features/namespaces/server';
-import { nodePath } from '$lib/features/nodes';
+import { getNodeBySlug } from '#lib/features/nodes/server.ts';
+import { resolveNamespaceParam, listNamespacesForUser, getNamespaceMembers } from '#lib/features/namespaces/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
 import {
   getPage,
   listPagesForUser,
   getPageShares,
   userCanReadPage,
   userCanWritePage,
-} from '$lib/features/pages/server';
-import { getHomePageId } from '$lib/features/site/server';
-import { listEnabledPageLayoutPresets } from '$lib/features/pages/server';
-import { collectAssetIds, type JsonNode } from '$lib/features/content';
-import { getAssetSizes } from '$lib/features/media/server';
-import { getNodeTags, listTags } from '$lib/features/semantic/server';
-import { listDocumentsForUser, getDocument, getDocumentShares, userCanReadDocument, userCanWriteDocument } from '$lib/features/documents/server';
-import { getCollection, membersWithBasis, userCanReadCollection, userCanWriteCollection } from '$lib/features/collections/server';
-import { describeCollectionSource, enabledPlugins } from '$lib/features/pluginHost/server';
+} from '#lib/features/pages/server.ts';
+import { getHomePageId } from '#lib/features/site/server.ts';
+import { listEnabledPageLayoutPresets } from '#lib/features/pages/server.ts';
+import { collectAssetIds, type JsonNode } from '#lib/features/content/index.ts';
+import { getAssetSizes } from '#lib/features/media/server.ts';
+import { getNodeTags, listTags } from '#lib/features/semantic/server.ts';
+import { listDocumentsForUser, getDocument, getDocumentShares, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { getCollection, membersWithBasis, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { describeCollectionSource, enabledPlugins } from '#lib/features/pluginHost/server.ts';
 // Labels arrive resolved for the request's locale (docs/architecture/languages.md).
-import { getManualProperties, listPropertySuggestionOptions, listPropertyGroupOptions } from '$lib/features/semantic/server';
+import { getManualProperties, listPropertySuggestionOptions, listPropertyGroupOptions } from '#lib/features/semantic/server.ts';
 // nodeClasses is every assignable class: the class picker narrows it to the
 // node's type, the query builder offers all of them.
-import { listNodeClassOptions, getNodeClassFields } from '$lib/features/semantic/server';
-import { listUsers } from '$lib/features/auth/server';
-import { latestVersionId } from '$lib/features/pages/server';
-import { getContentSchemeDefault } from '$lib/features/content/server';
-import { can } from '$lib/features/auth/server';
-import { listShareLinks } from '$lib/features/nodes/server';
+import { listNodeClassOptions, getNodeClassFields } from '#lib/features/semantic/server.ts';
+import { listUsers } from '#lib/features/auth/server.ts';
+import { latestVersionId } from '#lib/features/pages/server.ts';
+import { getContentSchemeDefault } from '#lib/features/content/server.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { listShareLinks } from '#lib/features/nodes/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { namespace?: string; slug: string };

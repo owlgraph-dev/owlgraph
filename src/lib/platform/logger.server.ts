@@ -12,8 +12,8 @@ import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import pino, { type Logger } from 'pino';
-import type { NodeType, Visibility } from '$lib/features/nodes';
-import type { DocumentSource } from '$lib/features/documents';
+import type { NodeType, Visibility } from '#lib/features/nodes/index.ts';
+import type { DocumentSource } from '#lib/features/documents/index.ts';
 
 export type { Logger };
 

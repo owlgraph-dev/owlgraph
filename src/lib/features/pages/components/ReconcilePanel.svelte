@@ -6,10 +6,10 @@
 <script lang="ts">
   import { renderPageBlocks } from '../client';
   import { onMount, untrack } from 'svelte';
-  import { RenderedContent } from '$lib/features/content/components';
+  import { RenderedContent } from '#lib/features/content/components.ts';
   import { diffDocs, type BlockPick, type BlockDiffEntry } from '../pageDiff';
-  import { Button, Alert, EmptyState, Checkbox, Badge } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Alert, EmptyState, Checkbox, Badge } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     pageId,

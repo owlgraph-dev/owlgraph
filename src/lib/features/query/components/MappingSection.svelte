@@ -5,10 +5,10 @@
 -->
 <script lang="ts">
   // One row per template parameter, with the warn-but-allow declared-type check.
-  import { Select, Input, Badge, Alert, EmptyState } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { parameterLocalName } from '$lib/features/semantic';
-  import { TRANSFORM_LABELS, TRANSFORM_PARAM_KEYS, TRANSFORM_PARAM_LABELS, declaredTypeMismatch, type TransformId } from '$lib/features/content';
+  import { Select, Input, Badge, Alert, EmptyState } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { parameterLocalName } from '#lib/features/semantic/index.ts';
+  import { TRANSFORM_LABELS, TRANSFORM_PARAM_KEYS, TRANSFORM_PARAM_LABELS, declaredTypeMismatch, type TransformId } from '#lib/features/content/index.ts';
   import SourcePicker from './SourcePicker.svelte';
   import { mappingSourceGroups, mappingSourceToKey, mappingKeyToSource, withStaleValue, type PropertyOption } from './sourceOptions';
   import { knownSourceCategory, transformOptionIds, withMappingSource, type MappingRow } from './mappingRows';

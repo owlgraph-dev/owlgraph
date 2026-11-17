@@ -4,11 +4,11 @@
 
 // Page operations, shared by the app and the standalone MCP server: keep it
 // free of SvelteKit-only imports.
-import { timed } from '$lib/platform/logger.server';
-import { db, type TxSql, type JsonArg } from '$lib/platform/db.server';
-import { sanitizeDoc } from '$lib/features/content/server';
+import { timed } from '#lib/platform/logger.server.ts';
+import { db, type TxSql, type JsonArg } from '#lib/platform/db.server.ts';
+import { sanitizeDoc } from '#lib/features/content/server.ts';
 import { listPageLayoutPresets } from './pageLayoutPresets.server';
-import { extractSearchText } from '$lib/features/search/server';
+import { extractSearchText } from '#lib/features/search/server.ts';
 import {
   changePageColumns,
   mentionsAllPageAttrs,
@@ -35,14 +35,14 @@ import {
   type PageColumns,
   type PageLayout,
   type SectionMerge,
-} from '$lib/features/content';
+} from '#lib/features/content/index.ts';
 import { presetSnapshot, type PageLayoutPreset } from './pageLayoutPresets';
-import type { Visibility } from '$lib/features/nodes';
-import type { SessionUser } from '$lib/features/auth/server';
-import { syncProperties } from '$lib/features/semantic/server';
-import { syncEdges } from '$lib/features/graph/server';
-import { pageOwnedAssetIds, reconcilePageAssets } from '$lib/features/media/server';
-import { getDocument } from '$lib/features/documents/server';
+import type { Visibility } from '#lib/features/nodes/index.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { syncProperties } from '#lib/features/semantic/server.ts';
+import { syncEdges } from '#lib/features/graph/server.ts';
+import { pageOwnedAssetIds, reconcilePageAssets } from '#lib/features/media/server.ts';
+import { getDocument } from '#lib/features/documents/server.ts';
 import {
   insertNode,
   deleteNodeTx,
@@ -60,9 +60,9 @@ import {
   userCanReadNode,
   userCanWriteNode,
   type NodeAccessRow,
-} from '$lib/features/nodes/server';
-import { getNamespace, getDefaultNamespace } from '$lib/features/namespaces/server';
-import { getTypeClass } from '$lib/features/semantic/server';
+} from '#lib/features/nodes/server.ts';
+import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getTypeClass } from '#lib/features/semantic/server.ts';
 import { captureVersion, registerVersionedType, type VersionKind } from './versions.server';
 import { applyPicks, type BlockPick } from './pageDiff';
 import {
@@ -80,11 +80,11 @@ import {
   buildNode,
   type CellStyleInput,
   type GridBlockInput,
-} from '$lib/features/content/server';
-import type { JsonDoc, JsonNode, ContentScheme } from '$lib/features/content';
-import { droppedUnits, isUnknownNode, lostKeys, unknownKey, unknownKeys, unwrapUnknown, type UnknownUnit } from '$lib/features/content';
+} from '#lib/features/content/server.ts';
+import type { JsonDoc, JsonNode, ContentScheme } from '#lib/features/content/index.ts';
+import { droppedUnits, isUnknownNode, lostKeys, unknownKey, unknownKeys, unwrapUnknown, type UnknownUnit } from '#lib/features/content/index.ts';
 import { assertNoUnknownDropped } from './unknownGuard';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 // The pages the user may read: userCanReadPage in SQL, via readableNodes.
 export interface PageListRow {

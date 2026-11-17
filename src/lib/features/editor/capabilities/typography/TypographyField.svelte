@@ -4,15 +4,15 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { editTier } from '$lib/features/content';
-  import { SegmentedControl, SegmentedControlItem, ColorField, Combobox, ScaleField, Select, FieldWarning } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { themeColorOptions, colorLabel } from '$lib/features/content';
-  import { FONT_IDS, FONT_LABELS } from '$lib/features/content';
-  import { getCustomFontLabels } from '$lib/features/content';
-  import type { ElementDefaults } from '$lib/features/content';
-  import { CUSTOM_SIZE_STEPS, SIZE_MAX, SIZE_MIN, sizeLabel, typeScaleOptions } from '$lib/features/content';
-  import { COLOR_SWATCHES } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { SegmentedControl, SegmentedControlItem, ColorField, Combobox, ScaleField, Select, FieldWarning } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { themeColorOptions, colorLabel } from '#lib/features/content/index.ts';
+  import { FONT_IDS, FONT_LABELS } from '#lib/features/content/index.ts';
+  import { getCustomFontLabels } from '#lib/features/content/index.ts';
+  import type { ElementDefaults } from '#lib/features/content/index.ts';
+  import { CUSTOM_SIZE_STEPS, SIZE_MAX, SIZE_MIN, sizeLabel, typeScaleOptions } from '#lib/features/content/index.ts';
+  import { COLOR_SWATCHES } from '#lib/features/content/index.ts';
   import {
     resolvedFamily,
     resolvedSize,
@@ -28,7 +28,7 @@
     LETTER_SPACING_STEPS,
     type TypographyData,
     type WeightToken,
-  } from '$lib/features/content';
+  } from '#lib/features/content/index.ts';
 
   type Field = 'family' | 'size' | 'color' | 'weight' | 'lineHeight' | 'letterSpacing';
 

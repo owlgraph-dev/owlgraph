@@ -11,13 +11,13 @@
   import TypographyTokenCard from './TypographyTokenCard.svelte';
   import ThemeColors from './ThemeColors.svelte';
   import BlockDefaults from './BlockDefaults.svelte';
-  import { Button, Input, Select, SettingsGroup, SettingsRow, SettingsWell, FormField, EmptyState, Table, TableRow, TableCell, Switch, Dialog, type TableColumn } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import ParagraphStyleModal from '$lib/features/site/routes/ParagraphStyleModal.svelte';
-  import CatalogLabel from '$lib/features/semantic/routes/CatalogLabel.svelte';
-  import { localize, missingLocales } from '$lib/platform/i18n/localizedText';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Input, Select, SettingsGroup, SettingsRow, SettingsWell, FormField, EmptyState, Table, TableRow, TableCell, Switch, Dialog, type TableColumn } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import ParagraphStyleModal from '#lib/features/site/routes/ParagraphStyleModal.svelte';
+  import CatalogLabel from '#lib/features/semantic/routes/CatalogLabel.svelte';
+  import { localize, missingLocales } from '#lib/platform/i18n/localizedText.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

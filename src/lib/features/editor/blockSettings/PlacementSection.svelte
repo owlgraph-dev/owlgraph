@@ -7,8 +7,8 @@
   // Where a block is and how it sits there (docs/architecture/blocks/layout.md, "Placement"): the
   // moves are commands, one undo step each; the alignment is per-viewport data.
   // Either row can be the only one.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Toolbar, ToolbarButton } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Toolbar, ToolbarButton } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import {
     editTier,
     hasAnyOwnValue,
@@ -19,8 +19,8 @@
     type PlacementData,
     type PlacementKind,
     type SectionMove,
-  } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
   import { moveTitle, shownMoves } from './placementMoves';
 

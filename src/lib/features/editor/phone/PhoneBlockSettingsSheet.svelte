@@ -6,9 +6,9 @@
 <script lang="ts">
   // An embed block's settings panel, in a sheet; the capability sections stay
   // the desktop's (docs/architecture/editor.md, "Block settings").
-  import { BottomSheet } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { pluginEditorBlock } from '$lib/plugins/editor';
+  import { BottomSheet } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { pluginEditorBlock } from '#lib/plugins/editor.ts';
   import { blockSettingsOf } from '../blocks/settings';
   import BlockSettingsSection from '../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../blockSettings/modified';

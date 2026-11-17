@@ -9,8 +9,8 @@
 // config can never fail a render. The builder offers only the ids for a
 // parameter's type category, so no datatype lookup happens at apply time.
 // Dates format in UTC, so output doesn't depend on the server's timezone.
-import { getLocale } from '$lib/paraglide/runtime';
-import * as m from '$lib/paraglide/messages';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import * as m from '#lib/paraglide/messages.js';
 
 export type TransformCategory = 'text' | 'number' | 'date' | 'boolean' | 'url' | 'reference';
 

@@ -5,14 +5,14 @@
 // Paragraph styles, the stored side (docs/architecture/typography.md). Exactly one default
 // per tag is kept here, not by the schema: the partial unique index only
 // allows at most one, so a default swaps in one transaction and can't be deleted.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { hasText, localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { localizedJson, parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { hasText, localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { localizedJson, parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
 import { isTypographyRoleKey, BUILTIN_ELEMENT_DEFAULTS, type TypographyRoleKey } from './roles';
 import { isParagraphStyleTag, mergeTokenOverDefaults, sortParagraphStyles, tagRole, type ParagraphStyle, type ParagraphStyleTag, type ResolvedParagraphStyle, type TokenLook } from './paragraphStyles';
 import { weightOrNull } from './typography';
 import { sizeOrNull } from './typeScale';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 interface Row {
   id: string;

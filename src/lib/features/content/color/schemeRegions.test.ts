@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { Schema } from '@tiptap/pm/model';
-import { contrastRatio, parseColor } from '$lib/design-system/theme/color';
+import { contrastRatio, parseColor } from '#lib/design-system/theme/color.ts';
 import { fillOver, fillText, groundStep, groundsAlong, schemeAttributeHtml, schemeAttributes, PAGE_GROUNDS, pageGrounds, schemeForGround, TEXT_MINIMUM } from './schemeRegions';
 import { schemeRegionDecorations } from './schemeRegionDecorations';
 import { renderDoc } from '../render/render.server';

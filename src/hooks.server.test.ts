@@ -5,7 +5,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import pino from 'pino';
 import type { RequestEvent } from '@sveltejs/kit';
-import { loggerOptions } from '$lib/platform/logger.server';
+import { loggerOptions } from '#lib/platform/logger.server.ts';
 
 // The server hooks outside SvelteKit: $app/env is the one module of its they need.
 vi.mock('$app/env', () => ({ browser: false, dev: false, building: false, version: 'test' }));

@@ -8,18 +8,18 @@
 // Every curated change runs under the collection's row lock and touches only
 // members the editor may read; one they may not read is never moved or counted.
 import { createHash } from 'node:crypto';
-import { db, type TxSql } from '$lib/platform/db.server';
-import { localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { nodePath } from '$lib/features/nodes';
-import { LOCALIZED_TEXT_DATATYPE, MEMBERSHIP_PROPERTY_GROUP, MEMBERSHIP_RELATIONSHIP } from '$lib/features/semantic';
-import { pluginLabel } from '$lib/plugins';
-import type { NodeType } from '$lib/features/nodes/server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { LOCALIZED_TEXT_DATATYPE, MEMBERSHIP_PROPERTY_GROUP, MEMBERSHIP_RELATIONSHIP } from '#lib/features/semantic/index.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
+import type { NodeType } from '#lib/features/nodes/server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { compareMembers, isReorderOf, mergeVisibleOrder, nextPosition, positionOf } from './members';
 import type { CollectionMember } from './types';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export const CONTAINS = MEMBERSHIP_RELATIONSHIP;
 const POSITION_PROPERTY = `${MEMBERSHIP_PROPERTY_GROUP}:position`;

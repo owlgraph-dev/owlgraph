@@ -2,12 +2,12 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { doc, para, cell } from '$tests/e2e/doc';
-import { layoutFingerprint } from '$tests/e2e/responsive';
-import { endOfLine, stepUpTo } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, para, cell } from '#tests/e2e/doc.ts';
+import { layoutFingerprint } from '#tests/e2e/responsive.ts';
+import { endOfLine, stepUpTo } from '#tests/e2e/editor.ts';
 import type { Page } from '@playwright/test';
 
 // docs/architecture/blocks/layout.md, "Grid columns per tier".

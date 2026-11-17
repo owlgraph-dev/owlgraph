@@ -4,8 +4,8 @@
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { schema } from '$lib/features/query/server';
-import { connectAs, textOf, userOf, type Role } from '$tests/integration/mcp';
+import { schema } from '#lib/features/query/server.ts';
+import { connectAs, textOf, userOf, type Role } from '#tests/integration/mcp.ts';
 import { setNodeTags } from './tags.server';
 
 // The restricted page is shared with editorB only.

@@ -8,7 +8,7 @@
 // handling (logoUpload.server.ts has it), so the MCP server doesn't pull jsdom.
 import { randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import { db, type JsonArg } from '$lib/platform/db.server';
+import { db, type JsonArg } from '#lib/platform/db.server.ts';
 import {
   BRAND_ID,
   EMPTY_THEME,
@@ -20,9 +20,9 @@ import {
   type BrandColor,
   type Shortfall,
   type StoredTheme,
-} from '$lib/design-system/theme/siteTheme';
-import { SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
-import { compileContentTheme, isColorReference, normalizeBlockDefaults, setBlockDefaults, WIDTH_BOUNDS, type WidthToken } from '$lib/features/content';
+} from '#lib/design-system/theme/siteTheme.ts';
+import { SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
+import { compileContentTheme, isColorReference, normalizeBlockDefaults, setBlockDefaults, WIDTH_BOUNDS, type WidthToken } from '#lib/features/content/index.ts';
 
 const color = z.string().regex(THEME_COLOR);
 

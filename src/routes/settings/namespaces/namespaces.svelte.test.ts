@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '$app/forms';
-import type { ActionAnswer } from '$tests/component/forms';
+import type { ActionAnswer } from '#tests/component/forms.ts';
 import NamespacesPage from './+page.svelte';
 import type { PageData } from './$types';
 

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Node metadata (rename, tags, visibility) goes through features/nodes/client.ts.
-import type { DocumentBlockData } from '$lib/features/content';
-import { readApiError } from '$lib/platform/readApiError';
+import type { DocumentBlockData } from '#lib/features/content/index.ts';
+import { readApiError } from '#lib/platform/readApiError.ts';
 
 // The server's sentence, or null for an answer without one: the caller words that.
 async function messageOf(res: Response): Promise<string | null> {

@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, formAction, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { call, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // Families and variants are made through the settings' form actions, as an admin does.
 

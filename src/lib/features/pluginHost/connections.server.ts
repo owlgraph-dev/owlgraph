@@ -7,9 +7,9 @@
 // to the session that started them. A sealed value names its user, integration
 // and origin and opens only for a row that says the same: copied to another
 // row, or kept after the integration's address changed, it opens as nothing.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { secretBox, SecretKeyMissing } from '$lib/platform/secretBox.server';
-import type { ConnectionCredentialKind, PluginCredential } from '$lib/plugins/api';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { secretBox, SecretKeyMissing } from '#lib/platform/secretBox.server.ts';
+import type { ConnectionCredentialKind, PluginCredential } from '#lib/plugins/api.ts';
 import type { FlowStore } from './connectionFlow.server';
 
 export type ConnectionStatus = 'active' | 'revoked' | 'error';

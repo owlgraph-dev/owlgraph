@@ -8,8 +8,8 @@
   // classes under it are offered: the hierarchy bounds what a node can be
   // (docs/architecture/semantic-layer.md).
   import { untrack } from 'svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { FormField } from '$lib/design-system';
+  import * as m from '#lib/paraglide/messages.js';
+  import { FormField } from '#lib/design-system/index.ts';
   import type { NodeClassOption } from '../nodeClass';
 
   let {

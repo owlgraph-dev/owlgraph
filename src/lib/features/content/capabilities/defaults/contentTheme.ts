@@ -4,8 +4,8 @@
 
 // The content half of the theme stylesheet: capability defaults and paragraph
 // style looks. Server and browser compile it alike, so both inject identical CSS.
-import type { StoredTheme } from '$lib/design-system/theme/siteTheme';
-import { inLayer } from '$lib/platform/cssLayers';
+import type { StoredTheme } from '#lib/design-system/theme/siteTheme.ts';
+import { inLayer } from '#lib/platform/cssLayers.ts';
 import { EMPTY_TYPOGRAPHY_REGISTRY, type TypographyRegistry } from '../typography/roles';
 import { emitParagraphStylesCss } from '../typography/emitParagraphStyles';
 import { resolveBlockDefaults, type ResolvedBlockDefaults } from './blockDefaults';

@@ -6,15 +6,15 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { renderDoc } from '$lib/features/content/server';
+import { renderDoc } from '#lib/features/content/server.ts';
 import { PLUGINS, PLUGIN_BLOCK_KINDS } from './index';
 import { PLUGIN_RENDERERS } from './renderers';
 import { pluginEditorBlock } from './editor';
 import { PLUGIN_SERVERS } from './server';
 import { PLUGIN_NODE_VIEWS } from './nodeViews';
 import { PLUGIN_INPUT_KINDS, pluginInputKindOfBlock, pluginInputOf } from './inputs.server';
-import { blockShape } from '$lib/features/content/server';
-import type { BlockRenderer } from '$lib/features/content';
+import { blockShape } from '#lib/features/content/server.ts';
+import type { BlockRenderer } from '#lib/features/content/index.ts';
 import type { PluginBlockKind, PluginManifest } from './api';
 
 const plugins: readonly PluginManifest[] = PLUGINS;

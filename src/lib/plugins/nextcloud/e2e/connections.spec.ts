@@ -5,10 +5,10 @@
 // E2E because: the approval page opens in a window of its own, and the row turns
 // connected as it polls.
 import type { Browser, BrowserContext, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { throwawayUserState } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
-import { db } from '$lib/platform/db.server';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { throwawayUserState } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { db } from '#lib/platform/db.server.ts';
 import { startMockNextcloud, type MockNextcloud } from './mockNextcloud';
 import { configure } from './settings';
 

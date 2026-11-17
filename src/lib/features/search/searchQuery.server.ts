@@ -6,10 +6,10 @@
 // may see, so a hidden one is dropped like an unknown one, never applied or named.
 // No value import from the query feature's server half, which imports this
 // feature's full-text fragments: the route adapter joins the two.
-import type { SessionUser } from '$lib/features/auth/server';
-import { getNodeClassBySlug } from '$lib/features/semantic/server';
-import { listNamespacesForUser } from '$lib/features/namespaces/server';
-import { localize } from '$lib/platform/i18n/localizedText';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { getNodeClassBySlug } from '#lib/features/semantic/server.ts';
+import { listNamespacesForUser } from '#lib/features/namespaces/server.ts';
+import { localize } from '#lib/platform/i18n/localizedText.ts';
 import { DEFAULT_NAMESPACE_PARAM, type SearchParams } from './searchUrl';
 import { toListQuery, type SearchListQuery } from './searchQuery';
 import type { SearchNamespaceOption } from './types';

@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { acquireLock, applyPicksToPage, captureStandaloneVersion, createPage, saveDoc } from '$lib/features/pages/server';
-import { connectAs, textOf, userOf } from '$tests/integration/mcp';
+import { db } from '#lib/platform/db.server.ts';
+import { acquireLock, applyPicksToPage, captureStandaloneVersion, createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { connectAs, textOf, userOf } from '#tests/integration/mcp.ts';
 
 // The page write boundary (sanitizeDoc, run by pages.server.ts's persistDocTx),
 // through every write path that reaches it and the lost-draft path that

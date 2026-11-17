@@ -8,8 +8,8 @@
   // the action reads an absent slug as unchanged.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Select, Alert, FormField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, Select, Alert, FormField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   type Row = { id: string; name: string; slug: string | null; access_level: string; is_default: boolean; inheriting_count: number };
 

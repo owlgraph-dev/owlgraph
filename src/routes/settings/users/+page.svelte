@@ -6,11 +6,11 @@
 <script lang="ts">
   // Accounts are deactivated, never deleted.
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { UserModal } from '$lib/features/auth/components';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { UserModal } from '#lib/features/auth/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
   let { data, form } = $props();
 
   type Row = (typeof data.users)[number];

@@ -7,10 +7,10 @@
   // The property picker: marks the selected text as a property's value, or,
   // inside a query block's template, as one of its parameters
   // (core/properties.svelte.ts).
-  import { Button, Popover, Combobox, Select, FieldError, TriggerFace, Input } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { DEFAULT_PROPERTY_GROUP, PROPERTY_DATATYPES, isPropertyDatatype } from '$lib/features/semantic';
+  import { Button, Popover, Combobox, Select, FieldError, TriggerFace, Input } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import { DEFAULT_PROPERTY_GROUP, PROPERTY_DATATYPES, isPropertyDatatype } from '#lib/features/semantic/index.ts';
   import type { EditorCore } from '../../core/editorCore.svelte';
   import { preserveEditorFocusOnClose } from '../keyboard';
   import type { EditorOverlays } from '../overlays.svelte';

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /graph, re-exported by src/routes/graph/+page.server.ts.
-import { getGraph } from '$lib/features/graph/server';
-import { listNodeClassOptions } from '$lib/features/semantic/server';
+import { getGraph } from '#lib/features/graph/server.ts';
+import { listNodeClassOptions } from '#lib/features/semantic/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 export const load = async ({ locals }: ServerLoadEvent) => {

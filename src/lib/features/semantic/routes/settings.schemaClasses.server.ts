@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/schema/classes, re-exported by src/routes/settings/schema/classes/+page.server.ts.
-import { listNodeClasses, upsertNodeClass, deleteNodeClass } from '$lib/features/semantic/server';
-import { listPropertyGroups } from '$lib/features/semantic/server';
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { localizedTextFromForm } from '$lib/platform/i18n/localizedText.server';
+import { listNodeClasses, upsertNodeClass, deleteNodeClass } from '#lib/features/semantic/server.ts';
+import { listPropertyGroups } from '#lib/features/semantic/server.ts';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { localizedTextFromForm } from '#lib/platform/i18n/localizedText.server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('schema.classes', 'class:manage');

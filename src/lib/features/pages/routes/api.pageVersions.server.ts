@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/versions/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getPage, userCanWritePage } from '$lib/features/pages/server';
-import { listVersions, captureStandaloneVersion } from '$lib/features/pages/server';
-import { unwrapUnknown, type JsonDoc } from '$lib/features/content';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { listVersions, captureStandaloneVersion } from '#lib/features/pages/server.ts';
+import { unwrapUnknown, type JsonDoc } from '#lib/features/content/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

@@ -9,10 +9,10 @@
   // connection" probes the address as typed, before anything is saved.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Alert, Button, Checkbox, Dialog, FieldError, Input, SettingsRow, toast } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import type { SettingsFieldProblem, SettingsFieldView } from '$lib/features/pluginHost';
-  import * as m from '$lib/paraglide/messages';
+  import { Alert, Button, Checkbox, Dialog, FieldError, Input, SettingsRow, toast } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import type { SettingsFieldProblem, SettingsFieldView } from '#lib/features/pluginHost/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

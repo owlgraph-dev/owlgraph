@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { parseCsp } from '$lib/platform/csp';
-import { call, formAction, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { parseCsp } from '#lib/platform/csp.ts';
+import { call, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // Only the sandbox and the empty default-src are pinned: the app's own style
 // policy may add a style-src beside a response's.

@@ -4,9 +4,9 @@
 
 import { describe, expect, it } from 'vitest';
 import { graphql } from 'graphql';
-import { schema } from '$lib/features/query/server';
-import { setManualProperties, setNodeTags } from '$lib/features/semantic/server';
-import { userOf } from '$tests/integration/users';
+import { schema } from '#lib/features/query/server.ts';
+import { setManualProperties, setNodeTags } from '#lib/features/semantic/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { createLinkDocument, refreshDocumentSearchMeta } from './server';
 
 describe('a link document', () => {

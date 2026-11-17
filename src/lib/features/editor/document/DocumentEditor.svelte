@@ -12,18 +12,18 @@
   import { MetaMirror } from '../meta/metaMirror.svelte';
   import { DeleteRequest } from '../meta/deleteRequest.svelte';
   import type { DocumentEditorProps } from '../meta/nodeMeta';
-  import { AccessControlPanel } from '$lib/features/nodes/components';
-  import { PagePropertiesDialog } from '$lib/features/semantic/components';
-  import { ClassFieldsPanel } from '$lib/features/semantic/components';
+  import { AccessControlPanel } from '#lib/features/nodes/components.ts';
+  import { PagePropertiesDialog } from '#lib/features/semantic/components.ts';
+  import { ClassFieldsPanel } from '#lib/features/semantic/components.ts';
   import DeleteDocumentModal from './DeleteDocumentModal.svelte';
   import DocumentSourcePanel from './DocumentSourcePanel.svelte';
-  import { classPropertySlots } from '$lib/features/semantic';
-  import type { ClassFields, NodeClassOption } from '$lib/features/semantic';
-  import { Alert, Button } from '$lib/design-system';
-  import { getLocale } from '$lib/paraglide/runtime';
-  import { isSupportedLocale } from '$lib/platform/i18n/siteLocales';
-  import { localeNameInUi } from '$lib/platform/i18n/localeNames';
-  import * as m from '$lib/paraglide/messages';
+  import { classPropertySlots } from '#lib/features/semantic/index.ts';
+  import type { ClassFields, NodeClassOption } from '#lib/features/semantic/index.ts';
+  import { Alert, Button } from '#lib/design-system/index.ts';
+  import { getLocale } from '#lib/paraglide/runtime.js';
+  import { isSupportedLocale } from '#lib/platform/i18n/siteLocales.ts';
+  import { localeNameInUi } from '#lib/platform/i18n/localeNames.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     documentId,

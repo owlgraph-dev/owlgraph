@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect, sameOrigin } from '$tests/e2e/fixtures';
+import { test, expect, sameOrigin } from '#tests/e2e/fixtures.ts';
 import AxeBuilder from '@axe-core/playwright';
-import { createPage, formAction } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { authState } from '$tests/e2e/seed-data';
+import { createPage, formAction } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
 import { generateAccent, type StoredTheme } from '../../../design-system/theme/siteTheme';
 import { contrastRatio, parseColor } from '../../../design-system/theme/color';
-import { setColorPref } from '$tests/e2e/fixtures';
-import { blockSettings } from '$tests/e2e/editor';
+import { setColorPref } from '#tests/e2e/fixtures.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 // The theme is site-wide: every test here runs alone (tests/e2e/fixtures.ts).
 test.use({ siteWide: true });

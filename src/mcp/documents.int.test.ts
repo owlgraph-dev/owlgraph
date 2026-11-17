@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { connectAs, jsonOf, textOf } from '$tests/integration/mcp';
+import { connectAs, jsonOf, textOf } from '#tests/integration/mcp.ts';
 
 const seed = inject('seed');
 const MISSING = '00000000-0000-4000-8000-000000000000';

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf } from '$tests/integration/users';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 const app = await startApp();
 const seed = inject('seed');

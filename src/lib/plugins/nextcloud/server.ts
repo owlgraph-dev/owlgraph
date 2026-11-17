@@ -4,7 +4,7 @@
 
 // The plugin's server half (docs/architecture/plugins.md, "The server half"). It reaches the
 // network only through the host's client, pinned to the configured server.
-import { definePluginServer } from '$lib/plugins/api';
+import { definePluginServer } from '#lib/plugins/api.ts';
 import { nextcloud } from './index';
 import { checkServer } from './server/status.server';
 import { listingRoute } from './server/listing.server';

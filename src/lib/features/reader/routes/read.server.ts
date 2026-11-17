@@ -4,23 +4,23 @@
 
 // Route adapter, re-exported by src/routes/[[namespace=namespace]]/[slug]/+page.server.ts.
 import { error, redirect } from '@sveltejs/kit';
-import { getNodeBySlug } from '$lib/features/nodes/server';
-import { resolveNamespaceParam } from '$lib/features/namespaces/server';
-import { effectiveVisibility, nodePath } from '$lib/features/nodes';
-import { getPage, userCanReadPage, userCanWritePage } from '$lib/features/pages/server';
-import { getIncomingEdges, getLocalGraph, relationshipGroups } from '$lib/features/graph/server';
-import { getNodeTags } from '$lib/features/semantic/server';
-import { previewScheme } from '$lib/features/content';
-import { getDocument, userCanReadDocument, userCanWriteDocument } from '$lib/features/documents/server';
-import { CONTAINS, getCollection, membersOf, userCanReadCollection, userCanWriteCollection } from '$lib/features/collections/server';
-import { resolveNodeView } from '$lib/features/pluginHost/server';
-import { renderPage } from '$lib/features/reader/server';
-import { pluginLabel } from '$lib/plugins';
-import { getManualProperties } from '$lib/features/semantic/server';
-import { getNodeClassFields } from '$lib/features/semantic/server';
-import type { ClassFields } from '$lib/features/semantic';
-import type { NodeHeaderView } from '$lib/features/nodes';
-import * as m from '$lib/paraglide/messages';
+import { getNodeBySlug } from '#lib/features/nodes/server.ts';
+import { resolveNamespaceParam } from '#lib/features/namespaces/server.ts';
+import { effectiveVisibility, nodePath } from '#lib/features/nodes/index.ts';
+import { getPage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { getIncomingEdges, getLocalGraph, relationshipGroups } from '#lib/features/graph/server.ts';
+import { getNodeTags } from '#lib/features/semantic/server.ts';
+import { previewScheme } from '#lib/features/content/index.ts';
+import { getDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { CONTAINS, getCollection, membersOf, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { resolveNodeView } from '#lib/features/pluginHost/server.ts';
+import { renderPage } from '#lib/features/reader/server.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
+import { getManualProperties } from '#lib/features/semantic/server.ts';
+import { getNodeClassFields } from '#lib/features/semantic/server.ts';
+import type { ClassFields } from '#lib/features/semantic/index.ts';
+import type { NodeHeaderView } from '#lib/features/nodes/index.ts';
+import * as m from '#lib/paraglide/messages.js';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { namespace?: string; slug: string };

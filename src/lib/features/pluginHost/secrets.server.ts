@@ -5,7 +5,7 @@
 // Node source secrets at rest (docs/architecture/authorization.md, "Secrets"), in a table no
 // node read path selects. Only sealed values pass through here: the host
 // (host.server.ts) and the rotation script seal and open them.
-import { db, type TxSql } from '$lib/platform/db.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
 
 /** Only when the node's integration is `plugin`. */
 export async function sealedSecretOf(nodeId: string, plugin: string, sql: TxSql = db): Promise<string | null> {

@@ -7,7 +7,7 @@ import { flushSync } from 'svelte';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import type { JSONContent } from '@tiptap/core';
-import { stubFetch } from '$tests/component/fetch';
+import { stubFetch } from '#tests/component/fetch.ts';
 import { createEditorCore, type EditorCore } from '../core/editorCore.svelte';
 import { BlockEdit } from './blockEdit.svelte';
 import BlockEditDialogs from './BlockEditDialogs.svelte';

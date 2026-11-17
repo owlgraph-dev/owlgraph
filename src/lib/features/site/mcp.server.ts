@@ -8,9 +8,9 @@ import type { ToolRegistry } from '../../../mcp/registry';
 import { text } from '../../../mcp/registry';
 import { getSiteTheme } from './theme.server';
 import { listCustomStyleRefs } from './customStyles.server';
-import { listParagraphStyles } from '$lib/features/content/server';
-import { listEnabledPageLayoutPresets } from '$lib/features/pages/server';
-import { localize } from '$lib/platform/i18n/localizedText';
+import { listParagraphStyles } from '#lib/features/content/server.ts';
+import { listEnabledPageLayoutPresets } from '#lib/features/pages/server.ts';
+import { localize } from '#lib/platform/i18n/localizedText.ts';
 
 export function registerSiteTools({ tool }: ToolRegistry): void {
   tool(

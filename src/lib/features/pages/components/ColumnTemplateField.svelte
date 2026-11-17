@@ -7,9 +7,9 @@
   // One viewport's column template (pageColumns.ts), the one template editor for
   // pages, page layouts and grids. A smaller viewport never has more columns
   // than a larger one (setTierColumnCount).
-  import { FieldRow, NumberField } from '$lib/design-system';
-  import { MAX_COLUMN_RATIO, MAX_PAGE_COLUMNS, setTierColumnCount, setTierColumnRatio, type ColumnTemplate, type Tier } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, NumberField } from '#lib/design-system/index.ts';
+  import { MAX_COLUMN_RATIO, MAX_PAGE_COLUMNS, setTierColumnCount, setTierColumnRatio, type ColumnTemplate, type Tier } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { template, tier, onChange, tierLabel = undefined, maxColumns = MAX_PAGE_COLUMNS, label = undefined, info = undefined }: {
     template: ColumnTemplate;

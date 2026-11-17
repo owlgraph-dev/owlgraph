@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import SurfaceField from './SurfaceField.svelte';
-import type { SurfaceData } from '$lib/features/content';
+import type { SurfaceData } from '#lib/features/content/index.ts';
 
 // The value is held as the block settings panel holds a cell's surface (docs/architecture/theming.md,
 // "Colour references").

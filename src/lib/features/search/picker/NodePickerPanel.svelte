@@ -21,17 +21,17 @@
     SegmentedControl,
     SegmentedControlItem,
     Spinner,
-  } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { canEdit } from '$lib/features/auth';
-  import { NODE_TYPE_GLYPH, NODE_TYPE_LABEL, nodePath, type NodeType } from '$lib/features/nodes';
+  } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import { canEdit } from '#lib/features/auth/index.ts';
+  import { NODE_TYPE_GLYPH, NODE_TYPE_LABEL, nodePath, type NodeType } from '#lib/features/nodes/index.ts';
   import { searchNodes } from '../client';
   import type { NodeSearchResult } from '../types';
-  import { createBlankPageViaApi } from '$lib/features/pages';
-  import { createCuratedCollection } from '$lib/features/collections';
-  import type { DocumentSource } from '$lib/features/documents';
-  import { NewDocumentForm } from '$lib/features/documents/create';
+  import { createBlankPageViaApi } from '#lib/features/pages/index.ts';
+  import { createCuratedCollection } from '#lib/features/collections/index.ts';
+  import type { DocumentSource } from '#lib/features/documents/index.ts';
+  import { NewDocumentForm } from '#lib/features/documents/create.ts';
   import { appendPage, createRowTypes, scopeTypes, type NodeMark, type NodePickerCreate, type NodePickerScope, type PickerRow } from './nodePicker';
 
   let {

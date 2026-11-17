@@ -12,9 +12,9 @@
 import { sanitizeFragmentInto } from './sanitize.server';
 import { StyleCollector, ruleIdAttribute } from '../capabilities/pageStyles';
 import { lowlight } from '../blocks/code/highlight';
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import { safeLinkHref } from './linkHref';
-import { isParameterName } from '$lib/features/semantic';
+import { isParameterName } from '#lib/features/semantic/index.ts';
 import type { QueryBlockResult } from '../blocks/query/result';
 import type { Root as HastRoot, RootContent as HastContent } from 'hast';
 import type { JsonDoc, JsonNode } from '../doc/doc';

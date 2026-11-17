@@ -5,8 +5,8 @@
 // The site's page layout presets (docs/architecture/blocks/layout.md, "Page layout: sections"). A page
 // renders from its own copy (content/page/pageColumns.ts), never from a preset.
 // The page records the name as a plain string, matched against every translation.
-import { localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { CodedError } from '$lib/platform/codedError';
+import { localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 import {
   TIERS,
   CUSTOM_PRESET_ID,
@@ -20,7 +20,7 @@ import {
   type ColumnTemplate,
   type PageColumns,
   type SectionDefaults,
-} from '$lib/features/content';
+} from '#lib/features/content/index.ts';
 
 export interface PageLayoutPreset {
   /** Stable, fixed at creation: what a page records as its provenance. */

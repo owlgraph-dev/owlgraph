@@ -7,8 +7,8 @@
 // one argument's value, where a document-depth validator never looks, so the
 // depth and leaf caps below are the only guard and must run before any DB work.
 import { GraphQLError } from 'graphql';
-import { isSupportedLocale } from '$lib/platform/i18n/siteLocales';
-import { NODE_TYPES } from '$lib/features/nodes';
+import { isSupportedLocale } from '#lib/platform/i18n/siteLocales.ts';
+import { NODE_TYPES } from '#lib/features/nodes/index.ts';
 
 export type PropertyOperator =
   | 'eq'

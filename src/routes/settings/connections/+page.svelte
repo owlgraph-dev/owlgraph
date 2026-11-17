@@ -9,11 +9,11 @@
   // after a reload; the waiting row links to that page in case the window was
   // blocked or closed.
   import { refreshAll } from '$app/navigation';
-  import { Alert, Button, EmptyState, SettingsRow, Spinner } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { formatDate, formatDateTime } from '$lib/platform/i18n/format';
-  import type { ServiceConnectionView } from '$lib/features/pluginHost';
-  import * as m from '$lib/paraglide/messages';
+  import { Alert, Button, EmptyState, SettingsRow, Spinner } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { formatDate, formatDateTime } from '#lib/platform/i18n/format.ts';
+  import type { ServiceConnectionView } from '#lib/features/pluginHost/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data } = $props();
 

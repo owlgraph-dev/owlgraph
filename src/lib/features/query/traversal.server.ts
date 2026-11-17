@@ -6,16 +6,16 @@
 // directions and repeats would need SQL assembled at runtime. Every hop runs
 // through runOneHop(), so readableNodes applies at every step and repeat.
 import type postgres from 'postgres';
-import { logEvent, logger, timed } from '$lib/platform/logger.server';
-import { db } from '$lib/platform/db.server';
-import { labelCache, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import type { SessionUser } from '$lib/features/auth/server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
+import { logEvent, logger, timed } from '#lib/platform/logger.server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { filterFragment, edgePropertyPredicate } from './filterSql.server';
 import type { EdgeConditionInput, EdgeDirection, NodeFilterInput } from './nodeFilter';
 import type { TraversalStartInput, TraversalStepInput, TraversalQueryInput } from './traversal';
 import { MAX_HOP_CANDIDATES, MAX_STEP_ACCUMULATED, MAX_START_NODE_IDS } from './traversal';
-import { nodePath, type NodeType } from '$lib/features/nodes';
+import { nodePath, type NodeType } from '#lib/features/nodes/index.ts';
 
 // No result returns these yet; runOneHop keeps them for a path result.
 export interface WalkedEdge {

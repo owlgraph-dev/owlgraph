@@ -8,8 +8,8 @@
   // caption naming the class it's inherited from, so an invoice's Documents
   // fields read as inherited (docs/architecture/semantic-layer.md).
   import { untrack } from 'svelte';
-  import { Input, Textarea, EmptyState } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Input, Textarea, EmptyState } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { ClassPropertySlot } from '../propertyGroups';
   import type { ClassFieldGroup } from '../nodeClass';
 

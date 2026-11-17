@@ -4,7 +4,7 @@
 
 // No island: its links are plain links. A document the reader may not read
 // renders nothing, not even its box, so it leaves no trace.
-import { getLocale } from '$lib/paraglide/runtime';
+import { getLocale } from '#lib/paraglide/runtime.js';
 import { attrsOf } from '../../doc/doc';
 import type { BlockRenderer } from '../blockRenderer';
 import { wrapperHtml } from '../scaffold/blockWrapper';

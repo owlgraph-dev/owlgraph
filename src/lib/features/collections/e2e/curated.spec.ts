@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIRequestContext, APIResponse, Page } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createDocument, createPage, unique } from '$tests/e2e/api';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createDocument, createPage, unique } from '#tests/e2e/api.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
 
 type Member = { id: string; title: string; position: number; label: string | null };

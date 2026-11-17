@@ -23,7 +23,7 @@ import {
   type TypographyData,
   type TypographyRegistry,
   type PlacementData,
-} from '$lib/features/content';
+} from '#lib/features/content/index.ts';
 import type { ListingView } from '../../server/listing.server';
 import { FOLDER_BLOCK, folderConfig, type FolderConfig } from './model';
 import type { FolderTexts } from './texts';

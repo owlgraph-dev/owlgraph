@@ -5,9 +5,9 @@
 // Share links: capability tokens granting anonymous read access to exactly one
 // node, past its visibility and namespace. Stored hashed; free of SvelteKit-only imports.
 import { randomBytes } from 'node:crypto';
-import { db } from '$lib/platform/db.server';
-import { logEvent, logger, type Logger } from '$lib/platform/logger.server';
-import { hashToken } from '$lib/features/auth/server';
+import { db } from '#lib/platform/db.server.ts';
+import { logEvent, logger, type Logger } from '#lib/platform/logger.server.ts';
+import { hashToken } from '#lib/features/auth/server.ts';
 
 /**
  * A share link's name in the log. Never the token: it is the whole

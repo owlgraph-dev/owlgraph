@@ -9,8 +9,8 @@
   // content stylesheets carry entryList.css, and the public renderer's Node
   // loader can't load one.
   import type { Snippet } from 'svelte';
-  import { Button } from '$lib/design-system';
-  import { glyphSvg } from '$lib/design-system/icons';
+  import { Button } from '#lib/design-system/index.ts';
+  import { glyphSvg } from '#lib/design-system/icons.ts';
   import type { EntryPlaceholder, EntryRow } from './types';
 
   interface Props {

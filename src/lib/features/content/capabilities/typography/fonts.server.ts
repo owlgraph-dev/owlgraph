@@ -4,11 +4,11 @@
 
 // Self-hosted custom font families: woff2 uploads stored as global assets, with
 // their family, weight and style in font_families/font_variants.
-import { db } from '$lib/platform/db.server';
-import { logEvent, logger } from '$lib/platform/logger.server';
-import { createImageAsset } from '$lib/features/media/server';
+import { db } from '#lib/platform/db.server.ts';
+import { logEvent, logger } from '#lib/platform/logger.server.ts';
+import { createImageAsset } from '#lib/features/media/server.ts';
 import { FONT_STACKS, type CustomFontEntry } from './fonts';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 const MAX_FONT_BYTES = 5 * 1024 * 1024; // 5 MB
 

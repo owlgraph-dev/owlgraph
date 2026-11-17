@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, it } from 'vitest';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // The API's one error body (docs/architecture/routing.md, "Errors"), per family, on the
 // built handler: what an adapter refuses, what the hook refuses before one

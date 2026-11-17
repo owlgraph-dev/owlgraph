@@ -5,7 +5,7 @@
 // The hover outline and grip over the block under the mouse, hidden while the
 // author clicks or types until the pointer leaves that block. Public methods
 // are arrow fields: the shell hands them to the DOM as listeners.
-import { blockNodeById, currentBlock } from '$lib/features/content/editor';
+import { blockNodeById, currentBlock } from '#lib/features/content/editor.ts';
 import type { EditorCore } from '../core/editorCore.svelte';
 import { extendListItemBox, type Box } from '../shared/selectedBox.svelte';
 

@@ -4,13 +4,13 @@
 
 // The schema catalogues' query fields and NodeProperty; the host schema registers them.
 import { GraphQLError } from 'graphql';
-import { builder, NodeTypeEnum } from '$lib/features/query/graphql/builder.server';
-import { can } from '$lib/features/auth/server';
-import { getPropertySuggestions, listRelationshipTypes, listNodeClasses, listTags, type RelationshipType, type PropertySuggestionRow, type NodeClassListRow } from '$lib/features/semantic/server';
-import { locales, type Locale } from '$lib/paraglide/runtime';
-import { localize, hasText, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
-import type { NodeType } from '$lib/features/nodes';
+import { builder, NodeTypeEnum } from '#lib/features/query/graphql/builder.server.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { getPropertySuggestions, listRelationshipTypes, listNodeClasses, listTags, type RelationshipType, type PropertySuggestionRow, type NodeClassListRow } from '#lib/features/semantic/server.ts';
+import { locales, type Locale } from '#lib/paraglide/runtime.js';
+import { localize, hasText, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 // Every label comes twice: `label(locale)`, one string by the fallback chain,
 // and `labels`, every translation (docs/architecture/languages.md). Identifiers never localize.

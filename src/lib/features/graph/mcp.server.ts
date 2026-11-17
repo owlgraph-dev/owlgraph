@@ -6,9 +6,9 @@
 import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text } from '../../../mcp/registry';
-import { edgeDirectionEnum } from '$lib/features/query/server';
-import { getOutgoingEdges, getIncomingEdges } from '$lib/features/graph/server';
-import { getNodeRelationships } from '$lib/features/graph/server';
+import { edgeDirectionEnum } from '#lib/features/query/server.ts';
+import { getOutgoingEdges, getIncomingEdges } from '#lib/features/graph/server.ts';
+import { getNodeRelationships } from '#lib/features/graph/server.ts';
 
 export function registerGraphTools({ user, tool, pageTool }: ToolRegistry): void {
   pageTool(

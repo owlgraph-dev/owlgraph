@@ -4,11 +4,11 @@
 
 // Route adapter for /settings/languages, re-exported by src/routes/settings/languages/+page.server.ts.
 // The default is always enabled: saving it enables it, so its disabled checkbox need not post (docs/architecture/languages.md).
-import { requireAction, settingsChanged } from '$lib/features/auth/routes/requireAction.server';
-import { loadSiteLocaleConfig, saveSiteLocaleConfig } from '$lib/platform/i18n/siteLocales.server';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
+import { requireAction, settingsChanged } from '#lib/features/auth/routes/requireAction.server.ts';
+import { loadSiteLocaleConfig, saveSiteLocaleConfig } from '#lib/platform/i18n/siteLocales.server.ts';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // Bound once, so an audited action's section and permission can't drift
 // (docs/architecture/logging.md, "The audit subset").

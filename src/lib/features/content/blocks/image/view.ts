@@ -4,7 +4,7 @@
 
 // An image block's attrs as its frame (the wrapper its width % resolves
 // against) and PageImage.svelte's props, for the editor and the page.
-import { mediaUrl } from '$lib/features/media';
+import { mediaUrl } from '#lib/features/media/index.ts';
 import { spaceAboveOverrides } from '../../capabilities/spacing/spacing';
 import { mergeOverrides, type OverrideSet } from '../../capabilities/overrides';
 import { imagePlacementRender } from '../../capabilities/placement/placement';

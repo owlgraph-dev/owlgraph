@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Select, Input } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Select, Input } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { MEMBERSHIP_RELATIONSHIP } from '../membership';
 
   type RelType = { slug: string; label: string; inverseLabel: string | null; properties: { name: string; label: string; datatype: string }[] };

@@ -16,14 +16,14 @@ import { tableNode } from './table/input.server';
 import { flexNode } from './flex/input.server';
 import { buildCollection, collectionNode } from './collection/input.server';
 import { buildDocument, documentNode } from './document/input.server';
-import { pluginInputKindOfBlock, pluginInputOf } from '$lib/plugins/inputs.server';
-import type { PluginHost } from '$lib/plugins/api';
+import { pluginInputKindOfBlock, pluginInputOf } from '#lib/plugins/inputs.server.ts';
+import type { PluginHost } from '#lib/plugins/api.ts';
 import { headingLevelOf, type ParagraphStyle } from '../capabilities/typography/paragraphStyles';
 import { listParagraphStyles } from '../capabilities/typography/paragraphStyles.server';
 import { minHeightData } from '../capabilities/inputShapes.server';
 import { GRID_TIERS, gridTierAttrs, resolvedGridColumns } from './grid/gridColumns';
-import { DEFAULT_PROPERTY_GROUP } from '$lib/features/semantic';
-import type { NodeType } from '$lib/features/nodes';
+import { DEFAULT_PROPERTY_GROUP } from '#lib/features/semantic/index.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 export type BlockInput = z.infer<typeof blockShape>;
 export type LeafBlockInput = z.infer<typeof leafBlockShape>;

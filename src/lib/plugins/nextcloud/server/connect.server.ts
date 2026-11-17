@@ -7,7 +7,7 @@
 // configured server: poll never fetches the `poll.endpoint` the answer names.
 // A 401 is never retried: Nextcloud's brute-force protection counts them per
 // address, and owlgraph is one address.
-import type { PluginConnectionFlow, PluginCredential } from '$lib/plugins/api';
+import type { PluginConnectionFlow, PluginCredential } from '#lib/plugins/api.ts';
 
 const LIMIT = 64 * 1024;
 /** A poll token as Nextcloud makes them: 128 letters and digits. */

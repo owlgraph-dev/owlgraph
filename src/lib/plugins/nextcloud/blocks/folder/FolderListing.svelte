@@ -8,9 +8,9 @@
   // NodeView and the page's island, drawn through the content listing. The
   // editor's document action comes in as `editing`, null on the page.
   import { untrack } from 'svelte';
-  import { BottomSheet, BottomSheetItem, Button, DropdownMenu, DropdownMenuItem, TriggerFace, toast } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { glyphSvg } from '$lib/design-system/icons';
+  import { BottomSheet, BottomSheetItem, Button, DropdownMenu, DropdownMenuItem, TriggerFace, toast } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { glyphSvg } from '#lib/design-system/icons.ts';
   import {
     EntryList,
     dateText as formatDate,
@@ -20,7 +20,7 @@
     sizeText as formatSize,
     type EntryPlaceholder,
     type EntryRow,
-  } from '$lib/features/content/listing';
+  } from '#lib/features/content/listing.ts';
   import { isWithin, nameOf, parentOf } from '../../sharePath';
   import { FOLDER_SORT_KEYS, type FolderSortDir, type FolderSortKey } from './model';
   import type { FolderProps } from './view';

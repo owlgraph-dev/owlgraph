@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { fakeHost } from '../../e2e/fakeHost';
-import type { PluginNode } from '$lib/plugins/api';
+import type { PluginNode } from '#lib/plugins/api.ts';
 import { resolveFileBlocks, type FileBlockData } from './blockData.server';
 
 const DOC = '2b4f0c1e-6d3a-4c59-9e1a-7f0b3c2d1e44';

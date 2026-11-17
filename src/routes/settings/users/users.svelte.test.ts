@@ -6,10 +6,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '$app/forms';
-import type { ActionAnswer } from '$tests/component/forms';
+import type { ActionAnswer } from '#tests/component/forms.ts';
 import UsersPage from './+page.svelte';
 import type { PageData } from './$types';
-import { passwordProblem, passwordProblemMessage } from '$lib/features/auth';
+import { passwordProblem, passwordProblemMessage } from '#lib/features/auth/index.ts';
 
 // The page renders with its load's data for an admin; SvelteKit's `update` is
 // played back by rendering it with what the route would hand it next.

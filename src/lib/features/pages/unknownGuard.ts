@@ -6,8 +6,8 @@
 // "Unknown blocks"): a write that would drop one its writer didn't acknowledge
 // by key is refused before anything is written. The server enforces it, the
 // client reads the refusal.
-import { droppedUnits, isUnknownKey, type UnknownUnit } from '$lib/features/content';
-import { CodedError, isCodedError } from '$lib/platform/codedError';
+import { droppedUnits, isUnknownKey, type UnknownUnit } from '#lib/features/content/index.ts';
+import { CodedError, isCodedError } from '#lib/platform/codedError.ts';
 
 /** Comma-separated keys a whole-document save acknowledges. */
 export const ACKNOWLEDGE_DROPPED_HEADER = 'x-acknowledge-dropped';

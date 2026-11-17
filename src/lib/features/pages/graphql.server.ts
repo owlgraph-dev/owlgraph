@@ -5,10 +5,10 @@
 // Page-only fields on the shared ContentNode type; the host schema calls
 // registerPageNodeFields() with its ContentNode ref.
 import type { ObjectRef } from '@pothos/core';
-import { builder } from '$lib/features/query/graphql/builder.server';
-import { getContentSchemeDefault } from '$lib/features/content/server';
-import { resolveContentScheme } from '$lib/features/content';
-import { getPageContentScheme } from '$lib/features/pages/server';
+import { builder } from '#lib/features/query/graphql/builder.server.ts';
+import { getContentSchemeDefault } from '#lib/features/content/server.ts';
+import { resolveContentScheme } from '#lib/features/content/index.ts';
+import { getPageContentScheme } from '#lib/features/pages/server.ts';
 
 export function registerPageNodeFields(ContentNode: ObjectRef<any, { id: string; type: string }>): void {
   builder.objectField(ContentNode, 'contentScheme', (t) =>

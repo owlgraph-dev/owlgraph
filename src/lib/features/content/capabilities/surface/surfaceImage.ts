@@ -9,7 +9,7 @@
 import { resolveCapability, type Tier, TIER_CHAR } from '../cascade';
 import { colorCss, fillTextProperty, isColorReference } from '../../color/colorTokens';
 import { POSITION_CSS, type ObjectPosition } from '../../blocks/image/imageBox';
-import { mediaUrl, mediaVariantUrl } from '$lib/features/media';
+import { mediaUrl, mediaVariantUrl } from '#lib/features/media/index.ts';
 import type { OverrideSet } from '../overrides';
 import { IMAGE_DEFAULTS, ownImageFields, type ImageFit, type ImageScheme, type SurfaceData, type SurfaceValue } from './surface';
 

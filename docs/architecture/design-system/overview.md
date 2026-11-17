@@ -121,7 +121,7 @@ Chrome speaks every configured language: `en` is Paraglide's base locale
 (the fallback for a request that asks for no configured language), `de` the
 second (`project.inlang/settings.json`), and every user-visible string in a
 feature, the shell or a route is a message (`import * as m from
-'$lib/paraglide/messages'`, a `snake_case` key with the feature's prefix,
+'#lib/paraglide/messages.js'`, a `snake_case` key with the feature's prefix,
 present in both `messages/en.json` and `messages/de.json`). The design-system
 layer imports no i18n at all — a primitive's labels, hints and accessible
 names are plain string props, so the same `FieldRow` serves the editor in

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/+server.ts.
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   documentEmbed,
   getDocument,
@@ -14,15 +14,15 @@ import {
   userCanWriteDocument,
   refreshDocumentSearchMeta,
   clearDocumentLocaleSuggestion,
-} from '$lib/features/documents/server';
-import { setNodeTags } from '$lib/features/semantic/server';
-import { setManualProperties } from '$lib/features/semantic/server';
-import { setNodeClass } from '$lib/features/semantic/server';
-import { deleteNode, setNodeLocale, setNodeNamespace, setNodeVisibility } from '$lib/features/nodes/server';
-import { isUuid, type Visibility } from '$lib/features/nodes';
+} from '#lib/features/documents/server.ts';
+import { setNodeTags } from '#lib/features/semantic/server.ts';
+import { setManualProperties } from '#lib/features/semantic/server.ts';
+import { setNodeClass } from '#lib/features/semantic/server.ts';
+import { deleteNode, setNodeLocale, setNodeNamespace, setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, apiErrorFrom } from '$lib/platform/apiErrors';
-import { isCodedError } from '$lib/platform/codedError';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
+import { isCodedError } from '#lib/platform/codedError.ts';
 
 type Params = { id: string };
 

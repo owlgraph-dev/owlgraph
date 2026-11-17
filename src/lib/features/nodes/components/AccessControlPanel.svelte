@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Dialog, Button, Alert, EmptyState, Checkbox, Select, Input, toast } from '$lib/design-system';
-  import { formatDate } from '$lib/platform/i18n/format';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Alert, EmptyState, Checkbox, Select, Input, toast } from '#lib/design-system/index.ts';
+  import { formatDate } from '#lib/platform/i18n/format.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

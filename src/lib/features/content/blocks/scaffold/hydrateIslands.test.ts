@@ -10,7 +10,7 @@ import { compile } from 'svelte/compiler';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import { hydrateIslands, islandMarker } from './hydrateIslands';
 import OuterIsland from './fixtures/OuterIsland.svelte';
 import InnerIsland from './fixtures/InnerIsland.svelte';

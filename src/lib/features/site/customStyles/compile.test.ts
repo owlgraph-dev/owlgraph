@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { CONTENT_ROOT, compileFreeCss, compileStyleCss, compileStylesheets, type CompileSheet } from './compile';
-import { baseLocale, overwriteGetLocale } from '$lib/paraglide/runtime';
+import { baseLocale, overwriteGetLocale } from '#lib/paraglide/runtime.js';
 
 const SELF = `${CONTENT_ROOT}${CONTENT_ROOT}`;
 

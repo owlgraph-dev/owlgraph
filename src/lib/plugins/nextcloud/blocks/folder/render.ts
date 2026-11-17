@@ -6,8 +6,8 @@
 // was resolved for the viewer (RenderContext.blockData); nothing resolved (an
 // agent's view) renders `loading`. A collection the viewer may not read gets the
 // neutral line and no island, whose props would carry the block's settings.
-import { attrsOf, wrapperHtml, type BlockRenderer } from '$lib/features/content';
-import { currentLocale } from '$lib/plugins/api';
+import { attrsOf, wrapperHtml, type BlockRenderer } from '#lib/features/content/index.ts';
+import { currentLocale } from '#lib/plugins/api.ts';
 import FolderListing from './FolderListing.svelte';
 import type { FolderBlockData } from './blockData.server';
 import { PLUGIN_ROUTES } from '../routes';

@@ -258,7 +258,7 @@ through its NodeView's props.
 Some content is drawn the same wherever it appears, whoever lists it: a
 listing of entries — a folder's files, a collection's members — has one look,
 in any block or view that shows one. Such a surface is a component of the
-content feature's own entry, `$lib/features/content/listing`, open to the
+content feature's own entry, `#lib/features/content/listing.ts`, open to the
 core and to a plugin alike ([plugins.md](../plugins.md#boundaries)).
 
 `EntryList` is the first. It draws the box, a header, a column header, rows

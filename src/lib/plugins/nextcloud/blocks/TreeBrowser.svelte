@@ -8,8 +8,8 @@
   // or from the editor's own Nextcloud (`own/listing`, through their connection),
   // live, folder by folder.
   import { untrack } from 'svelte';
-  import { Alert, Button, Dialog, FieldRow, Select } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Alert, Button, Dialog, FieldRow, Select } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import { t } from '../messages';
   import { nameOf, parentOf } from '../sharePath';
   import { PLUGIN_ROUTES } from './routes';

@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Locator, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, unique } from '$tests/e2e/api';
-import { doc, para, txt } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, unique } from '#tests/e2e/api.ts';
+import { doc, para, txt } from '#tests/e2e/doc.ts';
 
 // The document is the app's scroller, so SvelteKit's own scroll handling does
 // all of this (docs/architecture/responsive.md, "What scrolls").

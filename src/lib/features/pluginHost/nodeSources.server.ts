@@ -5,13 +5,13 @@
 // Plugin-sourced nodes (docs/architecture/plugins.md, "Sources"): a document or collection
 // whose `plugin` is a plugin is answered for by its server half, once the
 // core's route has checked the reader or the writer.
-import type { CollectionRow } from '$lib/features/collections/server';
-import type { DocumentRow } from '$lib/features/documents/server';
-import { pluginManifest } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
+import type { CollectionRow } from '#lib/features/collections/server.ts';
+import type { DocumentRow } from '#lib/features/documents/server.ts';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
 import { createPluginHost, type HostContext } from './host.server';
 import type { CollectionSourceView } from './types';
-import { apiError, pluginError } from '$lib/platform/apiErrors';
+import { apiError, pluginError } from '#lib/platform/apiErrors.ts';
 
 /** At most this long, each value a connect form posts. */
 const MAX_CONNECT_VALUE = 2048;

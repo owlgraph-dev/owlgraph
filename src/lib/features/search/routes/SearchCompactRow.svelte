@@ -7,11 +7,11 @@
   // A chip's × and a sort or view change apply at once; the filter sheet applies
   // on its own confirm.
   import { tick, untrack } from 'svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { BottomSheet, BottomSheetItem, Button, Chip } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import type { NodeClassOption } from '$lib/features/semantic';
-  import { effectiveSort, type SearchNamespaceOption, type SearchParams } from '$lib/features/search';
+  import * as m from '#lib/paraglide/messages.js';
+  import { BottomSheet, BottomSheetItem, Button, Chip } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+  import { effectiveSort, type SearchNamespaceOption, type SearchParams } from '#lib/features/search/index.ts';
   import { activeFilters } from './activeFilters';
   import { sortItems } from './filterItems';
   import SearchFilterSheet from './SearchFilterSheet.svelte';

@@ -4,10 +4,10 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { setManualProperties, upsertPropertyDefinition } from '$lib/features/semantic/server';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { setManualProperties, upsertPropertyDefinition } from '#lib/features/semantic/server.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 const app = await startApp();
 const seed = inject('seed');

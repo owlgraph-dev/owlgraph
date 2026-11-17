@@ -7,9 +7,9 @@
   // `href` is the content path, which redirects, so the button never carries
   // the address itself. Renders nothing when the stored address would fail the
   // redirect's own check, so it never leads to a 404.
-  import { Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import { safeExternalHref, externalHost } from '../externalUrl';
 
   let {

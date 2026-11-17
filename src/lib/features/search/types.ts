@@ -4,7 +4,7 @@
 
 // What the /search page's load hands its components.
 import type { DocumentKind } from './searchCards';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 /** One result as its card shows it, the same shape for every node type. */
 export interface SearchResultCard {

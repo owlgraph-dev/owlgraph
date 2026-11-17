@@ -4,11 +4,11 @@
 
 // Route adapter, re-exported by src/routes/api/collections/[id]/members/+server.ts.
 // Each answer carries the members and the basis of their order afresh.
-import { addCuratedMember, membersWithBasis, reorderCuratedMembers } from '$lib/features/collections/server';
-import { isUuid } from '$lib/features/nodes';
+import { addCuratedMember, membersWithBasis, reorderCuratedMembers } from '#lib/features/collections/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { arrangeableCollection } from './membership.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, apiErrorFrom } from '$lib/platform/apiErrors';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

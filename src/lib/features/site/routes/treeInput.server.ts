@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // A tree entry's fields as the navigation and footer settings forms post them.
-import type { TreeCreateInput, TreeUpdateInput } from '$lib/features/site/server';
+import type { TreeCreateInput, TreeUpdateInput } from '#lib/features/site/server.ts';
 
 export function readTreeCreateInput(f: FormData): TreeCreateInput {
   const kind: 'group' | 'link' = String(f.get('kind') ?? 'link') === 'group' ? 'group' : 'link';

@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   // Below desktop, None takes back a larger tier's height; Auto stores nothing.
-  import { FieldRow, NumberField, Select } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { editTier } from '$lib/features/content';
+  import { FieldRow, NumberField, Select } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { editTier } from '#lib/features/content/index.ts';
   import {
     convertMinHeight,
     formatMinHeight,
@@ -20,7 +20,7 @@
     MIN_HEIGHT_UNITS,
     type HeightData,
     type MinHeightUnit,
-  } from '$lib/features/content';
+  } from '#lib/features/content/index.ts';
 
   let { value, onChange }: {
     value: HeightData | null | undefined;

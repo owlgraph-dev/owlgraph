@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import type { NodeSearchResult } from '$lib/features/search';
+import type { NodeSearchResult } from '#lib/features/search/index.ts';
 import { appendPage, createRowTypes, pickerNamespace, scopeTypes } from './nodePicker';
-import { NODE_TYPES, type NodeType } from '$lib/features/nodes';
+import { NODE_TYPES, type NodeType } from '#lib/features/nodes/index.ts';
 
 const ALL: NodeType[] = [...NODE_TYPES];
 const base = { query: 'Roadmap', scope: 'all' as const, types: ALL, create: ['page', 'collection', 'document'] as NodeType[], exact: [] as NodeType[], canCreate: true };

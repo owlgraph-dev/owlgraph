@@ -5,10 +5,10 @@
 // Site-wide branding: the logos and the interface font. The logo is an `assets`
 // row (kind 'logo', scope 'global') that the 'logo_asset_id' setting points at.
 // The upload lives in logoUpload.server.ts, so importers of this never load jsdom.
-import { db } from '$lib/platform/db.server';
-import { getSetting, setSetting } from '$lib/platform/settings.server';
-import { getAssetMeta } from '$lib/features/media/server';
-import type { JsonArg } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
+import { getSetting, setSetting } from '#lib/platform/settings.server.ts';
+import { getAssetMeta } from '#lib/features/media/server.ts';
+import type { JsonArg } from '#lib/platform/db.server.ts';
 import { getSiteTheme } from './theme.server';
 
 export interface CurrentLogo {

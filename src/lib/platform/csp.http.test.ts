@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, beforeAll, describe, expect, inject, it } from 'vitest';
-import { createSession, getUserByToken } from '$lib/features/auth/server';
-import { startApp } from '$tests/integration/http';
+import { createSession, getUserByToken } from '#lib/features/auth/server.ts';
+import { startApp } from '#tests/integration/http.ts';
 import { parseCsp } from './csp';
 
 // The browser-side half is shell/e2e/csp-style-src.spec.ts.

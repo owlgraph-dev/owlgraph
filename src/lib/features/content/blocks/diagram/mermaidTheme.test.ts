@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_SCHEMES } from '$lib/design-system/theme/tokens';
+import { DEFAULT_SCHEMES } from '#lib/design-system/theme/tokens.ts';
 import { MERMAID_TOKENS, mermaidThemeVariables } from './mermaidTheme';
 
 // The palette as a browser would compute it: aliases resolved to their chrome value.

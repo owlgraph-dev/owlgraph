@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /api/relationship-types, re-exported by src/routes/api/relationship-types/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { listRelationshipTypes, getAllRelationshipTypeProperties } from '$lib/features/semantic/server';
-import { localizeRelationshipType, byLabel } from '$lib/features/semantic';
-import { can } from '$lib/features/auth/server';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { listRelationshipTypes, getAllRelationshipTypeProperties } from '#lib/features/semantic/server.ts';
+import { localizeRelationshipType, byLabel } from '#lib/features/semantic/index.ts';
+import { can } from '#lib/features/auth/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 
 // Each type carries its mapped properties, so the editor's relationship modal

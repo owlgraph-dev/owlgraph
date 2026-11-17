@@ -1,11 +1,11 @@
 {
-  // Resolution config for the Node entry points run directly with tsx — the
-  // MCP server (src/mcp/server.ts) and the scripts/ CLIs. The app's own
-  // tsconfig.json extends $app/tsconfig for the `$lib` path mapping, a file
-  // `svelte-kit sync` GENERATES (node_modules/$app/tsconfig.json) and which does
-  // not exist in the runtime image (nor before a sync), so tsx needs the mapping spelled out
-  // here. Keep it to what module resolution needs; type-checking is
-  // svelte-check's job via tsconfig.json.
+  // Config for the Node entry points run directly with tsx — the MCP server
+  // (src/mcp/server.ts) and the scripts/ CLIs. The app's own tsconfig.json
+  // extends $app/tsconfig, a file `svelte-kit sync` GENERATES
+  // (node_modules/$app/tsconfig.json) and which does not exist in the runtime
+  // image (nor before a sync), so tsx reads this one instead. #lib/… and
+  // #tests/… resolve through package.json's imports. Keep it to what module
+  // resolution needs; type-checking is svelte-check's job via tsconfig.json.
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -13,10 +13,6 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "$lib": ["./src/lib"],
-      "$lib/*": ["./src/lib/*"]
-    }
+    "resolveJsonModule": true
   }
 }

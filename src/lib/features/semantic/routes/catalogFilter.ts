@@ -5,9 +5,9 @@
 // One rule for the four schema catalogues (docs/architecture/languages.md): the search matches an
 // identifier or any language of a name; the missing-translations filter keeps
 // rows with a gap.
-import { localizedTextMatches, missingLocales, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { enabledLocales } from '$lib/platform/i18n/siteLocales';
-import type { Locale } from '$lib/paraglide/runtime';
+import { localizedTextMatches, missingLocales, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { enabledLocales } from '#lib/platform/i18n/siteLocales.ts';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /** One localized name of a row; `optional` for a description or an inverse
  * label, which is only a gap once it has text somewhere. */

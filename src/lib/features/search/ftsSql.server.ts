@@ -8,10 +8,10 @@
 // `-term` exclusion holds within each language's branch only (docs/architecture/languages.md).
 // The term is always a parameter; aliases are callers' literals, never input.
 import type postgres from 'postgres';
-import { db } from '$lib/platform/db.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { readableNodes } from '$lib/features/nodes/server';
-import { CONTAINS } from '$lib/features/collections/server';
+import { db } from '#lib/platform/db.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { readableNodes } from '#lib/features/nodes/server.ts';
+import { CONTAINS } from '#lib/features/collections/server.ts';
 import { HEADLINE_OPTS } from './searchSnippet';
 import { regconfigCaseSql, searchRegconfigs } from './contentRegconfig';
 

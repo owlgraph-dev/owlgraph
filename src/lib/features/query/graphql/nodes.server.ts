@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { GraphQLError } from 'graphql';
-import type { SessionUser } from '$lib/features/auth/server';
-import { getPropertyDatatypes } from '$lib/features/semantic/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { getPropertyDatatypes } from '#lib/features/semantic/server.ts';
 import { findPagesByFilter, findNodesByFilter, countNodesByFilter, type NodeFilterRow } from '../filterSql.server';
-import { getExistingRelationshipTypeSlugs } from '$lib/features/semantic/server';
+import { getExistingRelationshipTypeSlugs } from '#lib/features/semantic/server.ts';
 import {
   validateFilterShape,
   validateFilterOperators,
@@ -19,8 +19,8 @@ import {
   type WireNodeFilter,
   type WireOrderByInput
 } from '../nodeFilter';
-import { clampFirst, clampOffset } from '$lib/platform/pagination';
-import { nodePath, type NodeType } from '$lib/features/nodes';
+import { clampFirst, clampOffset } from '#lib/platform/pagination.ts';
+import { nodePath, type NodeType } from '#lib/features/nodes/index.ts';
 
 export interface ContentNodeHit {
   id: string;

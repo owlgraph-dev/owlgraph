@@ -7,14 +7,14 @@
   // One stylesheet: its named styles, its free CSS, and a preview of both.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState, Dialog, SettingsGroup, SettingsRow } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import CustomStylesPreview from '$lib/features/site/routes/CustomStylesPreview.svelte';
-  import CssField from '$lib/features/site/routes/CssField.svelte';
-  import CustomStyleModal from '$lib/features/site/routes/CustomStyleModal.svelte';
-  import { contentTokens, slugFromLabel, type CustomStyleRow } from '$lib/features/site';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState, Dialog, SettingsGroup, SettingsRow } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import CustomStylesPreview from '#lib/features/site/routes/CustomStylesPreview.svelte';
+  import CssField from '#lib/features/site/routes/CssField.svelte';
+  import CustomStyleModal from '#lib/features/site/routes/CustomStyleModal.svelte';
+  import { contentTokens, slugFromLabel, type CustomStyleRow } from '#lib/features/site/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

@@ -12,15 +12,15 @@
   // role badge is context, not a gate.
   import { page } from '$app/state';
   import { MediaQuery } from 'svelte/reactivity';
-  import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, BottomSheet, BottomSheetItem, Avatar, Badge, TriggerFace, PHONE_SHELL_MEDIA } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, BottomSheet, BottomSheetItem, Avatar, Badge, TriggerFace, PHONE_SHELL_MEDIA } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import LocaleSwitcher from '../LocaleSwitcher.svelte';
   import PhoneNavSheet from './PhoneNavSheet.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { localGraphOpen } from '$lib/features/graph';
-  import type { ResolvedTreeNode } from '$lib/features/site';
-  import type { SessionUser, Role } from '$lib/features/auth';
-  import { avatarUrl } from '$lib/features/media';
+  import * as m from '#lib/paraglide/messages.js';
+  import { localGraphOpen } from '#lib/features/graph/index.ts';
+  import type { ResolvedTreeNode } from '#lib/features/site/index.ts';
+  import type { SessionUser, Role } from '#lib/features/auth/index.ts';
+  import { avatarUrl } from '#lib/features/media/index.ts';
 
   type User = (SessionUser & { avatarVersion: string | null }) | null;
 

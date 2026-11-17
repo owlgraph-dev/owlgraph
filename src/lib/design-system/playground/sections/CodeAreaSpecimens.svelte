@@ -8,7 +8,7 @@
   import Specimen from '../Specimen.svelte';
   import SpecimenGrid from '../SpecimenGrid.svelte';
   // The app's shared highlighter, so a specimen shows what a consumer gets.
-  import { highlightToHtml } from '$lib/features/content';
+  import { highlightToHtml } from '#lib/features/content/index.ts';
 
   const css = (source: string) => highlightToHtml(source, 'css');
 

@@ -4,8 +4,8 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';

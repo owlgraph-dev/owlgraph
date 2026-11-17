@@ -13,7 +13,7 @@ import type { BlockKindName } from './catalog';
 import { quickLinkFacets } from './quickLink/model';
 import { collectionFacets } from './collection/model';
 import { documentFacets } from './document/model';
-import { PLUGIN_BLOCK_FACETS } from '$lib/plugins';
+import { PLUGIN_BLOCK_FACETS } from '#lib/plugins/index.ts';
 
 /** An edge out of the page a block declares — the graph turns it into an `edges` row. */
 export interface BlockEdge {

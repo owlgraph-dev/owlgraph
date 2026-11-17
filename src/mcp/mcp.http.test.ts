@@ -7,7 +7,7 @@ import type { Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
-import { upsertPropertyDefinition } from '$lib/features/semantic/server';
+import { upsertPropertyDefinition } from '#lib/features/semantic/server.ts';
 
 // The express app on a port of this file's own. Behind a proxy the client's
 // address is X-Forwarded-For's, so each test speaks from addresses of its own

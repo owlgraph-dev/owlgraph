@@ -5,8 +5,8 @@
 // The file block's page render: the editor's component, server-only (nothing
 // hydrates), from what was resolved for the viewer (RenderContext.blockData).
 // Nothing resolved (an agent's view) renders the neutral placeholder.
-import { attrsOf, wrapperHtml, type BlockRenderer } from '$lib/features/content';
-import { currentLocale } from '$lib/plugins/api';
+import { attrsOf, wrapperHtml, type BlockRenderer } from '#lib/features/content/index.ts';
+import { currentLocale } from '#lib/plugins/api.ts';
 import FileCard from './FileCard.svelte';
 import type { FileBlockData } from './blockData.server';
 import { fileTexts } from './texts';

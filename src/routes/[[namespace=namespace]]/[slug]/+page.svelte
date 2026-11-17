@@ -4,11 +4,11 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { RenderedContent } from '$lib/features/content/components';
-  import { DocumentView } from '$lib/features/documents/components';
-  import { CollectionNodeView } from '$lib/features/collections/components';
-  import NodeHeader from '$lib/features/reader/routes/NodeHeader.svelte';
-  import { styleNonceFor } from '$lib/platform/styleNonce';
+  import { RenderedContent } from '#lib/features/content/components.ts';
+  import { DocumentView } from '#lib/features/documents/components.ts';
+  import { CollectionNodeView } from '#lib/features/collections/components.ts';
+  import NodeHeader from '#lib/features/reader/routes/NodeHeader.svelte';
+  import { styleNonceFor } from '#lib/platform/styleNonce.ts';
   let { data } = $props();
 
   const headTitle = $derived(data.kind === 'page' ? data.title : data.kind === 'document' ? data.doc.title : data.kind === 'collection' ? data.collection.title : '');

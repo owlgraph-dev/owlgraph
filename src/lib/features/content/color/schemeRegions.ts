@@ -11,9 +11,9 @@
 // are the overlay over black and over white, judged by the worse.
 //
 // Pure, so the renderer and the editor emit identical attributes.
-import { composite, contrastRatio, parseColor, type Rgba } from '$lib/design-system/theme/color';
-import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
-import { readableScheme } from '$lib/design-system/theme/readableScheme';
+import { composite, contrastRatio, parseColor, type Rgba } from '#lib/design-system/theme/color.ts';
+import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
+import { readableScheme } from '#lib/design-system/theme/readableScheme.ts';
 import { TIERS, type Tier } from '../capabilities/cascade';
 import { resolvedBg, type SurfaceData } from '../capabilities/surface/surface';
 import { imageTextProperty, overlayFollowsScheme, resolvedImageLayer, SURFACE_IMAGE_TYPES, type ImageLayer } from '../capabilities/surface/surfaceImage';

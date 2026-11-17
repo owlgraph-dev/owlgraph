@@ -7,8 +7,8 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { randomBytes } from 'node:crypto';
 import pino from 'pino';
-import { loggerOptions } from '$lib/platform/logger.server';
-import type { PluginConnectionFlow, PluginCredential, PluginFlowClient } from '$lib/plugins/api';
+import { loggerOptions } from '#lib/platform/logger.server.ts';
+import type { PluginConnectionFlow, PluginCredential, PluginFlowClient } from '#lib/plugins/api.ts';
 import { openCredential, openFlow, sealCredential, sealFlow, type ConnectionRow, type FlowRow } from './connections.server';
 import { beginConnect, cancelConnect, disconnect, isOwnServer, onOrigin, pendingConnect, pollConnect, recheck, type FlowDeps, type FlowStore } from './connectionFlow.server';
 

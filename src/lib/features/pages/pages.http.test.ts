@@ -4,11 +4,11 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db, type JsonArg } from '$lib/platform/db.server';
-import { call, cookieFor, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf, type Role } from '$tests/integration/users';
-import { retiredWidget, textPara, txt } from '$tests/e2e/doc';
-import { storedDoc } from '$tests/support/storedDoc';
+import { db, type JsonArg } from '#lib/platform/db.server.ts';
+import { call, cookieFor, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
+import { retiredWidget, textPara, txt } from '#tests/e2e/doc.ts';
+import { storedDoc } from '#tests/support/storedDoc.ts';
 
 // Every page here is the test's own and restricted unless it says otherwise.
 

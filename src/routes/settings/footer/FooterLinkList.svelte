@@ -6,11 +6,11 @@
 <script lang="ts">
   // A link column's entries and the legal-line links, by their own action URLs.
   import { enhance } from '$app/forms';
-  import { PagePicker } from '$lib/features/search/picker';
-  import { Button, Input, FormField, EmptyState, RadioGroup } from '$lib/design-system';
-  import { nodePath } from '$lib/features/nodes';
-  import type { FooterLinkAdminRow } from '$lib/features/site';
-  import * as m from '$lib/paraglide/messages';
+  import { PagePicker } from '#lib/features/search/picker.ts';
+  import { Button, Input, FormField, EmptyState, RadioGroup } from '#lib/design-system/index.ts';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import type { FooterLinkAdminRow } from '#lib/features/site/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   type FooterLinkItem = Pick<FooterLinkAdminRow, 'id' | 'label' | 'target_type' | 'target_page_id' | 'url' | 'page_title' | 'page_slug' | 'namespace_slug'>;
   type PageResult = { id: string; slug: string; title: string };

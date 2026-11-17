@@ -5,7 +5,7 @@
 // A two-way, top-level block diff for page docs, matched by blockId only: a block
 // without one shows as removed plus added. Placeholders are dropped first: the
 // editor gives them a fresh id on every read (content/blocks/placeholder).
-import { withoutPlaceholders, type JsonNode } from '$lib/features/content';
+import { withoutPlaceholders, type JsonNode } from '#lib/features/content/index.ts';
 
 type AnyNode = {
   type?: string;

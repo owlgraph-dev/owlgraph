@@ -21,9 +21,6 @@ export default defineConfig({
   // The public renderer server-renders a block's Svelte component
   // (blocks/scaffold/ssrBlock.ts). Kit's options, in vite.config.ts, are the app's.
   plugins: [svelte({ configFile: false, compilerOptions: { hmr: false } })],
-  resolve: {
-    alias: { $lib: path.resolve('./src/lib'), $tests: path.resolve('./tests') },
-  },
   test: {
     projects: [
       {

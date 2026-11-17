@@ -5,12 +5,12 @@
 // A curated collection embedded on a page (docs/architecture/blocks/node-embeds.md, "Collection and
 // document blocks"). The block stores only the id and how members read; the
 // members are resolved for each reader before the page renders.
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import type { SurfaceData } from '../../capabilities/surface/surface';
 import type { Attrs, JsonNode } from '../../doc/doc';
 import type { BlockFacets, BlockEdge } from '../facets';
 import type { EmbedNode } from '../embeds';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 export const COLLECTION_BLOCK = 'collectionBlock';
 

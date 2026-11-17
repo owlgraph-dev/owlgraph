@@ -4,7 +4,7 @@
 
 // The components the Nextcloud plugin's blocks hydrate on the page
 // (docs/architecture/plugins.md), by island kind.
-import type { PluginIslands } from '$lib/plugins/api';
+import type { PluginIslands } from '#lib/plugins/api.ts';
 import FolderListing from './blocks/folder/FolderListing.svelte';
 import { FOLDER_ISLAND } from './blocks/folder/model';
 

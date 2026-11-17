@@ -5,7 +5,7 @@
 // A plugin step that threw is logged by its error's class and the step, never by
 // its message, which may quote what the plugin read (a parser quotes its input,
 // an address may carry a credential). The stack's frames stay: they name code, not data.
-import { errorClass, logEvent, type Logger } from '$lib/platform/logger.server';
+import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
 
 /** Without the message the stack's first lines repeat. */
 function framesOf(error: unknown): string | undefined {

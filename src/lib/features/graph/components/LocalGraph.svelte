@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   import GraphView from './GraphView.svelte';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { Button, EmptyState } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { Button, EmptyState } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { localGraphOpen, localGraphWidth } from '../localGraphStore';
   import type { GraphNode, GraphEdge } from '../types';
 

@@ -5,10 +5,10 @@
 // The rows before the nodes the link picker finds, while a card's target is
 // chosen: a typed address and the site pages the term names (docs/architecture/blocks/node-embeds.md,
 // "Quick link targets").
-import { linkTargetFromQuery } from '$lib/features/content';
+import { linkTargetFromQuery } from '#lib/features/content/index.ts';
 import { matchSitePages, type SitePage } from './sitePages';
-import type { PickerRow } from '$lib/features/search/picker';
-import * as m from '$lib/paraglide/messages';
+import type { PickerRow } from '#lib/features/search/picker.ts';
+import * as m from '#lib/paraglide/messages.js';
 
 export function linkPickerRows(
   term: string,

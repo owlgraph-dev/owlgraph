@@ -4,9 +4,9 @@
 
 // The checks every document upload passes, for POST /api/documents and
 // PUT /api/documents/[id]/content. Importable only from the documents routes.
-import { matchesDocumentType, ALLOWED_DOCUMENT_MIME, MAX_DOCUMENT_BYTES } from '$lib/features/documents/server';
-import { logEvent } from '$lib/platform/logger.server';
-import { apiError } from '$lib/platform/apiErrors';
+import { matchesDocumentType, ALLOWED_DOCUMENT_MIME, MAX_DOCUMENT_BYTES } from '#lib/features/documents/server.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 export type DocumentUpload = { bytes: Buffer; mime: string; filename: string };
 

@@ -2,8 +2,8 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { db } from '$lib/platform/db.server';
-import { logEvent, errorClass } from '$lib/platform/logger.server';
+import { db } from '#lib/platform/db.server.ts';
+import { logEvent, errorClass } from '#lib/platform/logger.server.ts';
 
 // Public (src/lib/shell/publicRoutes.ts), for the container healthcheck; a
 // database round trip, so it says "can serve requests", not "process is up".

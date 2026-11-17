@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import type { PluginNode, PluginRequest } from '$lib/plugins/api';
+import type { PluginNode, PluginRequest } from '#lib/plugins/api.ts';
 import { fakeHost, jsonResponses } from '../e2e/fakeHost';
 import { t } from '../messages';
 import { createCollectionRoute, searchCollectionsRoute } from './collections.server';

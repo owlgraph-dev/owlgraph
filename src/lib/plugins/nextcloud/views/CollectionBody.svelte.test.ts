@@ -5,8 +5,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen } from 'vitest/browser';
-import { CollectionNodeView } from '$lib/features/collections/components';
-import type { CollectionMember } from '$lib/features/collections';
+import { CollectionNodeView } from '#lib/features/collections/components.ts';
+import type { CollectionMember } from '#lib/features/collections/index.ts';
 import { PLUGIN_ROUTES } from '../blocks/routes';
 import type { ListingView } from '../server/listing.server';
 import type { CollectionBodyData } from '../server/nodeView.server';

@@ -5,9 +5,9 @@
 // Asset storage. The bytes live in `assets.bytes`; object storage would change
 // only the put and get here.
 import { createHash } from 'node:crypto';
-import { db, type TxSql } from '$lib/platform/db.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
 import { prepareImage, hasVariants, renderVariant } from './images.server';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 // Raster only: an SVG can carry script.

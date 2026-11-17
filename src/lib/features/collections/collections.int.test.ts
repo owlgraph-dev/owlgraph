@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createLinkDocument } from '$lib/features/documents/server';
-import { getGraph } from '$lib/features/graph/server';
-import { createPage, saveDoc } from '$lib/features/pages/server';
-import { connectAs, jsonOf } from '$tests/integration/mcp';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createLinkDocument } from '#lib/features/documents/server.ts';
+import { getGraph } from '#lib/features/graph/server.ts';
+import { createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { connectAs, jsonOf } from '#tests/integration/mcp.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { createCollection } from './server';
 import { addMember } from './members.server';
 

@@ -4,7 +4,7 @@
 
 // How a document block's attrs become what is drawn, shared by the editor and
 // the page so the two cannot disagree.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { spaceAboveOverrides, type SpacingData } from '../../capabilities/spacing/spacing';
 import { surfaceVars, type SurfaceData } from '../../capabilities/surface/surface';
 import { placementClass, placementVars, type PlacementData } from '../../capabilities/placement/placement';

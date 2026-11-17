@@ -6,10 +6,10 @@
 // A signed-in person's own connection (docs/architecture/plugins.md, "Connections"): each acts on the session's and the
 // person's own rows only, and a write is JSON, which a form on another site cannot send.
 import { type RequestEvent, type RequestHandler } from '@sveltejs/kit';
-import { logEvent } from '$lib/platform/logger.server';
-import { RateLimiter } from '$lib/platform/rateLimit';
-import { beginConnect, cancelConnect, disconnect, flowDepsFor, pollConnect, recheck, type FlowDeps } from '$lib/features/pluginHost/server';
-import { apiError } from '$lib/platform/apiErrors';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { RateLimiter } from '#lib/platform/rateLimit.ts';
+import { beginConnect, cancelConnect, disconnect, flowDepsFor, pollConnect, recheck, type FlowDeps } from '#lib/features/pluginHost/server.ts';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { plugin: string };
 

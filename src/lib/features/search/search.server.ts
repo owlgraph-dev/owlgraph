@@ -2,16 +2,16 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import type { SessionUser } from '$lib/features/auth/server';
-import { timed } from '$lib/platform/logger.server';
-import { db } from '$lib/platform/db.server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn, type NodeType } from '$lib/features/nodes/server';
-import { DOCUMENT_COLUMNS, DOCUMENT_FROM, type DocumentRow } from '$lib/features/documents/server';
-import { COLLECTION_COLUMNS, COLLECTION_FROM, type CollectionRow } from '$lib/features/collections/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { timed } from '#lib/platform/logger.server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn, type NodeType } from '#lib/features/nodes/server.ts';
+import { DOCUMENT_COLUMNS, DOCUMENT_FROM, type DocumentRow } from '#lib/features/documents/server.ts';
+import { COLLECTION_COLUMNS, COLLECTION_FROM, type CollectionRow } from '#lib/features/collections/server.ts';
 import { collectionHeadline, documentHeadline, ftsMatches, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from './ftsSql.server';
 import { containsSnippet } from './containsSnippet.server';
-import { clampFirst, clampOffset } from '$lib/platform/pagination';
-import { nodePath } from '$lib/features/nodes';
+import { clampFirst, clampOffset } from '#lib/platform/pagination.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
 
 export interface SearchHit {
   id: string;

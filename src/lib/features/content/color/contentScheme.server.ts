@@ -4,7 +4,7 @@
 
 // The site-wide content scheme default (docs/architecture/theming.md, "Content scheme");
 // unset reads as light.
-import { getSetting, setSetting } from '$lib/platform/settings.server';
+import { getSetting, setSetting } from '#lib/platform/settings.server.ts';
 import { CONTENT_SCHEME_FALLBACK, isContentScheme, type ContentScheme } from './contentScheme';
 
 const KEY = 'content_scheme_default';

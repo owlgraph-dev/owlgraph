@@ -18,6 +18,7 @@ const lines = (...text: string[]) => `${text.join('\n')}\n`;
 const TREE: Record<string, string> = {
   'src/lib/platform/csp.ts': 'export const csp = 1;\n',
   'src/lib/features/content/blocks/catalog.ts': 'export const blocks = [];\n',
+  'tests/e2e/fixtures.ts': 'export const test = 1;\n',
   'src/routes/[[namespace=namespace]]/[slug]/+page.svelte': '<p>page</p>\n',
   'scripts/tool.mjs': lines('// Reads `src/lib/platform/csp.ts`.', 'export const tool = 1;'),
   'docs/guide.md': lines('# Guide', '', 'The policy lives in `src/lib/platform/csp.ts`.'),
@@ -68,19 +69,20 @@ describe('the path check', () => {
     expect(status, output).toBe(0);
   });
 
-  it('resolves the src/lib/ shorthand, a feature-relative path and $lib/, and reports one of them that names nothing', () => {
+  it('resolves the src/lib/ shorthand, a feature-relative path, #lib/ and #tests/, and reports one of them that names nothing', () => {
     const passing = check({
-      'docs/guide.md': lines('# Guide', '', 'The policy (`platform/csp.ts`, `$lib/platform/csp`) and the blocks (`content/blocks/catalog.ts`).'),
+      'docs/guide.md': lines('# Guide', '', 'The policy (`platform/csp.ts`, `#lib/platform/csp.ts`), the blocks (`content/blocks/catalog.ts`) and the harness (`#tests/e2e/fixtures.ts`).'),
     });
     expect(passing.status, passing.output).toBe(0);
 
     const { status, output } = check({
-      'docs/guide.md': lines('# Guide', '', 'The policy (`platform/csp.ts`, `platform/gone.ts`, `$lib/platform/gone`) and the blocks (`content/blocks/gone.ts`).'),
+      'docs/guide.md': lines('# Guide', '', 'The policy (`platform/csp.ts`, `platform/gone.ts`, `#lib/platform/gone.ts`), the blocks (`content/blocks/gone.ts`) and the harness (`#tests/e2e/gone.ts`).'),
     });
     expect(status, output).toBe(1);
     expect(output).toContain('docs/guide.md:3: platform/gone.ts');
-    expect(output).toContain('docs/guide.md:3: $lib/platform/gone');
+    expect(output).toContain('docs/guide.md:3: #lib/platform/gone.ts');
     expect(output).toContain('docs/guide.md:3: content/blocks/gone.ts');
+    expect(output).toContain('docs/guide.md:3: #tests/e2e/gone.ts');
     expect(output).not.toContain(': platform/csp.ts');
   });
 

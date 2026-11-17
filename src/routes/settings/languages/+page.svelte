@@ -8,10 +8,10 @@
   // always enabled, so its checkbox stays checked and locked.
   import { tick, untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Checkbox, Select, SettingsRow, toast } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { localeName } from '$lib/platform/i18n/localeNames';
-  import * as m from '$lib/paraglide/messages';
+  import { Checkbox, Select, SettingsRow, toast } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { localeName } from '#lib/platform/i18n/localeNames.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data } = $props();
 

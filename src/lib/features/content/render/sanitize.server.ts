@@ -19,7 +19,7 @@
 // breaks under Playwright's module loader. The newer parser fixes concern tags
 // (<textarea>, <xmp>, SVG animation) this allowlist never admits.
 import sanitizeHtml from 'sanitize-html';
-import { logEvent, logger } from '$lib/platform/logger.server';
+import { logEvent, logger } from '#lib/platform/logger.server.ts';
 import type { Attrs, JsonDoc, JsonNode } from '../doc/doc';
 import { safeLinkHref } from './linkHref';
 import { TYPE_SCALE_STEPS } from '../capabilities/typography/typeScale';

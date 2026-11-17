@@ -24,11 +24,11 @@ import type {
   PlacementKind,
   ResolvedBlockDefaults,
   SurfaceBoxField,
-} from '$lib/features/content';
-import type { UpstreamClient } from '$lib/platform/upstream.server';
-import { baseLocale, getLocale, type Locale } from '$lib/paraglide/runtime';
+} from '#lib/features/content/index.ts';
+import type { UpstreamClient } from '#lib/platform/upstream.server.ts';
+import { baseLocale, getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
-export type { UpstreamFailure, UpstreamRequest, UpstreamResult, UpstreamStreamResult } from '$lib/platform/upstream.server';
+export type { UpstreamFailure, UpstreamRequest, UpstreamResult, UpstreamStreamResult } from '#lib/platform/upstream.server.ts';
 
 // --- the manifest -------------------------------------------------------------
 

@@ -6,7 +6,7 @@
 // preference, the picker's cookie, Accept-Language among the enabled languages,
 // the site default. A choice counts only while its language is enabled, and
 // negotiation never overrides one.
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { SiteLocaleConfig } from './siteLocales';
 
 /** The cookie the language picker writes — and nothing else does. */

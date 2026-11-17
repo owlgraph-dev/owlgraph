@@ -7,12 +7,12 @@
 // Free of SvelteKit-only imports: the MCP server imports it too.
 import { randomUUID } from 'node:crypto';
 import type postgres from 'postgres';
-import { db, type TxSql } from '$lib/platform/db.server';
-import { isEnabledLocale, siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { isEnabledLocale, siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
 import type { Visibility } from './access';
 import type { NodeType } from './types';
-import type { SessionUser } from '$lib/features/auth/server';
-import { CodedError } from '$lib/platform/codedError';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export function slugify(base: string): string {
   const cleaned = base.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');

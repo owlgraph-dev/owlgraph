@@ -8,18 +8,18 @@
 //   L2+ domain classes               kind 'domain'  admin-defined, any depth
 // nodes.type caches the class's L1 slug and composite FKs keep the two in step,
 // so the rules below are friendly errors over what the database enforces anyway.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { readableNodes, type NodeType } from '$lib/features/nodes/server';
-import { localize, compareLabels, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { localizedJson, parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { readableNodes, type NodeType } from '#lib/features/nodes/server.ts';
+import { localize, compareLabels, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { localizedJson, parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
 import { NAME_RE } from './properties.server';
 import { PARAMETER_GROUP, mergeChainDefinitions } from './propertyGroups';
 import { orderClassTree } from './nodeClassTree';
 import { localizeDefinition } from './localizeSchema';
 import { ROOT_CLASS_SEED, TYPE_CLASS_SEEDS } from './schemaSeeds.server';
-import { nodePath } from '$lib/features/nodes';
+import { nodePath } from '#lib/features/nodes/index.ts';
 import type { ClassFields, ClassFieldGroup, NodeClassKind, NodeClassOption } from './nodeClass';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export const ROOT_CLASS_SLUG = 'node';
 export const PAGE_CLASS_SLUG = 'page';

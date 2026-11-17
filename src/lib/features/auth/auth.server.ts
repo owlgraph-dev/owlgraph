@@ -5,12 +5,12 @@
 // Who the viewer is: password hashing (Node's built-in scrypt, no native deps),
 // users and server-side sessions. What they may do lives in authz.server.ts.
 import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
-import { db } from '$lib/platform/db.server';
-import { logEvent, logger, type Logger } from '$lib/platform/logger.server';
+import { db } from '#lib/platform/db.server.ts';
+import { logEvent, logger, type Logger } from '#lib/platform/logger.server.ts';
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH, passwordProblem, passwordProblemMessage } from './passwordPolicy';
 
 import { ROLES, type Role, type SessionUser } from './types';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 export { ROLES, type Role, type SessionUser };
 
 // Every stored password passes through here. Callers with a user to answer

@@ -5,14 +5,14 @@
 // AGPL-3.0 §13: every footer ends with the info icon, whatever its settings
 // (docs/guides/deployment.md, "Source code for network users").
 import type { APIResponse, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { formAction } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
-import { horizontalOverflow } from '$tests/e2e/responsive';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { formAction } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { horizontalOverflow } from '#tests/e2e/responsive.ts';
 import { db } from '../../platform/db.server';
 import { parseCsp } from '../../platform/csp';
 import { contrastRatio, parseColor } from '../../design-system/theme/color';
-import { setColorPref } from '$tests/e2e/fixtures';
+import { setColorPref } from '#tests/e2e/fixtures.ts';
 
 const ABOUT = 'About this software';
 const ANONYMOUS = { cookies: [], origins: [] };

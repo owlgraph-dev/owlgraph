@@ -5,8 +5,8 @@
 // The selection entry a settings section edits, and the path its writes take
 // back into the document. A block writes by id; a structural cell, a container
 // or a list by chain position; the page through the doc-attr step.
-import { PAGE_TYPE, type SelectionChainEntry } from '$lib/features/content/editor';
-import { embedKindOf } from '$lib/features/content';
+import { PAGE_TYPE, type SelectionChainEntry } from '#lib/features/content/editor.ts';
+import { embedKindOf } from '#lib/features/content/index.ts';
 import type { Target } from './types';
 
 type Ctx = { attrs: Record<string, any> } | null;

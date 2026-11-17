@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Locator, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
 import { db } from '../../../platform/db.server';
 
 // /settings/branding also holds the logo section, so locators are scoped to

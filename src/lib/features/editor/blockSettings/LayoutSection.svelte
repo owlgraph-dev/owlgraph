@@ -6,12 +6,12 @@
 <script lang="ts">
   // Each group is optional: the caller passes only what its block has, with
   // the block's own write path.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '$lib/design-system';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '#lib/design-system/index.ts';
   import GridColumnsField from '../blocks/grid/GridColumnsField.svelte';
   import LayoutField from '../capabilities/layout/LayoutField.svelte';
   import MinHeightField from '../capabilities/height/MinHeightField.svelte';
-  import { hasAnyOwnValue, normalizeColumnsByTier, normalizeGapByTier, type GapStep, type GridColumnAttrs, type GridTier, type HeightData, type LayoutArrangement, type LayoutData, type LayoutDefaults, type setLayoutField } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { hasAnyOwnValue, normalizeColumnsByTier, normalizeGapByTier, type GapStep, type GridColumnAttrs, type GridTier, type HeightData, type LayoutArrangement, type LayoutData, type LayoutDefaults, type setLayoutField } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
 
   type LayoutFieldName = Parameters<typeof setLayoutField>[2];

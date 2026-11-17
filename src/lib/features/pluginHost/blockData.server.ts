@@ -7,10 +7,10 @@
 // render. Only routes that render for a viewer ask; a resolver that throws
 // costs its blocks their data, never the page.
 import { pluginFailed } from './pluginFailure.server';
-import { collectBlocks } from '$lib/features/content';
-import { pluginOfBlockKind } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
-import type { PluginBlockDataResolver, PluginBlockRef, PluginHost } from '$lib/plugins/api';
+import { collectBlocks } from '#lib/features/content/index.ts';
+import { pluginOfBlockKind } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
+import type { PluginBlockDataResolver, PluginBlockRef, PluginHost } from '#lib/plugins/api.ts';
 import { createPluginHost, type HostContext } from './host.server';
 
 /** By kind, each block id once however often it occurs (a query template's copies share one). */

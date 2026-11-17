@@ -6,9 +6,9 @@
 <script lang="ts">
   // Suggestions are a row of buttons in the flow, not a Combobox dropdown:
   // BottomSheet's overflow:hidden clips an absolutely positioned dropdown.
-  import { BottomSheet, Button, Chip, Input } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { BottomSheet, Button, Chip, Input } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import { addTag, removeTag } from '../meta/tags';
 
   let {

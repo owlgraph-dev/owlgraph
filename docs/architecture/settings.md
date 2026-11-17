@@ -248,7 +248,7 @@ pattern — head, `Table`, add/edit in a modal — described in
 Routes mirror the tree, nested where the tree nests (`/settings/schema/*`).
 The route files are one-line bindings to feature adapters, as everywhere
 (`src/routes/settings/<section>/+page.server.ts` →
-`$lib/features/<f>/routes/<adapter>.server`). `settings` is a reserved
+`#lib/features/<f>/routes/<adapter>.server.ts`). `settings` is a reserved
 slug ([routing.md](routing.md)); the retired `/admin`, `/properties` and
 `/account` prefixes are released and have no redirects.
 

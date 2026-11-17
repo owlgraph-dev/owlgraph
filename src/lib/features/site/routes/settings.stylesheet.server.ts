@@ -5,7 +5,7 @@
 // Route adapter for /settings/styles/[id], re-exported by src/routes/settings/styles/[id]/+page.server.ts.
 // A CSS failure is a field error: its issues go back as `cssIssues`, not one `error` banner.
 import { error } from '@sveltejs/kit';
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   CustomCssError,
   createCustomStyle,
@@ -16,7 +16,7 @@ import {
   updateCustomStyle,
 } from '../customStyles.server';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 const ACTION = 'stylesheet:manage';
 

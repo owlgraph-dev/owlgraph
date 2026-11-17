@@ -5,7 +5,7 @@
 // Route adapter for /settings/integrations/[plugin], re-exported by src/routes/settings/integrations/[plugin]/+page.server.ts.
 // One plugin's settings section (docs/architecture/settings.md, "The integrations group").
 import { error, fail } from '@sveltejs/kit';
-import { requireAction, settingsChanged } from '$lib/features/auth/routes/requireAction.server';
+import { requireAction, settingsChanged } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   countConnections,
   getPluginSettings,
@@ -14,14 +14,14 @@ import {
   savePluginSettings,
   validateSettings,
   type SettingsInput,
-} from '$lib/features/pluginHost/server';
-import type { SettingsFieldView } from '$lib/features/pluginHost';
-import { secretKeyStatus } from '$lib/platform/secretBox.server';
-import { loopbackHttpAllowed, upstreamClient } from '$lib/platform/upstream.server';
-import { pluginManifest } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
-import type { PluginManifest, PluginSettings, PluginSettingsSection } from '$lib/plugins/api';
-import * as m from '$lib/paraglide/messages';
+} from '#lib/features/pluginHost/server.ts';
+import type { SettingsFieldView } from '#lib/features/pluginHost/index.ts';
+import { secretKeyStatus } from '#lib/platform/secretBox.server.ts';
+import { loopbackHttpAllowed, upstreamClient } from '#lib/platform/upstream.server.ts';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
+import type { PluginManifest, PluginSettings, PluginSettingsSection } from '#lib/plugins/api.ts';
+import * as m from '#lib/paraglide/messages.js';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { plugin: string };

@@ -2,8 +2,8 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { db } from '$lib/platform/db.server';
-import { readableNodes } from '$lib/features/nodes/server';
+import { db } from '#lib/platform/db.server.ts';
+import { readableNodes } from '#lib/features/nodes/server.ts';
 
 function cleanTags(tags: unknown): string[] {
   if (!Array.isArray(tags)) return [];

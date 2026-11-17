@@ -4,7 +4,7 @@
 
 // A collection's members as listing rows, the same on the collection's page
 // and in a collection block. A labelled member goes by its label, its title below.
-import { NODE_TYPE_GLYPH, type NodeType } from '$lib/features/nodes';
+import { NODE_TYPE_GLYPH, type NodeType } from '#lib/features/nodes/index.ts';
 import type { EntryRow } from './types';
 
 /** A member as a listing shows it. */

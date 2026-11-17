@@ -6,11 +6,11 @@
 <script lang="ts">
   // The background's contrast warning is the caller's: it needs the block's
   // place in the page.
-  import { editTier } from '$lib/features/content';
-  import { FieldRow, SegmentedControl, SegmentedControlItem, ColorPickerField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { themeColorOptions } from '$lib/features/content';
-  import { COLOR_SWATCHES } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, ColorPickerField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { themeColorOptions } from '#lib/features/content/index.ts';
+  import { COLOR_SWATCHES } from '#lib/features/content/index.ts';
   import {
     resolvedBg,
     resolvedBorder,
@@ -21,7 +21,7 @@
     type SurfaceData,
     type SurfaceDefaults,
     type ShadowToken,
-  } from '$lib/features/content';
+  } from '#lib/features/content/index.ts';
 
   let {
     value,

@@ -5,9 +5,9 @@
 // The folder block's schema and NodeView (docs/architecture/blocks/anatomy.md): the
 // page's component inside the block wrapper, an atom ProseMirror selects and drags.
 import { Node } from '@tiptap/core';
-import { dataAttr, flagValue, getBlockDefaults, getTypographyRegistry, placementAttr, surfaceAttr, textValue, typographyAttr } from '$lib/features/content';
-import { svelteNodeView } from '$lib/features/content/editor';
-import { currentLocale, type PluginEditorContext } from '$lib/plugins/api';
+import { dataAttr, flagValue, getBlockDefaults, getTypographyRegistry, placementAttr, surfaceAttr, textValue, typographyAttr } from '#lib/features/content/index.ts';
+import { svelteNodeView } from '#lib/features/content/editor.ts';
+import { currentLocale, type PluginEditorContext } from '#lib/plugins/api.ts';
 import FolderListing from './FolderListing.svelte';
 import { PLUGIN_ROUTES } from '../routes';
 import { editingFor } from './editing';

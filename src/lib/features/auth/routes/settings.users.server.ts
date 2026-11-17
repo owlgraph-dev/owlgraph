@@ -4,7 +4,7 @@
 
 // Route adapter for /settings/users, re-exported by src/routes/settings/users/+page.server.ts.
 import { requireAction } from './requireAction.server';
-import { logEvent } from '$lib/platform/logger.server';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import {
   listUsers,
   createUser,
@@ -14,10 +14,10 @@ import {
   setUserPassword,
   ROLES,
   type Role,
-} from '$lib/features/auth/server';
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH, passwordProblem } from '$lib/features/auth';
+} from '#lib/features/auth/server.ts';
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH, passwordProblem } from '#lib/features/auth/index.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // The policy's refusal, worded in the request's language by the code table;
 // passwordProblemMessage is create-admin's English.

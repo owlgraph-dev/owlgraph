@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import type { NodeClassOption } from '$lib/features/semantic';
+import type { NodeClassOption } from '#lib/features/semantic/index.ts';
 import { ALL, classPickerItems, namespacePickerItems, orNull, sortItems, typePickerItems } from './filterItems';
 
 const option = (slug: string, label: string, depth: number): NodeClassOption =>

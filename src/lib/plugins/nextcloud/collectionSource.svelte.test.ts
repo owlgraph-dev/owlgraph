@@ -6,12 +6,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
-import { CollectionEditor } from '$lib/features/editor/components';
-import type { CollectionMember } from '$lib/features/collections';
-import type { CollectionSourceView } from '$lib/features/pluginHost';
+import { CollectionEditor } from '#lib/features/editor/components.ts';
+import type { CollectionMember } from '#lib/features/collections/index.ts';
+import type { CollectionSourceView } from '#lib/features/pluginHost/index.ts';
 import { nextcloud } from './index';
 import { t } from './messages';
-import { stubFetch } from '$tests/component/fetch';
+import { stubFetch } from '#tests/component/fetch.ts';
 
 // A Nextcloud collection in the core's collection editor (docs/architecture/plugins.md,
 // "Sources"); PUT /api/collections/<id>/source is a stand-in.

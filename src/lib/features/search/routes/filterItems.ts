@@ -4,10 +4,10 @@
 
 // Shared by the filter row and the phone's filter sheet, so a filter reads the
 // same in both. Every value is what the URL carries, never a label.
-import * as m from '$lib/paraglide/messages';
-import { classItems, typeItems, type PickerItem } from '$lib/features/query';
-import type { NodeClassOption } from '$lib/features/semantic';
-import type { SearchNamespaceOption, SearchSort } from '$lib/features/search';
+import * as m from '#lib/paraglide/messages.js';
+import { classItems, typeItems, type PickerItem } from '#lib/features/query/index.ts';
+import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+import type { SearchNamespaceOption, SearchSort } from '#lib/features/search/index.ts';
 
 /** A Select has no empty item: "no filter" is a value of its own. */
 export const ALL = '__all__';

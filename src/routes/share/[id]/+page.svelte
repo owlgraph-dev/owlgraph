@@ -4,12 +4,12 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { RenderedContent } from '$lib/features/content/components';
-  import { styleNonceFor } from '$lib/platform/styleNonce';
-  import * as m from '$lib/paraglide/messages';
-  import { Button } from '$lib/design-system';
-  import { OpenExternalButton } from '$lib/features/documents/components';
-  import { externalHost, formatFileSize, documentContentPath } from '$lib/features/documents';
+  import { RenderedContent } from '#lib/features/content/components.ts';
+  import { styleNonceFor } from '#lib/platform/styleNonce.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { Button } from '#lib/design-system/index.ts';
+  import { OpenExternalButton } from '#lib/features/documents/components.ts';
+  import { externalHost, formatFileSize, documentContentPath } from '#lib/features/documents/index.ts';
   let { data } = $props();
 
   const d = $derived(data.kind === 'document' ? data.doc : null);

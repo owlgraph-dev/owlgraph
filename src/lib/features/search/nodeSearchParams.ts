@@ -4,7 +4,7 @@
 
 // /api/node-search's parameters, read once here: every value clamped, every id
 // checked, so the route hands the query nothing it didn't mean to.
-import { isUuid, NODE_TYPES, type NodeType } from '$lib/features/nodes';
+import { isUuid, NODE_TYPES, type NodeType } from '#lib/features/nodes/index.ts';
 
 /** The page size a picker gets unless it asks for another, and the most it may ask for. */
 export const NODE_SEARCH_LIMIT = 12;

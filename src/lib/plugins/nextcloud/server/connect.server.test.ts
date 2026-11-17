@@ -6,8 +6,8 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { startMockNextcloud, type MockNextcloud } from '../e2e/mockNextcloud';
 import { connectFlow } from './connect.server';
-import { READ_METHODS, upstreamClient, type UpstreamClient } from '$lib/platform/upstream.server';
-import type { PluginCredential } from '$lib/plugins/api';
+import { READ_METHODS, upstreamClient, type UpstreamClient } from '#lib/platform/upstream.server.ts';
+import type { PluginCredential } from '#lib/plugins/api.ts';
 
 let mock: MockNextcloud;
 let client: UpstreamClient;

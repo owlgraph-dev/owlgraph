@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import type { EditorCore } from '../core/editorCore.svelte';
 import { SaveAction } from './saveAction.svelte';
 
 const toasts = vi.hoisted(() => ({ error: vi.fn((..._args: unknown[]) => 7), dismiss: vi.fn() }));
-vi.mock('$lib/design-system', () => ({ toast: toasts }));
+vi.mock('#lib/design-system/index.ts', () => ({ toast: toasts }));
 
 const DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
 

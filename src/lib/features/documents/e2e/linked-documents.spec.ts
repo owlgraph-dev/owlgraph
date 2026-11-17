@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIRequestContext, Page } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { unique } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { unique } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 
 // The external address is never visited: redirects are read with maxRedirects: 0.
 

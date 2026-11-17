@@ -6,7 +6,7 @@
 // by chain position rather than by block id: an id-less cell, a container, a
 // list, the typography target, a node the block tools act on.
 import type { Editor } from '@tiptap/core';
-import { setLayoutField, type Tier } from '$lib/features/content';
+import { setLayoutField, type Tier } from '#lib/features/content/index.ts';
 
 /** Merges `patch` into the attributes of the node at `pos`; a position below 0 is none. */
 export function setAttrsAt(editor: Editor, pos: number, patch: Record<string, unknown>): void {

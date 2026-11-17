@@ -9,10 +9,10 @@
   // MCP) and edit like the root.
   import ConditionGroupEditor from './ConditionGroupEditor.svelte';
   import ConditionRowEditor from './ConditionRowEditor.svelte';
-  import { ConditionGroup, Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeClassOption, RelationshipTypeOption } from '$lib/features/semantic';
+  import { ConditionGroup, Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeClassOption, RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import { appendGroupItem, removeGroupItem, updateGroupItem, rowForSourceKey, newGroup, type ConditionGroupDraft, type ConditionItem } from '../conditionRows';
   import { conditionSourceGroups, propertyDatatype, ALL_SOURCE_KINDS, type SourceKind, type PropertyOption } from './sourceOptions';
 

@@ -4,12 +4,12 @@
 
 // docs/architecture/blocks/node-embeds.md, "A quick link becomes a block".
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { createDocument, createPage, unique } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { createDocument, createPage, unique } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
-import { blockSettings, savePage } from '$tests/e2e/editor';
+import { blockSettings, savePage } from '#tests/e2e/editor.ts';
 
 test.use({ storageState: authState('admin') });
 

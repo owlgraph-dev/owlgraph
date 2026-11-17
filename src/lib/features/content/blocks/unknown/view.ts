@@ -4,9 +4,9 @@
 
 // Only the editor draws an unknown block, so its words are the interface's
 // (docs/architecture/blocks/anatomy.md, "Unknown blocks"). A retired plugin's kind goes by its label.
-import * as m from '$lib/paraglide/messages';
-import { localize } from '$lib/platform/i18n/localizedText';
-import { retiredBlockKind } from '$lib/plugins';
+import * as m from '#lib/paraglide/messages.js';
+import { localize } from '#lib/platform/i18n/localizedText.ts';
+import { retiredBlockKind } from '#lib/plugins/index.ts';
 import { NO_OVERRIDES } from '../../capabilities/overrides';
 import type { BlockWrapper } from '../scaffold/blockWrapper';
 import type { UnknownBlockAttrs } from '../../doc/unknownBlocks';

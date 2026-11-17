@@ -6,10 +6,10 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { sourceHref, sourceInfo } from '$lib/platform/source.server';
-import { call, startApp, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { sourceHref, sourceInfo } from '#lib/platform/source.server.ts';
+import { call, startApp, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 // AGPL-3.0 §13 (docs/guides/deployment.md, "Source code for network users"). The footer's
 // info icon is the browser's (e2e/about.spec.ts).

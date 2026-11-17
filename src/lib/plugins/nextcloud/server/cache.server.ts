@@ -7,7 +7,7 @@
 // share connected anew or another server misses. When Nextcloud refuses a share,
 // every listing of it is forgotten: what its owner withdrew is shown to nobody.
 import { createHash } from 'node:crypto';
-import type { PluginHost } from '$lib/plugins/api';
+import type { PluginHost } from '#lib/plugins/api.ts';
 import { joinPath, relativeTo } from '../sharePath';
 import { propfind, shareAccess, type DavProblem, type ShareSecret, type UserAccess } from './client.server';
 import type { DavEntry } from './propfind.server';

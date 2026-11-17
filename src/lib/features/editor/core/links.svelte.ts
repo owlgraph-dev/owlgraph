@@ -6,8 +6,8 @@
 // the card it retargets, and what a pick writes. Whether the picker is open is
 // the chrome's. Public methods are arrow fields, as the core's are.
 import type { Editor } from '@tiptap/core';
-import { normalizeUrl, quickLinkTargetAttrs, type QuickLinkTarget } from '$lib/features/content';
-import { setBlockAttrsById } from '$lib/features/content/editor';
+import { normalizeUrl, quickLinkTargetAttrs, type QuickLinkTarget } from '#lib/features/content/index.ts';
+import { setBlockAttrsById } from '#lib/features/content/editor.ts';
 import type { SitePage } from '../shared/sitePages';
 
 export type LinkResult = { type: 'page' | 'document'; id: string; slug?: string; title: string };

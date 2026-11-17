@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The plugin's renderers for renderDoc, one per block kind (docs/architecture/plugins.md).
-import { definePluginRenderers } from '$lib/plugins/api';
+import { definePluginRenderers } from '#lib/plugins/api.ts';
 import { nextcloud } from './index';
 import { renderFolderBlock } from './blocks/folder/render';
 import { renderFileBlock } from './blocks/file/render';

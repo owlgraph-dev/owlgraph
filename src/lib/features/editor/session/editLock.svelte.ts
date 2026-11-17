@@ -7,8 +7,8 @@
 // holds it, this browser's other tabs, and the save that carries its token.
 // The lock coordinates editors; storage integrity is withPageDoc's row lock on
 // the server. Its requests and the browser's storage are passed in.
-import * as m from '$lib/paraglide/messages';
-import type { AcquireLockResult, EditTabs, LockHolder, LockStatus, SaveResult } from '$lib/features/pages';
+import * as m from '#lib/paraglide/messages.js';
+import type { AcquireLockResult, EditTabs, LockHolder, LockStatus, SaveResult } from '#lib/features/pages/index.ts';
 
 /**
  * 'elsewhere': another tab of this browser edits the page (editTabs.ts).

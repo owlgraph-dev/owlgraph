@@ -6,8 +6,8 @@
 <script lang="ts">
   // The open state is session-wide per `id`, so a section folds the same on
   // every block.
-  import { CollapsibleGroup } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { CollapsibleGroup } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { Snippet } from 'svelte';
   import { isSectionOpen, setSectionOpen } from './blockSettingsState.svelte';
   import type { CapabilitySectionId } from './sections';

@@ -21,7 +21,7 @@
   import { nodeActions } from '../meta/nodeActions';
   import type { PageEditorProps } from '../meta/nodeMeta';
   import type { EditPageData } from './edit.server';
-  import { ReconcilePanel } from '$lib/features/pages/components';
+  import { ReconcilePanel } from '#lib/features/pages/components.ts';
   import {
     savePageDoc,
     acquirePageLock,
@@ -33,13 +33,13 @@
     applyPagePicks,
     uploadPageImage,
     editTabs,
-  } from '$lib/features/pages';
-  import { replaceDocumentFile, setDocumentLink } from '$lib/features/documents';
-  import { nodeMetaClient, nodePath } from '$lib/features/nodes';
-  import { toast, PHONE_SHELL_MEDIA } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { setAssetSizes } from '$lib/features/content';
-  import { setPageLayoutPresets } from '$lib/features/pages';
+  } from '#lib/features/pages/index.ts';
+  import { replaceDocumentFile, setDocumentLink } from '#lib/features/documents/index.ts';
+  import { nodeMetaClient, nodePath } from '#lib/features/nodes/index.ts';
+  import { toast, PHONE_SHELL_MEDIA } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { setAssetSizes } from '#lib/features/content/index.ts';
+  import { setPageLayoutPresets } from '#lib/features/pages/index.ts';
 
   let { data }: { data: EditPageData } = $props();
   // The phone shell's query, so turning a phone never swaps editors.

@@ -7,10 +7,10 @@
   // What the collection calls a member, per language (docs/architecture/semantic-layer.md,
   // "Collections"). Mounted fresh per open, so the field starts from the label.
   import { untrack } from 'svelte';
-  import { Button, Dialog } from '$lib/design-system';
-  import { LocalizedField } from '$lib/features/semantic/components';
-  import * as m from '$lib/paraglide/messages';
-  import type { LocalizedText } from '$lib/platform/i18n/localizedText';
+  import { Button, Dialog } from '#lib/design-system/index.ts';
+  import { LocalizedField } from '#lib/features/semantic/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 
   let {
     open,

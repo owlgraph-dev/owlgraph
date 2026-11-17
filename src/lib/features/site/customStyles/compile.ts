@@ -18,7 +18,7 @@ import valueParser from 'postcss-value-parser';
 // Type-only, so nothing here reaches the feature's client barrel.
 import type { StyleKind } from '../types';
 import { styleClass } from './slug';
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 
 /**
  * Ancestor-or-self of the blocks container on every surface (public page, share

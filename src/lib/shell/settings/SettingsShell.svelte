@@ -8,9 +8,9 @@
   // by CSS, so server and hydrated markup agree. The sheet mounts only while
   // open, so there is never a second nav landmark.
   import type { Snippet } from 'svelte';
-  import { BottomSheet, Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { BottomSheet, Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import SettingsNav from './SettingsNav.svelte';
   import type { SettingsGroup } from './treeModel';
 

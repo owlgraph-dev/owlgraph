@@ -6,10 +6,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
-import { embedKindFor } from '$lib/features/content';
+import { embedKindFor } from '#lib/features/content/index.ts';
 import DocumentSettings from './DocumentSettings.svelte';
 import type { BlockSettingsActions, Target } from '../../blockSettings/types';
-import { stubFetch } from '$tests/component/fetch';
+import { stubFetch } from '#tests/component/fetch.ts';
 
 // The panel alone: its target and actions as the block settings panel hands them, the
 // target re-rendered with each update; the routes answered by a stand-in.

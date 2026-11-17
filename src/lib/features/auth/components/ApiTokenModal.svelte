@@ -6,8 +6,8 @@
 <script lang="ts">
   // The page shows the raw token afterwards (form.created), once.
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, FormField } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Input, FormField } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

@@ -6,11 +6,11 @@
 // absent from the production image (`npm ci --omit=dev`).
 import { createHash } from 'node:crypto';
 import { error } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 import { can } from '../authz.server';
-import { logEvent, logger, type Logger } from '$lib/platform/logger.server';
+import { logEvent, logger, type Logger } from '#lib/platform/logger.server.ts';
 import type { SessionUser, Action } from '../types';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 // Call it in a section's `load` AND in every form action: actions run before a
 // parent layout's `load` reruns, so a layout guard never protects a direct POST.

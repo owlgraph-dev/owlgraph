@@ -8,7 +8,7 @@
 // the request's interface language, built here from the code. No adapter writes
 // an error body of its own. Kept free of @sveltejs/kit, so the agents' server
 // answers with it too.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { isCodedError } from './codedError';
 
 type Details = Record<string, unknown>;

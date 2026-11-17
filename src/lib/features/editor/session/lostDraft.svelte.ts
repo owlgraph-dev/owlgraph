@@ -5,7 +5,7 @@
 // Unsaved work when the edit lock goes: kept as a draft version, which the
 // reconcile panel diffs against the stored page; its picks are applied under
 // the lock taken anew.
-import type { ApplyPicksResult, BlockPick } from '$lib/features/pages';
+import type { ApplyPicksResult, BlockPick } from '#lib/features/pages/index.ts';
 import type { EditLock } from './editLock.svelte';
 
 /** The page client's draft and picks requests (pages/client.ts). */

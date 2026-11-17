@@ -4,10 +4,10 @@
 
 // Typography tokens: named bundles a paragraph style lays over its base role's
 // built-in look (paragraphStyles.server.ts).
-import { db } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
 import { weightOrNull } from './typography';
 import { sizeOrNull, type TypeSize } from './typeScale';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export interface TypographyToken {
   id: string;

@@ -9,16 +9,16 @@
   // Combobox, which anchors to a trigger. The search runs on the server
   // (shouldFilter={false}), debounced.
   import { goto } from '$app/navigation';
-  import { crossesStylePolicy } from '$lib/platform/csp';
-  import { lockBodyScroll } from '$lib/design-system/scrollLock';
+  import { crossesStylePolicy } from '#lib/platform/csp.ts';
+  import { lockBodyScroll } from '#lib/design-system/scrollLock.ts';
   import { Dialog as BitsDialog, Command as BitsCommand } from 'bits-ui';
-  import { Command, CommandInput, CommandItem, SegmentedControl, SegmentedControlItem, EmptyState, Button, Badge } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Command, CommandInput, CommandItem, SegmentedControl, SegmentedControlItem, EmptyState, Button, Badge } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import { parseSnippet } from '../searchSnippet';
   import { searchOverlayOpen } from '../searchOverlayStore';
   import { searchHref } from '../searchUrl';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeType } from '$lib/features/nodes';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   type Result = { id: string; type: NodeType; title: string; url: string; snippet: string };
   // Collections come with All; the search page narrows to them.

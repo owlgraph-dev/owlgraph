@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/lock/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getPage, userCanWritePage } from '$lib/features/pages/server';
-import { getLock, acquireLock, releaseLock, forceReleaseLock } from '$lib/features/pages/server';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { getLock, acquireLock, releaseLock, forceReleaseLock } from '#lib/features/pages/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

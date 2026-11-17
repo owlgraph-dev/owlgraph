@@ -7,8 +7,8 @@ import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import ParagraphStyleModal from './ParagraphStyleModal.svelte';
 import PageLayoutPresetModal from './PageLayoutPresetModal.svelte';
-import { SEED_PAGE_LAYOUT_PRESETS } from '$lib/features/pages';
-import type { ParagraphStyle } from '$lib/features/content';
+import { SEED_PAGE_LAYOUT_PRESETS } from '#lib/features/pages/index.ts';
+import type { ParagraphStyle } from '#lib/features/content/index.ts';
 
 // Each language posts as `<name>.<locale>`, which the route adapters read back
 // (docs/architecture/languages.md); English is the site default here.

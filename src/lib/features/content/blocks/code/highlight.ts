@@ -5,7 +5,7 @@
 // One lowlight instance for the editor and the server renderer, so both
 // highlight the same languages the same way.
 import { createLowlight, common } from 'lowlight';
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 
 export const lowlight = createLowlight(common);
 

@@ -6,8 +6,8 @@
 // (DEFAULT_UPSTREAM_LIMITS.totalTimeoutMs); only the clock is fake. Fake timers
 // don't reach AbortSignal.timeout, so `fakeClock` runs it on the fake setTimeout.
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_UPSTREAM_LIMITS } from '$lib/platform/upstream.server';
-import type { PluginNode } from '$lib/plugins/api';
+import { DEFAULT_UPSTREAM_LIMITS } from '#lib/platform/upstream.server.ts';
+import type { PluginNode } from '#lib/plugins/api.ts';
 import { startMockNextcloud, type MockNextcloud } from '../e2e/mockNextcloud';
 import { fakeHost } from '../e2e/fakeHost';
 import { resolveFolderBlocks, type FolderBlockData } from '../blocks/folder/blockData.server';

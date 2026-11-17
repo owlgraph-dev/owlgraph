@@ -9,9 +9,9 @@
 // Every URL passes through safeUrl, or a /share/<token> page would write its
 // token into the log (docs/architecture/logging.md, "URLs in logs").
 import type { RequestHandler } from './$types';
-import { RateLimiter } from '$lib/platform/rateLimit';
-import { summarizeCspReport } from '$lib/platform/csp';
-import { logEvent } from '$lib/platform/logger.server';
+import { RateLimiter } from '#lib/platform/rateLimit.ts';
+import { summarizeCspReport } from '#lib/platform/csp.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 
 const limiter = new RateLimiter(30, 60_000);
 const MAX_BODY_BYTES = 16 * 1024;

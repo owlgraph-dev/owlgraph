@@ -5,9 +5,9 @@
 // "24 pages for “graph” · class Concept (incl. subclasses) · tagged ai or ml".
 // Built from what took effect, so a parameter the server dropped, such as a
 // hidden namespace, is never mentioned.
-import * as m from '$lib/paraglide/messages';
-import { getLocale, type Locale } from '$lib/paraglide/runtime';
-import type { SearchParams } from '$lib/features/search';
+import * as m from '#lib/paraglide/messages.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+import type { SearchParams } from '#lib/features/search/index.ts';
 
 export interface CountLineInput {
   total: number;

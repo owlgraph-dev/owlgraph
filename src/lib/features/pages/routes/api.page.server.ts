@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/+server.ts.
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   getPage,
   getPageShares,
@@ -16,19 +16,19 @@ import {
   setPageContentScheme,
   userCanWritePage,
   deletePage,
-} from '$lib/features/pages/server';
-import { getHomePageId } from '$lib/features/site/server';
-import { setNodeTags } from '$lib/features/semantic/server';
-import { setManualProperties } from '$lib/features/semantic/server';
-import { setNodeClass } from '$lib/features/semantic/server';
-import { setNodeLocale } from '$lib/features/nodes/server';
-import { getLock } from '$lib/features/pages/server';
-import { isContentScheme } from '$lib/features/content';
-import { ACKNOWLEDGE_DROPPED_HEADER, droppedSummary, isUnknownDropped, parseAcknowledged } from '$lib/features/pages';
-import type { Visibility } from '$lib/features/nodes';
+} from '#lib/features/pages/server.ts';
+import { getHomePageId } from '#lib/features/site/server.ts';
+import { setNodeTags } from '#lib/features/semantic/server.ts';
+import { setManualProperties } from '#lib/features/semantic/server.ts';
+import { setNodeClass } from '#lib/features/semantic/server.ts';
+import { setNodeLocale } from '#lib/features/nodes/server.ts';
+import { getLock } from '#lib/features/pages/server.ts';
+import { isContentScheme } from '#lib/features/content/index.ts';
+import { ACKNOWLEDGE_DROPPED_HEADER, droppedSummary, isUnknownDropped, parseAcknowledged } from '#lib/features/pages/index.ts';
+import type { Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, apiErrorFrom } from '$lib/platform/apiErrors';
-import { isCodedError } from '$lib/platform/codedError';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
+import { isCodedError } from '#lib/platform/codedError.ts';
 
 type Params = { id: string };
 

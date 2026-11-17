@@ -4,7 +4,7 @@
 
 // The Nextcloud plugin's editor half (docs/architecture/plugins.md): per block kind its
 // Tiptap node, its name, its Insert-menu entry and its block settings sections.
-import { definePluginEditor } from '$lib/plugins/api';
+import { definePluginEditor } from '#lib/plugins/api.ts';
 import { nextcloud } from './index';
 import { t } from './messages';
 import { folderExtension } from './blocks/folder/tiptap';

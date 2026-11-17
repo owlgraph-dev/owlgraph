@@ -6,13 +6,13 @@
 // a preset when applied, so editing, disabling or deleting one leaves pages as
 // they are. Standard, the one flow, is refused deletion, disabling and columns
 // here, so the settings UI is never the only guard.
-import { db, type JsonArg, type TxSql } from '$lib/platform/db.server';
-import { normalizeGap, normalizeSectionDefaults, normalizeTemplate } from '$lib/features/content';
-import { localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
-import { siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
+import { db, type JsonArg, type TxSql } from '#lib/platform/db.server.ts';
+import { normalizeGap, normalizeSectionDefaults, normalizeTemplate } from '#lib/features/content/index.ts';
+import { localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
+import { siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
 import { presetFieldsOrError, presetIdFromLabel, SEED_PAGE_LAYOUT_PRESETS, type PageLayoutPreset } from './pageLayoutPresets';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 const json = (sql: TxSql, value: object) => sql.json(value as unknown as JsonArg);
 

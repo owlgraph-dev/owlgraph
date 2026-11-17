@@ -8,13 +8,13 @@
   // reads the document from the editor's store (documents.ts), as the block
   // does, so a change here shows there at once.
   import { onDestroy, untrack } from 'svelte';
-  import { Button, FieldRow, Select, toast } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { currentLocale, type PluginSectionProps } from '$lib/plugins/api';
+  import { Button, FieldRow, Select, toast } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { currentLocale, type PluginSectionProps } from '#lib/plugins/api.ts';
   import { t } from '../../messages';
   import type { DocumentView } from '../../server/documents.server';
   import type { SourceStatus } from '../../server/refs';
-  import { sizeText } from '$lib/features/content/listing';
+  import { sizeText } from '#lib/features/content/listing.ts';
   import { PLUGIN_ROUTES } from '../routes';
   import TreeBrowser from '../TreeBrowser.svelte';
   import type { TreeChoice, TreeSource } from '../tree';

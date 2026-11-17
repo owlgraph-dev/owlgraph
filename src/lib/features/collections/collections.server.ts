@@ -5,9 +5,9 @@
 // A collection is curated, or mirrors a source an integration holds
 // (docs/architecture/semantic-layer.md, "Collections"). The integration's credential is
 // sealed apart in node_source_secrets and never read here.
-import { db, type TxSql } from '$lib/platform/db.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import type { Visibility } from '$lib/features/nodes';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import type { Visibility } from '#lib/features/nodes/index.ts';
 import {
   insertNode,
   readableNodes,
@@ -21,10 +21,10 @@ import {
   assertNotWiderThanNamespace,
   userCanReadNode,
   userCanWriteNode,
-} from '$lib/features/nodes/server';
-import { getNamespace, getDefaultNamespace } from '$lib/features/namespaces/server';
-import { getTypeClass } from '$lib/features/semantic/server';
-import { CodedError } from '$lib/platform/codedError';
+} from '#lib/features/nodes/server.ts';
+import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getTypeClass } from '#lib/features/semantic/server.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export interface CollectionRow {
   id: string;

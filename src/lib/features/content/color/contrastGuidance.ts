@@ -5,7 +5,7 @@
 // Contrast guidance for the editor's colour fields (docs/architecture/theming.md, "Contrast
 // guidance"), measured on the grounds the renderers decide scheme regions from, so
 // the warning describes what the page will show.
-import { SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
+import { SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
 import type { Tier } from '../capabilities/cascade';
 import { resolvedColor, type TypographyData } from '../capabilities/typography/typography';
 import type { ContentScheme } from './contentScheme';

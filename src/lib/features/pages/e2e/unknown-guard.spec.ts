@@ -5,13 +5,13 @@
 // The guard's other writers are pages.http.test.ts's and pages.int.test.ts's.
 // The kinds are invented: a plugin merely turned off keeps its kinds known.
 import type { APIRequestContext, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { endOfLine } from '$tests/e2e/editor';
-import { createPage } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { endOfLine } from '#tests/e2e/editor.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
-import { retiredWidget, textPara } from '$tests/e2e/doc';
-import { storedDoc } from '$tests/support/storedDoc';
+import { retiredWidget, textPara } from '#tests/e2e/doc.ts';
+import { storedDoc } from '#tests/support/storedDoc.ts';
 
 test.use({ storageState: authState('admin') });
 

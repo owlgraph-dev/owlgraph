@@ -4,9 +4,9 @@
 
 // Before anything is typed: the readable nodes the viewer last saved or made
 // (docs/architecture/search.md, "The node picker"). None without a session.
-import type { SessionUser } from '$lib/features/auth/server';
-import { db } from '$lib/platform/db.server';
-import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeSearchHit, type NodeType } from '$lib/features/nodes/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeSearchHit, type NodeType } from '#lib/features/nodes/server.ts';
 
 export async function recentNodesForUser(
   user: SessionUser | null,

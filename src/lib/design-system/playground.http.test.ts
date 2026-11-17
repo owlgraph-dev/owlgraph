@@ -4,7 +4,7 @@
 
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { call, startApp, type ServedApp } from '$tests/integration/http';
+import { call, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // The route reads ENABLE_DESIGN_PLAYGROUND per request, so each test stubs it
 // in this process, where the handler runs.

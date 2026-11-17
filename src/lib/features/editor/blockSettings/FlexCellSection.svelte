@@ -6,7 +6,7 @@
 <script lang="ts">
   // A flex cell's size along its row (Auto, Fill with a weight, Fixed with a
   // size) and its alignment across it. Auto is content-sized and stores nothing.
-  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
+  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
   import {
     convertFlexBasis,
     editTier,
@@ -24,8 +24,8 @@
     type FlexItemSelf,
     type FlexItemSize,
     type FlexItemValue,
-  } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
 
   let { value, onChange }: {

@@ -7,9 +7,9 @@ import { renderDoc as renderDocImpl } from './render.server';
 import { StyleCollector } from '../capabilities/pageStyles';
 import type { ResolvedParagraphStyle } from '../capabilities/typography/paragraphStyles';
 import { PERSISTED_ADDRESSABLE_BLOCK_TYPES } from '../blocks/catalog';
-import { PLUGIN_BLOCK_KIND_NAMES } from '$lib/plugins';
+import { PLUGIN_BLOCK_KIND_NAMES } from '#lib/plugins/index.ts';
 import { queryFormatContainer } from '../blocks/query/formats';
-import { txt } from '$tests/e2e/doc';
+import { txt } from '#tests/e2e/doc.ts';
 
 const doc = (content: unknown[]) => ({ type: 'doc', content }) as any;
 const para = (content: unknown[]) => ({ type: 'paragraph', content });

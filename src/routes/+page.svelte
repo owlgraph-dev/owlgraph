@@ -5,10 +5,10 @@
 -->
 <script lang="ts">
   // "/" without a home page the viewer can read (home.server.ts).
-  import { Button, EmptyState } from '$lib/design-system';
-  import { nodePath } from '$lib/features/nodes';
-  import { createDialog } from '$lib/shell/appbar/createDialog.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, EmptyState } from '#lib/design-system/index.ts';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import { createDialog } from '#lib/shell/appbar/createDialog.svelte.ts';
+  import * as m from '#lib/paraglide/messages.js';
   let { data } = $props();
 </script>
 

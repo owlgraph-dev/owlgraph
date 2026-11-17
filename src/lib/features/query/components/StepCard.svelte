@@ -7,10 +7,10 @@
   // Below the header line: the edge filter, one property row since
   // WireEdgeCondition.property holds one condition, and the target filter, a
   // condition group nested one level in.
-  import { Select, Input, Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeClassOption, RelationshipTypeOption } from '$lib/features/semantic';
+  import { Select, Input, Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeClassOption, RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import type { WireEdgeDirection } from '../nodeFilter';
   import { MAX_STEP_REPEAT } from '../traversal';
   import { newGroup, propertyOperatorsFor, type ConditionRow, type PropertyRow, type TraversalStepDraft } from '../conditionRows';

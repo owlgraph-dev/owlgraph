@@ -5,8 +5,8 @@
 // One list of a block's moves for the block tools and the block settings panel's
 // placement section, so their icons and words agree. Moves at an edge stay,
 // disabled, so the row doesn't jump as the block moves.
-import type { SectionMove } from '$lib/features/content';
-import * as m from '$lib/paraglide/messages';
+import type { SectionMove } from '#lib/features/content/index.ts';
+import * as m from '#lib/paraglide/messages.js';
 
 export interface PlacementMoveItem {
   move: SectionMove;

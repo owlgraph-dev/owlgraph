@@ -8,10 +8,10 @@
 // refreshes it after every transaction. Public methods are arrow fields.
 import { getMarkRange, type Editor } from '@tiptap/core';
 import { NodeSelection } from '@tiptap/pm/state';
-import { markFieldState, listApplicableCustomStyles, type CustomStyleRef } from '$lib/features/content';
-import { applyParagraphStyle, resolveParagraphStyle, sortParagraphStyles, getTypographyRegistry, type ResolvedParagraphStyle } from '$lib/features/content';
-import { getMarkFieldStates, type SelectionChainEntry } from '$lib/features/content/editor';
-import { setTypographyField, resolvedColor, sizeOrNull, blockSupportsCapability, typographyColorWarningText, type TypeSize, type WeightToken, type Tier, type ContentScheme } from '$lib/features/content';
+import { markFieldState, listApplicableCustomStyles, type CustomStyleRef } from '#lib/features/content/index.ts';
+import { applyParagraphStyle, resolveParagraphStyle, sortParagraphStyles, getTypographyRegistry, type ResolvedParagraphStyle } from '#lib/features/content/index.ts';
+import { getMarkFieldStates, type SelectionChainEntry } from '#lib/features/content/editor.ts';
+import { setTypographyField, resolvedColor, sizeOrNull, blockSupportsCapability, typographyColorWarningText, type TypeSize, type WeightToken, type Tier, type ContentScheme } from '#lib/features/content/index.ts';
 import { setAttrsAt } from '../commands/attrs';
 import type { SelectionState } from './selection.svelte';
 

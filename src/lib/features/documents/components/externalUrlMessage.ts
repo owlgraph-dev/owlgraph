@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Shared by the create form and the editor's Source panel.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import type { ExternalUrlError } from '../externalUrl';
 
 export function externalUrlMessage(reason: ExternalUrlError): string {

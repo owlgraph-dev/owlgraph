@@ -27,16 +27,16 @@ const fake = vi.hoisted(() => {
 
 const may = (set: Set<string>, user: { id: string } | null, id: string) => set.has(`${user?.id ?? 'anonymous'}:${id}`);
 
-vi.mock('$lib/platform/db.server', () => ({ db: { begin: async (run: (sql: unknown) => unknown) => run({}) } }));
-vi.mock('$lib/features/nodes/server', () => ({
+vi.mock('#lib/platform/db.server.ts', () => ({ db: { begin: async (run: (sql: unknown) => unknown) => run({}) } }));
+vi.mock('#lib/features/nodes/server.ts', () => ({
   getNodeType: async (id: string) => fake.types.get(id) ?? null,
   resolveShareLink: async () => null,
 }));
-vi.mock('$lib/features/pages/server', () => ({
+vi.mock('#lib/features/pages/server.ts', () => ({
   getPage: async (id: string) => fake.pages.get(id) ?? null,
   userCanWritePage: async (user: { id: string } | null, page: { id: string }) => may(fake.writers, user, page.id),
 }));
-vi.mock('$lib/features/collections/server', () => ({
+vi.mock('#lib/features/collections/server.ts', () => ({
   getCollection: async (id: string) => fake.collections.get(id) ?? null,
   getCollectionSourceRef: async (id: string) => fake.refs.get(id) ?? {},
   setCollectionSourceRef: async (id: string, ref: Record<string, unknown>) => (fake.refs.set(id, ref), true),
@@ -55,7 +55,7 @@ vi.mock('$lib/features/collections/server', () => ({
   findMemberDocument: async () => null,
   lockCollection: async () => true,
 }));
-vi.mock('$lib/features/documents/server', () => ({
+vi.mock('#lib/features/documents/server.ts', () => ({
   getDocument: async (id: string) => fake.documents.get(id) ?? null,
   getDocumentSourceRef: async (id: string) => fake.refs.get(id) ?? {},
   setDocumentSourceRef: async (id: string, ref: Record<string, unknown>) => (fake.refs.set(id, ref), true),
@@ -66,7 +66,7 @@ vi.mock('$lib/features/documents/server', () => ({
   listPluginDocumentsForUser: async () => [],
   lockPluginDocument: async () => {},
 }));
-vi.mock('$lib/plugins', () => ({
+vi.mock('#lib/plugins/index.ts', () => ({
   pluginManifest: (id: string) => (id === 'acme' ? { id: 'acme', label: () => 'Acme', connections: null } : null),
 }));
 vi.mock('./settings.server', () => ({
@@ -86,9 +86,9 @@ vi.mock('./connections.server', () => ({
 }));
 
 import { createPluginHost } from './host.server';
-import { secretBox } from '$lib/platform/secretBox.server';
+import { secretBox } from '#lib/platform/secretBox.server.ts';
 import { bindSecret, openBoundSecret } from './boundSecret';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 const COL = '11111111-1111-4111-8111-111111111111';
 const OTHER = '22222222-2222-4222-8222-222222222222';

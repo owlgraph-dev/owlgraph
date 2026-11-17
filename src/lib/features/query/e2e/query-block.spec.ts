@@ -2,8 +2,8 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { seed, authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { seed, authState } from '#tests/e2e/seed-data.ts';
 
 // The stamped instances a page serves are queryBlock.http.test.ts's.
 

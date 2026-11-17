@@ -4,7 +4,7 @@
 
 // A /search card's lead text and document kind. No visibility check here: pass
 // only ids the list query already read under the viewer's permissions.
-import { db } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
 import { extractSearchText } from './pageText.server';
 import { LEAD_LENGTH, clipText, documentKindOf, type DocumentKind } from './searchCards';
 

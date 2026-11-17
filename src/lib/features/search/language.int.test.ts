@@ -4,10 +4,10 @@
 
 import { describe, expect, it } from 'vitest';
 import { graphql } from 'graphql';
-import { setNodeLocale } from '$lib/features/nodes/server';
-import { createPage, saveDoc } from '$lib/features/pages/server';
-import { schema } from '$lib/features/query/server';
-import { userOf } from '$tests/integration/users';
+import { setNodeLocale } from '#lib/features/nodes/server.ts';
+import { createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { schema } from '#lib/features/query/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 async function graph<T>(source: string, variableValues: Record<string, unknown>): Promise<T> {
   const res = await graphql({ schema, source, variableValues, contextValue: { user: await userOf('editorA') } });

@@ -4,16 +4,16 @@
 
 // The root layout's route adapter (src/routes/+layout.server.ts): it may import
 // @sveltejs/kit, and only src/routes/ may import it.
-import { resolveTreeForUser } from '$lib/features/site/server';
-import { getCurrentLogo, getUiFontFamily, getSiteTheme, customStylesHref, listCustomStyleRefs } from '$lib/features/site/server';
-import { resolveFooterForUser } from '$lib/features/site/server';
-import { getUserAvatarMeta } from '$lib/features/media/server';
-import { listNamespacesForUser } from '$lib/features/namespaces/server';
-import { connectionsOffered } from '$lib/features/pluginHost/server';
-import { getFontFaceCss, getCustomFontEntries } from '$lib/features/content/server';
-import { getParagraphStyles } from '$lib/features/content/server';
-import { resolveFontStack, customFontStacksRecord, StyleCollector } from '$lib/features/content';
-import { siteLocaleConfig } from '$lib/platform/i18n/siteLocales';
+import { resolveTreeForUser } from '#lib/features/site/server.ts';
+import { getCurrentLogo, getUiFontFamily, getSiteTheme, customStylesHref, listCustomStyleRefs } from '#lib/features/site/server.ts';
+import { resolveFooterForUser } from '#lib/features/site/server.ts';
+import { getUserAvatarMeta } from '#lib/features/media/server.ts';
+import { listNamespacesForUser } from '#lib/features/namespaces/server.ts';
+import { connectionsOffered } from '#lib/features/pluginHost/server.ts';
+import { getFontFaceCss, getCustomFontEntries } from '#lib/features/content/server.ts';
+import { getParagraphStyles } from '#lib/features/content/server.ts';
+import { resolveFontStack, customFontStacksRecord, StyleCollector } from '#lib/features/content/index.ts';
+import { siteLocaleConfig } from '#lib/platform/i18n/siteLocales.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 export const load = async ({ locals }: ServerLoadEvent) => {

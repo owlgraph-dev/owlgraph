@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import postgres from 'postgres';
-import { baseName, urlFor } from '$tests/support/databases';
-import { call, startApp } from '$tests/integration/http';
+import { baseName, urlFor } from '#tests/support/databases.ts';
+import { call, startApp } from '#tests/integration/http.ts';
 
 const app = await startApp();
 const fileUrl = process.env.DATABASE_URL!;

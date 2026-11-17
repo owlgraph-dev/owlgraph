@@ -6,14 +6,14 @@
 // (docs/architecture/plugins.md, "Sources"): the integration's label in the node's language
 // and the plugin's `searchText`, never a credential. The host rewrites it with
 // every write of a node's source record.
-import { withContentLocale } from '$lib/platform/i18n/contentLocale.server';
-import type { Logger } from '$lib/platform/logger.server';
+import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
+import type { Logger } from '#lib/platform/logger.server.ts';
 import { pluginFailed } from './pluginFailure.server';
-import { getCollection, getCollectionSourceRef, mirroredCollectionIds, setCollectionSourceSearch } from '$lib/features/collections/server';
-import { getDocument, getDocumentSourceRef, pluginDocumentIds, setDocumentSourceSearch } from '$lib/features/documents/server';
-import { pluginManifest } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
-import type { PluginSearchNode } from '$lib/plugins/api';
+import { getCollection, getCollectionSourceRef, mirroredCollectionIds, setCollectionSourceSearch } from '#lib/features/collections/server.ts';
+import { getDocument, getDocumentSourceRef, pluginDocumentIds, setDocumentSourceSearch } from '#lib/features/documents/server.ts';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
+import type { PluginSearchNode } from '#lib/plugins/api.ts';
 
 // Ample for a deep path; a plugin cannot fill the index with more.
 const MAX_LENGTH = 2000;

@@ -6,12 +6,12 @@
 // built on it. Callers must have run validateFilterShape and
 // validateFilterOperators (nodeFilter.ts): the tree is assumed valid here.
 import type postgres from 'postgres';
-import { timed } from '$lib/platform/logger.server';
-import { db } from '$lib/platform/db.server';
-import { labelCache, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import type { SessionUser } from '$lib/features/auth/server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
-import { collectionHeadline, containsSnippet, documentHeadline, ftsMatches, ftsMatchingIds, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from '$lib/features/search/server';
+import { timed } from '#lib/platform/logger.server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { collectionHeadline, containsSnippet, documentHeadline, ftsMatches, ftsMatchingIds, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from '#lib/features/search/server.ts';
 import {
   INTRINSIC_FIELD_CATEGORY,
   type NodeFilterInput,
@@ -22,7 +22,7 @@ import {
   type IntrinsicField,
   type TagConditionInput,
 } from './nodeFilter';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 function castLiteral(v: string, datatype: string): string | number | Date {
   if (datatype === 'number') return Number(v); // format validated in nodeFilter.ts

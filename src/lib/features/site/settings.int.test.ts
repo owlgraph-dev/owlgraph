@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { connectAs, jsonOf, userOf } from '$tests/integration/mcp';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { connectAs, jsonOf, userOf } from '#tests/integration/mcp.ts';
+import type { Role } from '#tests/integration/users.ts';
 import {
   CustomCssError,
   createCustomStyle,

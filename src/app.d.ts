@@ -2,10 +2,10 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import type { SessionUser } from '$lib/features/auth';
-import type { Locale } from '$lib/paraglide/runtime';
-import type { ColorPref } from '$lib/design-system/theme/preference';
-import type { Logger } from '$lib/platform/logger.server';
+import type { SessionUser } from '#lib/features/auth/index.ts';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import type { ColorPref } from '#lib/design-system/theme/preference.ts';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 declare global {
   namespace App {

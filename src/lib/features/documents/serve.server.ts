@@ -4,7 +4,7 @@
 
 // Shared by /api/documents/[id]/content and /share/[id]/content, which differ
 // only in how they authorize and cache. A plugin's document is answered by its integration.
-import { servedFileHeaders } from '$lib/platform/servedFile';
+import { servedFileHeaders } from '#lib/platform/servedFile.ts';
 import { safeExternalHref } from './externalUrl';
 
 // An uploaded PDF is served inline without a sandbox, safe only because

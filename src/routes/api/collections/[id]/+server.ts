@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { GET, PATCH, DELETE } from '$lib/features/collections/routes/api.collection.server';
+export { GET, PATCH, DELETE } from '#lib/features/collections/routes/api.collection.server.ts';

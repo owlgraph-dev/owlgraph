@@ -8,7 +8,7 @@
   // the reader's pages hand their diagrams to. Its own policy allows the inline
   // styles Mermaid needs, and only this origin may embed it (platform/cspRoutes.ts).
   import { onMount } from 'svelte';
-  import { serveMermaidFrame } from '$lib/features/content';
+  import { serveMermaidFrame } from '#lib/features/content/index.ts';
 
   onMount(() => serveMermaidFrame());
 </script>

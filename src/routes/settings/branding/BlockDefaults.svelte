@@ -10,8 +10,8 @@
   // widths are px and the page gutters a step per tier, each in a row below.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Button, FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, SettingsRow, SettingsGroup, Table, TableRow, TableCell, toast, type TableColumn } from '$lib/design-system';
-  import type { StoredTheme } from '$lib/design-system/theme/siteTheme';
+  import { Button, FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, SettingsRow, SettingsGroup, Table, TableRow, TableCell, toast, type TableColumn } from '#lib/design-system/index.ts';
+  import type { StoredTheme } from '#lib/design-system/theme/siteTheme.ts';
   import {
     BUILTIN_BLOCK_DEFAULTS,
     BUILTIN_WIDTHS,
@@ -31,8 +31,8 @@
     WIDTH_TOKENS,
     TIERS,
     BUILTIN_GUTTERS,
-  } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { theme }: { theme: StoredTheme } = $props();
 

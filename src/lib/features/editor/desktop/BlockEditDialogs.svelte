@@ -7,10 +7,10 @@
   // The block Edit dialogs: an html block's markup with its class picker, a
   // diagram's code, a quick link's typed edge, a query block's definition.
   // What they edit and save is blockEdit.svelte.ts's.
-  import { listAllCustomStyles } from '$lib/features/content';
-  import { QueryBuilderModal } from '$lib/features/query/components';
-  import { Dialog, Button, Textarea, Popover, TriggerFace, Command, CommandSearch, CommandList, CommandItem, insertAtCaret, restoreCaret } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { listAllCustomStyles } from '#lib/features/content/index.ts';
+  import { QueryBuilderModal } from '#lib/features/query/components.ts';
+  import { Dialog, Button, Textarea, Popover, TriggerFace, Command, CommandSearch, CommandList, CommandItem, insertAtCaret, restoreCaret } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import RelationshipDialog from '../blocks/quickLink/RelationshipDialog.svelte';
   import type { PageEditorProps } from '../meta/nodeMeta';
   import type { BlockEdit } from './blockEdit.svelte';

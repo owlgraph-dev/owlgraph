@@ -4,11 +4,11 @@
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { db } from '$lib/platform/db.server';
-import { createPage } from '$lib/features/pages/server';
-import { setManualProperties, setNodeClass, upsertNodeClass } from '$lib/features/semantic/server';
+import { db } from '#lib/platform/db.server.ts';
+import { createPage } from '#lib/features/pages/server.ts';
+import { setManualProperties, setNodeClass, upsertNodeClass } from '#lib/features/semantic/server.ts';
 import { schema } from './server';
-import { userOf, type Role } from '$tests/integration/users';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 const seed = inject('seed');
 

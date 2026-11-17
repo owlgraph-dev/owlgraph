@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { getUserByToken, type SessionUser } from '$lib/features/auth/server';
-import { createNamespace, setNamespaceMembers } from '$lib/features/namespaces/server';
-import { createPage } from '$lib/features/pages/server';
+import { db } from '#lib/platform/db.server.ts';
+import { getUserByToken, type SessionUser } from '#lib/features/auth/server.ts';
+import { createNamespace, setNamespaceMembers } from '#lib/features/namespaces/server.ts';
+import { createPage } from '#lib/features/pages/server.ts';
 import { userCanReadNode, type NodeAccessRow } from './access.server';
 import { readableNodes } from './nodes.server';
 

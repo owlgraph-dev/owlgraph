@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, uploadImage } from '$tests/e2e/api';
-import { para, cell } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, uploadImage } from '#tests/e2e/api.ts';
+import { para, cell } from '#tests/e2e/doc.ts';
 
 // The hard case: an image past the page's opening is lazy with `sizes="auto"`,
 // and the browser contains such an image's size, so it needs a ratio to stand

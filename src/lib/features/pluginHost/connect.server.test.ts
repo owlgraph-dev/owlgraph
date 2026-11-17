@@ -11,11 +11,11 @@ const fake = vi.hoisted(() => ({
   revokeThrows: false,
 }));
 
-vi.mock('$lib/plugins', () => ({
+vi.mock('#lib/plugins/index.ts', () => ({
   PLUGINS_WITH_CONNECTIONS: ['acme'],
   pluginManifest: (id: string) => (id === 'acme' ? { id: 'acme', connections: {} } : null),
 }));
-vi.mock('$lib/plugins/server', () => ({
+vi.mock('#lib/plugins/server.ts', () => ({
   pluginServer: (id: string) =>
     id === 'acme'
       ? {
@@ -39,10 +39,10 @@ vi.mock('./connections.server', () => ({
   },
   openCredential: (row: { secret: string }) => ({ kind: 'app_password', login: 'x', secret: row.secret }),
 }));
-vi.mock('$lib/platform/upstream.server', () => ({ READ_METHODS: ['GET'], upstreamClient: () => ({}) }));
+vi.mock('#lib/platform/upstream.server.ts', () => ({ READ_METHODS: ['GET'], upstreamClient: () => ({}) }));
 
 import { removeConnections } from './connect.server';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 const lines: Record<string, unknown>[] = [];
 const log = (() => {

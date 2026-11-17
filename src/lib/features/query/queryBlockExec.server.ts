@@ -4,16 +4,16 @@
 
 // Runs each embedded queryBlock under the viewer's permissions. renderDoc is
 // synchronous, so the page loader runs this first and hands it the results.
-import type { SessionUser } from '$lib/features/auth/server';
-import { logEvent, logger, errorClass } from '$lib/platform/logger.server';
-import { resolveUserLabels } from '$lib/features/auth/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { logEvent, logger, errorClass } from '#lib/platform/logger.server.ts';
+import { resolveUserLabels } from '#lib/features/auth/server.ts';
 import { getNodes, type ContentNodeHit } from './graphql/nodes.server';
-import { attrsOf, type QueryBlockResult, type QueryBlockResultItem, type JsonNode } from '$lib/features/content';
-import { getNodeProperties } from '$lib/features/semantic/server';
+import { attrsOf, type QueryBlockResult, type QueryBlockResultItem, type JsonNode } from '#lib/features/content/index.ts';
+import { getNodeProperties } from '#lib/features/semantic/server.ts';
 import { fromWireFilter, fromWireOrderBy, type WireNodeFilter, type WireOrderByInput } from './nodeFilter';
 import { fromWireTraversalQuery, type WireTraversalQuery } from './traversal';
 import { traverse } from './graphql/traverse.server';
-import { resolveNamespaceLabels } from '$lib/features/namespaces/server';
+import { resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
 
 
 export interface QueryBlockAttrs {

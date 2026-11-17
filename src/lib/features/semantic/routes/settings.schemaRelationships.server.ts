@@ -9,12 +9,12 @@ import {
   deleteRelationshipType,
   getAllRelationshipTypeProperties,
   setRelationshipTypeProperties,
-} from '$lib/features/semantic/server';
-import { listPropertyDefinitions } from '$lib/features/semantic/server';
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { localizedTextFromForm } from '$lib/platform/i18n/localizedText.server';
+} from '#lib/features/semantic/server.ts';
+import { listPropertyDefinitions } from '#lib/features/semantic/server.ts';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { localizedTextFromForm } from '#lib/platform/i18n/localizedText.server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('schema.relationships', 'relationship:manage');

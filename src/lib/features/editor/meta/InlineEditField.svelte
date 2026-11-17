@@ -8,8 +8,8 @@
   // view/edit toggle and the draft. A rejected commit reopens the field with
   // the rejected text, described by the caller's FieldError (`errorId`), and
   // takes focus only when the commit came from Enter, not from a blur.
-  import { Button, Input } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Button, Input } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
 
   let {
     value,

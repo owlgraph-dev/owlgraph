@@ -8,7 +8,7 @@
 // before the ordinary renderDoc walk, which knows nothing of templating. An
 // optional `mapping` redirects a key to another source or applies a
 // transform; a key without one binds by direct match.
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import { applyTransform, type TransformSpec } from './templateTransforms';
 import { replaceHtmlParamTokens } from './templateParams';
 

@@ -9,9 +9,9 @@
   // the members this editor may read. A refused change (a stale order, a loop
   // of collections) leaves the list as the server has it, and says why.
   import { untrack } from 'svelte';
-  import { Badge, Button, DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, EmptyState, SortableList, TriggerFace, toast } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Badge, Button, DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, EmptyState, SortableList, TriggerFace, toast } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import {
     addCollectionMember,
     loadCollectionMembers,
@@ -20,11 +20,11 @@
     setCollectionMemberLabel,
     type CollectionMember,
     type MembersResult,
-  } from '$lib/features/collections';
-  import type { NodeSearchResult } from '$lib/features/search';
-  import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-  import { NodePicker } from '$lib/features/search/picker';
-  import { NODE_TYPE_LABEL, NODE_TYPES } from '$lib/features/nodes';
+  } from '#lib/features/collections/index.ts';
+  import type { NodeSearchResult } from '#lib/features/search/index.ts';
+  import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+  import { NodePicker } from '#lib/features/search/picker.ts';
+  import { NODE_TYPE_LABEL, NODE_TYPES } from '#lib/features/nodes/index.ts';
   import MemberLabelDialog from './MemberLabelDialog.svelte';
 
   let {

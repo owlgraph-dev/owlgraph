@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/render-blocks/+server.ts.
-import type { JsonNode } from '$lib/features/content';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getPage, userCanWritePage } from '$lib/features/pages/server';
-import { linkSlugMap } from '$lib/features/graph/server';
-import { renderDoc, getCustomFontEntries, getParagraphStyles } from '$lib/features/content/server';
-import { customFontStacksRecord, customStyleClassMap, compileContentTheme, StyleCollector, pageCanvasOverrides, pageRhythmPx } from '$lib/features/content';
-import { listCustomStyleRefs, getSiteTheme } from '$lib/features/site/server';
-import { withContentLocale } from '$lib/platform/i18n/contentLocale.server';
+import type { JsonNode } from '#lib/features/content/index.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { linkSlugMap } from '#lib/features/graph/server.ts';
+import { renderDoc, getCustomFontEntries, getParagraphStyles } from '#lib/features/content/server.ts';
+import { customFontStacksRecord, customStyleClassMap, compileContentTheme, StyleCollector, pageCanvasOverrides, pageRhythmPx } from '#lib/features/content/index.ts';
+import { listCustomStyleRefs, getSiteTheme } from '#lib/features/site/server.ts';
+import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

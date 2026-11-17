@@ -5,7 +5,7 @@
 // The site's brand colours for the colour pickers, set by the root layout. A
 // plain module value, not reactive state: the MCP server imports this outside
 // Svelte, and a picker opens long after the layout has set it.
-import type { BrandColor } from '$lib/design-system/theme/siteTheme';
+import type { BrandColor } from '#lib/design-system/theme/siteTheme.ts';
 
 let colors: readonly BrandColor[] = [];
 

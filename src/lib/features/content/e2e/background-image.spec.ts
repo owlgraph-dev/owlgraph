@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIRequestContext, Locator, Page } from '@playwright/test';
-import { test, expect, sameOrigin } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
+import { test, expect, sameOrigin } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
 import { db } from '../../../platform/db.server';
-import { para, cell } from '$tests/e2e/doc';
-import { blockSettings } from '$tests/e2e/editor';
+import { para, cell } from '#tests/e2e/doc.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 // A real (decodable) 1×1 PNG, and a second one with different bytes.
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');

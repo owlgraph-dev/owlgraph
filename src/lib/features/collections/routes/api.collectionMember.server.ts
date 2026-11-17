@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/collections/[id]/members/[nodeId]/+server.ts.
-import { membersWithBasis, removeCuratedMember, setCuratedMemberLabel } from '$lib/features/collections/server';
-import { isUuid } from '$lib/features/nodes';
+import { membersWithBasis, removeCuratedMember, setCuratedMemberLabel } from '#lib/features/collections/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { arrangeableCollection } from './membership.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, apiErrorFrom } from '$lib/platform/apiErrors';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string; nodeId: string };
 

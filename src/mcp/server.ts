@@ -35,7 +35,7 @@ import { registerDocumentTools } from '../lib/features/documents/mcp.server';
 import { registerCollectionTools } from '../lib/features/collections/mcp.server';
 import { registerQueryTools } from '../lib/features/query/mcp.server';
 import { registerSiteTools } from '../lib/features/site/mcp.server';
-import { apiErrorBody, type ApiErrorCode } from '$lib/platform/apiErrors';
+import { apiErrorBody, type ApiErrorCode } from '#lib/platform/apiErrors.ts';
 
 // The root logger reads this label per call, so import order doesn't matter.
 markProcess('mcp');

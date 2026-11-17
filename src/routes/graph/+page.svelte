@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { GraphView } from '$lib/features/graph/components';
+  import { GraphView } from '#lib/features/graph/components.ts';
   let { data } = $props();
 </script>
 

@@ -19,11 +19,11 @@ const CLEAN: Record<string, string> = {
   'src/lib/plugins/index.ts': "import { acme } from './acme';\nexport const PLUGINS = [acme];\n",
   'src/lib/plugins/renderers.ts': "import { renderers } from './acme/renderers';\nexport const PLUGIN_RENDERERS = { ...renderers };\n",
   'src/lib/plugins/blocks.css': "@import './acme/acme.css';\n",
-  'src/lib/plugins/acme/index.ts': "import { definePlugin } from '$lib/plugins/api';\nexport const acme = definePlugin({ blocks: [] });\n",
-  'src/lib/plugins/acme/renderers.ts': "import { wrapperHtml } from '$lib/features/content';\nexport const renderers = { block: wrapperHtml };\n",
+  'src/lib/plugins/acme/index.ts': "import { definePlugin } from '#lib/plugins/api.ts';\nexport const acme = definePlugin({ blocks: [] });\n",
+  'src/lib/plugins/acme/renderers.ts': "import { wrapperHtml } from '#lib/features/content/index.ts';\nexport const renderers = { block: wrapperHtml };\n",
   'src/lib/plugins/acme/acme.css': '.block { color: inherit; }\n',
   'src/lib/plugins/acme/hash.server.ts': "import { createHash } from 'node:crypto';\nexport const hash = (s: string) => createHash('sha256').update(s).digest('hex');\n",
-  'src/lib/features/content/index.ts': "import { PLUGINS } from '$lib/plugins';\nexport const KINDS = PLUGINS;\nexport const wrapperHtml = () => '';\n",
+  'src/lib/features/content/index.ts': "import { PLUGINS } from '#lib/plugins/index.ts';\nexport const KINDS = PLUGINS;\nexport const wrapperHtml = () => '';\n",
   'src/lib/features/content/blocks.css': "@import '../../plugins/blocks.css';\n",
   'migrations/0001_init.sql': '-- acme arrives later; this comment may say so\ncreate table t (id int);\n',
   'messages/en.json': '{ "hello": "Hello" }\n',
@@ -60,7 +60,7 @@ describe('check-boundaries, plugin rules', () => {
   });
 
   it('7: refuses a core module importing a plugin', () => {
-    expectProblem({ 'src/lib/features/content/leak.ts': "import { acme } from '$lib/plugins/acme';\nexport const a = acme;\n" }, "Plugin 'acme' imported outside the registry");
+    expectProblem({ 'src/lib/features/content/leak.ts': "import { acme } from '#lib/plugins/acme/index.ts';\nexport const a = acme;\n" }, "Plugin 'acme' imported outside the registry");
   });
 
   it("7: refuses a core stylesheet importing a plugin's", () => {
@@ -72,7 +72,7 @@ describe('check-boundaries, plugin rules', () => {
   });
 
   it('8: refuses a core module outside the allowlist', () => {
-    expectProblem({ 'src/lib/plugins/acme/rows.ts': "import { sql } from '$lib/platform/db.server';\nexport const rows = sql;\n" }, "Plugin 'acme' imports outside its allowlist");
+    expectProblem({ 'src/lib/plugins/acme/rows.ts': "import { sql } from '#lib/platform/db.server.ts';\nexport const rows = sql;\n" }, "Plugin 'acme' imports outside its allowlist");
   });
 
   it('8: refuses a network builtin, even on the server', () => {
@@ -88,11 +88,11 @@ describe('check-boundaries, plugin rules', () => {
       'src/lib/features/content/listing.ts': "export { default as EntryList } from './listing/EntryList.svelte';\n",
       'src/lib/features/content/listing/EntryList.svelte': '<script lang="ts">let { rows } = $props();</script>\n<ul>{#each rows as row}<li>{row}</li>{/each}</ul>\n',
     };
-    const drawn = { 'src/lib/plugins/acme/View.svelte': "<script lang=\"ts\">import { EntryList } from '$lib/features/content/listing';</script>\n<EntryList rows={[]} />\n" };
+    const drawn = { 'src/lib/plugins/acme/View.svelte': "<script lang=\"ts\">import { EntryList } from '#lib/features/content/listing.ts';</script>\n<EntryList rows={[]} />\n" };
     const { status, output } = check({ ...listing, ...drawn });
     expect(status, output).toBe(0);
     // Put together here, so the checker reading this file sees no import of it.
-    const deep = ['$lib/features/content/listing', 'EntryList.svelte'].join('/');
+    const deep = ['#lib/features/content/listing.ts', 'EntryList.svelte'].join('/');
     expectProblem(
       { ...listing, 'src/lib/plugins/acme/View.svelte': `<script lang="ts">import EntryList from '${deep}';</script>\n<EntryList rows={[]} />\n` },
       "Plugin 'acme' imports outside its allowlist"
@@ -104,7 +104,7 @@ describe('check-boundaries, plugin rules', () => {
       {
         'src/lib/features/content/listing.ts': "import './listing/listing.css';\nexport const EntryList = 1;\n",
         'src/lib/features/content/listing/listing.css': '.listing { color: inherit; }\n',
-        'src/lib/plugins/acme/renderers.ts': "import { wrapperHtml } from '$lib/features/content';\nimport { EntryList } from '$lib/features/content/listing';\nexport const renderers = { block: wrapperHtml, list: EntryList };\n",
+        'src/lib/plugins/acme/renderers.ts': "import { wrapperHtml } from '#lib/features/content/index.ts';\nimport { EntryList } from '#lib/features/content/listing.ts';\nexport const renderers = { block: wrapperHtml, list: EntryList };\n",
       },
       "the renderers reach a stylesheet, which the Node loader renderDoc runs under cannot load: lib/plugins/renderers -> lib/plugins/acme/renderers -> lib/features/content/listing imports './listing/listing.css'"
     );
@@ -146,7 +146,7 @@ describe('check-boundaries, plugin rules', () => {
 
   it('8: keeps the manifests pure data', () => {
     expectProblem(
-      { 'src/lib/plugins/acme/index.ts': "import { definePlugin } from '$lib/plugins/api';\nimport { KINDS } from '$lib/features/content';\nexport const acme = definePlugin({ blocks: KINDS });\n" },
+      { 'src/lib/plugins/acme/index.ts': "import { definePlugin } from '#lib/plugins/api.ts';\nimport { KINDS } from '#lib/features/content/index.ts';\nexport const acme = definePlugin({ blocks: KINDS });\n" },
       'the manifests are pure data'
     );
   });
@@ -154,7 +154,7 @@ describe('check-boundaries, plugin rules', () => {
   it('8: keeps Svelte components out of the manifests, which scripts outside Vite read', () => {
     expectProblem(
       {
-        'src/lib/plugins/acme/index.ts': "import { definePlugin } from '$lib/plugins/api';\nimport Card from './Card.svelte';\nexport const acme = definePlugin({ blocks: [], card: Card });\n",
+        'src/lib/plugins/acme/index.ts': "import { definePlugin } from '#lib/plugins/api.ts';\nimport Card from './Card.svelte';\nexport const acme = definePlugin({ blocks: [], card: Card });\n",
         'src/lib/plugins/acme/Card.svelte': '<p>card</p>\n',
       },
       'the manifests reach a Svelte component'
@@ -191,7 +191,7 @@ describe('check-boundaries, plugin rules', () => {
 
   it('10: refuses a module cycle through a registry', () => {
     expectProblem(
-      { 'src/lib/features/content/index.ts': "import { PLUGINS } from '$lib/plugins';\nimport { PLUGIN_RENDERERS } from '$lib/plugins/renderers';\nexport const KINDS = [PLUGINS, PLUGIN_RENDERERS];\nexport const wrapperHtml = () => '';\n" },
+      { 'src/lib/features/content/index.ts': "import { PLUGINS } from '#lib/plugins/index.ts';\nimport { PLUGIN_RENDERERS } from '#lib/plugins/renderers.ts';\nexport const KINDS = [PLUGINS, PLUGIN_RENDERERS];\nexport const wrapperHtml = () => '';\n" },
       'Module cycle through the plugin registry: lib/plugins/renderers'
     );
   });
@@ -202,8 +202,8 @@ describe('check-boundaries, the MCP closure', () => {
   it('1: refuses a stylesheet the MCP server would load', () => {
     expectProblem(
       {
-        'src/mcp/server.ts': "import { KINDS } from '$lib/features/content';\nexport const tools = KINDS;\n",
-        'src/lib/features/content/index.ts': "import { PLUGINS } from '$lib/plugins';\nimport './look.css';\nexport const KINDS = PLUGINS;\nexport const wrapperHtml = () => '';\n",
+        'src/mcp/server.ts': "import { KINDS } from '#lib/features/content/index.ts';\nexport const tools = KINDS;\n",
+        'src/lib/features/content/index.ts': "import { PLUGINS } from '#lib/plugins/index.ts';\nimport './look.css';\nexport const KINDS = PLUGINS;\nexport const wrapperHtml = () => '';\n",
         'src/lib/features/content/look.css': '.look { color: inherit; }\n',
       },
       "MCP closure reaches a stylesheet: mcp/server -> lib/features/content/index imports './look.css'"
