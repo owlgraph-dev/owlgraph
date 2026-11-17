@@ -8,20 +8,10 @@ import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { connectAs, jsonOf, textOf, type Role } from '#tests/integration/mcp.ts';
 
 const seed = inject('seed');
-const MISSING = '00000000-0000-4000-8000-000000000000';
 
 const createdPageId = (text: string) => /Created page (\S+)/.exec(text)![1];
 
 describe('reading a page', () => {
-  it('a restricted page the viewer is not shared on answers exactly as one that does not exist', async () => {
-    const viewer = await connectAs('viewer');
-    const res = await viewer.callTool({ name: 'get_page', arguments: { pageId: seed.restrictedId } });
-    const missing = await viewer.callTool({ name: 'get_page', arguments: { pageId: MISSING } });
-    expect(res.isError).toBeTruthy();
-    expect(textOf(res)).toBe('Page not found');
-    expect(textOf(res)).toBe(textOf(missing));
-  });
-
   it('the editor the restricted page is shared with reads it', async () => {
     const shared = await connectAs('editorB');
     const res = await shared.callTool({ name: 'get_page', arguments: { pageId: seed.restrictedId } });

@@ -47,7 +47,9 @@ Playwright's (`playwright.config.ts`).
 Every file sits beside the module it covers: `render.test.ts` next to
 `render.server.ts`, a component's test next to the component, a feature's
 specs in its `e2e/` folder. The shared harness lives in `tests/`
-([Where specs live](#where-specs-live)).
+([Where specs live](#where-specs-live)). A spec's acceptance tests are the
+exception: they live together, outside every feature
+([Acceptance tests](#acceptance-tests)).
 
 ## Choosing a layer
 
@@ -94,7 +96,60 @@ A test asserts what can be seen at its layer: "an anonymous request gets a
 - **An acceptance test names its criterion.** A test that proves a spec's
   acceptance criterion starts its name with the criterion's id: `'002.5 a
   node the asker may not read is answered as not found'`. One criterion may
-  have several tests, at different layers; searching for the id finds them.
+  have several tests, at different layers; searching for the id finds them,
+  all in that spec's folder ([Acceptance tests](#acceptance-tests)).
+
+## Acceptance tests
+
+> Decision: [0019. Acceptance tests live in one folder, a folder per spec](../adr/0019-acceptance-tests-live-in-one-folder-per-spec.md).
+
+An acceptance test proves one acceptance criterion of a spec
+([what a spec is](../README.md#how-these-docs-are-kept)). These tests are
+what the gate grows by, so they are kept as a set that can be seen and
+counted, apart from the tests beside each module:
+
+- **Where.** `tests/acceptance/<NNN>-<name>/`, the folder named as the spec's
+  file: `tests/acceptance/002-visibility-and-namespaces/` holds the tests of
+  `docs/features/002-visibility-and-namespaces.md`. A capability crosses
+  features, so its proof belongs to none of them. A plugin's spec has its
+  folder in the plugin, `src/lib/plugins/<id>/acceptance/<NNN>-<name>/`: the
+  core never names a plugin ([plugins.md](../architecture/plugins.md)), and
+  retiring the plugin takes its tests with it.
+- **Named after its criterion.** Every test in the folder starts its name
+  with the id of a criterion of that spec, and no test elsewhere carries one.
+- **Of a kind the gate runs.** A file's suffix says its kind, as everywhere:
+  `*.test.ts`, `*.int.test.ts` or `*.http.test.ts`, each in its usual
+  project, at the lowest of those layers that can observe the criterion. An
+  agent's tool is asked in-process (`connectAs`). A component test or a
+  Playwright spec has no place in the folder, since the gate runs neither
+  from there; a criterion only a browser shows gets a note instead (below).
+- **An outsider's view.** An acceptance test reaches a feature through its
+  entry points (`server.ts`, `index.ts`), a route adapter, the built handler
+  or the agents' server, and uses the harness and the seed. `check-boundaries`
+  refuses a deep import from the folder, as from any module outside the
+  feature ([overview.md](../architecture/overview.md#entry-points-and-boundary-rules)).
+  It asserts what the criterion states (who reads, what an address answers),
+  not a stored column or what a function does on the way.
+- **How a criterion gets its test.** An existing test that states exactly the
+  criterion's outcome, at the right layer and on its own, is moved into the
+  folder and takes the id. Otherwise the test is written new. A test left
+  behind keeps its name; one that an acceptance test makes redundant is
+  removed on purpose, in a change that says so.
+- **Few.** One test per criterion; more only where the criterion itself
+  lists cases that need different harnesses, such as each way a node can be
+  asked for. A spec has at most twice as many tests as criteria.
+- **A known bug is pinned** as everywhere: `it.fails`, with a comment saying
+  what happens today. A pin proves nothing and counts towards no limit.
+- **A criterion without a test** is said so in the spec's *Implementation
+  notes*, by a list item that begins with its id and gives the reason:
+  `- 002.10 has no acceptance test: only a browser shows it.`
+
+`scripts/check-criteria.mjs`, part of `npm run check`, holds all of this: the
+ids and the folder's spec, the kinds, that no acceptance test is skipped,
+that no test outside a folder carries an id, the limit, and that every
+criterion of an `implemented` spec has a test that passes or its note. It
+prints the count per spec. A spec whose criteria are not numbered is
+reported and held to nothing.
 
 ## Running tests
 
@@ -111,12 +166,14 @@ lane. A change runs the ones that cover what it touches before it is pushed,
 and `npm run gate:full` runs the gate with all of them. One that fails when it
 is next run is fixed, or deleted when it only pinned down how the code
 happened to work. What joins the gate are acceptance tests derived from a
-spec's acceptance criteria, at the lowest layer that can observe them.
+spec's acceptance criteria, at the lowest layer that can observe them
+([Acceptance tests](#acceptance-tests)).
 
 `npm run check` is the static half: svelte-check with warnings as errors, the
 architecture boundaries (`scripts/check-boundaries.mjs`), the UI conventions
 (`check-ui.mjs`), no stray `console` (`check-console.mjs`), the repository
-paths the docs and code comments name (`check-paths.mjs`), and the licence
+paths the docs and code comments name (`check-paths.mjs`), the acceptance
+tests against their specs' criteria (`check-criteria.mjs`), and the licence
 header on every source file (`license-headers.mjs --check`).
 
 | Command | What it does |

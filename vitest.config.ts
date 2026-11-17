@@ -49,7 +49,8 @@ export default defineConfig({
         resolve: { alias: [{ find: /^graphql$/, replacement: path.resolve('node_modules/graphql/index.js') }] },
         test: {
           name: 'integration',
-          include: ['src/**/*.int.test.ts', 'src/**/*.http.test.ts', 'tests/**/*.int.test.ts'],
+          // tests/ holds the harness's own and the acceptance tests (tests/acceptance/).
+          include: ['src/**/*.int.test.ts', 'src/**/*.http.test.ts', 'tests/**/*.int.test.ts', 'tests/**/*.http.test.ts'],
           environment: 'node',
           // A thread per file, with its own database URL, pool and caches.
           // Threads: a forked process fetches every module over IPC. Four at a

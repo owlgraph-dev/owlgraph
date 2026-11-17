@@ -11,7 +11,6 @@ import { userOf } from '#tests/integration/users.ts';
 import {
   createNamespace,
   deleteNamespace,
-  getDefaultNamespace,
   listNamespaces,
   renameNamespace,
   setNamespaceAccessLevel,
@@ -52,25 +51,6 @@ describe('a namespace as an admin manages it', () => {
       await expect(renameNamespace(other.id, { slug }), `rename to ${slug}`).rejects.toMatchObject({ code });
     }
     expect((await listNamespaces()).find((n) => n.id === taken.id)?.slug).toBe('taken-prefix');
-  });
-
-  it('deleting one keeps its content: nodes move into the default namespace, a colliding slug gets a suffix, an inheriting node takes the default’s level; the default namespace itself is refused', async () => {
-    const admin = await userOf('admin');
-    const ns = await createNamespace({ name: 'Leaving', slug: 'leaving', accessLevel: 'restricted' });
-    const collides = await createPage('Collides', admin, { namespaceId: ns.id });
-    await db`update nodes set slug = ${seed.publicSlug} where id = ${collides.id}`;
-    const inheriting = await createPage('Inheriting', admin, { namespaceId: ns.id });
-    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id), 'page')).toBe(false);
-
-    await deleteNamespace(ns.id);
-    const defaultNs = await getDefaultNamespace();
-    const moved = await db<{ id: string; namespace_id: string; slug: string }[]>`select id, namespace_id, slug from nodes where id in ${db([collides.id, inheriting.id])}`;
-    expect(moved.every((n) => n.namespace_id === defaultNs.id)).toBe(true);
-    expect(moved.find((n) => n.id === collides.id)!.slug).toBe(`${seed.publicSlug}-${collides.id.slice(0, 6)}`);
-    expect(await storedVisibility(inheriting.id)).toBeNull();
-    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id), 'page')).toBe(true);
-
-    await expect(deleteNamespace(defaultNs.id)).rejects.toThrow(/default namespace cannot be deleted/);
   });
 });
 

@@ -171,8 +171,10 @@ The pages live in four folders:
   A later change to the capability edits the same spec, in the pull request
   that makes the change: the spec goes back to `in-progress` and returns to
   `implemented`. Its acceptance criteria are numbered and a number is never
-  reused, since the tests that prove a criterion carry its id. A deviation
-  that no longer holds is deleted from the notes. `superseded` is for a
+  reused, since the tests that prove a criterion carry its id. A criterion
+  left without an acceptance test is a note that begins with its id and says
+  why ([testing.md](guides/testing.md#acceptance-tests)). A deviation that no
+  longer holds is deleted from the notes. `superseded` is for a
   capability that is replaced. The implementation plan itself is not
   committed; its summary goes into the pull request.
 - **Who writes what.** Planning writes the decision records and the specs.

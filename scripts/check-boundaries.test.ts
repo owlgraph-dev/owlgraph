@@ -8,8 +8,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-// Rules 11 and 12, the checker run with `--root` on a tree of the test's own; the
-// plugin rules are src/lib/plugins/boundaries.test.ts's.
+// Rules 11 and 12, and rule 2 as it reaches the acceptance tests: the checker run
+// with `--root` on a tree of the test's own; the plugin rules are
+// src/lib/plugins/boundaries.test.ts's.
 
 const CHECKER = resolve(import.meta.dirname, 'check-boundaries.mjs');
 
@@ -105,5 +106,25 @@ describe('check-boundaries, rule 12: only tests import the test harness', () => 
     const { status, output } = check({ 'src/lib/platform/env.ts': "import { txt } from '#tests/e2e/doc.ts';\nexport const env = { txt };\n" });
     expect(status, output).toBe(1);
     expect(output).toContain("The test harness imported outside a test: lib/platform/env imports '#tests/e2e/doc.ts'");
+  });
+});
+
+describe('check-boundaries, rule 2 in the acceptance tests: a feature is reached as an outsider reaches it', () => {
+  it("lets an acceptance test import a feature's entry point, its route adapter, the platform and the harness", () => {
+    const { status, output } = check({
+      'tests/integration/http.ts': 'export const call = () => 200;\n',
+      'tests/acceptance/001-site/name.int.test.ts':
+        "import { siteName } from '#lib/features/site/index.ts';\nimport { load } from '#lib/features/site/routes/load.server.ts';\nimport { env } from '#lib/platform/env.ts';\nimport { call } from '../../integration/http';\nexport { siteName, load, env, call };\n",
+    });
+    expect(status, output).toBe(0);
+  });
+
+  it('refuses an acceptance test that reaches into a feature past its entry points, naming the import', () => {
+    const { status, output } = check({
+      'src/lib/features/site/name.server.ts': "export const stored = () => 'site';\n",
+      'tests/acceptance/001-site/name.int.test.ts': "import { stored } from '#lib/features/site/name.server.ts';\nexport { stored };\n",
+    });
+    expect(status, output).toBe(1);
+    expect(output).toContain("Deep import into feature 'site': ../tests/acceptance/001-site/name.int.test imports '#lib/features/site/name.server.ts'");
   });
 });
