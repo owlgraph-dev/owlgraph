@@ -217,26 +217,15 @@ export async function getLocalGraph(pageId: string, user: SessionUser | null = n
   return { nodes, edges, focusId: center.id };
 }
 
-// Target id -> current path (no leading "/") for every page and document this
-// page links to, so rendered links survive a rename. Not viewer-scoped.
-export async function linkSlugMap(id: string): Promise<Record<string, string>> {
+// Target id -> current path (no leading "/") for the pages and documents this
+// page links to that `viewer` may read, so a rendered link survives a rename.
+// A target the viewer may not read is left out, as one that is gone is: its
+// link then carries no address (docs/architecture/routing.md, "The ID-vs-slug invariant").
+export async function linkSlugMap(id: string, viewer: SessionUser | null): Promise<Record<string, string>> {
   const rows = await db<{ id: string; path: string }[]>`
     select distinct n.id, case when ns.slug is not null then ns.slug || '/' || n.slug else n.slug end as path
     from edges l join nodes n on n.id = l.target_id ${db.unsafe(namespaceJoin('n'))}
-    where l.source_id = ${id}`;
-  const map: Record<string, string> = {};
-  for (const r of rows) map[r.id] = r.path;
-  return map;
-}
-
-// linkSlugMap for a share link: only targets an anonymous viewer could read,
-// so the hrefs leak no hidden namespace's slug. Kept a separate copy so the
-// one added predicate stays visible.
-export async function publicLinkSlugMap(id: string): Promise<Record<string, string>> {
-  const rows = await db<{ id: string; path: string }[]>`
-    select distinct n.id, case when ns.slug is not null then ns.slug || '/' || n.slug else n.slug end as path
-    from edges l join nodes n on n.id = l.target_id ${db.unsafe(namespaceJoin('n'))}
-    where l.source_id = ${id} and ${readableNodes(null, 'n')}`;
+    where l.source_id = ${id} and ${readableNodes(viewer, 'n')}`;
   const map: Record<string, string> = {};
   for (const r of rows) map[r.id] = r.path;
   return map;

@@ -330,6 +330,21 @@ reads nothing of what is in it. An agent embeds only a node its owning user
 may read (`append_block` refuses the rest), and what it embedded is pruned for
 every reader like anyone's.
 
+## What a link shows
+
+A link to another node — a page or document link in a run of text, a quick
+link — leads to the node's current address only for a reader who may read
+the node. For any other reader it is shown as a link to a node that does not
+exist: it carries no address, since an address names the node and its
+namespace ([routing.md](routing.md#the-id-vs-slug-invariant)). That holds at
+the page's address, through a share link, for an agent reading the page and
+in the editor's preview of a block. The link's text is its author's and is
+shown as written.
+
+An agent links only to a node its owning user may read. Any other target is
+as one that does not exist: a link to it in a run of text stays the text it
+was, and a quick link to it is refused as not found.
+
 ## Enforcement in practice
 
 The MCP server (`src/mcp/server.ts`) applies exactly the same checks as the

@@ -526,7 +526,9 @@ export async function deletePage(id: string): Promise<boolean> {
   return deleteNodeTx(db, id);
 }
 
-// For buildNode's quick link and link denormalization.
+// For buildNode's quick link and link denormalization, when the caller reads
+// as no one in particular (the seed, a script); a writer's own resolvers
+// replace them (WriterRefs).
 const blockRefs: BlockRefResolvers = {
   resolvePage: async (id) => {
     const p = await getPage(id);
@@ -538,8 +540,12 @@ const blockRefs: BlockRefResolvers = {
   },
 };
 
-/** What an embedding or plugin block may show, read as the writer; without them such a block is refused. */
-export type WriterRefs = Pick<BlockRefResolvers, 'resolveEmbedTarget' | 'embedKindOf' | 'pluginHost'>;
+/**
+ * What a block may link to, embed or show, read as the writer. Without the
+ * link resolvers a link's target is looked up whoever may read it; without the
+ * others an embedding or plugin block is refused.
+ */
+export type WriterRefs = Partial<Pick<BlockRefResolvers, 'resolvePage' | 'resolveDocument'>> & Pick<BlockRefResolvers, 'resolveEmbedTarget' | 'embedKindOf' | 'pluginHost'>;
 
 export async function appendBlock(id: string, input: BlockInput, writer: WriterRefs = {}): Promise<string> {
   const node = await buildNode(input, { ...blockRefs, ...writer }); // before the lock

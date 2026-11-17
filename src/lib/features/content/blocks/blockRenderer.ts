@@ -36,10 +36,10 @@ export interface RenderContext {
   /** id -> class for this scope's named styles (docs/architecture/custom-styles.md). */
   customStyles: CustomStyleClasses;
   /**
-   * A page or document id's current href. `cachedSlug` is the slug stored on
-   * the node; the walker decides whether it may serve as a fallback.
+   * A page or document id's current href for this reader, or `#` for a node
+   * that is gone or that this reader may not read.
    */
-  nodeHref(targetId: string | null | undefined, cachedSlug?: string): string;
+  nodeHref(targetId: string | null | undefined): string;
   /** Resolved query-block results for this page, keyed by blockId. */
   queryResults: Record<string, QueryBlockResult>;
   /**

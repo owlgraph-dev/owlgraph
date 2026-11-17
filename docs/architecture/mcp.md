@@ -89,6 +89,13 @@ by zod at the tool's boundary and mapped to the page's nodes on the server
   field, how a page with columns is written — and each plugin's paragraph
   after the core's.
 
+**Linking to a node.** A link in a run of text (`[[pageId|label]]`,
+`[[doc:id|label]]`) and a quick link name their target by id, and the target
+is read as the agent writing. One its user may not read is as one that does
+not exist: the link in the text stays the text it was, the quick link is
+refused as not found, and neither takes the node's title
+([authorization.md](authorization.md#what-a-link-shows)).
+
 **Embedding a node.** `collection {nodeId, …}` embeds a curated collection's
 members and `document {nodeId, …}` an uploaded or linked document
 ([blocks/node-embeds.md](blocks/node-embeds.md#collection-and-document-blocks)). The node is read as

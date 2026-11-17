@@ -9,7 +9,7 @@ import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
 import type { Logger } from '#lib/platform/logger.server.ts';
 import type { SessionUser } from '#lib/features/auth/index.ts';
 import type { PageRow } from '#lib/features/pages/server.ts';
-import { linkSlugMap, publicLinkSlugMap } from '#lib/features/graph/server.ts';
+import { linkSlugMap } from '#lib/features/graph/server.ts';
 import { renderDoc, getCustomFontEntries, getParagraphStyles, getContentSchemeDefault } from '#lib/features/content/server.ts';
 import {
   collectAssetIds,
@@ -69,10 +69,9 @@ export async function renderPage(
   opts: { previewScheme?: 'light' | 'dark' | null } = {}
 ): Promise<RenderedPage> {
   const user = reader.kind === 'share' ? null : reader.user;
-  // Through a share link, links resolve only to what an anonymous reader may
-  // follow, never to a cached slug (trustCachedSlug), which could name a hidden
-  // namespace's page.
-  const slugMap = reader.kind === 'share' ? await publicLinkSlugMap(page.id) : await linkSlugMap(page.id);
+  // A link resolves only to what this reader may read: through a share link,
+  // what an anonymous reader may.
+  const slugMap = await linkSlugMap(page.id, user);
   // Query output is content, so it renders in the content language (docs/architecture/languages.md).
   const queryResults = await withContentLocale(page.locale, () => resolveQueryBlocks(page.doc, user, page.id));
   const [customStacks, paragraphStyles, siteScheme, styleRefs, siteTheme, assetSizes, pluginBlockData, collectionBlocks, documentBlocks] = await Promise.all([
@@ -107,7 +106,6 @@ export async function renderPage(
   const afterRuleId = reader.kind === 'share' ? styles.add(pageCanvasOverrides({ layout: settings.layout }, rhythm)) : '';
   const { html, preloads } = await withContentLocale(page.locale, () =>
     renderDoc(page.doc, slugMap, queryResults, {
-      trustCachedSlug: reader.kind !== 'share',
       typographyRegistry: { customStacks, paragraphStyles },
       customStyles: customStyleClassMap(styleRefs),
       blockDefaults,

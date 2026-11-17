@@ -12,8 +12,11 @@ import { quickLinkCardOverrides, quickLinkCardProps, quickLinkWrapper } from './
 import QuickLinkCard from './QuickLinkCard.svelte';
 
 export const renderQuickLinkBlock: BlockRenderer = (node, ctx) => {
-  const a = attrsOf<QuickLinkAttrs>(node);
-  const { href, external } = quickLinkTarget(a, (id, slug) => ctx.nodeHref(id, slug));
+  const stored = attrsOf<QuickLinkAttrs>(node);
+  const { href, external } = quickLinkTarget(stored, (id) => ctx.nodeHref(id));
+  // The slug stored with the card stands in for a label it lacks. A target
+  // this reader has no address for gives none that way either.
+  const a = href === '#' && stored?.targetSlug ? { ...stored, targetSlug: '' } : stored;
   // The card element's rule id is one of its props, so the hydrated tree
   // carries the same data-b the server rendered.
   const props = quickLinkCardProps(a, href, external, true, ctx.styles.add(quickLinkCardOverrides(a, ctx.registry, ctx.blockDefaults)));

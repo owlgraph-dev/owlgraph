@@ -24,24 +24,27 @@ describe('a node the agent’s user may not read, asked for through a tool', () 
   describe('a link the agent writes', () => {
     /** A page of the agent's own, as it reads it back after linking to a page its user may not read and to an id no page has. */
     let page: string;
+    /** What a quick link to each is answered, the id the agent gave left out. */
+    const card = { unreadable: '', missing: '' };
     beforeAll(async () => {
       const agent = await connectAs('editorC');
       const made = await agent.callTool({ name: 'create_page', arguments: { title: 'A page that links' } });
       const pageId = /Created page (\S+)/.exec(textOf(made))![1];
       const linked = await agent.callTool({ name: 'append_block', arguments: { pageId, block: { kind: 'paragraph', text: `See [[${seed.restrictedId}]] and [[${MISSING}]].` } } });
       expect(linked.isError).toBeFalsy();
+      const quickLinkTo = async (targetPageId: string) =>
+        textOf(await agent.callTool({ name: 'append_block', arguments: { pageId, block: { kind: 'quickLink', targetPageId } } })).replaceAll(targetPageId, '<id>');
+      Object.assign(card, { unreadable: await quickLinkTo(seed.restrictedId), missing: await quickLinkTo(MISSING) });
       page = textOf(await agent.callTool({ name: 'get_page', arguments: { pageId } }));
-      // A link to an id no page has stays the text it was.
+      // To an id no page has, a link in the text stays the text it was and a quick link is refused.
       expect(page).toContain(`[[${MISSING}]]`);
+      expect(card.missing).toContain('not found');
     });
 
-    // Today a link's target is looked up without asking whether the agent's
-    // user may read it: the link is made, and with no label of its own it
-    // takes the page's title (pages/pages.server.ts,
-    // content/blocks/blockInput.server.ts).
-    it.fails('002.5 an agent’s link to a page its user may not read is taken as a link to one that does not exist', () => {
+    it('002.5 an agent’s link to a page its user may not read is taken as a link to one that does not exist', () => {
       expect(page).not.toContain(seed.restrictedTitle);
       expect(page).toContain(`[[${seed.restrictedId}]]`);
+      expect(card.unreadable).toBe(card.missing);
     });
   });
 });

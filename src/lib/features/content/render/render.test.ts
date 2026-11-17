@@ -56,30 +56,34 @@ describe('renderDoc', () => {
     expect(renderDoc(d, {})).toContain('href="#"');
   });
 
-  // A cached slug must not reveal a target the viewer-scoped slug map omitted.
-  it('pageLink falls back to the cached targetSlug when absent from the map and trustCachedSlug defaults true', () => {
+  // The slug map holds what this reader may read; the slug stored with a link
+  // must not reveal a target the map leaves out.
+  it('a pageLink absent from the slug map carries no address, whatever slug is stored with it', () => {
     const d = doc([para([txt('link', [{ type: 'pageLink', attrs: { targetPageId: 'missing', targetSlug: 'other-ns/secret' } }])])]);
-    expect(renderDoc(d, {})).toContain('href="/other-ns/secret"');
-  });
-
-  it('pageLink ignores the cached targetSlug when trustCachedSlug is false, even though it is set', () => {
-    const d = doc([para([txt('link', [{ type: 'pageLink', attrs: { targetPageId: 'missing', targetSlug: 'other-ns/secret' } }])])]);
-    const html = renderDoc(d, {}, {}, { trustCachedSlug: false });
+    const html = renderDoc(d, {});
     expect(html).toContain('href="#"');
     expect(html).not.toContain('other-ns/secret');
-    expect(html).toContain('link'); // link text still renders, just the href is blocked
+    expect(html).toContain('link'); // the link's text still renders
   });
 
-  it('pageLink still resolves via the slug map when trustCachedSlug is false, if the target IS in the map', () => {
+  it('a pageLink in the slug map resolves to its current address, not to the slug stored with it', () => {
     const d = doc([para([txt('link', [{ type: 'pageLink', attrs: { targetPageId: 'p1', targetSlug: 'stale-cache' } }])])]);
-    const html = renderDoc(d, { p1: 'current-slug' }, {}, { trustCachedSlug: false });
+    const html = renderDoc(d, { p1: 'current-slug' });
     expect(html).toContain('href="/current-slug"');
+    expect(html).not.toContain('stale-cache');
   });
 
-  it('quick link to a page target: cached slug ignored when trustCachedSlug is false', () => {
-    const d = doc([{ type: 'quickLink', attrs: { refType: 'page', targetPageId: 'missing', targetSlug: 'other-ns/secret', label: 'See page' } }]);
-    const html = renderDoc(d, {}, {}, { trustCachedSlug: false });
-    expect(html).not.toContain('other-ns/secret');
+  it('a quick link to a page absent from the slug map shows no stored slug, as its address or in place of a label', () => {
+    const card = (label: string) => renderDoc(doc([{ type: 'quickLink', attrs: { refType: 'page', targetPageId: 'missing', targetSlug: 'other-ns/secret', label } }]), {});
+    expect(card('See page')).not.toContain('other-ns/secret');
+    expect(card('See page')).toContain('See page');
+    expect(card('')).not.toContain('other-ns/secret');
+  });
+
+  it('a quick link without a label shows the slug stored with it when its page is in the slug map', () => {
+    const html = renderDoc(doc([{ type: 'quickLink', attrs: { refType: 'page', targetPageId: 'p1', targetSlug: 'my-page', label: '' } }]), { p1: 'my-page' });
+    expect(html).toContain('href="/my-page"');
+    expect(html).toContain('>my-page<');
   });
 
   it('resolves a custom font family on a heading via opts.typographyRegistry', () => {

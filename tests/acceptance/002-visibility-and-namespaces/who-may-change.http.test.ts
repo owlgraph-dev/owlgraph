@@ -53,7 +53,7 @@ describe.skipIf(app.skipped)('namespaces, as the app serves them', () => {
     const NOT_MEMBER: CallOptions = { as: 'editorC' };
     const MEMBER: CallOptions = { as: 'editorB' };
     let namespaceId: string;
-    /** A public page linking to a page in the restricted namespace, as a visitor is sent it. */
+    /** The address of a public page that links to a page in the restricted namespace. */
     let linking: string;
 
     beforeAll(async () => {
@@ -64,13 +64,11 @@ describe.skipIf(app.skipped)('namespaces, as the app serves them', () => {
       const doc = { type: 'doc', content: [{ type: 'paragraph', attrs: { blockId: 'links' }, content: [{ type: 'text', text: 'See ' }, link] }] };
       // A new page inherits the default namespace, which the suite's seed makes public.
       const page = await createPage(served, 'admin', { title: 'A page anyone reads', doc });
-      const res = await call(served, `/${page.slug}`, VISITOR);
-      expect(res.status).toBe(200);
-      linking = await res.text();
-      expect(linking).toContain('the minutes');
+      linking = `/${page.slug}`;
+      expect(await (await call(served, linking, VISITOR)).text()).toContain('the minutes');
     });
 
-    it('002.15 a restricted namespace is in nothing a non-member’s browser receives — not a page’s namespace list, not the slugs it routes by, not the search page — and in what its member receives', async () => {
+    it('002.15 a restricted namespace is in nothing a non-member’s browser receives — not a page’s namespace list, not the slugs it routes by, not the search page, not a link into it — and in what its member receives', async () => {
       const own = await createPage(served, 'editorC', { title: 'An editor’s own page' });
       /** Whether what the app sends for `path` names the namespace, by its name or its slug. */
       const named = async (path: string, asker: CallOptions) => {
@@ -85,15 +83,10 @@ describe.skipIf(app.skipped)('namespaces, as the app serves them', () => {
       }
       // The editor's move picker, on a page of the non-member's own.
       expect(await named(`/${own.slug}/edit`, NOT_MEMBER)).toBe(false);
+      // A public page that links to a page in the namespace.
+      for (const asker of [VISITOR, NOT_MEMBER]) expect(await named(linking, asker), `the linking page as ${asker.as ?? 'a visitor'}`).toBe(false);
 
-      for (const path of ['/', '/search', '/api/namespaces/slugs']) expect(await named(path, MEMBER), `${path} as its member`).toBe(true);
-    });
-
-    // Today a link's address is resolved without regard to the reader, so a
-    // visitor's page carries /quartz-council/<slug>; only a share link's
-    // reader is spared it (graph/graph.server.ts, linkSlugMap).
-    it.fails('002.15 a link to a node in a namespace its reader cannot reach names that namespace nowhere on the page', () => {
-      expect(linking).not.toContain(hidden.slug);
+      for (const path of ['/', '/search', '/api/namespaces/slugs', linking]) expect(await named(path, MEMBER), `${path} as its member`).toBe(true);
     });
   });
 });

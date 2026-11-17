@@ -11,6 +11,8 @@ import { blockShape, leafBlockShape, cellStyleShape, pageSettingsShape, spacingS
 import {
   listPagesForUser,
   createPage,
+  getPage,
+  userCanReadPage,
   listBlocks,
   appendBlock,
   updateBlock,
@@ -60,9 +62,18 @@ const EMBEDS_DESCRIPTION =
   "COLLECTIONS AND DOCUMENTS: kind:'collection' {nodeId, limit?, density?, showLabels?, columns?} embeds a curated collection's members in their order (find ids with get_collection or search) — at most `limit` (default 20) with a link to the collection's own page for the rest; kind:'document' {nodeId, variant?: 'row'|'card', titleMode?, preview?, showMeta?, showDownload?, showNodeLink?} embeds an uploaded or linked document (list_documents, search). Both take placement, surface, spacing and typography like a quick link. Every reader sees what THEY may read: a member they may not read is left out, and a collection or document they may not read renders nothing at all — whoever embedded it. A page is not found by what it embeds; the collection and the document are. Nodes an integration keeps have kinds of their own:";
 
 export function registerPageTools({ user, log, tool, pageTool }: ToolRegistry): void {
-  // Read as the agent: an embedding block shows only a node the agent may read,
-  // and a plugin's block reads through the plugin's host as the agent.
+  // Read as the agent: a link or an embedding block reaches only a node the
+  // agent may read — any other is as one that does not exist — and a plugin's
+  // block reads through the plugin's host as the agent.
   const writer: WriterRefs = {
+    async resolvePage(id) {
+      const page = await getPage(id);
+      return page && (await userCanReadPage(user, page)) ? { id: page.id, slug: page.slug, title: page.title } : null;
+    },
+    async resolveDocument(id) {
+      const document = await getDocument(id);
+      return document && (await userCanReadDocument(user, document)) ? { id: document.id, title: document.title } : null;
+    },
     embedKindOf(plugin, family) {
       const kind = EMBED_KINDS.find((k) => k.family === family && k.source === plugin);
       return kind ? pluginInputKindOfBlock(kind.kind) : null;
