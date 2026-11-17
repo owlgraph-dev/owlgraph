@@ -97,7 +97,7 @@ export function registerDocumentTools({ user, log, tool, documentTool }: ToolReg
       inputSchema: {
         title: z.string().min(1).max(500),
         url: z.string().max(MAX_EXTERNAL_URL_LENGTH + 100),
-        namespaceId: z.string().uuid().optional(),
+        namespaceId: z.guid().optional(),
         locale: z.string().optional().describe("The language the content is in — an enabled language code such as 'de' or 'en' (not the interface language); it decides how full-text search indexes the content. Default: the site default language."),
       },
     },

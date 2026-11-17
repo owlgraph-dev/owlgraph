@@ -263,12 +263,15 @@ export function definePluginEditor<M extends PluginManifest>(_manifest: M, edito
 
 // --- what an agent may author ------------------------------------------------
 
+/** A block input's schema: an object whose `kind` names it in the union of block inputs. */
+export type KindedShape = z.ZodObject<{ kind: z.ZodType } & z.ZodRawShape>;
+
 /**
  * One of the plugin's block kinds as an agent authors it (append_block, update_block, set_cell;
  * docs/architecture/mcp.md): the shape the MCP tools check, and the node it becomes. `kind` joins the core's
  * block taxonomy, so it must be a literal no other block input uses.
  */
-export interface PluginBlockInput<S extends z.ZodDiscriminatedUnionOption<'kind'> = z.ZodDiscriminatedUnionOption<'kind'>> {
+export interface PluginBlockInput<S extends KindedShape = KindedShape> {
   /** The manifest's block kind it becomes, so the core can name the agent's kind for a stored node. */
   block: string;
   shape: S;

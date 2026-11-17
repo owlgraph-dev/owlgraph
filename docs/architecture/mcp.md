@@ -22,9 +22,7 @@ unexpected failure (`internal`, 500) — are the app's error body
 
 The 100 KB holds any tool call. The body is held whole and parsed before the
 token is read, so bytes an agent uploads take a route of their own rather than
-a larger limit. Nor does the limit grow before zod is at 4.6.6 or later: an
-older zod collects an issue for every invalid element of an array, without
-bound (GHSA-mrhx-c7xc-m3w5).
+a larger limit.
 
 The server's information names its version and, as `websiteUrl` and in its
 description, where the source code of the running version is
@@ -46,6 +44,25 @@ and `src/mcp/server.ts` composes them; the full set is the one
 | collections | `get_collection` ([semantic-layer.md](semantic-layer.md#collections)) |
 | query | `graphql` ([dynamic-rendering.md](dynamic-rendering.md)) |
 | site | `list_paragraph_styles`, `list_custom_styles`, `list_brand_colors`, `list_page_layout_presets` |
+
+## The tools' schemas
+
+A tool's arguments are a zod shape, which the SDK hands an agent as JSON
+Schema (draft-07) in `tools/list`. zod writes a shape out in full wherever it
+is used, so a shape a tool uses more than once carries an `id`
+(`.meta({ id })`): the schema names it once, under `definitions`, and refers to
+it. The capability shapes have one (`content/capabilities/inputShapes.server.ts`),
+and so do the cell style and the union of leaf blocks
+(`content/blocks/blockInputSchema.server.ts`), which the union of all blocks
+takes as one member rather than repeating its blocks. A description given
+where a shape is used stays at that use. Without the ids, `append_block`'s
+schema alone would be about ten times as long; `src/mcp/mcp.int.test.ts` fails
+when a part of a schema of 1 KB or more repeats.
+
+An id names one shape: two shapes with the same id in one tool's schema make
+`tools/list` fail. An id an agent passes is checked as `z.guid()` — any
+8-4-4-4-12 hex, as Postgres reads a `uuid` — not as `z.uuid()`, which also
+wants an RFC version.
 
 ## Writing a page
 

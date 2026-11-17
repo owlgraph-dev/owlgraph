@@ -13,9 +13,9 @@ import { SUPPORTED_LOCALES, isSupportedLocale, siteDefaultLocale } from './siteL
 // Trimmed, blanks dropped. A disabled language's translation is kept; a key
 // outside the catalogues is refused, since it could never be edited or resolved.
 const localizedTextSchema = z
-  .record(z.string())
+  .record(z.string(), z.string())
   .refine((value) => Object.keys(value).every(isSupportedLocale), {
-    message: `Translations may only use the supported languages (${SUPPORTED_LOCALES.join(', ')}).`,
+    error: `Translations may only use the supported languages (${SUPPORTED_LOCALES.join(', ')}).`,
   })
   .transform((value): LocalizedText => {
     const out: LocalizedText = {};

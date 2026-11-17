@@ -15,7 +15,7 @@ import { FILE_BLOCK } from './blocks/file/model';
 
 const folderShape = z.object({
   kind: z.literal('nextcloud-folder'),
-  collectionId: z.string().uuid().describe('A Nextcloud collection (get_collection names its plugin "nextcloud"; search finds it).'),
+  collectionId: z.guid().describe('A Nextcloud collection (get_collection names its plugin "nextcloud"; search finds it).'),
   startPath: z.string().optional().describe('The folder inside the collection it starts at, relative to its root ("Q3/Reports"); omit for the root.'),
   density: z.enum(['normal', 'compact']).optional(),
   sortKey: z.enum(['name', 'modified', 'size']).optional(),
@@ -29,7 +29,7 @@ const folderShape = z.object({
 
 const fileShape = z.object({
   kind: z.literal('nextcloud-file'),
-  documentId: z.string().uuid().describe('A Nextcloud document (list_documents names its plugin "nextcloud"; search finds it).'),
+  documentId: z.guid().describe('A Nextcloud document (list_documents names its plugin "nextcloud"; search finds it).'),
   variant: z.enum(['row', 'card']).optional(),
   titleMode: z.enum(['auto', 'node', 'filename']).optional(),
   preview: z.enum(['auto', 'none']).optional(),
