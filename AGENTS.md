@@ -17,9 +17,11 @@ Operational guidance for coding agents working in this repository. This file is 
 
 ## Specs and decisions
 
-- **Start from the spec.** For a feature with a spec in `docs/features/`, read it, the decision records it links (`docs/adr/`) and `docs/architecture/overview.md` before planning the implementation. The spec says what and why; you work out how.
+- **Start from the spec.** A spec in `docs/features/` states what one capability must do, for as long as the capability exists (`docs/adr/0018-a-spec-is-the-standing-statement-of-a-capability.md`). Before planning work on a capability that has one, read it, the decision records it links (`docs/adr/`) and `docs/architecture/overview.md`. The spec says what and why; you work out how.
 - **Don't diverge silently.** If the code would contradict a spec or an accepted decision record, stop and say so.
-- **Close the loop.** Set the spec's `status` when you start (`in-progress`) and when you finish (`implemented`), and record every deviation in its *Implementation notes* — the only parts of a spec you edit. Your implementation plan is not committed; its summary goes into the pull request.
+- **Close the loop.** Set the spec's `status` when you start (`in-progress`) and when you finish (`implemented`), record every deviation in its *Implementation notes*, and delete a note that no longer holds — the only parts of a spec you edit. Your implementation plan is not committed; its summary goes into the pull request.
+- **Criteria are changed on purpose, never to fit the code.** A change in behaviour arrives as a changed acceptance criterion in the spec you are handed. If your change would make a criterion untrue and the spec does not say so, stop and say so. A criterion's number is never reused.
+- **An acceptance test names its criterion.** A test that proves a criterion starts its name with the criterion's id, `NNN.n` (`'002.5 a node the asker may not read is answered as not found'`), at the lowest layer that can observe it.
 - **Decision records are read-only.** A decision that changes gets a new record that supersedes the old one; the old one changes only its status.
 - **The present follows the code.** A change that alters what `docs/architecture/` or `docs/guides/` describe updates them in the same change.
 
@@ -49,7 +51,7 @@ If a command isn't obvious, check `package.json` and the compose/scripts before 
 - **SQL-first migrations**, tracked and forward-only.
 - **Consistent imports / file layout** — follow the existing module and relative-import structure.
 - **No secrets in code or images** — configuration comes from env (see `.env.example`).
-- **Docs by time.** `docs/architecture/` and `docs/guides/` describe what is and why — timeless, wiki-style, matching `main`: no "implemented in slice N", no changelog notes. Why a decision was taken and what was rejected is a decision record in `docs/adr/`; planned work is a spec in `docs/features/`. How the work went — slices, steps, timelines — belongs nowhere in `/docs`, nor here. The conventions are in [`docs/README.md`](./docs/README.md#how-these-docs-are-kept).
+- **Docs by time.** `docs/architecture/` and `docs/guides/` describe what is and why — timeless, wiki-style, matching `main`: no "implemented in slice N", no changelog notes. Why a decision was taken and what was rejected is a decision record in `docs/adr/`; what a capability must do, built or planned, is a spec in `docs/features/`. How the work went — slices, steps, timelines — belongs nowhere in `/docs`, nor here. The conventions are in [`docs/README.md`](./docs/README.md#how-these-docs-are-kept).
 
 ## Where things are documented
 
@@ -58,6 +60,6 @@ If a command isn't obvious, check `package.json` and the compose/scripts before 
 - `docs/architecture/` — how the system is, one page per concept;
 - `docs/guides/` — how to run, test and extend it;
 - `docs/adr/` — why it is that way, one record per decision;
-- `docs/features/` — what is planned, one spec per feature.
+- `docs/features/` — what owlgraph must do, one spec per capability, built or planned.
 
 The terms that mean something particular here are in `docs/glossary.md`. A new page gets its line in the index. A durable concept goes on its page in `docs/architecture/`; a decision you had to take goes into the spec's implementation notes, or is raised for a decision record — not here. Keep this file short: **operate here, learn there.**

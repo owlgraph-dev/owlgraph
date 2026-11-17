@@ -10,7 +10,8 @@ The pages live in four folders:
 - [`architecture/`](architecture/) — how the system is, one page per concept;
 - [`guides/`](guides/) — how to run, test and extend it;
 - [`adr/`](adr/) — why it is that way, one record per decision;
-- [`features/`](features/) — what is planned, one spec per feature.
+- [`features/`](features/) — what owlgraph must do, one spec per capability,
+  built or planned.
 
 [How these docs are kept](#how-these-docs-are-kept) is at the end.
 
@@ -125,15 +126,17 @@ The pages live in four folders:
 - [Decision records](adr/) — why owlgraph is the way it is: the decisions an
   outsider would otherwise reopen, each with its context, its consequences and
   the alternatives weighed against it.
-- [Feature specs](features/) — what is planned: the problem, the scope, what
-  is left out on purpose, and how to tell it is done.
+- [Feature specs](features/) — what each capability must do: the problem, the
+  scope, what is left out on purpose, and the acceptance criteria its tests
+  are named after.
 
 ## How these docs are kept
 
-- **The present, the past and the future have their own folders.**
+- **How it is, why, and what it must do have their own folders.**
   `architecture/` and `guides/` describe what is, in the present tense, and
   always match `main`: no process, no history, no changelog, no "used to".
-  `adr/` records why. `features/` holds what is planned.
+  `adr/` records why. `features/` holds what each capability must do, whether
+  it is built yet or not.
 - **One home for each fact.** A page is linked, never copied. A design's
   reason is a paragraph on its page, which links the decision record; the
   record keeps the context the decision was taken in, the alternatives and
@@ -142,25 +145,36 @@ The pages live in four folders:
 - **Names.** File names are kebab-case. A decision record is
   `adr/NNNN-<decision>.md`, a spec `features/NNN-<feature>.md`, each numbered
   in its own sequence. A new page gets its line in this index.
+  A spec's number identifies it and says nothing about its age; criterion 5
+  of spec 002 is `002.5`.
 - **Frontmatter.** A decision record and a spec start with YAML frontmatter,
   so that a reader or an agent can filter without reading the whole file:
   - a record: `status` (`proposed`, `accepted` or `superseded`), `date`, and
     `supersedes` or `superseded-by` where they apply;
   - a spec: `status` (`draft`, `ready`, `in-progress`, `implemented` or
-    `superseded`), `issue`, `adrs` (the records it relies on) and `updated`.
+    `superseded`), `issue` (the change in progress, empty when there is
+    none), `adrs` (the records it relies on) and `updated`.
 
   Each folder has its template: [a record's](adr/_template.md),
   [a spec's](features/_template.md).
 - **An accepted decision record is not edited.** A decision that changes gets
   a new record that supersedes it; the old one changes only its status.
-- **A spec's life.** It is written as a `draft` and handed over as `ready`.
-  It says what and why, with its constraints; how is left to the
-  implementation, which sets it `in-progress`, then `implemented`, and records
-  every deviation under *Implementation notes*. The change that implements it
-  updates `architecture/` and `guides/` to match. An implemented spec is
-  history, and the next round of planning starts from its deviations. The
-  implementation plan itself is not committed; its summary goes into the pull
-  request.
+- **A spec's life**
+  ([decision 0018](adr/0018-a-spec-is-the-standing-statement-of-a-capability.md)).
+  A spec states what one capability must do, for as long as the capability
+  exists. It is written as a `draft` and handed over as `ready`. It says what
+  and why, with its constraints; how is left to the implementation, which
+  sets it `in-progress`, then `implemented`, and records every deviation
+  under *Implementation notes*. The change that implements it updates
+  `architecture/` and `guides/` to match.
+
+  A later change to the capability edits the same spec, in the pull request
+  that makes the change: the spec goes back to `in-progress` and returns to
+  `implemented`. Its acceptance criteria are numbered and a number is never
+  reused, since the tests that prove a criterion carry its id. A deviation
+  that no longer holds is deleted from the notes. `superseded` is for a
+  capability that is replaced. The implementation plan itself is not
+  committed; its summary goes into the pull request.
 - **Who writes what.** Planning writes the decision records and the specs.
   The implementation writes the code together with `architecture/` and
   `guides/`, and of a spec only its status and its implementation notes.
