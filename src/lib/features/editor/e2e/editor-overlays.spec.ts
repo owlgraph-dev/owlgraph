@@ -123,7 +123,7 @@ test.describe('editor overlay focus/Escape conventions (editorA)', () => {
     await expect(breadcrumb.getByRole('button', { name: 'Cell', exact: true })).toHaveAttribute('aria-current', 'true');
 
     const panel = blockSettings(page);
-    await panel.getByRole('button', { name: 'Background', exact: true }).click();
+    await panel.getByRole('button', { name: /^Background: / }).click();
     await expect(page.getByTitle('#2563eb')).toBeVisible();
     await page.keyboard.press('Escape');
 
