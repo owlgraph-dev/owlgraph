@@ -19,7 +19,6 @@ on:
       - package.json
       - package-lock.json
       - .npmrc
-      - svelte.config.js
       - vite.config.ts
       - tsconfig.json
       - tsconfig.tsx.json

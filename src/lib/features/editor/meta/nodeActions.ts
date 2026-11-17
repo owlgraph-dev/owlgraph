@@ -18,7 +18,7 @@ export function nodeActions(
     beforeDelete?: () => void;
     /** The namespaces the route loaded, read when the node moves. */
     namespaces: () => readonly { id: string; slug: string | null; isDefault: boolean }[];
-    goto: (href: string, opts?: { replaceState?: boolean; noScroll?: boolean; keepFocus?: boolean }) => Promise<void>;
+    goto: (href: string, opts?: { replace?: boolean; reset?: boolean }) => Promise<void>;
     refreshAll: () => Promise<void>;
   }
 ): NodeMetaActions {
@@ -33,7 +33,7 @@ export function nodeActions(
       row.slug = res.slug;
       // The URL is keyed by namespace and slug, so a refresh or a shared copy
       // must follow the rename.
-      if (slugChanged) await goto(editHref(), { replaceState: true, noScroll: true, keepFocus: true });
+      if (slugChanged) await goto(editHref(), { replace: true, reset: false });
       return res;
     },
     onSetTags: (tags) => client.setTags(tags),
@@ -72,7 +72,7 @@ export function nodeActions(
       const target = opts.namespaces().find((n) => n.id === namespaceId);
       row.namespace_id = namespaceId;
       row.namespace_slug = target?.isDefault ? null : (target?.slug ?? null);
-      await goto(editHref(), { replaceState: true, noScroll: true, keepFocus: true });
+      await goto(editHref(), { replace: true, reset: false });
       return res;
     },
     async onDelete() {

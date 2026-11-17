@@ -14,10 +14,10 @@
   const scheme = $derived(page.url.searchParams.get('scheme') === 'dark' ? 'dark' : 'light');
 
   function setScheme(next: 'light' | 'dark') {
-    const url = new URL(page.url);
+    const url = new URL(page.url.href);
     if (next === 'dark') url.searchParams.set('scheme', 'dark');
     else url.searchParams.delete('scheme');
-    goto(url, { replaceState: true, noScroll: true, keepFocus: true });
+    goto(url, { replace: true, reset: false });
   }
 </script>
 

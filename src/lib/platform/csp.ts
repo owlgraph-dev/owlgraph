@@ -37,7 +37,7 @@ export const HASHED_STYLE_ATTRIBUTES = [
   {
     // app.css carries the same rules, so it stays hidden if this string changes.
     what: "SvelteKit's route announcer",
-    source: 'node_modules/@sveltejs/kit/src/core/sync/write_root.js',
+    source: 'node_modules/@sveltejs/kit/src/runtime/components/root.svelte',
     style:
       'position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px',
     hash: 'sha256-S8qMpvofolR8Mpjy4kQvEm7m1q8clzU4dfDH0AmvZjo=',

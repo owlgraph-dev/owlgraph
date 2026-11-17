@@ -5,7 +5,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen } from 'vitest/browser';
-import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
+import type { ActionResult, SubmitFunction } from '$app/forms';
 import TypographyTokenCard from './TypographyTokenCard.svelte';
 
 type Post = { action: string | null; formData: FormData };
@@ -21,7 +21,7 @@ vi.mock('$app/forms', () => ({
       const action = new URL(form.action);
       forms.posts.push({ action: form.getAttribute('action'), formData });
       const after = await submit?.({ action, formData, formElement: form, controller: new AbortController(), submitter: event.submitter, cancel: () => {} });
-      const result: ActionResult = { type: 'success', status: 200 };
+      const result: ActionResult = { type: 'success', status: 200, location: action.pathname };
       if (typeof after === 'function') await after({ action, formData, formElement: form, result, update: async () => {} });
     }
     form.addEventListener('submit', onsubmit);

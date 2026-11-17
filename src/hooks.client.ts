@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import type { ClientInit } from '@sveltejs/kit';
+import type { ClientInit } from '@sveltejs/kit/hooks';
 import { setKnownNamespaceSlugs } from '$lib/features/namespaces';
 import { baseLocale, isLocale, overwriteGetLocale } from '$lib/paraglide/runtime';
 

@@ -75,8 +75,8 @@ COPY --from=build /app/build ./build
 # .dockerignore), which the MCP server and scripts import through tsx.
 COPY --from=build /app/src ./src
 COPY scripts ./scripts
-# tsx resolves `$lib/…` through this file (the app's tsconfig.json extends the
-# generated .svelte-kit/tsconfig.json, which is not shipped) — see the
+# tsx resolves `$lib/…` through this file (the app's tsconfig.json extends
+# $app/tsconfig, which `svelte-kit sync` generates and the image lacks) — see the
 # `--tsconfig tsconfig.tsx.json` in every compose command and npm script.
 COPY tsconfig.tsx.json ./tsconfig.tsx.json
 COPY migrations ./migrations

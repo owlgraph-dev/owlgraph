@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-// The namespace slugs the [namespace] params matcher (src/params/namespace.ts)
+// The namespace slugs the [namespace] params matcher (src/lib/features/namespaces/matcher.ts)
 // knows, on the server and in the browser alike, so no server-only imports. The
 // browser's copy is warmed before hydration (src/hooks.client.ts); a stale one
 // only picks the wrong route leaf, whose own load 404s.

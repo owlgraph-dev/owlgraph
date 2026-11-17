@@ -479,23 +479,26 @@ which are the ones with a cheap before-value to read.
 | event | level | fields | emitted at |
 |---|---|---|---|
 | `error.unhandled` | `error` | `errorClass`, `message`, `stack` | `handleError` in `hooks.server.ts`; the MCP request handler; `/api/health`'s DB failure |
-| `error.expected` | `info` for 404, `warn` otherwise | `status`, `errorClass` | `handleError`, by inspecting the status |
+| `error.expected` | `info` for 404, `warn` otherwise | `status`, `kind` (`framework`) | `handleError`, for SvelteKit's own refusals |
 
 There is **one error path**, and it is narrower than it looks. SvelteKit calls
-`handleError` for **unexpected** errors and for its own unmatched-route 404s —
-**not** for an expected error raised with `error(...)`. So the two dozen
-`throw error(404, …)` sites across the read/share/media/font adapters never
-reach it, by design.
+`handleError` for every error it catches, and says which `kind` it is.
+An expected error raised with `error(...)` (`app`) keeps the status and message
+it was raised with, and the hook logs nothing for it. So the two dozen
+`throw error(404, …)` sites across the read/share/media/font adapters add no
+line of their own, by design.
 
 That is fine, because they are already recorded: `http.request` carries the
 status of every request, and an authorization refusal carries its own
-`authz.denied` with the action and the resource. `error.expected` covers what
-is left — chiefly SvelteKit's own 404 for a path that matched no route at all.
+`authz.denied` with the action and the resource. `error.expected` covers
+SvelteKit's own refusals (`framework`) — chiefly its 404 for a path that
+matched no route at all. Everything else (`unknown`) is `error.unhandled`.
 Nothing is instrumented at the individual `throw` sites.
 
-`handleError` returns `{ message, id }` — the shape `App.Error` declares in
-`src/app.d.ts`. The message stays generic for unexpected errors; the id is the
-`reqId`, which `+error.svelte` shows as the error ID. Under `/api/` the hook
+`handleError` returns the shape `App.Error` declares in `src/app.d.ts`:
+nothing for an `error(...)`, the `id` for a refusal, and for an unhandled
+error a generic message with the `id`. The id is the `reqId`, which
+`+error.svelte` shows as the error ID. Under `/api/` the hook
 puts it in the API's error body, as `internal` with that `id`
 ([routing.md](routing.md#errors)).
 
