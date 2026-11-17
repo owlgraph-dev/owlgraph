@@ -4,33 +4,30 @@
 
 import { sveltekit } from '@sveltejs/kit/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
-import { defineConfig } from 'vite';
-import type { Plugin as EsbuildPlugin } from 'esbuild';
+import { defineConfig, type Rolldown } from 'vite';
 
 // postcss's package.json maps its node builtins to false for the browser.
-// Rollup honours that; Vite's dev optimizer doesn't, and its stand-in warns on
-// every read postcss makes at load. This applies the mapping to imports from
+// The build honours that; Vite's dev optimizer doesn't, and its stand-in warns
+// on every read postcss makes at load. This applies the mapping to imports from
 // inside postcss only, so any other package keeps the warning. Dev only.
-const honourPostcssBrowserField: EsbuildPlugin = {
+const POSTCSS_STUB = '\0postcss-browser-field:';
+const honourPostcssBrowserField: Rolldown.Plugin = {
   name: 'postcss-browser-field',
-  setup(build) {
-    const NODE_ONLY = /^(path|fs|url|source-map-js)$/;
-    const NAMESPACE = 'postcss-browser-field-stub';
+  resolveId(source, importer) {
+    if (!importer || !/^(path|fs|url|source-map-js)$/.test(source)) return null;
     // By path segment, for either separator and never a package named *-postcss.
-    const insidePostcss = (importer: string) => {
-      const segments = importer.split(/[^A-Za-z0-9_.-]+/);
-      return segments.some((segment, i) => segment === 'node_modules' && segments[i + 1] === 'postcss');
-    };
-    build.onResolve({ filter: NODE_ONLY }, (args) =>
-      insidePostcss(args.importer) ? { path: args.path, namespace: NAMESPACE } : null
-    );
-    // postcss only destructures these in the browser; a call would throw.
-    build.onLoad({ filter: /.*/, namespace: NAMESPACE }, () => ({ contents: 'module.exports = {};', loader: 'js' }));
+    const segments = importer.split(/[^A-Za-z0-9_.-]+/);
+    const insidePostcss = segments.some((segment, i) => segment === 'node_modules' && segments[i + 1] === 'postcss');
+    return insidePostcss ? POSTCSS_STUB + source : null;
+  },
+  // postcss only destructures these in the browser; a call would throw.
+  load(id) {
+    return id.startsWith(POSTCSS_STUB) ? { code: 'module.exports = {};', moduleType: 'js' } : null;
   },
 };
 
 export default defineConfig({
-  optimizeDeps: { esbuildOptions: { plugins: [honourPostcssBrowserField] } },
+  optimizeDeps: { rolldownOptions: { plugins: [honourPostcssBrowserField] } },
   plugins: [
     // Keep these the same as `npm run messages`' flags, which compile the
     // same output outside Vite on install.
