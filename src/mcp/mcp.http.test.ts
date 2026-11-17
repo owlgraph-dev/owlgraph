@@ -45,6 +45,28 @@ describe('the bearer token', () => {
   });
 });
 
+describe('the request body', () => {
+  const post = (body: string) =>
+    fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'x-forwarded-for': '10.4.0.1', authorization: `Bearer ${seed.tokens.editorA}` },
+      body,
+    });
+
+  it('one over 100 KB answers 413 too_large', async () => {
+    const call = JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'ping', params: { pad: 'x'.repeat(100 * 1024) } });
+    const res = await post(call);
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: { code: 'too_large', message: expect.any(String) } });
+  });
+
+  it('one that is not JSON answers 400 invalid_json', async () => {
+    const res = await post('{"jsonrpc": "2.0",');
+    expect(res.status).toBe(400);
+    expect(await res.json()).toMatchObject({ error: { code: 'invalid_json', message: expect.any(String) } });
+  });
+});
+
 describe('the rate limits', () => {
   it('the 31st request a minute from one address answers 429 with Retry-After, before any token is looked up', async () => {
     for (let i = 0; i < 30; i++) expect((await ping('10.2.0.1')).status).toBe(401);

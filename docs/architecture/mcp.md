@@ -15,9 +15,16 @@ agent learns nothing of what it may not see, not even that it is there — and a
 list of links leaves such a node out. Only a refusal by role ("Forbidden: your
 role … cannot …"), or of a write to a node it may read, says why. The
 server's own HTTP refusals — no token or one that names nobody
-(`token_required`, 401), too many requests (`rate_limited`, 429), an
+(`token_required`, 401), too many requests (`rate_limited`, 429), a body
+over 100 KB (`too_large`, 413) or not JSON (`invalid_json`, 400), an
 unexpected failure (`internal`, 500) — are the app's error body
 ([routing.md](routing.md#errors)).
+
+The 100 KB holds any tool call. The body is held whole and parsed before the
+token is read, so bytes an agent uploads take a route of their own rather than
+a larger limit. Nor does the limit grow before zod is at 4.6.6 or later: an
+older zod collects an issue for every invalid element of an array, without
+bound (GHSA-mrhx-c7xc-m3w5).
 
 The server's information names its version and, as `websiteUrl` and in its
 description, where the source code of the running version is
