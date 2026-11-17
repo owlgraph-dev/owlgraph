@@ -46,7 +46,7 @@ const leafBlocks = [
   ...PLUGIN_INPUT_SHAPES,
 ] as const;
 
-export const leafBlockShape = z.discriminatedUnion('kind', [...leafBlocks]);
+export const leafBlockShape = z.discriminatedUnion('kind', [...leafBlocks]).meta({ id: 'LeafBlock' });
 
 // Aligned to `cells`. stretch fills the cell both ways and overrides alignX/alignY.
 export const cellStyleShape = z.object({
@@ -56,10 +56,10 @@ export const cellStyleShape = z.object({
   alignX: z.enum(['start', 'center', 'end']).optional(),
   alignY: z.enum(['start', 'center', 'end']).optional(),
   stretch: z.boolean().optional(),
-});
+}).meta({ id: 'CellStyle' });
 
 export const blockShape = z.discriminatedUnion('kind', [
-  ...leafBlocks,
+  leafBlockShape,
   // Cells hold leaf blocks only: no nested layouts. columnWidths (relative
   // weights) wins over columns; rowHeights are px floors; cells are row-major.
   z.object({

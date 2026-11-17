@@ -88,6 +88,27 @@ describe('the tool surface', () => {
     }
   });
 
+  // zod writes a shape out at every use; one with an id is named once
+  // (docs/architecture/mcp.md, "The tools' schemas").
+  it('names a shape a tool uses more than once: no part of a schema of 1 KB or more repeats', async () => {
+    const { tools } = await (await connectAs('admin')).listTools();
+    for (const tool of tools) {
+      const seen = new Set<string>();
+      const repeated: string[] = [];
+      const walk = (node: unknown, path: string): void => {
+        if (!node || typeof node !== 'object') return;
+        const json = JSON.stringify(node);
+        if (!Array.isArray(node) && json.length >= 1024) {
+          if (seen.has(json)) repeated.push(path);
+          seen.add(json);
+        }
+        for (const [key, value] of Object.entries(node)) walk(value, `${path}/${key}`);
+      };
+      walk(tool.inputSchema, '');
+      expect(repeated, tool.name).toEqual([]);
+    }
+  });
+
   it('offers documents to read, search and add as a link, never to upload, share, change visibility or delete', async () => {
     const names = (await (await connectAs('admin')).listTools()).tools.map((t) => t.name);
     expect(names).toEqual(expect.arrayContaining(['list_documents', 'search', 'get_document', 'get_document_text', 'create_document_link']));

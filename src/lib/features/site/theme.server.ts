@@ -75,7 +75,7 @@ const storedThemeSchema = z.object({
     .optional(),
   appbar: z.object({ light: color.nullable().optional(), dark: color.nullable().optional() }).optional(),
   footer: z.object({ light: color.nullable().optional(), dark: color.nullable().optional() }).optional(),
-  logoDarkAssetId: z.string().uuid().nullable().optional(),
+  logoDarkAssetId: z.guid().nullable().optional(),
   blockDefaults: blockDefaultsSchema.optional(),
 });
 

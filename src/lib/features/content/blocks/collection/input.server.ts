@@ -15,8 +15,7 @@ import { COLLECTION_BLOCK, MAX_COLLECTION_LIMIT } from './model';
 export const collectionInputShape = z.object({
   kind: z.literal('collection'),
   nodeId: z
-    .string()
-    .uuid()
+    .guid()
     .describe(
       'A curated collection (get_collection, search). Each reader of the page sees the members they may read, in the collection’s order; a reader who may not read the collection sees nothing of it. A collection an integration mirrors has a block kind of its own — the error names it.'
     ),

@@ -97,7 +97,7 @@
     "svelte": "^5.57.3",
     "svelte-toolbelt": "^0.10.6",
     "tsx": "^4.23.15",
-    "zod": "^3.23.0"
+    "zod": "^4.6.7"
   },
   "overrides": {
     "sanitize-html": {

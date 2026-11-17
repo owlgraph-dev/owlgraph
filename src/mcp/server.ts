@@ -70,9 +70,7 @@ app.disable('x-powered-by');
 if (process.env.ADDRESS_HEADER) app.set('trust proxy', Number(process.env.XFF_DEPTH ?? 1));
 // The JSON-RPC body, held whole in memory and parsed before the token is read.
 // 100 KB holds any tool call; bytes an agent uploads take a route of their own,
-// not a larger limit here. Before it grows, zod 4.6.6 or later: an older zod
-// collects an issue for every invalid element of an array, without bound
-// (GHSA-mrhx-c7xc-m3w5).
+// not a larger limit here.
 app.use(express.json({ limit: '100kb' }));
 
 // A body over the limit, or not JSON, refused as the route refuses.

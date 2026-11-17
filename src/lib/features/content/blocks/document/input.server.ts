@@ -15,8 +15,7 @@ import { DOCUMENT_BLOCK } from './model';
 export const documentInputShape = z.object({
   kind: z.literal('document'),
   nodeId: z
-    .string()
-    .uuid()
+    .guid()
     .describe(
       'An uploaded or linked document (list_documents, search). A reader who may not read it sees nothing of it. A document an integration keeps has a block kind of its own — the error names it.'
     ),
