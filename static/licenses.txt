@@ -603,7 +603,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ------------------------------------------------------------------------------
-@hono/node-server@1.19.17 — MIT
+@hono/node-server@2.1.9 — MIT
 ------------------------------------------------------------------------------
 
 MIT License
@@ -7524,7 +7524,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------------------------
-hono@4.13.14 — MIT
+hono@4.13.19 — MIT
 ------------------------------------------------------------------------------
 
 MIT License
@@ -13662,7 +13662,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ------------------------------------------------------------------------------
-@sveltejs/adapter-node@5.5.7 — MIT
+@sveltejs/adapter-node@5.5.8 — MIT
 ------------------------------------------------------------------------------
 
 Copyright (c) 2020 [these people](https://github.com/sveltejs/kit/graphs/contributors)
