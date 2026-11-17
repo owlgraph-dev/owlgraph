@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import { Toaster } from '$lib/design-system';
 import { toaster } from '$lib/design-system/toast.svelte';
@@ -142,9 +142,9 @@ describe("a person's Nextcloud connection", () => {
     navigation.onInvalidate = () => view.rerender({ data: connectionsData(false) });
 
     const row = screen.getByRole('group', { name: 'Nextcloud' });
-    await expect.element(row).toHaveTextContent('Connected as Alice Example');
+    await expect.element(row).toMatchTextContent('Connected as Alice Example');
     await row.getByRole('button', { name: 'Disconnect' }).click();
-    await expect.element(row).toHaveTextContent('Not connected');
+    await expect.element(row).toMatchTextContent('Not connected');
     await expect.element(row.getByRole('button', { name: 'Connect Nextcloud' })).toBeVisible();
     await expect.element(row.getByText('security settings', { exact: false })).not.toBeInTheDocument();
     expect(calls).toEqual([{ method: 'DELETE', url: `/api/connections/${nextcloud.id}` }]);
@@ -153,9 +153,9 @@ describe("a person's Nextcloud connection", () => {
     // Nextcloud could not be asked: disconnected here all the same, with how to finish it there.
     remoteRevoked = false;
     await view.rerender({ data: connectionsData(true) });
-    await expect.element(row).toHaveTextContent('Connected as Alice Example');
+    await expect.element(row).toMatchTextContent('Connected as Alice Example');
     await row.getByRole('button', { name: 'Disconnect' }).click();
-    await expect.element(row).toHaveTextContent('Not connected');
+    await expect.element(row).toMatchTextContent('Not connected');
     await expect
       .element(row.getByText(`Disconnected here, but Nextcloud could not be asked to forget the access. Remove “${CLIENT}” in your Nextcloud account’s security settings.`))
       .toBeVisible();
@@ -173,7 +173,7 @@ describe("the Nextcloud settings page's people's connections", () => {
     await expect.element(screen.getByText('Active connections: 3')).toBeVisible();
     await screen.getByRole('button', { name: 'Disconnect everyone' }).click();
     const confirm = screen.getByRole('dialog', { name: 'Disconnect everyone?' });
-    await expect.element(confirm).toHaveTextContent('the service is asked to forget each access');
+    await expect.element(confirm).toMatchTextContent('the service is asked to forget each access');
     await confirm.getByRole('button', { name: 'Cancel' }).click();
     await expect.element(confirm).not.toBeInTheDocument();
     expect(forms.posts).toEqual([]);
@@ -185,7 +185,7 @@ describe("the Nextcloud settings page's people's connections", () => {
     // Removed here is not forgotten there: said so, never as a plain success.
     await expect
       .element(toasts())
-      .toHaveTextContent("Connections removed: 3. The service could not be asked to forget 1 of them — each stays valid there until removed in that account's security settings.");
+      .toMatchTextContent("Connections removed: 3. The service could not be asked to forget 1 of them — each stays valid there until removed in that account's security settings.");
     await expect.element(screen.getByText('Active connections: 0')).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Disconnect everyone' })).toBeDisabled();
   });
@@ -197,7 +197,7 @@ describe("the Nextcloud settings page's people's connections", () => {
 
     await screen.getByRole('button', { name: 'Disconnect everyone' }).click();
     await screen.getByRole('dialog', { name: 'Disconnect everyone?' }).getByRole('button', { name: 'Disconnect everyone' }).click();
-    await expect.element(toasts()).toHaveTextContent('Connections removed: 2');
-    await expect.element(toasts()).not.toHaveTextContent('could not be asked');
+    await expect.element(toasts()).toMatchTextContent('Connections removed: 2');
+    await expect.element(toasts()).not.toMatchTextContent('could not be asked');
   });
 });

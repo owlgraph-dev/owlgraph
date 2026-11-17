@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { createRawSnippet, getAllContexts, mount, tick, unmount, type Component } from 'svelte';
 import FieldRow from '../FieldRow.svelte';
 import Input from '../Input.svelte';
@@ -21,7 +21,7 @@ import DialogSpecimens from './sections/DialogSpecimens.svelte';
 // Each renders the playground's own specimens alone; what only the whole page
 // shows stays with the e2e lane (../e2e/playground.spec.ts).
 
-const specimen = (state: string) => screen.elementLocator(document.querySelector(`[data-specimen="${state}"]`)!);
+const specimen = (state: string) => screen.getByCSS(`[data-specimen="${state}"]`);
 const openLayers = () => document.querySelectorAll('[data-state="open"], [data-state="delayed-open"], [data-state="instant-open"]').length;
 const described = (el: Element) => (el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
 
@@ -155,7 +155,7 @@ describe('the toasts', () => {
     expect(shown()).toEqual(['Same message.', 'Queued message 1 of 5.', 'Queued message 2 of 5.']);
 
     // Hovered, the same three outlast their 5s; left, the queued ones take their turn.
-    await screen.elementLocator(document.querySelector('.ds-toaster .ds-toast')!).hover();
+    await screen.getByCSS('.ds-toaster .ds-toast').first().hover();
     await vi.advanceTimersByTimeAsync(6_000);
     expect(shown()).toEqual(['Same message.', 'Queued message 1 of 5.', 'Queued message 2 of 5.']);
     await specimen('danger').getByRole('button').hover();
@@ -195,7 +195,7 @@ describe('a command search', () => {
 
     const before = openLayers();
     await specimen('in-popover').getByRole('button', { name: 'Find' }).click();
-    const inner = screen.elementLocator(document.querySelector('[data-popover-content] [role="combobox"]')!);
+    const inner = screen.getByCSS('[data-popover-content] [role="combobox"]');
     await expect.element(inner).toHaveFocus();
     await userEvent.keyboard('road');
     await expect.element(inner).toHaveValue('road');
@@ -226,10 +226,10 @@ describe('a bottom sheet’s page', () => {
 
     await choose.click();
     await sheet.getByRole('button', { name: 'Green' }).click();
-    await expect.element(settings).toHaveTextContent('Colour: Green');
+    await expect.element(settings).toMatchTextContent('Colour: Green');
     await choose.click();
     await sheet.getByRole('button', { name: 'Back', exact: true }).click();
-    await expect.element(settings).toHaveTextContent('Colour: Green');
+    await expect.element(settings).toMatchTextContent('Colour: Green');
     await expect.element(choose).toHaveFocus();
     await userEvent.keyboard('{Escape}');
     await expect.element(screen.getByRole('dialog')).not.toBeInTheDocument();

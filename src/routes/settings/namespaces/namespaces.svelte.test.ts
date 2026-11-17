@@ -4,7 +4,7 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import NamespacesPage from './+page.svelte';
 import type { PageData } from './$types';
@@ -85,7 +85,7 @@ describe('the namespaces list', () => {
 
     const root = rowOf('(root)');
     await expect.element(root).toBeVisible();
-    await expect.element(root).toHaveTextContent('Default');
+    await expect.element(root).toMatchTextContent('Default');
     await expect.element(root.getByRole('button', { name: 'Edit' })).toBeVisible();
     await expect.element(root.getByRole('button', { name: 'Delete' })).not.toBeInTheDocument();
     await expect.element(rowOf('/project-a').getByRole('button', { name: 'Delete' })).toBeVisible();
@@ -104,7 +104,7 @@ describe('the Add namespace dialog', () => {
     await userEvent.fill(dialog.getByRole('textbox', { name: 'Name', exact: true }), made.name);
     await userEvent.fill(dialog.getByRole('textbox', { name: 'URL prefix', exact: true }), made.slug!);
     // The access picker is left alone: what an admin gets by not thinking about it.
-    await expect.element(dialog.getByRole('combobox', { name: 'Default access' })).toHaveTextContent('Internal — any signed-in user');
+    await expect.element(dialog.getByRole('combobox', { name: 'Default access' })).toMatchTextContent('Internal — any signed-in user');
     await dialog.getByRole('button', { name: 'Create namespace' }).click();
 
     await vi.waitFor(() => expect(forms.posts).toHaveLength(1));
@@ -112,7 +112,7 @@ describe('the Add namespace dialog', () => {
     expect(post.action).toBe('?/create');
     expect(Object.fromEntries(post.formData)).toEqual({ name: made.name, slug: made.slug, accessLevel: 'internal' });
     await expect.element(dialog).not.toBeInTheDocument();
-    await expect.element(rowOf(`/${made.slug}`)).toHaveTextContent('Internal');
+    await expect.element(rowOf(`/${made.slug}`)).toMatchTextContent('Internal');
   });
 });
 
@@ -124,7 +124,7 @@ describe('the Edit namespace dialog', () => {
     await rowOf('/team').getByRole('button', { name: 'Edit' }).click();
     const dialog = screen.getByRole('dialog', { name: 'Edit namespace' });
     const access = dialog.getByRole('combobox', { name: 'Default access' });
-    await expect.element(access).toHaveTextContent('Restricted');
+    await expect.element(access).toMatchTextContent('Restricted');
     await expect.element(dialog.getByText('pages and documents take', { exact: false })).not.toBeInTheDocument();
 
     await access.click();
@@ -172,7 +172,7 @@ describe('the Manage members dialog', () => {
     forms.applied = async () => view.rerender({ data: data([DEFAULT, team], { [team.id]: ['u-ada', 'u-cy'] }) });
 
     const manage = rowOf('/team').getByRole('button', { name: /^Manage members/ });
-    await expect.element(manage).toHaveTextContent('Manage members (1)');
+    await expect.element(manage).toMatchTextContent('Manage members (1)');
     await manage.click();
     const dialog = screen.getByRole('dialog', { name: 'Members of "Team"' });
     await expect.element(dialog.getByRole('checkbox', { name: 'Ada Admin' })).toBeChecked();
@@ -187,6 +187,6 @@ describe('the Manage members dialog', () => {
     expect(post.formData.get('id')).toBe(team.id);
     expect(post.formData.getAll('members')).toEqual(['u-ada', 'u-cy']);
     await expect.element(dialog).not.toBeInTheDocument();
-    await expect.element(rowOf('/team').getByRole('button', { name: /^Manage members/ })).toHaveTextContent('Manage members (2)');
+    await expect.element(rowOf('/team').getByRole('button', { name: /^Manage members/ })).toMatchTextContent('Manage members (2)');
   });
 });

@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { get } from 'svelte/store';
 import { searchOverlayOpen } from '../searchOverlayStore';
 import SearchOverlay from './SearchOverlay.svelte';

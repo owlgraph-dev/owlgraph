@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { HL_START, HL_STOP } from '../searchSnippet';
 import { searchOverlayOpen } from '../searchOverlayStore';
 import SearchOverlay from './SearchOverlay.svelte';
@@ -53,7 +53,7 @@ describe('the search overlay', () => {
       [link, 'Society annual census'],
     ] as const) {
       await expect.element(row).toMatchTextContent(/^\s*document/);
-      await expect.element(row).toHaveTextContent(rest);
+      await expect.element(row).toMatchTextContent(rest);
       expect(row.element().querySelector('mark')?.textContent?.toLowerCase()).toBe('heron');
     }
 

@@ -3,8 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { flushSync } from 'svelte';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { nodeMetaClient } from '$lib/features/nodes';
 import AccessControlPanel from './AccessControlPanel.svelte';
 import { stubFetch } from '$tests/component/fetch';
@@ -14,19 +15,27 @@ import { stubFetch } from '$tests/component/fetch';
 
 const PAGE_ID = 'p0000000-0000-4000-8000-000000000001';
 
-/** The panel as a page's editor mounts it: open, its actions the node client's. */
-async function panel(props: { visibility: string | null; namespaceAccessLevel: string; shareLinks?: { id: string; label: string; createdAt: string }[] }) {
+type Props = Parameters<typeof AccessControlPanel>[1];
+
+/**
+ * The panel as a page's editor mounts it: open, its actions the node client's.
+ * `set` changes props one at a time, as the route does; `rerender` would hand
+ * in a new object, which every prop reads as changed.
+ */
+async function panel(initial: { visibility: string | null; namespaceAccessLevel: string; shareLinks?: { id: string; label: string; createdAt: string }[] }) {
   const client = nodeMetaClient('pages', PAGE_ID);
-  const onClose = vi.fn(() => void view.rerender({ open: false }));
-  const view = await render(AccessControlPanel, {
+  const set = (next: Partial<Props>) => flushSync(() => void Object.assign(props, next));
+  const onClose = vi.fn(() => set({ open: false }));
+  const props: Props = $state({
     open: true,
-    ...props,
+    ...initial,
     onSetVisibility: (v: string | null) => client.setVisibility(v),
     onCreateShareLink: (label: string) => client.createShareLink(label),
     onRevokeShareLink: (id: string) => client.revokeShareLink(id),
     onClose,
   });
-  return { view, onClose, dialog: screen.getByRole('dialog', { name: 'Access control' }) };
+  await render(AccessControlPanel, props);
+  return { set, onClose, dialog: screen.getByRole('dialog', { name: 'Access control' }) };
 }
 
 afterEach(() => {
@@ -40,7 +49,7 @@ describe('the access level in a public namespace', () => {
     const { dialog, onClose } = await panel({ visibility: 'internal', namespaceAccessLevel: 'public' });
 
     const level = dialog.getByRole('combobox', { name: 'Who can view this page' });
-    await expect.element(level).toHaveTextContent('Internal — any signed-in user');
+    await expect.element(level).toMatchTextContent('Internal — any signed-in user');
     await level.click();
     const options = screen.getByRole('option');
     await vi.waitFor(() => expect(options.elements()).toHaveLength(3));
@@ -63,7 +72,7 @@ describe('the access level in a public namespace', () => {
   it('reads a stored Public as what it amounts to: the namespace’s level', async () => {
     stubFetch(() => undefined);
     const { dialog } = await panel({ visibility: 'public', namespaceAccessLevel: 'public' });
-    await expect.element(dialog.getByRole('combobox', { name: 'Who can view this page' })).toHaveTextContent('Same as namespace (public: anyone, even signed-out)');
+    await expect.element(dialog.getByRole('combobox', { name: 'Who can view this page' })).toMatchTextContent('Same as namespace (public: anyone, even signed-out)');
   });
 });
 
@@ -104,24 +113,24 @@ describe('the share links', () => {
 
   it('opened again, shows a link made before without its address', async () => {
     stubFetch(() => undefined);
-    const { view, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
+    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
     await expect.element(dialog.getByText(link.label, { exact: true })).toBeVisible();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).not.toBeInTheDocument();
     await expect.element(dialog.getByRole('button', { name: 'Revoke' })).toBeVisible();
-    await view.rerender({ open: false });
-    await view.rerender({ open: true });
+    set({ open: false });
+    set({ open: true });
     await expect.element(screen.getByRole('dialog', { name: 'Access control' }).getByText(link.label, { exact: true })).toBeVisible();
   });
 
   it('closed and opened again after a link was made, still lists that link, its address no longer shown', async () => {
     stubFetch((call) => (call.method === 'POST' && call.url === `/api/pages/${PAGE_ID}/share-links` ? Response.json(link, { status: 201 }) : undefined));
     // The route's list, which a create never reloads.
-    const { view, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
+    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
     await dialog.getByRole('button', { name: 'Create link' }).click();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).toBeVisible();
 
     await dialog.getByRole('button', { name: 'Cancel' }).click();
-    await view.rerender({ open: true });
+    set({ open: true });
     const again = screen.getByRole('dialog', { name: 'Access control' });
     await expect.element(again.getByRole('textbox', { name: 'Share links' })).not.toBeInTheDocument();
     await expect.element(again.getByText(link.label, { exact: true }), { timeout: 2000 }).toBeVisible();
@@ -129,16 +138,16 @@ describe('the share links', () => {
 
   it('keeps a new link’s address shown while its route reloads the list, and lists the link once', async () => {
     stubFetch((call) => (call.method === 'POST' && call.url === `/api/pages/${PAGE_ID}/share-links` ? Response.json(link, { status: 201 }) : undefined));
-    const { view, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
+    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
     await dialog.getByRole('button', { name: 'Create link' }).click();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).toBeVisible();
 
-    await view.rerender({ shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
+    set({ shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).toBeVisible();
     await expect.element(dialog.getByText(link.label, { exact: true })).toBeVisible();
 
     await dialog.getByRole('button', { name: 'Cancel' }).click();
-    await view.rerender({ open: true });
+    set({ open: true });
     const again = screen.getByRole('dialog', { name: 'Access control' });
     await expect.element(again.getByRole('textbox', { name: 'Share links' })).not.toBeInTheDocument();
     expect(again.getByText(link.label, { exact: true }).elements()).toHaveLength(1);

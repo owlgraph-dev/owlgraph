@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import type { JSONContent } from '@tiptap/core';
 import { createEditorCore, type EditorCore } from '../../core/editorCore.svelte';
 import { EditorOverlays } from '../overlays.svelte';
@@ -75,7 +75,7 @@ describe("the toolbar's property picker", () => {
     ]);
 
     await screen.getByRole('button', { name: 'Add semantic property' }).click();
-    await expect.element(screen.getByRole('combobox', { name: 'Property group' })).toHaveTextContent('Project');
+    await expect.element(screen.getByRole('combobox', { name: 'Property group' })).toMatchTextContent('Project');
   });
 
   it("refuses a query template's parameter name with a space, says why, and marks nothing", async () => {

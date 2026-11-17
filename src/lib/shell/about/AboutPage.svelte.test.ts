@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import AboutPage from './AboutPage.svelte';
 import type { InstallationInfo } from './types';
 
@@ -39,10 +39,10 @@ describe('the About page’s database schema', () => {
       adopts: { baseline: '0001_baseline.sql', replaced: 59 },
       refused: null,
     });
-    await expect.element(row).toHaveTextContent('Migrations applied: 59, the latest 0059_node_versions_node.sql');
-    await expect.element(row).toHaveTextContent('Behind this version');
-    await expect.element(row).toHaveTextContent('Not applied yet: 0001_baseline.sql');
-    await expect.element(row).toHaveTextContent('The next migrate records 0001_baseline.sql in place of 59 migrations, without running it');
+    await expect.element(row).toMatchTextContent('Migrations applied: 59, the latest 0059_node_versions_node.sql');
+    await expect.element(row).toMatchTextContent('Behind this version');
+    await expect.element(row).toMatchTextContent('Not applied yet: 0001_baseline.sql');
+    await expect.element(row).toMatchTextContent('The next migrate records 0001_baseline.sql in place of 59 migrations, without running it');
   });
 
   it('says that migrate refuses a database from before the baseline, and through which release it upgrades', async () => {
@@ -53,23 +53,23 @@ describe('the About page’s database schema', () => {
       adopts: null,
       refused: { cause: 'partial', baseline: '0001_baseline.sql', tag: 'pre-baseline' },
     });
-    await expect.element(row).toHaveTextContent('Cannot be migrated');
-    await expect.element(row).toHaveTextContent(
+    await expect.element(row).toMatchTextContent('Cannot be migrated');
+    await expect.element(row).toMatchTextContent(
       'Migrate refuses this database: it has applied only some of the migrations 0001_baseline.sql replaces. Upgrade through the release tagged pre-baseline first.'
     );
-    await expect.element(row).not.toHaveTextContent('Nothing waiting to be applied');
+    await expect.element(row).not.toMatchTextContent('Nothing waiting to be applied');
   });
 
   it('says that migrate refuses one whose records are not what the baseline replaces', async () => {
     const row = await renderSchema({ applied: 3, latest: '0003_c.sql', pending: [], adopts: null, refused: { cause: 'mismatch', baseline: '0001_baseline.sql', tag: 'pre-baseline' } });
-    await expect.element(row).toHaveTextContent('Cannot be migrated');
-    await expect.element(row).toHaveTextContent('what it records is not the migrations 0001_baseline.sql replaces');
+    await expect.element(row).toMatchTextContent('Cannot be migrated');
+    await expect.element(row).toMatchTextContent('what it records is not the migrations 0001_baseline.sql replaces');
   });
 
   it('says nothing waits on a database that is current', async () => {
     const row = await renderSchema(INSTALLATION.schema);
-    await expect.element(row).toHaveTextContent('Migrations applied: 1, the latest 0001_baseline.sql');
-    await expect.element(row).toHaveTextContent('Nothing waiting to be applied');
-    await expect.element(row).not.toHaveTextContent('Behind this version');
+    await expect.element(row).toMatchTextContent('Migrations applied: 1, the latest 0001_baseline.sql');
+    await expect.element(row).toMatchTextContent('Nothing waiting to be applied');
+    await expect.element(row).not.toMatchTextContent('Behind this version');
   });
 });

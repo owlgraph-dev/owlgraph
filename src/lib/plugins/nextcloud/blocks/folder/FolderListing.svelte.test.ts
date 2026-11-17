@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import FolderListing from './FolderListing.svelte';
 import { editingFor } from './editing';
 import { folderTexts } from './texts';
@@ -90,7 +90,7 @@ describe('the Nextcloud folder block in the editor', () => {
 
       const placeholder = screen.getByRole('status').filter({ hasText: said });
       await expect.element(placeholder).toBeVisible();
-      await expect.element(placeholder).toHaveTextContent('5 entries,');
+      await expect.element(placeholder).toMatchTextContent('5 entries,');
       const repair = placeholder.getByRole('link', { name: 'Reconnect the share' });
       await expect.element(repair).toHaveAttribute('href', `${COLLECTION_HREF}/edit`);
       await expect.element(repair).toHaveAttribute('target', '_blank');
@@ -162,7 +162,7 @@ describe('a folder read from each viewer’s own files', () => {
 
     const placeholder = screen.getByRole('status').filter({ hasText: 'Nextcloud no longer accepts your connection' });
     await expect.element(placeholder).toBeVisible();
-    await expect.element(placeholder).toHaveTextContent('Connect again to see this folder.');
+    await expect.element(placeholder).toMatchTextContent('Connect again to see this folder.');
     const again = placeholder.getByRole('link', { name: 'Connect again' });
     await expect.element(again).toHaveAttribute('href', connectHref);
     // A full load, under the connections page's own CSP.

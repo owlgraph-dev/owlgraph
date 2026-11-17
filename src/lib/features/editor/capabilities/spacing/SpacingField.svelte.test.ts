@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import SpacingField from './SpacingField.svelte';
 
 describe('the spacing field’s per-side trigger', () => {
@@ -20,7 +20,7 @@ describe('the spacing field’s per-side trigger', () => {
     await render(SpacingField, { value: { desktop: { top: 8, left: 4 } }, fallback: null, onChange: () => {} });
     const trigger = page.getByRole('button', { name: 'Customize sides · 2', exact: true });
     await expect.element(trigger).toBeVisible();
-    await expect.element(trigger).toHaveTextContent('2');
+    await expect.element(trigger).toMatchTextContent('2');
     expect(trigger.element().getAttribute('title')).toBe('Customize sides · 2');
   });
 });

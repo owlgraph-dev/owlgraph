@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import SurfaceField from './SurfaceField.svelte';
 import type { SurfaceData } from '$lib/features/content';
 
@@ -22,7 +22,9 @@ describe('the surface field’s background', () => {
       },
     });
 
-    const background = screen.getByRole('button', { name: 'Background', exact: true });
+    // Named by its field and the colour it shows (docs/architecture/design-system/patterns.md,
+    // "A trigger that shows a value"), so by the field alone across the pick.
+    const background = screen.getByRole('button', { name: /^Background: / });
     await background.click();
     const theme = screen.getByRole('group', { name: 'Theme' });
     const custom = screen.getByRole('group', { name: 'Custom' });
@@ -35,6 +37,7 @@ describe('the surface field’s background', () => {
     await userEvent.keyboard('{Escape}');
 
     await expect.element(theme).not.toBeInTheDocument();
-    await expect.element(background).toHaveTextContent('Inverse');
+    await expect.element(background).toMatchTextContent('Inverse');
+    await expect.element(screen.getByRole('button', { name: 'Background: Inverse', exact: true })).toBeVisible();
   });
 });

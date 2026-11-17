@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import DeletePageModal from './DeletePageModal.svelte';
 
 // The dialog alone; the delete itself and who may make it are the e2e test's

@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { goto } from '$app/navigation';
 import SettingsSearch from './SettingsSearch.svelte';
 import { SETTINGS_TREE } from './tree';

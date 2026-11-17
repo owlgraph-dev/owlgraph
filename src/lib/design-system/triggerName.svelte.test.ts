@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import ColorPickerField from './ColorPickerField.svelte';
 import IconPickerField from './IconPickerField.svelte';
 

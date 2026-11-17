@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import type { SearchResultCard as Result } from '$lib/features/search';
 import SearchResultCard from './SearchResultCard.svelte';
 
@@ -18,8 +18,8 @@ describe('a document’s result card', () => {
     const cards = screen.getByTestId('search-result');
     const uploaded = cards.filter({ hasText: 'Uploaded note' });
     const linked = cards.filter({ hasText: 'Cited paper' });
-    await expect.element(uploaded).toHaveTextContent('Text');
-    await expect.element(uploaded).not.toHaveTextContent('Link');
+    await expect.element(uploaded).toMatchTextContent('Text');
+    await expect.element(uploaded).not.toMatchTextContent('Link');
     await expect.element(linked).toMatchTextContent(/Link\s·\sexample\.org/);
     await expect.element(uploaded.getByRole('link', { name: 'Uploaded note' })).toHaveAttribute('href', '/d/uploaded-note');
   });

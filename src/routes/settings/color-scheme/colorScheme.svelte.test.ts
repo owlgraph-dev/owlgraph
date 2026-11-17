@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import ColorSchemePage from './+page.svelte';
 import type { PageData } from './$types';
@@ -77,7 +77,7 @@ describe('the default colour scheme', () => {
 
     const confirm = dialog.getByRole('button', { name: 'Let pages adapt' });
     await expect.element(confirm).toBeDisabled();
-    await expect.element(dialog).toHaveTextContent('The theme colours meet the contrast minimums in both schemes');
+    await expect.element(dialog).toMatchTextContent('The theme colours meet the contrast minimums in both schemes');
     const boxes = dialog.getByRole('checkbox').elements();
     // The report, the HTML block with inline colours, the dark preview.
     expect(boxes).toHaveLength(3);
@@ -123,7 +123,7 @@ describe('the readiness table', () => {
     const table = screen.getByRole('table', { name: 'Readiness' });
     const row = table.getByRole('row').filter({ hasText: 'Field notes' });
     await expect.element(row).toBeVisible();
-    await expect.element(row).toHaveTextContent('1 text · 1 HTML');
+    await expect.element(row).toMatchTextContent('1 text · 1 HTML');
     await expect.element(row.getByRole('link', { name: 'Edit' })).toHaveAttribute('href', '/field-notes/edit');
     await expect.element(row.getByRole('link', { name: 'Preview in dark' })).toHaveAttribute('href', '/field-notes?scheme=dark');
 

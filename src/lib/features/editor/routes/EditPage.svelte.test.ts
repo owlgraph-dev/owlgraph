@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import EditPage from './EditPage.svelte';
 import type { EditPageData } from './edit.server';
@@ -151,7 +151,7 @@ describe('a document in its editor', () => {
     await screen.getByRole('button', { name: 'Access control' }).click();
     const panel = screen.getByRole('dialog', { name: 'Access control' });
     await expect.element(panel).toBeVisible();
-    await expect.element(panel.getByRole('combobox', { name: 'Who can view this page' })).toHaveTextContent('Restricted — only selected users');
+    await expect.element(panel.getByRole('combobox', { name: 'Who can view this page' })).toMatchTextContent('Restricted — only selected users');
     await expect.element(panel.getByText('You (the owner) and admins always have access.', { exact: false })).toBeVisible();
     await expect.element(panel.getByRole('checkbox', { name: /Bea Reader/ })).toBeChecked();
   });

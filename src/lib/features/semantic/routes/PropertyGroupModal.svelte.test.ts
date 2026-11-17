@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import PropertyGroupModal from './PropertyGroupModal.svelte';
 
 // The site default language is English here.
@@ -24,7 +24,7 @@ describe('the property group dialog’s label', () => {
     const language = dialog.getByRole('combobox', { name: 'Label: Language' });
     await language.click();
     await expect.element(screen.getByRole('option', { name: /English.*required/ })).toBeVisible();
-    await expect.element(screen.getByRole('option', { name: /Deutsch/ })).not.toHaveTextContent('required');
+    await expect.element(screen.getByRole('option', { name: /Deutsch/ })).not.toMatchTextContent('required');
     await screen.getByRole('option', { name: /Deutsch/ }).click();
     await dialog.getByRole('textbox', { name: 'Label Deutsch', exact: true }).fill('Gruppe');
     await expect.element(save).toBeDisabled();

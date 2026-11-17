@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import type { CollectionMember } from '$lib/features/collections';
 import type { NodeSearchResult } from '$lib/features/search';
@@ -147,16 +147,16 @@ describe("the members editor's picker", () => {
 
     // A page with this exact title exists, so no new page is offered.
     await userEvent.type(field, token);
-    await expect.element(picker.getByRole('option').first()).toHaveTextContent(token);
+    await expect.element(picker.getByRole('option').first()).toMatchTextContent(token);
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(2));
     await expect.element(picker.getByRole('option', { name: new RegExp(`^New collection “${token}”`) })).toBeVisible();
-    await expect.element(picker.getByRole('option', { name: /^New document/ })).toHaveTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(picker.getByRole('option', { name: /^New document/ })).toMatchTextContent(`in ${NAMESPACE.name}`);
     expect(picker.getByRole('option', { name: /^New page/ }).elements()).toHaveLength(0);
     await picker.getByRole('radio', { name: 'Pages' }).click();
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(0));
     await picker.getByRole('radio', { name: 'Collections' }).click();
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(1));
-    await expect.element(newRows).toHaveTextContent(`New collection “${token}”`);
+    await expect.element(newRows).toMatchTextContent(`New collection “${token}”`);
     await picker.getByRole('radio', { name: 'All' }).click();
 
     await userEvent.fill(field, fresh);

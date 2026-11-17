@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import BlockBreadcrumb from './BlockBreadcrumb.svelte';
 import type { SelectionChainEntry } from '$lib/features/content/editor';
 

@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import TreeBrowser from './TreeBrowser.svelte';
 import { PLUGIN_ROUTES } from './routes';
 import type { TreeSource } from './tree';

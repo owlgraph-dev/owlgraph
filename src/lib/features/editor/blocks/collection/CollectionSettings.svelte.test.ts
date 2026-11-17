@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import { EMBED_KINDS, embedKindFor } from '$lib/features/content';
 import { pluginLabel } from '$lib/plugins';
@@ -80,7 +80,7 @@ describe('the collection block', () => {
     await userEvent.type(picker.getByPlaceholder('Search collections'), title);
     const make = picker.getByRole('option', { name: /^New collection “/ });
     await make.click();
-    await expect.element(picker.getByRole('alert')).toHaveTextContent('could not be made');
+    await expect.element(picker.getByRole('alert')).toMatchTextContent('could not be made');
     expect(updates).toEqual([]);
 
     await make.click();
@@ -109,8 +109,8 @@ describe('the collection block', () => {
     // One type, so one row — named for the page's namespace.
     const make = picker.getByRole('option', { name: /^New / });
     await vi.waitFor(() => expect(make.elements()).toHaveLength(1));
-    await expect.element(make).toHaveTextContent(`New collection “${title}”`);
-    await expect.element(make).toHaveTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(make).toMatchTextContent(`New collection “${title}”`);
+    await expect.element(make).toMatchTextContent(`in ${NAMESPACE.name}`);
     expect(new URL(calls.find((c) => c.url.startsWith('/api/node-search'))!.url, 'http://localhost').searchParams.get('types')).toBe('collection');
     await make.click();
 
@@ -138,7 +138,7 @@ describe('a plugin’s collections in the collection block’s picker', () => {
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), 'Ablage');
     const option = picker.getByRole('option', { name: /^Ablage/ });
-    await expect.element(option).toHaveTextContent(`${label} is turned off`);
+    await expect.element(option).toMatchTextContent(`${label} is turned off`);
     await expect.element(option).toHaveAttribute('aria-disabled', 'true');
     await option.click({ force: true });
     await expect.element(picker).toBeVisible();

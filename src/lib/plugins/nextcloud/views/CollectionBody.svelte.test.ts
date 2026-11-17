@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import { CollectionNodeView } from '$lib/features/collections/components';
 import type { CollectionMember } from '$lib/features/collections';
 import { PLUGIN_ROUTES } from '../blocks/routes';
@@ -111,8 +111,8 @@ describe("a Nextcloud collection's own page", () => {
     await linked.click();
     const rows = screen.getByRole('tabpanel').getByRole('listitem');
     await vi.waitFor(() => expect(rows.elements()).toHaveLength(1));
-    await expect.element(rows).toHaveTextContent('Bericht.pdf');
-    await expect.element(rows).toHaveTextContent('Document · Nextcloud');
+    await expect.element(rows).toMatchTextContent('Bericht.pdf');
+    await expect.element(rows).toMatchTextContent('Document · Nextcloud');
   });
 
   it('offers a reader who may not write no way to make a document', async () => {

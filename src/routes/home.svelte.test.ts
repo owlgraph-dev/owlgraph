@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import { page } from '$app/state';
 import HomePage from './+page.svelte';
 import AppBar from '$lib/shell/AppBar.svelte';

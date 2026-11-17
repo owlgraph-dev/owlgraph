@@ -102,6 +102,9 @@ export default defineConfig({
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],
+            // A text or name a locator gives matches part of the element's, as a
+            // test passes `exact: true` where it means the whole.
+            locators: { exact: false },
           },
         },
       },

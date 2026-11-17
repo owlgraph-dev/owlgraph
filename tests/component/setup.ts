@@ -5,3 +5,19 @@
 // The app's stylesheet, as the root layout loads it: without the tokens a
 // primitive sized by one has no box (docs/guides/testing.md, "Component tests").
 import '../../src/app.css';
+import { locators, type Locator } from 'vitest/browser';
+
+// `getByCSS(selector)`: a locator that holds to a CSS selector. Vitest turns
+// `page.elementLocator(element)` into a selector built from the element's
+// text, which stops matching once that text changes.
+declare module 'vitest/browser' {
+  interface LocatorSelectors {
+    getByCSS(selector: string): Locator;
+  }
+}
+
+locators.extend({
+  getByCSS(selector: string) {
+    return `css=${selector}`;
+  },
+});

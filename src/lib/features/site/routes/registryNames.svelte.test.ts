@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import ParagraphStyleModal from './ParagraphStyleModal.svelte';
 import PageLayoutPresetModal from './PageLayoutPresetModal.svelte';
 import { SEED_PAGE_LAYOUT_PRESETS } from '$lib/features/pages';
