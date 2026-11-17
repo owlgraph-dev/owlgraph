@@ -17470,7 +17470,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ------------------------------------------------------------------------------
-typescript@5.9.3 — Apache-2.0
+typescript@6.0.3 — Apache-2.0
 ------------------------------------------------------------------------------
 
 Apache License

@@ -27,8 +27,8 @@ export const QuickLink = Node.create({
   addOptions() {
     // Configured by editorCore.svelte.ts, as in pageLink.ts.
     return {
-      resolvePageHref: (_id: string) => '#',
-      resolveDocHref: (_id: string) => '#',
+      resolvePageHref: (_id: string): string => '#',
+      resolveDocHref: (_id: string): string => '#',
     };
   },
 

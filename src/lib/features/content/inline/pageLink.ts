@@ -13,7 +13,7 @@ export const PageLink = Mark.create({
   addOptions() {
     // editorCore.svelte.ts configures the real resolver; the default keeps the
     // extension valid on its own.
-    return { resolveHref: (_id: string) => '#' };
+    return { resolveHref: (_id: string): string => '#' };
   },
 
   addAttributes() {
