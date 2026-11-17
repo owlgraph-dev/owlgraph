@@ -585,7 +585,13 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
   .canvas-blocks .html-block,
   .cap-layout[data-scroll] {
     --scroll-cue-mask: linear-gradient(to right, transparent, #000 var(--scroll-cue-start), #000 calc(100% - var(--scroll-cue-end)), transparent);
-    animation: scroll-cue-start linear both, scroll-cue-end linear both;
+    /* Longhands, not the shorthand: the build's minifier (Lightning CSS) expands
+       `animation` with a duration of 0s, which plays a scroll-driven animation
+       at once instead of across its range; `auto` spans the range. */
+    animation-name: scroll-cue-start, scroll-cue-end;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: scroll(self x);
     animation-range: 0 3rem, calc(100% - 3rem) 100%;
   }
