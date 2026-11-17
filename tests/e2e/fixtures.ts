@@ -98,8 +98,9 @@ export async function waitForHydration(page: Page): Promise<void> {
 }
 
 /**
- * The Origin header SvelteKit's cross-site check requires on a form POST,
- * which a request context doesn't send: `page.request.post(url, { form, headers: sameOrigin() })`.
+ * The Origin header SvelteKit's cross-site check requires on a form POST and
+ * on a write without a body, which a request context doesn't send:
+ * `page.request.post(url, { form, headers: sameOrigin() })`.
  */
 export const sameOrigin = () => ({ origin: test.info().project.use.baseURL! });
 

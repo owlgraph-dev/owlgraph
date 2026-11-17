@@ -75,7 +75,7 @@ ranks them so). Reserving the word `edit` as a slug does not help: the read
 route would still match every `/{slug}/edit`.
 
 The fix is a **params matcher**: the namespace segment is declared as
-`[namespace=namespace]` (`src/params/namespace.ts`), which SvelteKit ranks
+`[namespace=namespace]` (`src/params.ts`), which SvelteKit ranks
 as *more specific* than a plain dynamic segment — more specific segments
 are tried first, and a *matched* dynamic segment outranks a plain one even
 after the leading-optional-segment stripping above. If the first path
@@ -125,7 +125,7 @@ independent copies exist:
     `load()` still does a fresh, correct DB lookup and 404s cleanly when it
     doesn't find a match — never a security issue or a data-shape
     mismatch, only a rare, self-healing 404 that a reload fixes. The admin
-    namespaces UI uses `use:enhance`'s default `invalidateAll()` after
+    namespaces UI uses `use:enhance`'s default `refreshAll()` after
     every mutation, so the acting admin's own client cache is refreshed
     immediately; other users' already-open tabs pick it up on their next
     hard navigation.

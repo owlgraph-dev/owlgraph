@@ -10,7 +10,7 @@ import { join } from 'node:path';
 const HANDLER = 'build/handler.js';
 // src/lib/paraglide is rewritten by every compile, so its sources count
 // instead. A deleted file leaves no newer time behind: rebuild after deleting.
-const SOURCES = ['src', 'messages', 'project.inlang', 'static', 'svelte.config.js', 'vite.config.ts', 'package-lock.json'];
+const SOURCES = ['src', 'messages', 'project.inlang', 'static', 'vite.config.ts', 'package-lock.json'];
 // project.inlang/cache is the compiler's own, written by every compile too.
 const GENERATED = new Set([join('src', 'lib', 'paraglide'), join('project.inlang', 'cache')]);
 // Files under src/ that never reach a build: docs and tests.

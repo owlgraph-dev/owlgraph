@@ -36,7 +36,7 @@ reader's route ([Content Security Policy](overview.md#content-security-policy))
 
 The address matches `src/routes/[[namespace=namespace]]/[slug]/`: an optional
 namespace segment, then the slug. The `namespace` matcher
-(`src/params/namespace.ts`) accepts the first segment only if it is a known
+(`src/params.ts`) accepts the first segment only if it is a known
 namespace's slug, from an in-memory registry; otherwise the address belongs
 to the default namespace, which has no prefix
 ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).

@@ -2,7 +2,8 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import type { Handle, HandleServerError, RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent } from '@sveltejs/kit';
+import type { Handle, HandleServerError } from '@sveltejs/kit/hooks';
 import { dev } from '$app/env';
 import {
   logEvent,
@@ -258,18 +259,20 @@ const serve = async (event: RequestEvent, resolve: Parameters<Handle>[0]['resolv
 };
 
 /**
- * The one error path (docs/architecture/logging.md, "Errors"): unexpected errors and
- * unmatched routes; an expected error(...) shows in http.request's status.
- * +error.svelte shows the id, so the log line can be found.
+ * The one error path (docs/architecture/logging.md, "Errors"): every error SvelteKit
+ * catches. An error(...) the app throws keeps its status and message, and
+ * http.request's status records it; SvelteKit's own refusals are expected; the
+ * rest is unhandled. +error.svelte shows the id, so the log line can be found.
  */
-export const handleError: HandleServerError = ({ error, event, status, message }) => {
+export const handleError: HandleServerError = ({ kind, error, event }) => {
+  if (kind === 'app') return;
   const log = event.locals?.log ?? logger;
   const id = event.locals?.reqId ?? newId();
 
   // An expected outcome is never `error`, or the error log stops being actionable.
-  if (status < 500) {
-    logEvent(log, 'error.expected', { status, errorClass: errorClass(error) }, { level: status === 404 ? 'info' : 'warn' });
-    return { message, id };
+  if (kind !== 'unknown' && error.status < 500) {
+    logEvent(log, 'error.expected', { status: error.status, kind }, { level: error.status === 404 ? 'info' : 'warn' });
+    return { id };
   }
 
   logEvent(log, 'error.unhandled', {

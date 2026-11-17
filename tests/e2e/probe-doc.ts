@@ -5,6 +5,7 @@
 import type { APIRequestContext } from '@playwright/test';
 import { seed } from './seed-data';
 import { txt } from './doc';
+import { sameOrigin } from './fixtures';
 
 // A page with every block kind and capability emitter at once, overrides on
 // every tier: its public render must carry no style attribute and no CSP violation.
@@ -163,7 +164,7 @@ export function probeDoc() {
 
 /** Creates the probe page through the API (the request context must be signed in as an editor or admin). */
 export async function seedProbePage(request: APIRequestContext, scheme: 'light' | 'dark' | 'adaptive' = 'adaptive'): Promise<{ id: string; slug: string }> {
-  const created = (await (await request.post('/api/pages')).json()) as { id: string; slug: string };
+  const created = (await (await request.post('/api/pages', { headers: sameOrigin() })).json()) as { id: string; slug: string };
   const put = await request.put(`/api/pages/${created.id}`, { data: probeDoc() });
   if (!put.ok()) throw new Error(`probe page: PUT failed with ${put.status()}: ${await put.text()}`);
   const patch = await request.patch(`/api/pages/${created.id}`, { data: { contentScheme: scheme } });

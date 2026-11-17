@@ -48,7 +48,7 @@
 
   // A change of filter starts over at the first page; the view keeps it.
   function go(change: Partial<SearchParams>) {
-    return goto(searchHref({ ...applied, page: 1, ...change }), { keepFocus: true, noScroll: true });
+    return goto(searchHref({ ...applied, page: 1, ...change }), { reset: false });
   }
 
   function submit(e: SubmitEvent) {

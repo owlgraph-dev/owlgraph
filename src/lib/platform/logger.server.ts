@@ -306,7 +306,7 @@ export interface EventFields {
   };
 
   'error.unhandled': { errorClass: string; message: string; stack?: string };
-  'error.expected': { status: number; errorClass: string };
+  'error.expected': { status: number; kind: 'framework' | 'validation' };
 
   'mcp.tool_call': { tool: string; toolCallId: string; durationMs: number; denied: boolean; denyReason?: string };
 

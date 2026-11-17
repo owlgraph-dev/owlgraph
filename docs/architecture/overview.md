@@ -201,6 +201,12 @@ A feature is imported **only through its entry points**, never by deep path:
   step share. The search barrels are on every page (the root layout imports
   the search overlay) and `documents/components.ts` is the reader's surface,
   so neither carries them. Both are client-safe like `index.ts`.
+- `$lib/features/namespaces/matcher` (`matcher.ts`) — the `[namespace]`
+  params matcher, which `src/params.ts` declares
+  ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).
+  SvelteKit's build also loads `src/params.ts` with Node, outside Vite, so
+  the matcher imports only by paths Node resolves: the namespace registry,
+  which imports nothing, by its file name.
 - The feature's **adapters** — the modules that bind it to one channel, each
   importable only from that channel (Svelte components included: a modal that
   only a settings page opens is an adapter, and keeps the feature's internals
@@ -323,7 +329,8 @@ logic of their own.
 
 > Decisions: [0007. Styles reach a page through a per-page stylesheet](../adr/0007-styles-reach-a-page-through-a-per-page-stylesheet.md); [0008. Diagrams draw in a same-origin frame](../adr/0008-diagrams-draw-in-a-same-origin-frame.md).
 
-The base header comes from `kit.csp` in `svelte.config.js` (mode `auto`, so
+The base header comes from the `csp` option of the `sveltekit()` plugin in
+`vite.config.ts` (mode `auto`, so
 SvelteKit nonces its own hydration script); `src/hooks.server.ts` then decides
 the **style** half per response through `src/lib/platform/csp.ts`, with the
 route classes by route id beside it in `src/lib/platform/cspRoutes.ts`:

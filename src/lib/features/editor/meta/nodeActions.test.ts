@@ -35,7 +35,7 @@ function fixture(client: Partial<Record<keyof NodeMetaClient, unknown>> = {}) {
   return { actions, row, client: fake, goto, refreshAll, beforeDelete };
 }
 
-const STAY = { replaceState: true, noScroll: true, keepFocus: true };
+const STAY = { replace: true, reset: false };
 
 describe("a node's actions in its editor", () => {
   it('follow a renamed slug to the new address in place of the old, and a new title without moving', async () => {

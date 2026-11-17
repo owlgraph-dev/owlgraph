@@ -36,7 +36,7 @@ export interface PageSetup {
  */
 export async function createPage(request: APIRequestContext, setup: PageSetup = {}): Promise<{ id: string; slug: string }> {
   const { doc, title, contentScheme, namespaceId, visibility = 'restricted' } = setup;
-  const created = await request.post('/api/pages', namespaceId ? { data: { namespaceId } } : undefined);
+  const created = await request.post('/api/pages', { headers: sameOrigin(), ...(namespaceId ? { data: { namespaceId } } : {}) });
   expect(created.ok(), 'create a page').toBe(true);
   const { id, slug } = (await created.json()) as { id: string; slug: string };
   if (visibility) await patchPage(request, id, { visibility });

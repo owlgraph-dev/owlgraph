@@ -5,7 +5,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent, type Locator } from 'vitest/browser';
-import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
+import type { ActionResult, SubmitFunction } from '$app/forms';
+import type { ActionAnswer } from '$tests/component/forms';
 import ClassesPage from './classes/+page.svelte';
 import PropertiesPage from './properties/+page.svelte';
 import GroupsPage from './groups/+page.svelte';
@@ -24,7 +25,7 @@ type Post = { action: string | null; formData: FormData };
 // run through the page's submit function with the test's answer.
 const forms = vi.hoisted(() => ({
   posts: [] as Post[],
-  answer: (_post: Post): ActionResult => ({ type: 'success', status: 200 }),
+  answer: (_post: Post): ActionAnswer => ({ type: 'success', status: 200 }),
   applied: async (_result: ActionResult): Promise<void> => {},
 }));
 
@@ -39,7 +40,7 @@ vi.mock('$app/forms', () => ({
       if (cancelled) return;
       const post = { action: form.getAttribute('action'), formData };
       forms.posts.push(post);
-      const result = forms.answer(post);
+      const result: ActionResult = { ...forms.answer(post), location: action.pathname };
       const update = async () => forms.applied(result);
       if (typeof after === 'function') await after({ action, formData, formElement: form, result, update });
       else await update();

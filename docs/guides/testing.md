@@ -368,9 +368,10 @@ The shared harness stays in `tests/`. What every layer uses is in
 `tests/support/` (`databases.ts`, the run's databases; `seed.ts`, the seed),
 the integration and component projects' setup in `tests/integration/` and
 `tests/component/`, and Playwright's in `tests/e2e/`. A test under `src/` imports
-it as `$tests/…` (`$tests/e2e/fixtures`): the alias is `kit.alias` in
-`svelte.config.js` (and so the generated tsconfig's paths, which Playwright
-reads), `vitest.config.ts` and the Node loader hook. Only tests import it, a
+it as `$tests/…` (`$tests/e2e/fixtures`): the alias is the `sveltekit()`
+plugin's `alias` in `vite.config.ts` (and so the paths of the tsconfig
+SvelteKit generates, which Playwright reads), `vitest.config.ts` and the Node
+loader hook. Only tests import it, a
 spec's helpers in an `e2e/` folder included (`check-boundaries`):
 
 | File | Role |
