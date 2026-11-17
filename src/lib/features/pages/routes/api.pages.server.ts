@@ -3,13 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/+server.ts.
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { createBlankPage } from '$lib/features/pages/server';
-import { can } from '$lib/features/auth/server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { createBlankPage } from '#lib/features/pages/server.ts';
+import { can } from '#lib/features/auth/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiErrorFrom } from '$lib/platform/apiErrors';
-import { isCodedError } from '$lib/platform/codedError';
+import { apiErrorFrom } from '#lib/platform/apiErrors.ts';
+import { isCodedError } from '#lib/platform/codedError.ts';
 
 // The real boundary: the app bar's own check is UX only.
 export const POST: RequestHandler = async ({ request, locals }) => {

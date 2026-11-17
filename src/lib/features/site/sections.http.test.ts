@@ -4,9 +4,9 @@
 
 import { afterAll, beforeEach, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 // Set up through the sections' own form actions: the served build caches the
 // site-wide settings, and only its own save refreshes them. The tests share the

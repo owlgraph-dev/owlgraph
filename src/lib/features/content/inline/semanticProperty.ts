@@ -8,7 +8,7 @@
 // `parameter:` propName makes it a parameter, and `paramType` declares the
 // slot's expected datatype for the mapping; null on ordinary properties.
 import { Mark, mergeAttributes } from '@tiptap/core';
-import { isParameterName, parameterLocalName } from '$lib/features/semantic';
+import { isParameterName, parameterLocalName } from '#lib/features/semantic/index.ts';
 
 export const SemanticProperty = Mark.create({
   name: 'semanticProperty',

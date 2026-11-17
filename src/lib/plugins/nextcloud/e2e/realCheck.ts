@@ -11,8 +11,8 @@
 // Once approved, the app password is revoked whatever happens next (a failed
 // step, Ctrl+C), or the script says to remove it by hand. Neither it nor the
 // login name is ever printed.
-import { READ_METHODS, loopbackHttpAllowed, parseUpstreamOrigin, upstreamClient } from '$lib/platform/upstream.server';
-import type { PluginCredential, PluginOpenConnection } from '$lib/plugins/api';
+import { READ_METHODS, loopbackHttpAllowed, parseUpstreamOrigin, upstreamClient } from '#lib/platform/upstream.server.ts';
+import type { PluginCredential, PluginOpenConnection } from '#lib/plugins/api.ts';
 import { connectFlow } from '../server/connect.server';
 import { propfind, searchById, streamFile, userAccess } from '../server/client.server';
 import { fakeHost } from './fakeHost';

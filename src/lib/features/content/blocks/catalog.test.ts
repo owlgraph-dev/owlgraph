@@ -10,7 +10,7 @@ import {
   STRUCTURAL_BLOCK_TYPES,
   BLOCK_KINDS
 } from './catalog';
-import { PLUGIN_BLOCK_KIND_NAMES } from '$lib/plugins';
+import { PLUGIN_BLOCK_KIND_NAMES } from '#lib/plugins/index.ts';
 
 // A change to these lists changes which blocks are addressable, persisted or
 // structural, so it must be deliberate. The plugins' kinds are left out:

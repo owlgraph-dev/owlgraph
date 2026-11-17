@@ -5,7 +5,7 @@
 // Best effort: a scanned PDF has no text layer and yields little or nothing,
 // and any failure gives an empty string rather than throwing.
 
-import { logEvent, logger, errorClass } from '$lib/platform/logger.server';
+import { logEvent, logger, errorClass } from '#lib/platform/logger.server.ts';
 
 export async function extractText(bytes: Buffer, mime: string): Promise<string> {
   if (mime === 'text/plain' || mime === 'text/markdown') return bytes.toString('utf8');

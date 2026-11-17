@@ -6,8 +6,8 @@
 <script lang="ts">
   // The same rows a page's collection block draws (memberRows). Read-only: the
   // members are arranged in the collection's editor.
-  import { EntryList, memberRows } from '$lib/features/content/listing';
-  import * as m from '$lib/paraglide/messages';
+  import { EntryList, memberRows } from '#lib/features/content/listing.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { CollectionMember } from '../types';
 
   let { members, empty }: { members: CollectionMember[]; empty: string } = $props();

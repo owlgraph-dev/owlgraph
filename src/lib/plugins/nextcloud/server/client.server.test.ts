@@ -8,7 +8,7 @@ import { startMockNextcloud, type MockNextcloud } from '../e2e/mockNextcloud';
 import { fakeHost } from '../e2e/fakeHost';
 import { propfind, streamFile, encodeSecret, decodeSecret, shareAccess, type ShareSecret } from './client.server';
 import { checkServer } from './status.server';
-import { upstreamClient } from '$lib/platform/upstream.server';
+import { upstreamClient } from '#lib/platform/upstream.server.ts';
 
 const OPEN = 'OpenShare123';
 const LOCKED = 'LockedShare456';

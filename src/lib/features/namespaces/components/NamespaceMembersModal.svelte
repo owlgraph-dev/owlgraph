@@ -8,8 +8,8 @@
   // modal (docs/architecture/design-system/patterns.md#settings-pages).
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, EmptyState, Checkbox } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, EmptyState, Checkbox } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

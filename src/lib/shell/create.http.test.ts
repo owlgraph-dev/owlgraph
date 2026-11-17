@@ -4,9 +4,9 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf, type Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 // The routes check the permission themselves: the Create button is UX only.
 // The dialog itself is the browser's (e2e/create-content.spec.ts).

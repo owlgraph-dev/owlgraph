@@ -6,10 +6,10 @@
 <script lang="ts">
   // The title and the excerpt are content, so they carry the node's language;
   // the rest is chrome, in the interface language.
-  import * as m from '$lib/paraglide/messages';
-  import { Badge, Card, Chip } from '$lib/design-system';
-  import { parseSnippet, type DocumentKind, type SearchResultCard } from '$lib/features/search';
-  import { formatDate } from '$lib/platform/i18n/format';
+  import * as m from '#lib/paraglide/messages.js';
+  import { Badge, Card, Chip } from '#lib/design-system/index.ts';
+  import { parseSnippet, type DocumentKind, type SearchResultCard } from '#lib/features/search/index.ts';
+  import { formatDate } from '#lib/platform/i18n/format.ts';
 
   let {
     result,

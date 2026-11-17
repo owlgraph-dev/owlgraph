@@ -2,10 +2,10 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { unique, createPage } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { unique, createPage } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
 
 const text = (s: string) => ({ type: 'paragraph', attrs: { blockId: unique('b').slug }, content: [txt(s)] });
 

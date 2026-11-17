@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The names of PositionGrid's nine cells, for the focus-point rows.
-import * as m from '$lib/paraglide/messages';
-import type { Position } from '$lib/design-system';
+import * as m from '#lib/paraglide/messages.js';
+import type { Position } from '#lib/design-system/index.ts';
 
 export function positionLabels(): Record<Position, string> {
   return {

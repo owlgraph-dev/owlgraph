@@ -5,7 +5,7 @@
 // Where a node's root lies in the viewer's own files: searched by its file id
 // across what they own and what was shared with them; failing that, at the
 // picker's path hint when the picker is asking (storage the search misses).
-import type { PluginHost } from '$lib/plugins/api';
+import type { PluginHost } from '#lib/plugins/api.ts';
 import { propfind, searchById, type DavProblem, type UserAccess } from './client.server';
 import { confirmLocation, forgetConnectionLocations, forgetLocation, heldLocation, rememberLocation } from './locations.server';
 import type { PathHint } from './refs';

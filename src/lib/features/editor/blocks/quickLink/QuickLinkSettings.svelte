@@ -6,10 +6,10 @@
 <script lang="ts">
   // The variant decides which Surface fields the card carries. The target
   // opens the toolbar's link picker in retarget mode, the only picker there is.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch, Input, IconPickerField, Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { QUICK_LINK_VARIANTS, quickLinkVariant, normalizeUrl, isValidUrl, type QuickLinkVariant } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch, Input, IconPickerField, Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { QUICK_LINK_VARIANTS, quickLinkVariant, normalizeUrl, isValidUrl, type QuickLinkVariant } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';

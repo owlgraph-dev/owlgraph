@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import { Button, EmptyState, Select } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, EmptyState, Select } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   type Variant = { id: string; weight: number; style: 'normal' | 'italic'; url: string };
   type Family = { id: string; name: string; variants: Variant[] };

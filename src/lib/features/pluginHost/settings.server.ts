@@ -5,10 +5,10 @@
 // A plugin's settings as site_settings stores them (key `plugin:<id>`). Read on
 // every request a plugin serves, so cached in-process: a save here drops the
 // entry, and a change made elsewhere (another process, an e2e reset) shows after a few seconds.
-import { getSetting, setSetting } from '$lib/platform/settings.server';
-import { loopbackHttpAllowed, parseUpstreamOrigin } from '$lib/platform/upstream.server';
-import { PLUGINS } from '$lib/plugins';
-import type { PluginManifest, PluginSettings } from '$lib/plugins/api';
+import { getSetting, setSetting } from '#lib/platform/settings.server.ts';
+import { loopbackHttpAllowed, parseUpstreamOrigin } from '#lib/platform/upstream.server.ts';
+import { PLUGINS } from '#lib/plugins/index.ts';
+import type { PluginManifest, PluginSettings } from '#lib/plugins/api.ts';
 import { originOf, storedSettings } from './settingsFields.server';
 
 const TTL_MS = 10_000;

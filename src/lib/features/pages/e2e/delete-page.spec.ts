@@ -4,9 +4,9 @@
 
 // Cancelling is DeletePageModal.svelte.test.ts's; who may delete is pages.http.test.ts's.
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { createPage } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 
 async function openDeleteMenu(page: Page) {
   // "More actions" labels the menu content, not its trigger.

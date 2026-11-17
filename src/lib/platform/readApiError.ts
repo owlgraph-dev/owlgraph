@@ -6,7 +6,7 @@
 // body, `{ error: { code, message, …details } }`, read once. A client branches
 // on the code and shows the message, which is already in the interface's
 // language.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 
 export interface ApiErrorReply {
   code: string;

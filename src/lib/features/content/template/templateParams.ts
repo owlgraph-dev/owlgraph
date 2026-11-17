@@ -6,7 +6,7 @@
 // `parameter:` group, or inside an HTML block a {{{key}}} / {{{key:type}}}
 // token. The renderer and the mapping UI share this one token grammar, so
 // what the mapping shows and what is substituted can't drift apart.
-import { isPropertyDatatype } from '$lib/features/semantic';
+import { isPropertyDatatype } from '#lib/features/semantic/index.ts';
 
 // `key` is a mark's full propName or a token's key as written; `inHtml` tells
 // a mark `parameter:x` from a token `{{{x}}}`, which both display as "x".

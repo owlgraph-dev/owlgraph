@@ -10,9 +10,9 @@
   // so the form posts it back untouched, but no new one can be entered.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Button, Input, Select } from '$lib/design-system';
-  import { typeScaleOptions, type TypeSize } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Input, Select } from '#lib/design-system/index.ts';
+  import { typeScaleOptions, type TypeSize } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   type Token = {
     id: string;

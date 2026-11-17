@@ -8,12 +8,12 @@
   // an upload removes the URL (docs/architecture/documents.md). Within a source, replacing
   // needs no confirm. A document from an integration offers no switch.
   import { untrack } from 'svelte';
-  import { Button, FormField, Input, RadioGroup } from '$lib/design-system';
-  import { parseExternalUrl, externalHost, formatFileSize, documentContentPath, type DocumentSource } from '$lib/features/documents';
-  import { OpenExternalButton, externalUrlMessage } from '$lib/features/documents/components';
+  import { Button, FormField, Input, RadioGroup } from '#lib/design-system/index.ts';
+  import { parseExternalUrl, externalHost, formatFileSize, documentContentPath, type DocumentSource } from '#lib/features/documents/index.ts';
+  import { OpenExternalButton, externalUrlMessage } from '#lib/features/documents/components.ts';
   import SwitchDocumentSourceModal from './SwitchDocumentSourceModal.svelte';
-  import { pluginLabel } from '$lib/plugins';
-  import * as m from '$lib/paraglide/messages';
+  import { pluginLabel } from '#lib/plugins/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   type FileResult = { ok: boolean; filename?: string; mime?: string; size?: number; error?: string };
   type LinkResult = { ok: true; externalUrl: string } | { ok: false; error: string };

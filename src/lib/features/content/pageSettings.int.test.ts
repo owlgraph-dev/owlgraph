@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createPage, saveDoc } from '$lib/features/pages/server';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 // Saved through saveDoc, which the page API's PUT and a version restore run.
 

@@ -4,7 +4,7 @@
 
 // Wherever a node is listed by its type: its glyph (each name exists in both
 // the chrome's Icon set and the content glyphs) and its name.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import type { NodeType } from './types';
 
 export const NODE_TYPE_GLYPH: Readonly<Record<NodeType, string>> = { page: 'file-text', document: 'file', collection: 'layers' };

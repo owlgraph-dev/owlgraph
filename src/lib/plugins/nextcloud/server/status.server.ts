@@ -5,7 +5,7 @@
 // "Check connection" on the settings page. Shares are read through the WebDAV
 // endpoint Nextcloud 29 introduced, so an older server is refused here rather
 // than failing every listing later.
-import type { PluginUpstream } from '$lib/plugins/api';
+import type { PluginUpstream } from '#lib/plugins/api.ts';
 import { t } from '../messages';
 
 const MIN_MAJOR_VERSION = 29;

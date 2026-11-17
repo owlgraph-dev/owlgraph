@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The template-parameter mapping as the builder edits it, one row per parameter.
-import type { TemplateParam, WrapperMapping, TransformCategory, TransformId } from '$lib/features/content';
-import { INTRINSIC_SOURCE_CATEGORY, categoryForDatatype, transformIdsForCategory, isTransformAllowed } from '$lib/features/content';
+import type { TemplateParam, WrapperMapping, TransformCategory, TransformId } from '#lib/features/content/index.ts';
+import { INTRINSIC_SOURCE_CATEGORY, categoryForDatatype, transformIdsForCategory, isTransformAllowed } from '#lib/features/content/index.ts';
 import type { PropertyOption } from './sourceOptions';
 
 export interface MappingRow {

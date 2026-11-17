@@ -7,10 +7,10 @@
   // The node's content language, not the interface's (docs/architecture/languages.md). A language
   // disabled since stays, shown as such.
   import { untrack } from 'svelte';
-  import { FormField, Select } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { enabledLocales, isSupportedLocale } from '$lib/platform/i18n/siteLocales';
-  import { localeName } from '$lib/platform/i18n/localeNames';
+  import { FormField, Select } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { enabledLocales, isSupportedLocale } from '#lib/platform/i18n/siteLocales.ts';
+  import { localeName } from '#lib/platform/i18n/localeNames.ts';
 
   let {
     locale,

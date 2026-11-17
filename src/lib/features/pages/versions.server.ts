@@ -5,7 +5,7 @@
 // The type-agnostic version store: it owns identity, order, lineage, author and
 // kind (node_versions); each registered type stores its own payload. Diff and
 // cherry-pick are per-type, on top (pageDiff.ts).
-import { db, type TxSql } from '$lib/platform/db.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
 
 export type VersionKind = 'autosave' | 'manual' | 'lost_draft';
 

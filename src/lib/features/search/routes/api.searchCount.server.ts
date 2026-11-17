@@ -4,9 +4,9 @@
 
 // Route adapter for /api/search-count, re-exported by src/routes/api/search-count/+server.ts.
 import type { RequestHandler } from '@sveltejs/kit';
-import { countNodes } from '$lib/features/query/server';
-import { resolveSearchParams } from '$lib/features/search/server';
-import { parseSearchParams } from '$lib/features/search';
+import { countNodes } from '#lib/features/query/server.ts';
+import { resolveSearchParams } from '#lib/features/search/server.ts';
+import { parseSearchParams } from '#lib/features/search/index.ts';
 
 // The filter sheet's "Show N results" for pending filters: the search page's own
 // parameters through the same chain, so it matches what the page then shows.

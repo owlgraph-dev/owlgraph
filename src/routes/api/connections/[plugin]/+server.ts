@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { begin as POST, remove as DELETE } from '$lib/features/pluginHost/routes/api.connections.server';
+export { begin as POST, remove as DELETE } from '#lib/features/pluginHost/routes/api.connections.server.ts';

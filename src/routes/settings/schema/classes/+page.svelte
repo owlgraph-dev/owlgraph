@@ -9,16 +9,16 @@
   // are core schema: never deleted, their key and parent locked, the root not
   // editable at all. A class accumulates every group up its chain.
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import CatalogFilterBar from '$lib/features/semantic/routes/CatalogFilterBar.svelte';
-  import CatalogLabel from '$lib/features/semantic/routes/CatalogLabel.svelte';
-  import { rowMatches, rowMissingLocales } from '$lib/features/semantic/routes/catalogFilter';
-  import { localize } from '$lib/platform/i18n/localizedText';
-  import NodeClassModal from '$lib/features/semantic/routes/NodeClassModal.svelte';
-  import { inheritedGroups } from '$lib/features/semantic';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import CatalogFilterBar from '#lib/features/semantic/routes/CatalogFilterBar.svelte';
+  import CatalogLabel from '#lib/features/semantic/routes/CatalogLabel.svelte';
+  import { rowMatches, rowMissingLocales } from '#lib/features/semantic/routes/catalogFilter.ts';
+  import { localize } from '#lib/platform/i18n/localizedText.ts';
+  import NodeClassModal from '#lib/features/semantic/routes/NodeClassModal.svelte';
+  import { inheritedGroups } from '#lib/features/semantic/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   let { data, form } = $props();
 
   type Row = (typeof data.classes)[number];

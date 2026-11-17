@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import AboutPage from '$lib/shell/about/AboutPage.svelte';
+  import AboutPage from '#lib/shell/about/AboutPage.svelte';
   let { data } = $props();
 </script>
 

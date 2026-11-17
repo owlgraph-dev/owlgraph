@@ -7,10 +7,10 @@
   // A host passes its own `defaults` so the hints show what renders when a
   // field is unset. Align-content is disabled, not cleared, while the row
   // doesn't wrap, so wrapping again restores the last choice.
-  import { editTier } from '$lib/features/content';
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import {
     resolvedDisplay,
     resolvedFlexDirection,
@@ -31,7 +31,7 @@
     type JustifyContent,
     type AlignItems,
     type AlignContent,
-  } from '$lib/features/content';
+  } from '#lib/features/content/index.ts';
 
   let {
     value,

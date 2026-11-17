@@ -7,9 +7,9 @@
 // handle stays server-side, sealed to the session; the browser only learns
 // where to approve. A credential that is not kept is one the service is asked
 // to forget, best effort.
-import { logEvent, type Logger } from '$lib/platform/logger.server';
+import { logEvent, type Logger } from '#lib/platform/logger.server.ts';
 import { pluginFailed } from './pluginFailure.server';
-import type { PluginConnectionFlow, PluginCredential, PluginFlowClient } from '$lib/plugins/api';
+import type { PluginConnectionFlow, PluginCredential, PluginFlowClient } from '#lib/plugins/api.ts';
 import type { ConnectionBinding, ConnectionRow, FlowRow, FlowSecret } from './connections.server';
 
 /** How long a connect may take here; the service may keep its side longer. */

@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { GRANT_TTL_MS } from '$lib/features/pluginHost/server';
-import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '$tests/integration/http';
-import { connectAs } from '$tests/integration/mcp';
+import { GRANT_TTL_MS } from '#lib/features/pluginHost/server.ts';
+import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '#tests/integration/http.ts';
+import { connectAs } from '#tests/integration/mcp.ts';
 import { startMockNextcloud, type MockNextcloud, type MockShare } from './e2e/mockNextcloud';
 
 // What the integration passes on from a share, as served, against the mock

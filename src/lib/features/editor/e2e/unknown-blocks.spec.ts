@@ -5,14 +5,14 @@
 // docs/architecture/blocks/anatomy.md, "Unknown blocks". The kinds are invented: a plugin that is
 // merely turned off keeps its kinds known.
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage, uploadImage } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage, uploadImage } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
-import { textPara } from '$tests/e2e/doc';
-import { storedDoc } from '$tests/support/storedDoc';
-import { endOfLine, savePage } from '$tests/e2e/editor';
+import { textPara } from '#tests/e2e/doc.ts';
+import { storedDoc } from '#tests/support/storedDoc.ts';
+import { endOfLine, savePage } from '#tests/e2e/editor.ts';
 
 test.use({ storageState: authState('admin') });
 

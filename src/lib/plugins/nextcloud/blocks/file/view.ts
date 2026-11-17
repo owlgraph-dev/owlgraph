@@ -22,7 +22,7 @@ import {
   type SurfaceData,
   type TypographyData,
   type TypographyRegistry,
-} from '$lib/features/content';
+} from '#lib/features/content/index.ts';
 import type { DocumentView } from '../../server/documents.server';
 import { FILE_BLOCK, fileConfig, type FileConfig } from './model';
 import type { FileTexts } from './texts';

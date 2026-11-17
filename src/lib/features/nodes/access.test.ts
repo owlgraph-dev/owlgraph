@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { canReadNode, canWriteNode } from './access';
-import type { SessionUser, Role } from '$lib/features/auth/server';
+import type { SessionUser, Role } from '#lib/features/auth/server.ts';
 
 const user = (role: Role, id = role): SessionUser => ({ id, email: `${id}@t`, name: id, role });
 const admin = user('admin');

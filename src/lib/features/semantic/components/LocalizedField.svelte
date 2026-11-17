@@ -7,12 +7,12 @@
   // The design system's LocalizedTextField bound to the site's languages
   // (docs/architecture/languages.md); the primitive itself knows no language. Text in a disabled
   // language is kept, with a note.
-  import { LocalizedTextField, type LocalizedTextLocale } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { getLocale } from '$lib/paraglide/runtime';
-  import { COMMON_FALLBACK_LOCALE } from '$lib/platform/i18n/localizedText';
-  import { enabledLocales, isSupportedLocale, siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
-  import { localeName, localeNameInUi } from '$lib/platform/i18n/localeNames';
+  import { LocalizedTextField, type LocalizedTextLocale } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { getLocale } from '#lib/paraglide/runtime.js';
+  import { COMMON_FALLBACK_LOCALE } from '#lib/platform/i18n/localizedText.ts';
+  import { enabledLocales, isSupportedLocale, siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
+  import { localeName, localeNameInUi } from '#lib/platform/i18n/localeNames.ts';
 
   let {
     label,

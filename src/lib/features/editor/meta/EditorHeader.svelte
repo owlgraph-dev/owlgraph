@@ -8,13 +8,13 @@
   // overlay check (desktop/overlays.svelte.ts); title and slug are local, the
   // tags the editor's mirror.
   import { untrack } from 'svelte';
-  import { Button, DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, FieldError, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { Logo } from '$lib/features/site/components';
+  import { Button, DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, FieldError, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { Logo } from '#lib/features/site/components.ts';
   import InlineEditField from './InlineEditField.svelte';
   import TagsPopover from './TagsPopover.svelte';
-  import { nodePath } from '$lib/features/nodes';
-  import * as m from '$lib/paraglide/messages';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     title = '',

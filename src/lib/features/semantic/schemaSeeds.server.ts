@@ -4,8 +4,8 @@
 
 // The baseline's seed rows of the schema again, for ensureCoreClasses() and
 // the e2e reseed after a truncate; keep the two in step.
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-import type { NodeType } from '$lib/features/nodes/server';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import type { NodeType } from '#lib/features/nodes/server.ts';
 
 export interface PropertyGroupSeed {
   slug: string;

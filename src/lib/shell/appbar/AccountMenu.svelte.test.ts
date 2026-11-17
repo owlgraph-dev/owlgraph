@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, type Locator } from 'vitest/browser';
 import AccountMenu from './AccountMenu.svelte';
-import { canEdit, type Role } from '$lib/features/auth';
+import { canEdit, type Role } from '#lib/features/auth/index.ts';
 
 // At a desktop width: the phone's menu is a sheet. The open state is held as
 // the app bar holds it.

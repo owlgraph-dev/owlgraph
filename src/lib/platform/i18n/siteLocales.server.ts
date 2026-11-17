@@ -5,8 +5,8 @@
 // The site's languages as site_settings stores them. Every rendered request
 // reads them, so they are cached: refreshed by a save in this process, else
 // re-read after the TTL, which picks up another process's change too.
-import { db } from '$lib/platform/db.server';
-import { CodedError } from '$lib/platform/codedError';
+import { db } from '#lib/platform/db.server.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 import {
   SUPPORTED_LOCALES,
   isSupportedLocale,

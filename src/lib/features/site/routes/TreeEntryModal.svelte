@@ -6,9 +6,9 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { PagePicker } from '$lib/features/search/picker';
-  import { Dialog, Button, Input, FormField, RadioGroup } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { PagePicker } from '#lib/features/search/picker.ts';
+  import { Dialog, Button, Input, FormField, RadioGroup } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { TreeNodeAdminRow, TreeNodeKind, TreeTargetType } from '../types';
 
   type PageResult = { id: string; slug: string; title: string };

@@ -6,7 +6,7 @@
 // A share's token is checked against the server at once and kept only sealed,
 // never in the record or an answer. An own-files folder has no credential of
 // its own: each viewer reads it with their own connection, or not at all.
-import type { PluginConnectResult, PluginHost, PluginNode, PluginRequest, PluginSourceSummary } from '$lib/plugins/api';
+import type { PluginConnectResult, PluginHost, PluginNode, PluginRequest, PluginSourceSummary } from '#lib/plugins/api.ts';
 import { t } from '../messages';
 import { checkSharePath } from '../sharePath';
 import { parseShareUrl } from './shareUrl';

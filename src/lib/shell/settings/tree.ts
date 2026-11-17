@@ -5,8 +5,8 @@
 // Message functions are stored, never called here: the locale resolves per
 // render. This only decides what is shown; each route's adapter enforces the
 // same action with requireAction (docs/architecture/settings.md).
-import * as m from '$lib/paraglide/messages';
-import { PLUGINS_WITH_CONNECTIONS, PLUGINS_WITH_SETTINGS } from '$lib/plugins';
+import * as m from '#lib/paraglide/messages.js';
+import { PLUGINS_WITH_CONNECTIONS, PLUGINS_WITH_SETTINGS } from '#lib/plugins/index.ts';
 import type { SettingsGroup, SettingsItem } from './treeModel';
 
 // The group is absent while no plugin declares settings.

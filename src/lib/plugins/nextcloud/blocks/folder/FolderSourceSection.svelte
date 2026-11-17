@@ -7,9 +7,9 @@
   // The folder block's Source section: its rows, inside the block settings panel's frame. A
   // collection's source is connected anew on the collection's own page.
   import { onDestroy, untrack } from 'svelte';
-  import { Button, FieldRow, Select, toast } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import type { PluginSectionProps } from '$lib/plugins/api';
+  import { Button, FieldRow, Select, toast } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import type { PluginSectionProps } from '#lib/plugins/api.ts';
   import { t } from '../../messages';
   import type { SourceStatus } from '../../server/refs';
   import { PLUGIN_ROUTES } from '../routes';

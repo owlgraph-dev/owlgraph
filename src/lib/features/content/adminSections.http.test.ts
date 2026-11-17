@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // The site's defaults are saved through the branding section's form action:
 // the served build caches them, and only its own save refreshes them.

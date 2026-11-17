@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/media/avatar/[userId]/+server.ts.
-import { getUserAvatarMeta } from '$lib/features/media/server';
-import { getAssetBytes, servePublicAssetBytes } from '$lib/features/media/server';
+import { getUserAvatarMeta } from '#lib/features/media/server.ts';
+import { getAssetBytes, servePublicAssetBytes } from '#lib/features/media/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { textError } from '$lib/platform/apiErrors';
+import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { userId: string };
 

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The languages' names (docs/architecture/languages.md), so a language is named in one place.
-import type { Locale } from '$lib/paraglide/runtime';
-import * as m from '$lib/paraglide/messages';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import * as m from '#lib/paraglide/messages.js';
 
 // Each language in its own name (an autonym), so a reader finds theirs in
 // any interface language.

@@ -5,7 +5,7 @@
 // A diagram takes the content palette of its canvas (docs/architecture/theming.md,
 // "Content scheme"). Mermaid derives shades from concrete colours, so it can't
 // take `var()`: the palette is read off the rendered element.
-import { parseColor, relativeLuminance } from '$lib/design-system/theme/color';
+import { parseColor, relativeLuminance } from '#lib/design-system/theme/color.ts';
 
 export const MERMAID_TOKENS = [
   '--content-bg',

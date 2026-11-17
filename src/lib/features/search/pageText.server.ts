@@ -8,7 +8,7 @@
 // runs inside the save chokepoint.
 
 import sanitizeHtml from 'sanitize-html';
-import { blockText, isUnknownType, type JsonNode } from '$lib/features/content';
+import { blockText, isUnknownType, type JsonNode } from '#lib/features/content/index.ts';
 
 
 export interface PageSearchText {

@@ -7,9 +7,9 @@
   // The header of a node's own page (docs/architecture/semantic-layer.md, "A node's page").
   // Presentation only: the read route resolves every word and prunes every
   // list for the viewer (NodeHeaderView).
-  import { Badge, Button } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeHeaderView } from '$lib/features/nodes';
+  import { Badge, Button } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeHeaderView } from '#lib/features/nodes/index.ts';
 
   let { view }: { view: NodeHeaderView } = $props();
 

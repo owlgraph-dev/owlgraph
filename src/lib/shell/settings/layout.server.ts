@@ -6,7 +6,7 @@
 // It gates nothing, as a layout load never protects a direct POST: it says
 // which sections the viewer may see, and each section's adapter enforces its
 // action with requireAction. No DB work: it reruns on every form action.
-import { can } from '$lib/features/auth/server';
+import { can } from '#lib/features/auth/server.ts';
 import { SETTINGS_TREE } from './tree';
 import { requiredActions } from './treeModel';
 import type { ServerLoadEvent } from '@sveltejs/kit';

@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Locator } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { doc } from '$tests/e2e/doc';
-import { blockSettings } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc } from '#tests/e2e/doc.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const LIGHT_GROUND = 'rgb(255, 255, 255)';
 const DARK_GROUND = 'rgb(28, 28, 27)';

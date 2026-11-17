@@ -5,16 +5,16 @@
 // Routes reachable without a session, each enforcing per-page visibility in its
 // own load; everything else requires one (src/hooks.server.ts). Each feature
 // declares its own in routes/publicRoutes.ts.
-import { publicRoutes as auth } from '$lib/features/auth/routes/publicRoutes';
-import { publicRoutes as site } from '$lib/features/site/routes/publicRoutes';
-import { publicRoutes as reader } from '$lib/features/reader/routes/publicRoutes';
-import { publicRoutes as namespaces } from '$lib/features/namespaces/routes/publicRoutes';
-import { publicRoutes as content } from '$lib/features/content/routes/publicRoutes';
-import { publicRoutes as documents } from '$lib/features/documents/routes/publicRoutes';
-import { publicRoutes as media } from '$lib/features/media/routes/publicRoutes';
-import { publicRoutes as query } from '$lib/features/query/routes/publicRoutes';
-import { publicRoutes as search } from '$lib/features/search/routes/publicRoutes';
-import { publicRoutes as integrations } from '$lib/features/pluginHost/routes/publicRoutes';
+import { publicRoutes as auth } from '#lib/features/auth/routes/publicRoutes.ts';
+import { publicRoutes as site } from '#lib/features/site/routes/publicRoutes.ts';
+import { publicRoutes as reader } from '#lib/features/reader/routes/publicRoutes.ts';
+import { publicRoutes as namespaces } from '#lib/features/namespaces/routes/publicRoutes.ts';
+import { publicRoutes as content } from '#lib/features/content/routes/publicRoutes.ts';
+import { publicRoutes as documents } from '#lib/features/documents/routes/publicRoutes.ts';
+import { publicRoutes as media } from '#lib/features/media/routes/publicRoutes.ts';
+import { publicRoutes as query } from '#lib/features/query/routes/publicRoutes.ts';
+import { publicRoutes as search } from '#lib/features/search/routes/publicRoutes.ts';
+import { publicRoutes as integrations } from '#lib/features/pluginHost/routes/publicRoutes.ts';
 
 export const PUBLIC_ROUTES: ReadonlySet<string> = new Set<string>([
   '/api/health',

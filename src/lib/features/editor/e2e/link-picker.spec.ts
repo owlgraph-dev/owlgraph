@@ -3,13 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // docs/architecture/search.md, "The node picker".
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, unique } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { horizontalOverflow } from '$tests/e2e/responsive';
-import { endOfLine, selectText } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, unique } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { horizontalOverflow } from '#tests/e2e/responsive.ts';
+import { endOfLine, selectText } from '#tests/e2e/editor.ts';
 import { db } from '../../../platform/db.server';
 
 test.describe('the link picker', () => {

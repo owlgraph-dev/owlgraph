@@ -6,9 +6,9 @@
 <script lang="ts">
   // The phone's counterpart of the desktop-only NavigationMenu: the same tree
   // as expandable sheet rows.
-  import { BottomSheetItem } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import type { ResolvedTreeNode } from '$lib/features/site';
+  import { BottomSheetItem } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import type { ResolvedTreeNode } from '#lib/features/site/index.ts';
 
   let {
     navEntries,

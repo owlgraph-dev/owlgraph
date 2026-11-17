@@ -6,10 +6,10 @@
 <script lang="ts">
   // The notices AGPL-3.0 §0 asks for. The licence texts are plain text, not
   // pages: rel="external" hands them to the browser.
-  import { Badge, Button, SettingsRow, SettingsGroup } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { pluginLabel } from '$lib/plugins';
-  import { localeNameInUi } from '$lib/platform/i18n/localeNames';
+  import { Badge, Button, SettingsRow, SettingsGroup } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { pluginLabel } from '#lib/plugins/index.ts';
+  import { localeNameInUi } from '#lib/platform/i18n/localeNames.ts';
   import type { InstallationInfo } from './types';
 
   interface AboutPageData {

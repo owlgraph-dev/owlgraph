@@ -4,8 +4,8 @@
 
 // What a custom style may do but will regret (docs/architecture/custom-styles.md): warnings,
 // never refusals (docs/architecture/design-system/patterns.md, "Where an error goes").
-import { contrastRatio, parseColor, type Rgba } from '$lib/design-system/theme/color';
-import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
+import { contrastRatio, parseColor, type Rgba } from '#lib/design-system/theme/color.ts';
+import { resolveSchemeValue, SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
 import postcss, { type Declaration } from 'postcss';
 import valueParser from 'postcss-value-parser';
 import type { StyleKind } from './compile';

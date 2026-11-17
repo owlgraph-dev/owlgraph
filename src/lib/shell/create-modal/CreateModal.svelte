@@ -6,19 +6,19 @@
 <script lang="ts">
   // Dialog has no multi-step pattern, so the grid and document views are
   // switched inside its children.
-  import { createBlankPageViaApi } from '$lib/features/pages';
-  import type { DocumentSource } from '$lib/features/documents';
-  import { createCuratedCollection } from '$lib/features/collections';
-  import { NewDocumentForm } from '$lib/features/documents/create';
+  import { createBlankPageViaApi } from '#lib/features/pages/index.ts';
+  import type { DocumentSource } from '#lib/features/documents/index.ts';
+  import { createCuratedCollection } from '#lib/features/collections/index.ts';
+  import { NewDocumentForm } from '#lib/features/documents/create.ts';
   // The editor runs under a looser style-src (platform/cspRoutes.ts) and a
   // policy belongs to the document: a full navigation, never goto().
   const openEditor = (href: string) => window.location.assign(href);
   import { page } from '$app/state';
-  import { Dialog, Button, Alert, FormField, Select } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Dialog, Button, Alert, FormField, Select } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import { CREATE_CARDS, type CreateCard } from './createCards';
-  import { nodePath } from '$lib/features/nodes';
-  import * as m from '$lib/paraglide/messages';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void } = $props();
 

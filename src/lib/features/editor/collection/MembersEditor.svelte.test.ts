@@ -6,10 +6,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
-import type { CollectionMember } from '$lib/features/collections';
-import type { NodeSearchResult } from '$lib/features/search';
+import type { CollectionMember } from '#lib/features/collections/index.ts';
+import type { NodeSearchResult } from '#lib/features/search/index.ts';
 import MembersEditor from './MembersEditor.svelte';
-import { stubFetch, type Call } from '$tests/component/fetch';
+import { stubFetch, type Call } from '#tests/component/fetch.ts';
 
 // The members API, the title search and the create routes are a stand-in;
 // what the members API stores is members.http.test.ts's.

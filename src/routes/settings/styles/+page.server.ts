@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { load, actions } from '$lib/features/site/routes/settings.styles.server';
+export { load, actions } from '#lib/features/site/routes/settings.styles.server.ts';

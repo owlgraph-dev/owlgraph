@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   // A grid cell's flat node attrs, not capability data: no tiers.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Switch } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
   import type { Target } from './types';
 

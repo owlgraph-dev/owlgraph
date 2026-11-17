@@ -6,9 +6,9 @@
 <script lang="ts">
   // No onCloseAutoFocus: closing this never hands focus back to the editor
   // content.
-  import { Popover, Combobox, TriggerFace, Chip } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Popover, Combobox, TriggerFace, Chip } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import { addTag, removeTag } from './tags';
 
   let {

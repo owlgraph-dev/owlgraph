@@ -6,9 +6,9 @@
 // visibility. The bytes stay behind this module so they can move to object
 // storage. Access is enforced wherever a document is read or served.
 import { createHash } from 'node:crypto';
-import { db, type TxSql } from '$lib/platform/db.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { canWriteNode, type Visibility } from '$lib/features/nodes';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { canWriteNode, type Visibility } from '#lib/features/nodes/index.ts';
 import {
   insertNode,
   readableNodes,
@@ -21,14 +21,14 @@ import {
   assertCanPlaceInNamespace,
   assertNotWiderThanNamespace,
   userCanReadNode,
-} from '$lib/features/nodes/server';
-import { getNamespace, getDefaultNamespace } from '$lib/features/namespaces/server';
-import { getTypeClass } from '$lib/features/semantic/server';
+} from '#lib/features/nodes/server.ts';
+import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getTypeClass } from '#lib/features/semantic/server.ts';
 import { extractText } from './extract.server';
 import { detectLocale } from './detectLocale';
-import { enabledLocales } from '$lib/platform/i18n/siteLocales';
+import { enabledLocales } from '#lib/platform/i18n/siteLocales.ts';
 import type { DocumentSource } from './externalUrl';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export const MAX_DOCUMENT_BYTES = 25 * 1024 * 1024;
 // No HTML or SVG: they can carry script, and served content must stay inert.

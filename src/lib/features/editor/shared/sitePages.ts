@@ -5,9 +5,9 @@
 // The app's own linkable pages, which are not nodes, so no node picker finds
 // them. A quick link to one stores its path, so a filter can follow
 // (docs/architecture/blocks/node-embeds.md#quick-link-targets). A new linkable route is one entry.
-import * as m from '$lib/paraglide/messages';
-import { isLocale } from '$lib/paraglide/runtime';
-import { searchHref } from '$lib/features/search';
+import * as m from '#lib/paraglide/messages.js';
+import { isLocale } from '#lib/paraglide/runtime.js';
+import { searchHref } from '#lib/features/search/index.ts';
 
 export interface SitePage {
   path: string;

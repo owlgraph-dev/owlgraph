@@ -5,10 +5,10 @@
 // E2E because: the flow is the point. A page asks a reader to connect, they
 // approve through Connections, and come back to their own files.
 import type { APIRequestContext, Browser, BrowserContext, Locator, Page } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, formAction, throwawayUserState } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, formAction, throwawayUserState } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
 import { startMockNextcloud, type MockNextcloud, type MockUser } from './mockNextcloud';
 
 const API = '/api/plugins/nextcloud';

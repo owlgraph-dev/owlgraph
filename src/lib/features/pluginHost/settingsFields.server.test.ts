@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import type { PluginSettingsSection } from '$lib/plugins/api';
+import type { PluginSettingsSection } from '#lib/plugins/api.ts';
 import { defaultSettings, originOf, storedSettings, validateSettings } from './settingsFields.server';
 
 // A fake plugin's section: one origin, one number.

@@ -6,7 +6,7 @@
 // In the editor it speaks the interface's language and follows the document
 // through the configured `source`.
 import { Node } from '@tiptap/core';
-import { getLocale } from '$lib/paraglide/runtime';
+import { getLocale } from '#lib/paraglide/runtime.js';
 import { surfaceAttr } from '../../capabilities/surface/surface';
 import { typographyAttr } from '../../capabilities/typography/typography';
 import { placementAttr } from '../../capabilities/placement/placement';

@@ -8,8 +8,8 @@
   // sync. It sees only the tree the sidebar shows, so a hidden section can't be
   // found by name.
   import { goto } from '$app/navigation';
-  import { Input, EmptyState } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Input, EmptyState } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { leavesSettings, searchItems, type SettingsGroup } from './treeModel';
 
   let {

@@ -9,7 +9,7 @@
   // document's content, which answers each follower with a grant of their own.
   // The editor's actions (`editing`) and texts (`texts.editor`) are null on the page.
   import { untrack } from 'svelte';
-  import { Button, toast } from '$lib/design-system';
+  import { Button, toast } from '#lib/design-system/index.ts';
   import {
     DocumentEntry,
     dateText,
@@ -20,7 +20,7 @@
     typeLabel,
     type DocumentEntryFile,
     type DocumentPlaceholder,
-  } from '$lib/features/content/listing';
+  } from '#lib/features/content/listing.ts';
   import TreeBrowser from '../TreeBrowser.svelte';
   import type { TreeChoice } from '../tree';
   import type { FileProps } from './view';

@@ -10,9 +10,9 @@
   import SpacingField from '../capabilities/spacing/SpacingField.svelte';
   import SpaceField from '../capabilities/spacing/SpaceField.svelte';
   import GutterField from '../capabilities/spacing/GutterField.svelte';
-  import { Button } from '$lib/design-system';
-  import { BLOCK_SPACE_PRESETS, SPACE_ABOVE_PRESETS, editTier, hasAnyOwnValue, hasOwnValueAt, pageGutter, type PageLayout, type SpaceField as SpaceFieldName, type SpacingData, type Side } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { Button } from '#lib/design-system/index.ts';
+  import { BLOCK_SPACE_PRESETS, SPACE_ABOVE_PRESETS, editTier, hasAnyOwnValue, hasOwnValueAt, pageGutter, type PageLayout, type SpaceField as SpaceFieldName, type SpacingData, type Side } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
 
   let {

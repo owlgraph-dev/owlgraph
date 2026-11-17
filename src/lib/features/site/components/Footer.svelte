@@ -7,8 +7,8 @@
   // No rich content: all text is plain interpolation, the only markup <a>/<img>
   // from validated hrefs. The strip always ends with the link to /-/about
   // (AGPL-3.0 §13), which no footer setting removes (docs/architecture/settings.md, "The footer").
-  import { Icon } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Icon } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { ResolvedFooter } from '../types';
 
   let {

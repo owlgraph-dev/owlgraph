@@ -4,8 +4,8 @@
 
 // Route adapter for /settings/branding, re-exported by src/routes/settings/branding/+page.server.ts.
 import { fail } from '@sveltejs/kit';
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { getCurrentLogo, removeLogo, getUiFontFamily, setUiFontFamily } from '$lib/features/site/server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getCurrentLogo, removeLogo, getUiFontFamily, setUiFontFamily } from '#lib/features/site/server.ts';
 // Outside the barrel: the upload is the only importer of the SVG sanitizer (jsdom).
 import { replaceLogo, replaceDarkLogo } from '../logoUpload.server';
 import {
@@ -16,8 +16,8 @@ import {
   saveBlockDefaults,
   resetBlockDefaults,
   type ThemeColorsInput,
-} from '$lib/features/site/server';
-import { getCustomFontEntries } from '$lib/features/content/server';
+} from '#lib/features/site/server.ts';
+import { getCustomFontEntries } from '#lib/features/content/server.ts';
 import {
   listTypographyTokens,
   createTypographyToken,
@@ -30,11 +30,11 @@ import {
   setDefaultParagraphStyle,
   deleteParagraphStyle,
   type TypographyTokenInput,
-} from '$lib/features/content/server';
-import { isParagraphStyleTag, type TypeSize } from '$lib/features/content';
-import { localizedTextFromForm } from '$lib/platform/i18n/localizedText.server';
+} from '#lib/features/content/server.ts';
+import { isParagraphStyleTag, type TypeSize } from '#lib/features/content/index.ts';
+import { localizedTextFromForm } from '#lib/platform/i18n/localizedText.server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('branding', 'branding:manage');

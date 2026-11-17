@@ -7,17 +7,17 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import postgres from 'postgres';
-import { db } from '$lib/platform/db.server';
-import { readBaseline, type MigrationRow, type ReplacedMigration } from '$lib/platform/baseline.server';
-import { runMigrations } from '$lib/platform/migrate.server';
-import { secretBox } from '$lib/platform/secretBox.server';
-import { addCuratedMember, createCollection } from '$lib/features/collections/server';
-import { createDocument, createLinkDocument, replaceDocumentBytes } from '$lib/features/documents/server';
-import { sealCredential, storeConnection, storeSealedSecret } from '$lib/features/pluginHost/server';
-import { baseName, createEmptyDatabase, dropDatabase, urlFor } from '$tests/support/databases';
-import { pgContainer } from '$tests/integration/pg';
-import { runScript } from '$tests/integration/scripts';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { readBaseline, type MigrationRow, type ReplacedMigration } from '#lib/platform/baseline.server.ts';
+import { runMigrations } from '#lib/platform/migrate.server.ts';
+import { secretBox } from '#lib/platform/secretBox.server.ts';
+import { addCuratedMember, createCollection } from '#lib/features/collections/server.ts';
+import { createDocument, createLinkDocument, replaceDocumentBytes } from '#lib/features/documents/server.ts';
+import { sealCredential, storeConnection, storeSealedSecret } from '#lib/features/pluginHost/server.ts';
+import { baseName, createEmptyDatabase, dropDatabase, urlFor } from '#tests/support/databases.ts';
+import { pgContainer } from '#tests/integration/pg.ts';
+import { runScript } from '#tests/integration/scripts.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 // The scripts run as an operator runs them, against the server in its container
 // (docs/guides/backup.md). A restore may overwrite only `<clone>_target`, which this

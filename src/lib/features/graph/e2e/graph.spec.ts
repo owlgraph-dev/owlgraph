@@ -2,9 +2,9 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { seed, authState } from '$tests/e2e/seed-data';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { seed, authState } from '#tests/e2e/seed-data.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
 
 // Each node is an SVG <g role="button" aria-label={title}>.
 const graphButton = (page: import('@playwright/test').Page, title: string) =>

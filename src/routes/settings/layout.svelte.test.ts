@@ -8,8 +8,8 @@ import { page as screen, userEvent } from 'vitest/browser';
 import { createRawSnippet } from 'svelte';
 import { page } from '$app/state';
 import Layout from './+layout.svelte';
-import { SETTINGS_TREE } from '$lib/shell/settings/tree';
-import { requiredActions } from '$lib/shell/settings/treeModel';
+import { SETTINGS_TREE } from '#lib/shell/settings/tree.ts';
+import { requiredActions } from '#lib/shell/settings/treeModel.ts';
 import type { LayoutData } from './$types';
 
 // At a desktop width, since below the breakpoint the nav moves into a sheet;

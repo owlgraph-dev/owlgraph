@@ -4,7 +4,7 @@
 
 // The Nextcloud plugin's interface texts — its own dictionaries
 // (docs/architecture/plugins.md), so the core's message catalogues never carry its words.
-import { pluginMessages } from '$lib/plugins/api';
+import { pluginMessages } from '#lib/plugins/api.ts';
 
 export const t = pluginMessages(
   {

@@ -11,7 +11,7 @@ import { clearLocations } from './locations.server';
 import { clearListings } from './cache.server';
 import { listingOf } from './listing.server';
 import { resolveNode } from './resolve.server';
-import type { PluginNode, PluginOpenConnection } from '$lib/plugins/api';
+import type { PluginNode, PluginOpenConnection } from '#lib/plugins/api.ts';
 
 const SHARE = 'TeamShare123';
 const team = { content: 'A', mime: 'text/plain', fileid: 501 };

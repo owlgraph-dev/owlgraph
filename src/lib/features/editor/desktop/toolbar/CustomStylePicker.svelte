@@ -7,9 +7,9 @@
   // The named-style picker. Label and class, no styled preview: the compiled
   // rules are scoped to the page canvas (docs/architecture/custom-styles.md) and this
   // popover portals to the body.
-  import { Button, Popover, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Popover, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import { preserveEditorFocusOnClose } from '../keyboard';
   import type { EditorCore } from '../../core/editorCore.svelte';
   import type { EditorOverlays } from '../overlays.svelte';

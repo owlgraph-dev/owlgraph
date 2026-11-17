@@ -6,15 +6,15 @@
 // site theme). The only place SVG is accepted, so the only module needing the
 // SVG sanitizer and jsdom: it stays out of the barrel (server.ts), which the MCP
 // server and every logo-rendering route import.
-import { db } from '$lib/platform/db.server';
-import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '$lib/features/media/server';
-import { sanitizeSvg, SvgRejectedError } from '$lib/platform/svgSanitize.server';
-import { logEvent, logger } from '$lib/platform/logger.server';
-import type { JsonArg } from '$lib/platform/db.server';
-import type { StoredTheme } from '$lib/design-system/theme/siteTheme';
+import { db } from '#lib/platform/db.server.ts';
+import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '#lib/features/media/server.ts';
+import { sanitizeSvg, SvgRejectedError } from '#lib/platform/svgSanitize.server.ts';
+import { logEvent, logger } from '#lib/platform/logger.server.ts';
+import type { JsonArg } from '#lib/platform/db.server.ts';
+import type { StoredTheme } from '#lib/design-system/theme/siteTheme.ts';
 import { getLogoAssetId } from './branding.server';
 import { getSiteTheme, SITE_THEME_CONFLICT } from './theme.server';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 const ALLOWED_LOGO_MIME = new Set([...ALLOWED_IMAGE_MIME, 'image/svg+xml']);
 const MAX_LOGO_BYTES = MAX_IMAGE_BYTES;

@@ -9,7 +9,7 @@
 import { Extension, Node, mergeAttributes } from '@tiptap/core';
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import type { ViewMutationRecord } from '@tiptap/pm/view';
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { placeholderMenuTarget } from './placeholderOps';
 
 type N = any;

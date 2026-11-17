@@ -6,12 +6,12 @@
 // (docs/architecture/theming.md, "Letting pages adapt"). The report and the pinning run
 // under the viewer's own permissions (readiness.server.ts).
 import { type Actions, type ServerLoadEvent } from '@sveltejs/kit';
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { isContentScheme, themeColorShortfalls } from '$lib/features/content';
-import { getContentSchemeDefault, setContentSchemeDefault } from '$lib/features/content/server';
-import { keepPagesLight, siteReadiness } from '$lib/features/pages/server';
-import { getSiteTheme } from '$lib/features/site/server';
-import { formError } from '$lib/platform/formError.server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { isContentScheme, themeColorShortfalls } from '#lib/features/content/index.ts';
+import { getContentSchemeDefault, setContentSchemeDefault } from '#lib/features/content/server.ts';
+import { keepPagesLight, siteReadiness } from '#lib/features/pages/server.ts';
+import { getSiteTheme } from '#lib/features/site/server.ts';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('color-scheme', 'branding:manage');

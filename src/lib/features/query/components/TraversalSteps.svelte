@@ -6,10 +6,10 @@
 <script lang="ts">
   // The repeat hint sits once on the label, not per step. With no steps only the
   // add button shows, so the common flat filter stays light.
-  import { Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeClassOption, RelationshipTypeOption } from '$lib/features/semantic';
+  import { Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeClassOption, RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import { MAX_STEPS } from '../traversal';
   import { newStepDraft, type TraversalStepDraft } from '../conditionRows';
   import type { PropertyOption } from './sourceOptions';

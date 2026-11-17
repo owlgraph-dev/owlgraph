@@ -5,7 +5,7 @@
 // The source is edited through the selected-block overlay ("Edit block"),
 // like the HTML block's.
 import { Node } from '@tiptap/core';
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { svelteNodeView } from '../scaffold/svelteNodeView.svelte';
 import { diagramProps, diagramWrapper } from './view';
 import DiagramView from './Diagram.svelte';

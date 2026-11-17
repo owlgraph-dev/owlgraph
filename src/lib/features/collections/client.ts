@@ -4,10 +4,10 @@
 
 // Every answer about members carries them afresh with the basis of their
 // order, which the next rearrangement names.
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
-import type { CollectionBlockData } from '$lib/features/content';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import type { CollectionBlockData } from '#lib/features/content/index.ts';
 import type { CollectionMember } from './types';
-import { readApiError } from '$lib/platform/readApiError';
+import { readApiError } from '#lib/platform/readApiError.ts';
 
 /** A collection as a block shows it to the viewer; hidden when missing, unreadable or unreachable. */
 export async function loadCollectionEmbed(collectionId: string): Promise<CollectionBlockData> {

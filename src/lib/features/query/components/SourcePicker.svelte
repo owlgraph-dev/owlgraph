@@ -6,7 +6,7 @@
 <script lang="ts">
   // The builder's one source picker, for conditions, sorting and the mapping;
   // sourceOptions.ts builds its groups per context.
-  import { Select } from '$lib/design-system';
+  import { Select } from '#lib/design-system/index.ts';
   import type { SourceGroup } from './sourceOptions';
 
   let {

@@ -6,14 +6,14 @@
 // into the plugin's, its id and capabilities carried, and Undo turns it back in
 // one step (docs/architecture/blocks/node-embeds.md, "One family in the editor").
 import type { APIRequestContext, Locator, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage, unique } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage, unique } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { db } from '../../../platform/db.server';
 import { startMockNextcloud, type MockNextcloud } from './mockNextcloud';
-import { blockSettings, savePage } from '$tests/e2e/editor';
+import { blockSettings, savePage } from '#tests/e2e/editor.ts';
 import { configure } from './settings';
 
 const API = '/api/plugins/nextcloud';

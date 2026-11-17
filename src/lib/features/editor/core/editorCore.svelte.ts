@@ -16,15 +16,15 @@ import { FormatState } from './format.svelte';
 import { LinkInsertion } from './links.svelte';
 import { PropertyMarks } from './properties.svelte';
 import { collectionEmbeds, documentEmbeds } from './embeds';
-import { unwrapUnknown, unknownKeys, lostKeys, type UnknownUnit } from '$lib/features/content';
-import { LiveStyles, setLiveStyles, getLiveStyles } from '$lib/features/content/editor';
-import { pageAttrsOf, type PageAttrs } from '$lib/features/content';
-import { setBlockAttrsById, deleteBlockById, nearestInsertPos } from '$lib/features/content/editor';
-import { editTier } from '$lib/features/content';
-import type { Tier } from '$lib/features/content';
-import { nodePath } from '$lib/features/nodes';
-import { computeFirstBlockBleeds } from '$lib/features/content';
-import type { JsonDoc } from '$lib/features/content';
+import { unwrapUnknown, unknownKeys, lostKeys, type UnknownUnit } from '#lib/features/content/index.ts';
+import { LiveStyles, setLiveStyles, getLiveStyles } from '#lib/features/content/editor.ts';
+import { pageAttrsOf, type PageAttrs } from '#lib/features/content/index.ts';
+import { setBlockAttrsById, deleteBlockById, nearestInsertPos } from '#lib/features/content/editor.ts';
+import { editTier } from '#lib/features/content/index.ts';
+import type { Tier } from '#lib/features/content/index.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { computeFirstBlockBleeds } from '#lib/features/content/index.ts';
+import type { JsonDoc } from '#lib/features/content/index.ts';
 
 export type MountOptions = {
   doc: unknown;

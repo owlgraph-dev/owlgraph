@@ -5,7 +5,7 @@
 // The node check of authorization, after the role check's can()
 // (docs/architecture/authorization.md, "Two checks"). Pure: the caller looks up shares and
 // membership (./access.server.ts). canReadNode's SQL twin is readableNodes().
-import type { SessionUser } from '$lib/features/auth';
+import type { SessionUser } from '#lib/features/auth/index.ts';
 import type { NodeType } from './types';
 
 export type Visibility = 'public' | 'internal' | 'restricted';

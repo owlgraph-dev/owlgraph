@@ -20,12 +20,12 @@
     TableCell,
     toast,
     type TableColumn,
-  } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { nodePath } from '$lib/features/nodes';
-  import { CONTENT_SCHEMES, type ContentScheme } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import { CONTENT_SCHEMES, type ContentScheme } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data } = $props();
 

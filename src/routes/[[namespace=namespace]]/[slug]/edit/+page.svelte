@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import EditPage from '$lib/features/editor/routes/EditPage.svelte';
+  import EditPage from '#lib/features/editor/routes/EditPage.svelte';
   let { data } = $props();
 </script>
 

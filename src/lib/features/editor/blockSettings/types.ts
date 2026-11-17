@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Editor as TiptapEditor } from '@tiptap/core';
-import type { EmbedDispatch, EmbedFamily, EmbedKind } from '$lib/features/content';
+import type { EmbedDispatch, EmbedFamily, EmbedKind } from '#lib/features/content/index.ts';
 
 // What every block settings section edits, with the write path back into the
 // document: a section never knows whether its target is addressed by block id

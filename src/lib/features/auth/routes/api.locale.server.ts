@@ -7,11 +7,11 @@
 // which nothing else writes, and a signed-in viewer's preference, so the choice
 // follows them to every device. Public; only an enabled language is accepted.
 import { dev } from '$app/env';
-import { setOwnLocale } from '$lib/features/auth/server';
-import { UI_LOCALE_COOKIE } from '$lib/platform/i18n/negotiate';
-import { currentSiteLocaleConfig } from '$lib/platform/i18n/siteLocales.server';
+import { setOwnLocale } from '#lib/features/auth/server.ts';
+import { UI_LOCALE_COOKIE } from '#lib/platform/i18n/negotiate.ts';
+import { currentSiteLocaleConfig } from '#lib/platform/i18n/siteLocales.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 const ONE_YEAR_S = 60 * 60 * 24 * 365;
 

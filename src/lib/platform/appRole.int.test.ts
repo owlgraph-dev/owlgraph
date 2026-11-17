@@ -9,7 +9,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { db } from './db.server';
 import { runMigrations } from './migrate.server';
-import { createEmptyDatabase, dropDatabase, urlFor } from '$tests/support/databases';
+import { createEmptyDatabase, dropDatabase, urlFor } from '#tests/support/databases.ts';
 
 // app_user (the role block of migrations/0001_baseline.sql) is what a
 // deployment connects as, and every other test connects as the superuser, so

@@ -4,10 +4,10 @@
 
 import { describe, expect, inject, it } from 'vitest';
 import pino from 'pino';
-import { db } from '$lib/platform/db.server';
-import { loggerOptions, type Logger } from '$lib/platform/logger.server';
-import { getUserByToken } from '$lib/features/auth/server';
-import { connectAs, textOf, userOf } from '$tests/integration/mcp';
+import { db } from '#lib/platform/db.server.ts';
+import { loggerOptions, type Logger } from '#lib/platform/logger.server.ts';
+import { getUserByToken } from '#lib/features/auth/server.ts';
+import { connectAs, textOf, userOf } from '#tests/integration/mcp.ts';
 
 // The real MCP server for a seeded user, over the SDK's in-memory transport
 // (tests/integration/mcp.ts).

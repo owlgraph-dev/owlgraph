@@ -7,7 +7,7 @@
   // The quick-link card, in the editor and as the page's island. An authored
   // surface, never a chrome primitive: quickLink.css decides its look
   // (docs/architecture/blocks/anatomy.md, "Svelte leaf blocks").
-  import { iconSvg, isIconName } from '$lib/design-system/icons';
+  import { iconSvg, isIconName } from '#lib/design-system/icons.ts';
 
   let {
     variant = 'link',

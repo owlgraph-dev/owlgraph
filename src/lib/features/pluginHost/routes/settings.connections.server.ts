@@ -5,10 +5,10 @@
 // Route adapter for /settings/connections, re-exported by src/routes/settings/connections/+page.server.ts.
 // The person's own connections (docs/architecture/settings.md, "The personal group"), scoped to locals.user.
 import { error, type ServerLoadEvent } from '@sveltejs/kit';
-import { safePath } from '$lib/features/auth';
-import { clientNameFor, connectionStore, connectionsOf, pendingConnect, pluginOrigin } from '$lib/features/pluginHost/server';
-import type { ConnectionView, ServiceConnectionView } from '$lib/features/pluginHost';
-import { PLUGINS_WITH_CONNECTIONS } from '$lib/plugins';
+import { safePath } from '#lib/features/auth/index.ts';
+import { clientNameFor, connectionStore, connectionsOf, pendingConnect, pluginOrigin } from '#lib/features/pluginHost/server.ts';
+import type { ConnectionView, ServiceConnectionView } from '#lib/features/pluginHost/index.ts';
+import { PLUGINS_WITH_CONNECTIONS } from '#lib/plugins/index.ts';
 
 export const load = async ({ locals, url }: ServerLoadEvent) => {
   const user = locals.user;

@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { setNodeTags } from '$lib/features/semantic/server';
-import { connectAs, jsonOf, textOf, type Role } from '$tests/integration/mcp';
+import { db } from '#lib/platform/db.server.ts';
+import { setNodeTags } from '#lib/features/semantic/server.ts';
+import { connectAs, jsonOf, textOf, type Role } from '#tests/integration/mcp.ts';
 
 const seed = inject('seed');
 const MISSING = '00000000-0000-4000-8000-000000000000';

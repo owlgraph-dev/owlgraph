@@ -7,11 +7,11 @@
   // The page's colour scheme (docs/architecture/theming.md, "Content scheme"). Adaptive
   // lists what would stop reading on the live document but is still allowed.
   // The draft is taken from `value` on each open and written only on Apply.
-  import { Dialog, Button, FormField, RadioGroup, Alert } from '$lib/design-system';
-  import { checkAdaptiveReadiness, resolveContentScheme, colorCss, type ContentScheme, type ReadinessFinding } from '$lib/features/content';
-  import { formatNumber } from '$lib/platform/i18n/format';
+  import { Dialog, Button, FormField, RadioGroup, Alert } from '#lib/design-system/index.ts';
+  import { checkAdaptiveReadiness, resolveContentScheme, colorCss, type ContentScheme, type ReadinessFinding } from '#lib/features/content/index.ts';
+  import { formatNumber } from '#lib/platform/i18n/format.ts';
   import { labelFor } from '../blockSettings/blockLabels';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
 
   type Choice = 'site' | ContentScheme;
 

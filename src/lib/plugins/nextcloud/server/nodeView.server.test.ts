@@ -9,7 +9,7 @@ import { encodeSecret } from './client.server';
 import { clearListings, readListing } from './cache.server';
 import { clearLocations } from './locations.server';
 import { collectionNodeView, type CollectionBodyData } from './nodeView.server';
-import type { PluginNode, PluginOpenConnection } from '$lib/plugins/api';
+import type { PluginNode, PluginOpenConnection } from '#lib/plugins/api.ts';
 
 const SHARE = 'NodeViewShare77';
 let mock: MockNextcloud;

@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/fonts, re-exported by src/routes/settings/fonts/+page.server.ts.
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { listFontFamilies, createFontFamily, addFontVariant, removeFontVariant, removeFontFamily } from '$lib/features/content/server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { listFontFamilies, createFontFamily, addFontVariant, removeFontVariant, removeFontFamily } from '#lib/features/content/server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('fonts', 'font:manage');

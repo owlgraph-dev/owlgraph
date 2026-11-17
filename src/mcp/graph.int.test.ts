@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { connectAs, jsonOf, textOf, type Role } from '$tests/integration/mcp';
+import { connectAs, jsonOf, textOf, type Role } from '#tests/integration/mcp.ts';
 
 // The seed: Graph Test Page --[mentions]--> Public Page (edge year 2020), and
 // Relationship Cross Page --[refers-to]--> the restricted page.

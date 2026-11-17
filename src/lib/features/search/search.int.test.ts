@@ -4,16 +4,16 @@
 
 import { describe, expect, inject, it } from 'vitest';
 import type { ServerLoadEvent } from '@sveltejs/kit';
-import { createLinkDocument } from '$lib/features/documents/server';
-import { createNamespace } from '$lib/features/namespaces/server';
-import { searchNodesForUser } from '$lib/features/nodes/server';
-import { createPage, saveDoc } from '$lib/features/pages/server';
-import { setNodeClass, setNodeTags, upsertNodeClass } from '$lib/features/semantic/server';
-import { db } from '$lib/platform/db.server';
+import { createLinkDocument } from '#lib/features/documents/server.ts';
+import { createNamespace } from '#lib/features/namespaces/server.ts';
+import { searchNodesForUser } from '#lib/features/nodes/server.ts';
+import { createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { setNodeClass, setNodeTags, upsertNodeClass } from '#lib/features/semantic/server.ts';
+import { db } from '#lib/platform/db.server.ts';
 import { parseNodeSearchParams } from './nodeSearchParams';
 import { HL_START, HL_STOP } from './searchSnippet';
 import { load } from './routes/searchPage.server';
-import { userOf, type Role } from '$tests/integration/users';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 // Each test's rows carry a tag or a term of their own; the search page's
 // loader is called as the route calls it.

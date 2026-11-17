@@ -15,7 +15,7 @@ import { BUILTIN_ELEMENT_DEFAULTS, typographyRoleOverrideOrNull, type ElementDef
 import { WEIGHT_PRESETS, type WeightToken } from './typography';
 import { sizePreviewRem, type TypeSize } from './typeScale';
 import { resolveFontStack } from './fonts';
-import { localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
+import { localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 
 export const PARAGRAPH_STYLE_TAGS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const;
 export type ParagraphStyleTag = (typeof PARAGRAPH_STYLE_TAGS)[number];

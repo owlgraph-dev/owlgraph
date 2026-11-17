@@ -8,13 +8,13 @@
   // A relationship's optional edge property is a second line: this component,
   // property-only, since WireEdgeCondition.property holds one condition.
   import ConditionRowEditor from './ConditionRowEditor.svelte';
-  import { Select, MultiSelect, Input, Button, ChipInput } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Select, MultiSelect, Input, Button, ChipInput } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import type { WirePropertyOperator, WireEdgeDirection, WireClassMatch, WireTagOperator, WireIntrinsicField } from '../nodeFilter';
   import { WIRE_TAG_OPERATORS } from '../nodeFilter';
   import { typeItems as buildTypeItems, classItems as buildClassItems, namespaceItems as buildNamespaceItems, localeItems as buildLocaleItems } from '../filterOptions';
-  import type { NodeClassOption, RelationshipTypeOption } from '$lib/features/semantic';
+  import type { NodeClassOption, RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import {
     needsValue,
     intrinsicNeedsValue,

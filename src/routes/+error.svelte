@@ -7,7 +7,7 @@
   // Every word here is the interface's: the server's error message is for
   // the log, so an unexpected error reads the same in every language.
   import { page } from '$app/state';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
 </script>
 
 <div class="error-page">

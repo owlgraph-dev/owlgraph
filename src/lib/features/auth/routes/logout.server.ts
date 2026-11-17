@@ -4,8 +4,8 @@
 
 // Route adapter for /logout, re-exported by src/routes/logout/+page.server.ts.
 import { redirect } from '@sveltejs/kit';
-import { deleteSession } from '$lib/features/auth/server';
-import { logEvent } from '$lib/platform/logger.server';
+import { deleteSession } from '#lib/features/auth/server.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import type { Actions } from '@sveltejs/kit';
 
 export const actions = {

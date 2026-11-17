@@ -4,10 +4,10 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import CreateModal from '../create-modal/CreateModal.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
 
   // canEdit only hides the trigger; the create endpoints enforce the permission.
   let {

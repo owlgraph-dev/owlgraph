@@ -7,14 +7,14 @@
   // The desktop chrome around one EditorCore, which owns the Tiptap instance
   // and every document mutation (docs/architecture/editor.md).
   import { onMount, onDestroy, untrack } from 'svelte';
-  import { pageColumnsOf } from '$lib/features/content';
+  import { pageColumnsOf } from '#lib/features/content/index.ts';
   import EditorCanvas from '../shared/EditorCanvas.svelte';
   import { CanvasScheme } from '../shared/canvasScheme.svelte';
   import { SelectedBox } from '../shared/selectedBox.svelte';
-  import { currentBlock, deleteBlockById, moveBlockById } from '$lib/features/content/editor';
-  import { pickerNamespace } from '$lib/features/search/picker';
+  import { currentBlock, deleteBlockById, moveBlockById } from '#lib/features/content/editor.ts';
+  import { pickerNamespace } from '#lib/features/search/picker.ts';
   import { insertCommands, appendBlock } from '../commands/insert';
-  import { editTier } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
   import BlockSettings from '../blockSettings/BlockSettings.svelte';
   import EditorHeader from '../meta/EditorHeader.svelte';
   import { DeleteRequest } from '../meta/deleteRequest.svelte';
@@ -30,8 +30,8 @@
   import PageDialogs from './PageDialogs.svelte';
   import PlaceholderInsertMenu from './PlaceholderInsertMenu.svelte';
   import { quickLinkEmbedFor, embedQuickLinkById } from './quickLinkEmbed';
-  import { Alert, COMPACT_CHROME_MEDIA } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Alert, COMPACT_CHROME_MEDIA } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { PageEditorProps } from '../meta/nodeMeta';
   import { createPageEditing, reportLockLost } from '../session/pageEditing.svelte';
 

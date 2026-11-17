@@ -243,7 +243,7 @@ for (const p of files) {
         if (type && INPUT_PRIMITIVE_FOR_TYPE[type]) primitive = INPUT_PRIMITIVE_FOR_TYPE[type];
         else if (type && INPUT_TYPES_EXEMPT.has(type)) continue;
       }
-      record(file, 'raw-element', lineOf(template, m.index), `<${tag}> → ${primitive} from $lib/design-system`, lines);
+      record(file, 'raw-element', lineOf(template, m.index), `<${tag}> → ${primitive} from #lib/design-system/index.ts`, lines);
     }
   }
 

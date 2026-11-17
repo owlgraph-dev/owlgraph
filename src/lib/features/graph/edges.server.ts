@@ -4,17 +4,17 @@
 
 // Edge property values (edge_properties) and a node's typed edges. The
 // relationship-type catalogue is the semantic feature's.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { labelCache, localize, hasText, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import * as m from '$lib/paraglide/messages';
-import { nodePath, type RelationshipGroupView } from '$lib/features/nodes';
-import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeType } from '$lib/features/nodes/server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { clampFirst } from '$lib/platform/pagination';
-import { getExistingRelationshipTypeSlugs } from '$lib/features/semantic/server';
-import { LOCALIZED_TEXT_DATATYPE } from '$lib/features/semantic';
-import { hydrateContentNodes, type TraversalNodeHit } from '$lib/features/query/server';
-import type { EdgeDirection } from '$lib/features/query';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { labelCache, localize, hasText, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import * as m from '#lib/paraglide/messages.js';
+import { nodePath, type RelationshipGroupView } from '#lib/features/nodes/index.ts';
+import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeType } from '#lib/features/nodes/server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { clampFirst } from '#lib/platform/pagination.ts';
+import { getExistingRelationshipTypeSlugs } from '#lib/features/semantic/server.ts';
+import { LOCALIZED_TEXT_DATATYPE } from '#lib/features/semantic/index.ts';
+import { hydrateContentNodes, type TraversalNodeHit } from '#lib/features/query/server.ts';
+import type { EdgeDirection } from '#lib/features/query/index.ts';
 
 // Batched for display: labels, and values that are one text per language, come
 // out in the reader's language, never as the stored JSON.

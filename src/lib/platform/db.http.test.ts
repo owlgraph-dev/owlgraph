@@ -4,8 +4,8 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import postgres from 'postgres';
-import { baseName, urlFor } from '$tests/support/databases';
-import { call, startApp } from '$tests/integration/http';
+import { baseName, urlFor } from '#tests/support/databases.ts';
+import { call, startApp } from '#tests/integration/http.ts';
 
 // adapter-node emits `sveltekit:shutdown` once a signal has closed its server,
 // and the app ends its pool there. The event is emitted directly: a signal

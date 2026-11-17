@@ -8,7 +8,7 @@
   // which like the rest of the design system imports nothing from $app/*.
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import Playground from '$lib/design-system/playground/Playground.svelte';
+  import Playground from '#lib/design-system/playground/Playground.svelte';
 
   const section = $derived(page.url.searchParams.get('section'));
   const scheme = $derived(page.url.searchParams.get('scheme') === 'dark' ? 'dark' : 'light');

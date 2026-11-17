@@ -8,15 +8,15 @@
   // open flags are the editor's (overlays.svelte.ts), since the block settings
   // panel opens its link picker to retarget a quick link and every flag feeds
   // the editor's overlay check.
-  import { DropdownMenu, DropdownMenuItem, TriggerFace } from '$lib/design-system';
+  import { DropdownMenu, DropdownMenuItem, TriggerFace } from '#lib/design-system/index.ts';
   import InsertMenuItems from '../InsertMenuItems.svelte';
-  import type { NodePickerCreate } from '$lib/features/search/picker';
+  import type { NodePickerCreate } from '#lib/features/search/picker.ts';
   import type { InsertCommands } from '../../commands/insert';
-  import { sizeLabel, paragraphStylePreviewCss, PARAGRAPH_STYLE_TEXTBLOCKS, colorCss, getTypographyRegistry, editTier } from '$lib/features/content';
-  import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarGroupItem } from '$lib/design-system';
+  import { sizeLabel, paragraphStylePreviewCss, PARAGRAPH_STYLE_TEXTBLOCKS, colorCss, getTypographyRegistry, editTier } from '#lib/features/content/index.ts';
+  import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarGroupItem } from '#lib/design-system/index.ts';
   import { Toolbar as BitsToolbar } from 'bits-ui';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   import type { EditorCore } from '../../core/editorCore.svelte';
   import type { SaveAction } from '../../session/saveAction.svelte';
   import type { CanvasScheme } from '../../shared/canvasScheme.svelte';

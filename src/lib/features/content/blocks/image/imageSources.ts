@@ -6,7 +6,7 @@
 // NodeView and the page alike. Never width/height attributes: an unloaded
 // image is laid out at their size before its column caps it, widening a
 // phone's page.
-import { MEDIA_WIDTHS, mediaUrl, mediaVariantUrl } from '$lib/features/media';
+import { MEDIA_WIDTHS, mediaUrl, mediaVariantUrl } from '#lib/features/media/index.ts';
 import type { OverrideSet } from '../../capabilities/overrides';
 import { effectiveWidth, type ImageWidthAttrs } from './imageWidth';
 import { normalizeBoxMode, type ImageBoxAttrs } from './imageBox';

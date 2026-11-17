@@ -7,10 +7,10 @@
   // The sections tree, filtered to the `:manage` actions the viewer holds.
   // Visibility only: each section's route enforces its action on the server.
   import { page } from '$app/state';
-  import SettingsShell from '$lib/shell/settings/SettingsShell.svelte';
-  import { OVERVIEW, SETTINGS_TREE } from '$lib/shell/settings/tree';
-  import { activeItemId, visibleTree } from '$lib/shell/settings/treeModel';
-  import * as m from '$lib/paraglide/messages';
+  import SettingsShell from '#lib/shell/settings/SettingsShell.svelte';
+  import { OVERVIEW, SETTINGS_TREE } from '#lib/shell/settings/tree.ts';
+  import { activeItemId, visibleTree } from '#lib/shell/settings/treeModel.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, children } = $props();
 

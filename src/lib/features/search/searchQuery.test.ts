@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { fromWireFilter, fromWireOrderBy, validateFilterOperators, validateFilterShape } from '$lib/features/query';
+import { fromWireFilter, fromWireOrderBy, validateFilterOperators, validateFilterShape } from '#lib/features/query/index.ts';
 import { toListQuery } from './searchQuery';
 import { EMPTY_SEARCH, SEARCH_PAGE_SIZE, type SearchParams } from './searchUrl';
 

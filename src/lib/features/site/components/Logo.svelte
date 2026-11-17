@@ -5,7 +5,7 @@
 -->
 <script lang="ts">
   import { page } from '$app/state';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
 
   // A size step, not a pixel prop: the reader's routes carry no style
   // attributes (platform/csp.ts), so the mark's height is a class rule.

@@ -8,14 +8,14 @@
   // The panels' open state stays local: this shell has no Escape-key
   // coordination across overlays that would need to read it.
   import { untrack } from 'svelte';
-  import { Button, FieldError } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Button, FieldError } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import InlineEditField from '../meta/InlineEditField.svelte';
   import PhoneTagsSheet from './PhoneTagsSheet.svelte';
-  import { AccessControlPanel } from '$lib/features/nodes/components';
-  import { PagePropertiesDialog } from '$lib/features/semantic/components';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeClassOption, ClassFieldGroup } from '$lib/features/semantic';
+  import { AccessControlPanel } from '#lib/features/nodes/components.ts';
+  import { PagePropertiesDialog } from '#lib/features/semantic/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeClassOption, ClassFieldGroup } from '#lib/features/semantic/index.ts';
 
   let {
     title = '',

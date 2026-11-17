@@ -4,8 +4,8 @@
 
 // Which block settings sections a target gets, free of Svelte and Tiptap:
 // capability support comes in as a predicate, not from an editor.
-import { queryFormat, FLOW_BLOCK_TYPES, SPACED_BLOCK_TYPES } from '$lib/features/content';
-import { PAGE_TYPE } from '$lib/features/content/editor';
+import { queryFormat, FLOW_BLOCK_TYPES, SPACED_BLOCK_TYPES } from '#lib/features/content/index.ts';
+import { PAGE_TYPE } from '#lib/features/content/editor.ts';
 import { surfaceFieldsOf } from '../blocks/catalog';
 
 export type CapabilitySectionId = 'layout' | 'placement' | 'spacing' | 'surface' | 'alignment' | 'flexItem';

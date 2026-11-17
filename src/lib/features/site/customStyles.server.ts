@@ -7,14 +7,14 @@
 // needs no process-wide invalidation. Every write compiles first and refuses
 // what the compiler rejects, so the settings UI is never the only guard.
 import { createHash } from 'node:crypto';
-import { db, type TxSql } from '$lib/platform/db.server';
-import { LAYER_ORDER, inLayer } from '$lib/platform/cssLayers';
-import { logEvent, logger } from '$lib/platform/logger.server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { LAYER_ORDER, inLayer } from '#lib/platform/cssLayers.ts';
+import { logEvent, logger } from '#lib/platform/logger.server.ts';
 import { compileFreeCss, compileStyleCss, compileStylesheets, keyframePrefix, type CompileSheet, type CssIssue, type StyleKind } from './customStyles/compile';
 import { slugFromLabel, styleClass } from './customStyles/slug';
-import type { CustomStyleRef } from '$lib/features/content';
+import type { CustomStyleRef } from '#lib/features/content/index.ts';
 import type { CustomStyleRow, StylesheetWithStyles } from './types';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 const STYLE_KINDS: readonly StyleKind[] = ['inline', 'block'];
 

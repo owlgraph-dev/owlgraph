@@ -11,7 +11,7 @@ import { colorCss, fillTextProperty, type FillKind } from '../../color/colorToke
 import type { OverrideSet } from '../overrides';
 import { colorOrNull, safeColor, shadowOrNull } from '../parse';
 import { normalizePosition, type ObjectPosition } from '../../blocks/image/imageBox';
-import { isAssetId } from '$lib/features/media';
+import { isAssetId } from '#lib/features/media/index.ts';
 
 export type ShadowToken = 'none' | 'sm' | 'md' | 'lg';
 

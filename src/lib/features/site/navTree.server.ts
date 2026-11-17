@@ -6,15 +6,15 @@
 // (the table nav_tree_entries). A node is a `group` (a label with `link`
 // children) or a `link` (no children). A consumer's policy, such as the
 // footer's groups-only top level, is its callers' to apply.
-import { db } from '$lib/platform/db.server';
-import { readablePageIds } from '$lib/features/pages/server';
-import { namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
-import { nodePath } from '$lib/features/nodes';
-import { safeTargetHref } from '$lib/features/content';
-import type { SessionUser } from '$lib/features/auth/server';
+import { db } from '#lib/platform/db.server.ts';
+import { readablePageIds } from '#lib/features/pages/server.ts';
+import { namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { safeTargetHref } from '#lib/features/content/index.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
 
 import type { TreeConsumer, TreeNodeKind, TreeTargetType, TreeNodeRow, TreeNodeAdminRow, TreeNodeAdminWithChildren, TreeCreateInput, TreeUpdateInput, ResolvedTreeLink, ResolvedTreeGroup, ResolvedTreeNode } from './types';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 export type { TreeConsumer, TreeNodeKind, TreeTargetType, TreeNodeRow, TreeNodeAdminRow, TreeNodeAdminWithChildren, TreeCreateInput, TreeUpdateInput, ResolvedTreeLink, ResolvedTreeGroup, ResolvedTreeNode };
 
 // Mirrors nav_tree_entries_shape_check, for a friendly error instead of a constraint violation.

@@ -7,7 +7,7 @@ import { startMockNextcloud, type MockFile, type MockNextcloud } from '../../e2e
 import { fakeHost } from '../../e2e/fakeHost';
 import { clearListings } from '../../server/cache.server';
 import { encodeSecret } from '../../server/client.server';
-import type { PluginNode } from '$lib/plugins/api';
+import type { PluginNode } from '#lib/plugins/api.ts';
 import { resolveFolderBlocks, SNAPSHOT_ROWS, type FolderBlockData } from './blockData.server';
 
 const TOKEN = 'SnapshotShare7';

@@ -169,15 +169,19 @@ against the host the `pluginHost` feature hands it ([plugins.md](plugins.md)).
 
 ### Entry points and boundary rules
 
-A feature is imported **only through its entry points**, never by deep path:
+A feature is imported **only through its entry points**, never by deep path.
+An import from outside a module's own folder names it by its subpath import,
+`#lib/…` (`package.json`'s `imports`; `#tests/…` for the test harness), with
+the file's own extension and a folder by its `index.ts`: Node resolves a
+subpath import as written, adding no extension and no index.
 
-- `$lib/features/<f>` (`index.ts`) — plain TypeScript: types, pure helpers,
+- `#lib/features/<f>/index.ts` — plain TypeScript: types, pure helpers,
   stores, typed API clients. Loadable in the browser, on the server and under
   Node tooling (the MCP server, Vitest, scripts) alike.
-- `$lib/features/<f>/components` (`components.ts`) — Svelte components.
-- `$lib/features/<f>/server` (`server.ts`) — the server-only modules
+- `#lib/features/<f>/components.ts` — Svelte components.
+- `#lib/features/<f>/server.ts` — the server-only modules
   (`*.server.ts`, which SvelteKit refuses to bundle into client code).
-- `$lib/features/<f>/editor` (`editor.ts`) — the Tiptap node and mark
+- `#lib/features/<f>/editor.ts` — the Tiptap node and mark
   definitions and the operations on them. They are plain TypeScript too, but
   they reach `@tiptap` and through it ProseMirror — hundreds of kilobytes
   that every importer of `index.ts` would otherwise carry, including the root
@@ -186,14 +190,14 @@ A feature is imported **only through its entry points**, never by deep path:
   only the editor feature imports it. `check-boundaries` enforces both halves:
   a deep import is refused, and an `index.ts` whose closure reaches `@tiptap`
   is reported.
-- `$lib/features/content/listing` (`listing.ts`) — the content feature's one
+- `#lib/features/content/listing.ts` — the content feature's one
   further entry: its **shared listings**, Svelte components that draw
   content alike in any block or view that shows it, a plugin's included
   ([blocks/anatomy.md](blocks/anatomy.md#shared-listings)). It is client-safe like
   `index.ts` and imports no stylesheet: the public renderer loads these
   components under the Node loader too.
-- `$lib/features/search/picker` (`picker.ts`) and
-  `$lib/features/documents/create` (`create.ts`) — one further entry each,
+- `#lib/features/search/picker.ts` and
+  `#lib/features/documents/create.ts` — one further entry each,
   for a surface only some pages show: the node picker
   ([search.md](search.md#the-node-picker)), with which the editor, the
   semantic schema and the site's settings choose a node, and a new
@@ -201,7 +205,7 @@ A feature is imported **only through its entry points**, never by deep path:
   step share. The search barrels are on every page (the root layout imports
   the search overlay) and `documents/components.ts` is the reader's surface,
   so neither carries them. Both are client-safe like `index.ts`.
-- `$lib/features/namespaces/matcher` (`matcher.ts`) — the `[namespace]`
+- `#lib/features/namespaces/matcher.ts` — the `[namespace]`
   params matcher, which `src/params.ts` declares
   ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).
   SvelteKit's build also loads `src/params.ts` with Node, outside Vite, so

@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { load } from '$lib/features/reader/routes/share.server';
+export { load } from '#lib/features/reader/routes/share.server.ts';

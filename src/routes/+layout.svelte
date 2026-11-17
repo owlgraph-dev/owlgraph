@@ -8,21 +8,21 @@
   import { onMount, tick, untrack } from 'svelte';
   import { beforeNavigate } from '$app/navigation';
   import { page } from '$app/state';
-  import AppBar from '$lib/shell/AppBar.svelte';
-  import { Footer } from '$lib/features/site/components';
-  import { LocalGraph } from '$lib/features/graph/components';
-  import UtilitySidebarToggle from '$lib/shell/UtilitySidebarToggle.svelte';
-  import { SearchOverlay } from '$lib/features/search/components';
-  import { localGraphOpen, localGraphWidth } from '$lib/features/graph';
-  import { searchOverlayOpen } from '$lib/features/search';
-  import { setTypographyRegistry, setBrandColors, setCustomStyles, setBlockDefaults, compileContentTheme, customFontStacksRecord, canvasScheme, CONTENT_SCHEME_FALLBACK } from '$lib/features/content';
-  import { Toaster, trackKeyboardInset } from '$lib/design-system';
-  import { compileTheme, setActiveTheme } from '$lib/design-system/theme/siteTheme';
-  import { appbarColors, themeColors } from '$lib/design-system/theme/preference';
-  import { styleNonceFor } from '$lib/platform/styleNonce';
-  import { crossesStylePolicy } from '$lib/platform/csp';
-  import { styleRouteKind, MERMAID_FRAME_ROUTE } from '$lib/platform/cspRoutes';
-  import * as m from '$lib/paraglide/messages';
+  import AppBar from '#lib/shell/AppBar.svelte';
+  import { Footer } from '#lib/features/site/components.ts';
+  import { LocalGraph } from '#lib/features/graph/components.ts';
+  import UtilitySidebarToggle from '#lib/shell/UtilitySidebarToggle.svelte';
+  import { SearchOverlay } from '#lib/features/search/components.ts';
+  import { localGraphOpen, localGraphWidth } from '#lib/features/graph/index.ts';
+  import { searchOverlayOpen } from '#lib/features/search/index.ts';
+  import { setTypographyRegistry, setBrandColors, setCustomStyles, setBlockDefaults, compileContentTheme, customFontStacksRecord, canvasScheme, CONTENT_SCHEME_FALLBACK } from '#lib/features/content/index.ts';
+  import { Toaster, trackKeyboardInset } from '#lib/design-system/index.ts';
+  import { compileTheme, setActiveTheme } from '#lib/design-system/theme/siteTheme.ts';
+  import { appbarColors, themeColors } from '#lib/design-system/theme/preference.ts';
+  import { styleNonceFor } from '#lib/platform/styleNonce.ts';
+  import { crossesStylePolicy } from '#lib/platform/csp.ts';
+  import { styleRouteKind, MERMAID_FRAME_ROUTE } from '#lib/platform/cspRoutes.ts';
+  import * as m from '#lib/paraglide/messages.js';
   let { children, data } = $props();
 
   // Marks the document once it answers input, after the effects pending at

@@ -4,11 +4,11 @@
 
 // Route adapter for /settings/page-layouts, re-exported by src/routes/settings/page-layouts/+page.server.ts.
 // The registry's rules live in pages/pageLayoutPresets.server.ts, so every refusal here is the model's.
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { createPageLayoutPreset, deletePageLayoutPreset, listPageLayoutPresets, movePageLayoutPreset, setPageLayoutPresetEnabled, updatePageLayoutPreset, type PresetInput } from '$lib/features/pages/server';
-import { localizedTextFromForm } from '$lib/platform/i18n/localizedText.server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { createPageLayoutPreset, deletePageLayoutPreset, listPageLayoutPresets, movePageLayoutPreset, setPageLayoutPresetEnabled, updatePageLayoutPreset, type PresetInput } from '#lib/features/pages/server.ts';
+import { localizedTextFromForm } from '#lib/platform/i18n/localizedText.server.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 const ACTION = 'page-layout:manage';
 

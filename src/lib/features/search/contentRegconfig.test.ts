@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { CONTENT_REGCONFIG, FALLBACK_REGCONFIG, regconfigFor, searchRegconfigs } from './contentRegconfig';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
 
 describe('content language → text-search configuration', () => {
   it('covers every supported language', () => {

@@ -7,7 +7,7 @@
 // reference this walk misses is an asset deleted on the next save.
 import type { JsonNode } from './doc';
 import { TIERS, type Tier } from '../capabilities/cascade';
-import { isAssetId } from '$lib/features/media';
+import { isAssetId } from '#lib/features/media/index.ts';
 import { isUnknownNode } from './unknownBlocks';
 
 /** Every asset id the document references. */

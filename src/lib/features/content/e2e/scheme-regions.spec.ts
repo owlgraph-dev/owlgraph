@@ -3,13 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Locator } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
+import { test, expect } from '#tests/e2e/fixtures.ts';
 import AxeBuilder from '@axe-core/playwright';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { txt, doc } from '$tests/e2e/doc';
-import { setColorPref } from '$tests/e2e/fixtures';
-import { blockSettings } from '$tests/e2e/editor';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { txt, doc } from '#tests/e2e/doc.ts';
+import { setColorPref } from '#tests/e2e/fixtures.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const para = (text: string, typography?: unknown) => ({ type: 'paragraph', ...(typography ? { attrs: { typography } } : {}), content: [txt(text)] });
 const cell = (surface: unknown, content: unknown[]) => ({ type: 'gridCell', attrs: { surface }, content });

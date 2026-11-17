@@ -7,7 +7,7 @@
 // reliably, so a lock without a heartbeat for LOCK_TTL_SECONDS may be taken
 // over. MCP writes ignore it: withPageDoc keeps storage safe regardless.
 import { randomUUID } from 'node:crypto';
-import { db } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
 import type { LockStatus } from './types';
 
 // About three missed 20 s heartbeats. Server time only, never a client clock.

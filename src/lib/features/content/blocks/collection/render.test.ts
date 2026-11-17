@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import { renderDoc } from '$lib/features/content/server';
-import { withContentLocale } from '$lib/platform/i18n/contentLocale.server';
+import { renderDoc } from '#lib/features/content/server.ts';
+import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
 import type { CollectionBlockData, EmbedMember } from './model';
 
 const COLLECTION = '6f1c1a52-0c5a-4b8e-9d0f-6b1f0e2a9c11';

@@ -4,9 +4,9 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 // Classes and labels are set up through the settings form actions, as an admin does.
 

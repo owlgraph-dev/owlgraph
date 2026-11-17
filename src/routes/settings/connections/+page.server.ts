@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { load } from '$lib/features/pluginHost/routes/settings.connections.server';
+export { load } from '#lib/features/pluginHost/routes/settings.connections.server.ts';

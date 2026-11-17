@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/namespaces/slugs/+server.ts.
-import { listNamespaceSlugsForUser } from '$lib/features/namespaces/server';
+import { listNamespaceSlugsForUser } from '#lib/features/namespaces/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 
 

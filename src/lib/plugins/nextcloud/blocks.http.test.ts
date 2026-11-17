@@ -5,11 +5,11 @@
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { unflatten } from 'devalue';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { getGraph } from '$lib/features/graph/server';
-import { wrapUnknown, type JsonNode } from '$lib/features/content';
-import { call, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf, type Role } from '$tests/integration/users';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { getGraph } from '#lib/features/graph/server.ts';
+import { wrapUnknown, type JsonNode } from '#lib/features/content/index.ts';
+import { call, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 import { startMockNextcloud, type MockShare, type MockUser } from './e2e/mockNextcloud';
 
 // The plugin's blocks and collection pages as served, against the mock

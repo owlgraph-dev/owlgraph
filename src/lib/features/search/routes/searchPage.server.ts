@@ -6,11 +6,11 @@
 // Everything the page offers to pick from comes from what the viewer may read
 // (docs/architecture/search.md).
 import { redirect, type ServerLoadEvent } from '@sveltejs/kit';
-import { listNodes } from '$lib/features/query/server';
-import { getPropertyByLocalName, getTagsForNodes, listClassIdsInUse, listNodeClassOptions, listTagsForUser } from '$lib/features/semantic/server';
-import { getDefaultNamespace, resolveNamespaceLabels } from '$lib/features/namespaces/server';
-import { resolveSearchParams, searchCardExtras } from '$lib/features/search/server';
-import { SEARCH_PAGE_SIZE, clipText, linkHost, parseSearchParams, searchHref, type SearchResultCard } from '$lib/features/search';
+import { listNodes } from '#lib/features/query/server.ts';
+import { getPropertyByLocalName, getTagsForNodes, listClassIdsInUse, listNodeClassOptions, listTagsForUser } from '#lib/features/semantic/server.ts';
+import { getDefaultNamespace, resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
+import { resolveSearchParams, searchCardExtras } from '#lib/features/search/server.ts';
+import { SEARCH_PAGE_SIZE, clipText, linkHost, parseSearchParams, searchHref, type SearchResultCard } from '#lib/features/search/index.ts';
 
 // A card's excerpt without a term: the first of these properties it has.
 const DESCRIPTION_NAMES = ['description', 'abstract', 'summary'];

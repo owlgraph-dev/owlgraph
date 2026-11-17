@@ -79,7 +79,7 @@ if (problems.length) {
   console.error(`check-console: ${problems.length} problem(s)`);
   for (const p of problems) console.error('  - ' + p);
   console.error(
-    '  Log through $lib/platform/logger.server: logEvent(locals.log, "<catalog.event>", { … }).\n' +
+    '  Log through #lib/platform/logger.server.ts: logEvent(locals.log, "<catalog.event>", { … }).\n' +
       '  The event must exist in the catalog (logger.server.ts) and in docs/architecture/logging.md.\n' +
       '  See docs/architecture/logging.md, "Guardrail" (allow-list, the log-allow escape hatch).'
   );

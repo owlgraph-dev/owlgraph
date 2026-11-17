@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import type { SelectionChainEntry } from '$lib/features/content/editor';
+import type { SelectionChainEntry } from '#lib/features/content/editor.ts';
 import { blockSettingsTarget, embedTarget, type TargetSelection, type TargetWrites } from './target';
 
 const entry = (type: string, id: string | null, pos: number, attrs: Record<string, unknown> = {}): SelectionChainEntry => ({ type, id, attrs, pos });

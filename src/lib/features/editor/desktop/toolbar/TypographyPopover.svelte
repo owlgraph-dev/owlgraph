@@ -8,8 +8,8 @@
   // the selected block's own values or the marks on the selected text, as the
   // core's arbitration decides (core/format.svelte.ts).
   import type { Snippet } from 'svelte';
-  import { Popover } from '$lib/design-system';
-  import { resolveParagraphStyle, getTypographyRegistry } from '$lib/features/content';
+  import { Popover } from '#lib/design-system/index.ts';
+  import { resolveParagraphStyle, getTypographyRegistry } from '#lib/features/content/index.ts';
   import TypographyField from '../../capabilities/typography/TypographyField.svelte';
   import TypographyMarkFields from '../../capabilities/typography/TypographyMarkFields.svelte';
   import type { EditorCore } from '../../core/editorCore.svelte';

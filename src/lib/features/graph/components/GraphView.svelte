@@ -10,10 +10,10 @@
   import { browser } from '$app/env';
   import { goto } from '$app/navigation';
   import { MediaQuery } from 'svelte/reactivity';
-  import { Badge, BottomSheet, Button, Tooltip, EmptyState } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { nodePath, type NodeType } from '$lib/features/nodes';
-  import * as m from '$lib/paraglide/messages';
+  import { Badge, BottomSheet, Button, Tooltip, EmptyState } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { nodePath, type NodeType } from '#lib/features/nodes/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { GraphNode, GraphEdge } from '../types';
   import { computeGroupHulls, type InflatableNode } from '../hull';
   import { VIEW_MODES, type ViewModeId } from '../layout/viewModes';
@@ -22,8 +22,8 @@
   import { computeFitTransform, FIT_MIN_SCALE, FIT_MAX_SCALE } from '../fit';
   import { DEFAULT_SETTINGS, loadSettings, saveSettings, type GraphSettings } from '../settings';
   import { activeFilterCount, applyGraphFilter, EMPTY_FILTER, isFilterEmpty, relationshipTypeItems, type GraphFilter } from '../graphFilter';
-  import type { NodeClassOption } from '$lib/features/semantic';
-  import type { NamespaceOption } from '$lib/features/query';
+  import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+  import type { NamespaceOption } from '#lib/features/query/index.ts';
   import { hubNodeIds, labelOpacity } from '../labels';
   import { buildColorScheme } from '../nodeColor';
   import { UNIFORM_RADIUS } from '../nodeGeometry';

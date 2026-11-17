@@ -4,12 +4,12 @@
 
 // Route adapter, re-exported by src/routes/share/[id]/+page.server.ts.
 import { error } from '@sveltejs/kit';
-import { resolveShareLink } from '$lib/features/nodes/server';
-import { getNodeType } from '$lib/features/nodes/server';
-import { getPage } from '$lib/features/pages/server';
-import { getIncomingEdges, getLocalGraph } from '$lib/features/graph/server';
-import { getDocument } from '$lib/features/documents/server';
-import { renderPage } from '$lib/features/reader/server';
+import { resolveShareLink } from '#lib/features/nodes/server.ts';
+import { getNodeType } from '#lib/features/nodes/server.ts';
+import { getPage } from '#lib/features/pages/server.ts';
+import { getIncomingEdges, getLocalGraph } from '#lib/features/graph/server.ts';
+import { getDocument } from '#lib/features/documents/server.ts';
+import { renderPage } from '#lib/features/reader/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { id: string };

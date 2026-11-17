@@ -7,7 +7,7 @@
 import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text } from '../../../mcp/registry';
-import { readablePageIds } from '$lib/features/pages/server';
+import { readablePageIds } from '#lib/features/pages/server.ts';
 import {
   getNodeTags,
   setNodeTags,
@@ -17,8 +17,8 @@ import {
   findPagesByProperty,
   listPropertyNames,
   listPropertyDefinitions,
-} from '$lib/features/semantic/server';
-import { localize } from '$lib/platform/i18n/localizedText';
+} from '#lib/features/semantic/server.ts';
+import { localize } from '#lib/platform/i18n/localizedText.ts';
 
 export function registerSemanticTools({ user, tool, pageTool }: ToolRegistry): void {
   pageTool(

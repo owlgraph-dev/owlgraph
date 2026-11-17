@@ -4,8 +4,8 @@
 
 // A plugin's settings against its manifest's fields (docs/architecture/plugins.md, "Settings").
 // The core checks every field by its kind, so a plugin's own checks only add to them.
-import type { PluginSettings, PluginSettingsSection, PluginSettingsValues } from '$lib/plugins/api';
-import { parseUpstreamOrigin } from '$lib/platform/upstream.server';
+import type { PluginSettings, PluginSettingsSection, PluginSettingsValues } from '#lib/plugins/api.ts';
+import { parseUpstreamOrigin } from '#lib/platform/upstream.server.ts';
 import type { SettingsFieldProblem } from './types';
 
 /** The settings of a plugin nobody configured: off, every origin unset, every number its default. */

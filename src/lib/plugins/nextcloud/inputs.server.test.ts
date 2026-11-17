@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import type { PluginNode } from '$lib/plugins/api';
+import type { PluginNode } from '#lib/plugins/api.ts';
 import { fakeHost } from './e2e/fakeHost';
 import { nextcloudInputs } from './inputs.server';
 

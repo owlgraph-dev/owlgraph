@@ -6,8 +6,8 @@
 <script lang="ts">
   // The file block's Display section. Block attrs, not capabilities: they hold
   // for every viewport, whatever the tier switcher shows.
-  import { FieldRow, SegmentedControl, SegmentedControlItem, Select, Switch } from '$lib/design-system';
-  import type { PluginSectionProps } from '$lib/plugins/api';
+  import { FieldRow, SegmentedControl, SegmentedControlItem, Select, Switch } from '#lib/design-system/index.ts';
+  import type { PluginSectionProps } from '#lib/plugins/api.ts';
   import { t } from '../../messages';
   import { fileConfig } from './model';
 

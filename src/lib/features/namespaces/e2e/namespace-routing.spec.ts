@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { unique, createPage, createNamespace, deleteNamespace } from '$tests/e2e/api';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { unique, createPage, createNamespace, deleteNamespace } from '#tests/e2e/api.ts';
 
 // Only a browser re-resolves the route during hydration, which needs the
 // namespace registry warm (src/hooks.client.ts). What the addresses answer is

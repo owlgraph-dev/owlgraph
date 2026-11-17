@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page, Route } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { editorSelection } from '$tests/e2e/editor';
-import { createPage } from '$tests/e2e/api';
-import { txt, doc } from '$tests/e2e/doc';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { editorSelection } from '#tests/e2e/editor.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { txt, doc } from '#tests/e2e/doc.ts';
 import { db } from '../../../platform/db.server';
 
 test.use({ storageState: authState('admin') });

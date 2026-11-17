@@ -7,7 +7,7 @@
 // cross-block or per-request comes in through the context, so a block never
 // reaches into the walker. Renderers are registered in blocks/renderers.ts.
 import type { Component } from 'svelte';
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import { spaceAboveOverrides, type SpacingData } from '../capabilities/spacing/spacing';
 import type { OverrideSet } from '../capabilities/overrides';
 import { ruleIdAttribute, type StyleCollector } from '../capabilities/pageStyles';

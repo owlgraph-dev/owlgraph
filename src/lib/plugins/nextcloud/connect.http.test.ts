@@ -4,10 +4,10 @@
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { call, createPage, formAction, startApp, type CallOptions, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 import { startMockNextcloud, type MockNextcloud, type MockShare } from './e2e/mockNextcloud';
 
 // The integration's settings and shares as served, against the mock

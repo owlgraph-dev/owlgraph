@@ -7,8 +7,8 @@
 import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text, errText } from '../../../mcp/registry';
-import { getCollection, membersOf, userCanReadCollection } from '$lib/features/collections/server';
-import { pluginLabel } from '$lib/plugins';
+import { getCollection, membersOf, userCanReadCollection } from '#lib/features/collections/server.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
 
 export function registerCollectionTools({ user, tool }: ToolRegistry): void {
   tool(

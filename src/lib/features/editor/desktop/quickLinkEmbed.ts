@@ -6,9 +6,9 @@
 // source names, a plugin's only while it is on (docs/architecture/blocks/node-embeds.md, "A quick link
 // becomes a block").
 import type { Editor } from '@tiptap/core';
-import { blockNodeById, embedQuickLink, quickLinkDocument } from '$lib/features/content/editor';
-import { embedKindFor } from '$lib/features/content';
-import { pluginLabel } from '$lib/plugins';
+import { blockNodeById, embedQuickLink, quickLinkDocument } from '#lib/features/content/editor.ts';
+import { embedKindFor } from '#lib/features/content/index.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
 import { embedUnavailable } from '../blocks/embedPicker';
 import type { QuickLinkEmbed } from '../blockSettings/types';
 

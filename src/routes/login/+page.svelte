@@ -7,9 +7,9 @@
   // One error message whatever went wrong: login() collapses unknown email,
   // wrong password and inactive account against enumeration (auth.server.ts).
   import { enhance } from '$app/forms';
-  import { Logo } from '$lib/features/site/components';
-  import { Input, Button, Alert } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Logo } from '#lib/features/site/components.ts';
+  import { Input, Button, Alert } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { form } = $props();
 

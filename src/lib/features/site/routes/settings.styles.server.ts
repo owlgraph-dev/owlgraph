@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/styles, re-exported by src/routes/settings/styles/+page.server.ts.
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
 import { createStylesheet, deleteStylesheet, listStylesheets, moveStylesheet, renameStylesheet, setStylesheetEnabled } from '../customStyles.server';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 const ACTION = 'stylesheet:manage';
 

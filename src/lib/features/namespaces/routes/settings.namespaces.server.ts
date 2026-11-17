@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/settings/namespaces/+page.server.ts.
-import { requireAction } from '$lib/features/auth/routes/requireAction.server';
-import { logEvent } from '$lib/platform/logger.server';
+import { requireAction } from '#lib/features/auth/routes/requireAction.server.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import {
   listNamespaces,
   getNamespace,
@@ -14,12 +14,12 @@ import {
   deleteNamespace,
   getNamespaceMembers,
   setNamespaceMembers,
-} from '$lib/features/namespaces/server';
-import { listUsers } from '$lib/features/auth/server';
-import { db } from '$lib/platform/db.server';
-import type { Visibility } from '$lib/features/nodes';
+} from '#lib/features/namespaces/server.ts';
+import { listUsers } from '#lib/features/auth/server.ts';
+import { db } from '#lib/platform/db.server.ts';
+import type { Visibility } from '#lib/features/nodes/index.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 const ACCESS_LEVELS = new Set(['public', 'internal', 'restricted']);
 

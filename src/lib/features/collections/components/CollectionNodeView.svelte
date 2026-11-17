@@ -7,13 +7,13 @@
   // (docs/architecture/semantic-layer.md, "A node's page"). The body is a query container
   // named like the page canvas, so its listing folds for a phone as on a page;
   // the listing's stylesheet is imported here, the canvas's not being on this page.
-  import '$lib/features/content/listing/entryList.css';
+  import '#lib/features/content/listing/entryList.css';
   import { refreshAll } from '$app/navigation';
-  import { Tabs, TabsContent, TabsTrigger } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { getLocale } from '$lib/paraglide/runtime';
-  import { pluginNodeViews } from '$lib/plugins/nodeViews';
-  import type { NodeSourceView } from '$lib/features/pluginHost';
+  import { Tabs, TabsContent, TabsTrigger } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { getLocale } from '#lib/paraglide/runtime.js';
+  import { pluginNodeViews } from '#lib/plugins/nodeViews.ts';
+  import type { NodeSourceView } from '#lib/features/pluginHost/index.ts';
   import MembersList from './MembersList.svelte';
   import type { CollectionMember } from '../types';
 

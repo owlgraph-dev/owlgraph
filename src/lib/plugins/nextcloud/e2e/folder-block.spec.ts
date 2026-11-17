@@ -6,16 +6,16 @@
 // paged by a reader, on a phone too. Each test lists a share of its own, so one
 // test's cached reads answer for no other's.
 import type { APIRequestContext, Locator, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import { startMockNextcloud, type MockNextcloud, type MockShare } from './mockNextcloud';
-import { anonymous } from '$tests/e2e/fixtures';
+import { anonymous } from '#tests/e2e/fixtures.ts';
 import { configure } from './settings';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const API = '/api/plugins/nextcloud';
 const PDF = '%PDF-1.4\n% e2e\n';

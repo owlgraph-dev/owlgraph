@@ -4,9 +4,9 @@
 
 // The phone's filter chips: never the term, the sort or the view, which have
 // controls of their own. Their number is the Filter button's count.
-import * as m from '$lib/paraglide/messages';
-import { typeItems } from '$lib/features/query';
-import type { SearchParams } from '$lib/features/search';
+import * as m from '#lib/paraglide/messages.js';
+import { typeItems } from '#lib/features/query/index.ts';
+import type { SearchParams } from '#lib/features/search/index.ts';
 
 export interface ActiveFilter {
   key: string;

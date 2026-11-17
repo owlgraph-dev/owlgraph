@@ -7,13 +7,13 @@
   // Marks are per-run overrides, not a responsive cascade: no viewport tier,
   // no Auto/Inherit. A field the selection holds differing values for is
   // "mixed": no option active, plus a hint.
-  import { SegmentedControl, SegmentedControlItem, ColorField, Combobox, ScaleField, Select, FieldWarning } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { themeColorOptions } from '$lib/features/content';
-  import { FONT_IDS, FONT_LABELS } from '$lib/features/content';
-  import { getCustomFontLabels } from '$lib/features/content';
-  import { CUSTOM_SIZE_STEPS, SIZE_MAX, SIZE_MIN, typeScaleOptions, type TypeSize } from '$lib/features/content';
-  import { COLOR_SWATCHES } from '$lib/features/content';
+  import { SegmentedControl, SegmentedControlItem, ColorField, Combobox, ScaleField, Select, FieldWarning } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { themeColorOptions } from '#lib/features/content/index.ts';
+  import { FONT_IDS, FONT_LABELS } from '#lib/features/content/index.ts';
+  import { getCustomFontLabels } from '#lib/features/content/index.ts';
+  import { CUSTOM_SIZE_STEPS, SIZE_MAX, SIZE_MIN, typeScaleOptions, type TypeSize } from '#lib/features/content/index.ts';
+  import { COLOR_SWATCHES } from '#lib/features/content/index.ts';
   import {
     LINE_HEIGHT_MIN,
     LINE_HEIGHT_MAX,
@@ -22,7 +22,7 @@
     LETTER_SPACING_MAX,
     LETTER_SPACING_STEPS,
     type WeightToken,
-  } from '$lib/features/content';
+  } from '#lib/features/content/index.ts';
 
   type Field = 'family' | 'size' | 'color' | 'weight' | 'lineHeight' | 'letterSpacing';
 

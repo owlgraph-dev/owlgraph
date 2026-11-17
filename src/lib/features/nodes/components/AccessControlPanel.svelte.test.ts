@@ -6,9 +6,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushSync } from 'svelte';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
-import { nodeMetaClient } from '$lib/features/nodes';
+import { nodeMetaClient } from '#lib/features/nodes/index.ts';
 import AccessControlPanel from './AccessControlPanel.svelte';
-import { stubFetch } from '$tests/component/fetch';
+import { stubFetch } from '#tests/component/fetch.ts';
 
 // The panel wired to the node client as the editors wire it, the page API
 // stubbed. What a share link serves is shareLinks.http.test.ts's.

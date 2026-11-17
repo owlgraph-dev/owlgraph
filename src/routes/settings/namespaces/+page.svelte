@@ -6,12 +6,12 @@
 <script lang="ts">
   // The default namespace has no prefix and cannot be deleted.
   import { enhance } from '$app/forms';
-  import { Button, Dialog, Table, TableRow, TableCell, type TableColumn } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { NamespaceModal } from '$lib/features/namespaces/components';
-  import { NamespaceMembersModal } from '$lib/features/namespaces/components';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Dialog, Table, TableRow, TableCell, type TableColumn } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { NamespaceModal } from '#lib/features/namespaces/components.ts';
+  import { NamespaceMembersModal } from '#lib/features/namespaces/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
   let { data, form } = $props();
 
   type Row = (typeof data.namespaces)[number];

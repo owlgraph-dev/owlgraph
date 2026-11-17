@@ -8,13 +8,13 @@
   // together. A hand-set accent is checked as it is picked, and on the server.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Button, ColorPickerField, EmptyState, FieldError, FieldWarning, Input, SettingsRow, SettingsGroup, toast } from '$lib/design-system';
-  import { accentShortfalls, brandTextRatio, resolveTheme, schemeAccent, type Shortfall, type StoredTheme } from '$lib/design-system/theme/siteTheme';
-  import { SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
-  import { formatNumber } from '$lib/platform/i18n/format';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, ColorPickerField, EmptyState, FieldError, FieldWarning, Input, SettingsRow, SettingsGroup, toast } from '#lib/design-system/index.ts';
+  import { accentShortfalls, brandTextRatio, resolveTheme, schemeAccent, type Shortfall, type StoredTheme } from '#lib/design-system/theme/siteTheme.ts';
+  import { SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
+  import { formatNumber } from '#lib/platform/i18n/format.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import ThemePreview from './ThemePreview.svelte';
-  import { COLOR_SWATCHES } from '$lib/features/content';
+  import { COLOR_SWATCHES } from '#lib/features/content/index.ts';
 
   type Errors =
     | { accent?: string; lightAccent?: string; darkAccent?: string; appbarLight?: string; appbarDark?: string; footerLight?: string; footerDark?: string; brand?: string }

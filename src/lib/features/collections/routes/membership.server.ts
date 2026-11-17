@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Shared by api.collectionMembers.server.ts and api.collectionMember.server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getCollection, userCanReadCollection, userCanWriteCollection, type CollectionRow } from '$lib/features/collections/server';
-import { isUuid } from '$lib/features/nodes';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getCollection, userCanReadCollection, userCanWriteCollection, type CollectionRow } from '#lib/features/collections/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 /**
  * 404 for one the viewer may not read (as if it were not there), 403 for one

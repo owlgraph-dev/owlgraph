@@ -7,7 +7,7 @@
   // The section's title is the page's h1: the sidebar is navigation, not a
   // heading (docs/architecture/settings.md). `children` is the page's single Add action.
   import type { Snippet } from 'svelte';
-  import { Alert } from '$lib/design-system';
+  import { Alert } from '#lib/design-system/index.ts';
 
   let {
     title,

@@ -7,13 +7,13 @@
   // Edits a pending state: nothing applies until "Show N results", and closing
   // any other way drops the changes. /api/search-count counts the pending state
   // as the page would, so the button's number is the list's to be.
-  import * as m from '$lib/paraglide/messages';
-  import { getLocale } from '$lib/paraglide/runtime';
-  import { BottomSheet, Button, Checkbox, ChipInput, FormField, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
-  import type { NodeClassOption } from '$lib/features/semantic';
-  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchSort } from '$lib/features/search';
+  import * as m from '#lib/paraglide/messages.js';
+  import { getLocale } from '#lib/paraglide/runtime.js';
+  import { BottomSheet, Button, Checkbox, ChipInput, FormField, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
+  import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchSort } from '#lib/features/search/index.ts';
   import { ALL, orNull, classPickerItems, typePickerItems, namespacePickerItems, sortItems } from './filterItems';
-  import type { NodeType } from '$lib/features/nodes';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   let {
     open = $bindable(false),

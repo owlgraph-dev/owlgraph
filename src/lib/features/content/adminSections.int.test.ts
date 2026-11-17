@@ -3,13 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createPage, createPageLayoutPreset, deletePageLayoutPreset, listEnabledPageLayoutPresets, saveDoc, setPageLayoutPresetEnabled } from '$lib/features/pages/server';
-import { resolvePageLayoutPreset } from '$lib/features/pages';
+import { db } from '#lib/platform/db.server.ts';
+import { createPage, createPageLayoutPreset, deletePageLayoutPreset, listEnabledPageLayoutPresets, saveDoc, setPageLayoutPresetEnabled } from '#lib/features/pages/server.ts';
+import { resolvePageLayoutPreset } from '#lib/features/pages/index.ts';
 import { createParagraphStyle, deleteParagraphStyle, getParagraphStyles, listParagraphStyles, setDefaultParagraphStyle } from './server';
 import { pageColumnsOf } from './page/pageAttrs';
-import { connectAs, jsonOf, userOf } from '$tests/integration/mcp';
-import { baseLocale, overwriteGetLocale } from '$lib/paraglide/runtime';
+import { connectAs, jsonOf, userOf } from '#tests/integration/mcp.ts';
+import { baseLocale, overwriteGetLocale } from '#lib/paraglide/runtime.js';
 
 // The rules behind the paragraph style and page layout sections, called as
 // their form actions call them.

@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIRequestContext, Browser, Page } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage, unique } from '$tests/e2e/api';
-import { doc } from '$tests/e2e/doc';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage, unique } from '#tests/e2e/api.ts';
+import { doc } from '#tests/e2e/doc.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 import sharp from 'sharp';
-import { contrastRatio, parseColor } from '$lib/design-system/theme/color';
+import { contrastRatio, parseColor } from '#lib/design-system/theme/color.ts';
 import { db } from '../../../platform/db.server';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 test.use({ storageState: authState('admin') });
 

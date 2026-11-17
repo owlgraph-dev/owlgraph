@@ -10,8 +10,8 @@
   import { uploadDocument, createLinkDocument } from '../client';
   import { parseExternalUrl, type DocumentSource } from '../externalUrl';
   import { externalUrlMessage } from '../components/externalUrlMessage';
-  import { Input, Alert, FormField, RadioGroup } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Input, Alert, FormField, RadioGroup } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     id,

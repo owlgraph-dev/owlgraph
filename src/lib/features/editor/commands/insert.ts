@@ -7,8 +7,8 @@
 // caret; a placeholder's "+" replaces that node in one dispatch, one undo step.
 import type { Editor } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
-import { makeTable, newQuickLink, type JsonNode } from '$lib/features/content';
-import { nearestInsertPos, makeContainer, makeQueryTemplate, insertSection, makeFlexContainer, type InsertTarget } from '$lib/features/content/editor';
+import { makeTable, newQuickLink, type JsonNode } from '#lib/features/content/index.ts';
+import { nearestInsertPos, makeContainer, makeQueryTemplate, insertSection, makeFlexContainer, type InsertTarget } from '#lib/features/content/editor.ts';
 
 export function applyInsertTarget(editor: Editor, target: InsertTarget, content: Record<string, unknown>) {
   if (target.mode === 'insert') {

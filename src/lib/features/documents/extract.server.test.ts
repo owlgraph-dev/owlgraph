@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { minimalPdf } from '$tests/e2e/pdf';
+import { minimalPdf } from '#tests/e2e/pdf.ts';
 import { extractText } from './extract.server';
 
 // What search reads of an upload (docs/architecture/documents.md): a failure is

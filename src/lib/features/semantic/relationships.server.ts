@@ -5,11 +5,11 @@
 // The properties an edge of a type carries are an explicit mapping to property
 // definitions, not a group: a type may want properties from several groups. The
 // edges and their values live in features/graph/edges.server.ts.
-import { db } from '$lib/platform/db.server';
-import { hasText, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { localizedJson, parseLocalizedText } from '$lib/platform/i18n/localizedText.server';
+import { db } from '#lib/platform/db.server.ts';
+import { hasText, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { localizedJson, parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
 import { NAME_RE } from './properties.server';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 // Stored LocalizedText, resolved by each channel (docs/architecture/languages.md). A null
 // inverse_label means none, never an empty map.

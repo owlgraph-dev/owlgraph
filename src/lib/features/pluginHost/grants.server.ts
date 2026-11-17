@@ -6,7 +6,7 @@
 // viewer fetch one node's content. A page never carries one: it links a stable
 // address, the same for every viewer, that redirects to a grant minted for
 // whoever followed it. Redeeming re-checks everything that made it.
-import type { PluginGrantDetail, PluginOpenConnection, PluginRedeemed } from '$lib/plugins/api';
+import type { PluginGrantDetail, PluginOpenConnection, PluginRedeemed } from '#lib/plugins/api.ts';
 
 /** How long a grant lasts: long enough to follow a redirect and stream a file, short enough to be useless once copied. */
 export const GRANT_TTL_MS = 5 * 60_000;

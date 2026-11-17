@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect, afterEach } from 'vitest';
-import { overwriteGetLocale, baseLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale, baseLocale } from '#lib/paraglide/runtime.js';
 import {
   localize,
   hasText,

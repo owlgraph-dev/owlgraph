@@ -4,8 +4,8 @@
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/content/+server.ts
 // (docs/architecture/documents.md, "The content endpoint").
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   getDocument,
   getDocumentBytes,
@@ -16,13 +16,13 @@ import {
   documentBytesResponse,
   externalContentResponse,
   type DocumentRow,
-} from '$lib/features/documents/server';
-import { parseExternalUrl, type DocumentSource } from '$lib/features/documents';
-import { servePluginDocument } from '$lib/features/pluginHost/server';
-import { readFormData } from '$lib/platform/formData';
+} from '#lib/features/documents/server.ts';
+import { parseExternalUrl, type DocumentSource } from '#lib/features/documents/index.ts';
+import { servePluginDocument } from '#lib/features/pluginHost/server.ts';
+import { readFormData } from '#lib/platform/formData.ts';
 import { readDocumentUpload, uploadTooLarge } from './documentUpload.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError, textError } from '$lib/platform/apiErrors';
+import { apiError, textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

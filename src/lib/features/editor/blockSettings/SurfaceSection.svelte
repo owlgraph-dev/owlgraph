@@ -9,9 +9,9 @@
   // one; back to Colour drops the image layer at every viewport in one step.
   import SurfaceField from '../capabilities/surface/SurfaceField.svelte';
   import SurfaceImageField from '../capabilities/surface/SurfaceImageField.svelte';
-  import { Button, FieldRow, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import { editTier, hasAnyOwnValue, hasOwnValueAt, hasSurfaceImage, IMAGE_FIELDS, NO_SURFACE_DEFAULTS, type ImageField, type SurfaceData, type SurfaceDefaults } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, FieldRow, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import { editTier, hasAnyOwnValue, hasOwnValueAt, hasSurfaceImage, IMAGE_FIELDS, NO_SURFACE_DEFAULTS, type ImageField, type SurfaceData, type SurfaceDefaults } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
   import { positionLabels } from './positionLabels';
 

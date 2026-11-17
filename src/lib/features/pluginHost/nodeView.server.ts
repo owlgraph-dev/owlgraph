@@ -6,10 +6,10 @@
 // "Node views"): the plugin resolves what the body starts from before the
 // render. A plugin that throws costs the page its body, never the page.
 import { pluginFailed } from './pluginFailure.server';
-import { pluginManifest } from '$lib/plugins';
-import { pluginServer } from '$lib/plugins/server';
-import type { PluginNodeAction } from '$lib/plugins/api';
-import type { CollectionRow } from '$lib/features/collections/server';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
+import type { PluginNodeAction } from '#lib/plugins/api.ts';
+import type { CollectionRow } from '#lib/features/collections/server.ts';
 import { createPluginHost, type HostContext } from './host.server';
 import type { NodeSourceAction, NodeSourceView } from './types';
 

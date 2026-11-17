@@ -4,7 +4,7 @@
 
 // Browser client for the node metadata API, which pages, documents and
 // collections expose field for field.
-import { apiErrorText, readApiError } from '$lib/platform/readApiError';
+import { apiErrorText, readApiError } from '#lib/platform/readApiError.ts';
 
 export type NodeApiKind = 'pages' | 'documents' | 'collections';
 

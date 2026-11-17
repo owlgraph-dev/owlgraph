@@ -9,16 +9,16 @@
   // it leaves the pages that took its values as they are. Standard, every
   // page's fallback, is never switched off or deleted.
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn, Switch, Dialog } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import PageLayoutPresetModal from '$lib/features/site/routes/PageLayoutPresetModal.svelte';
-  import { PageLayoutThumbnail } from '$lib/features/pages/components';
-  import { presetName } from '$lib/features/pages';
-  import CatalogLabel from '$lib/features/semantic/routes/CatalogLabel.svelte';
-  import { localize } from '$lib/platform/i18n/localizedText';
-  import { rowMissingLocales } from '$lib/features/semantic/routes/catalogFilter';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn, Switch, Dialog } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import PageLayoutPresetModal from '#lib/features/site/routes/PageLayoutPresetModal.svelte';
+  import { PageLayoutThumbnail } from '#lib/features/pages/components.ts';
+  import { presetName } from '#lib/features/pages/index.ts';
+  import CatalogLabel from '#lib/features/semantic/routes/CatalogLabel.svelte';
+  import { localize } from '#lib/platform/i18n/localizedText.ts';
+  import { rowMissingLocales } from '#lib/features/semantic/routes/catalogFilter.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

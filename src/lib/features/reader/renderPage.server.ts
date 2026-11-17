@@ -5,12 +5,12 @@
 // The one render of a page for its reader (docs/architecture/overview.md, "Editor vs.
 // public render — and why they must match"). Everything viewer-scoped is resolved here, as the reader,
 // because the walker (content/render/render.server.ts) is synchronous.
-import { withContentLocale } from '$lib/platform/i18n/contentLocale.server';
-import type { Logger } from '$lib/platform/logger.server';
-import type { SessionUser } from '$lib/features/auth';
-import type { PageRow } from '$lib/features/pages/server';
-import { linkSlugMap, publicLinkSlugMap } from '$lib/features/graph/server';
-import { renderDoc, getCustomFontEntries, getParagraphStyles, getContentSchemeDefault } from '$lib/features/content/server';
+import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
+import type { Logger } from '#lib/platform/logger.server.ts';
+import type { SessionUser } from '#lib/features/auth/index.ts';
+import type { PageRow } from '#lib/features/pages/server.ts';
+import { linkSlugMap, publicLinkSlugMap } from '#lib/features/graph/server.ts';
+import { renderDoc, getCustomFontEntries, getParagraphStyles, getContentSchemeDefault } from '#lib/features/content/server.ts';
 import {
   collectAssetIds,
   compileContentTheme,
@@ -26,13 +26,13 @@ import {
   type ContentScheme,
   type ImagePreload,
   type JsonNode,
-} from '$lib/features/content';
-import { listCustomStyleRefs, getSiteTheme } from '$lib/features/site/server';
-import { getAssetSizes } from '$lib/features/media/server';
-import { resolveQueryBlocks } from '$lib/features/query/server';
-import { resolveCollectionBlocks } from '$lib/features/collections/server';
-import { resolveDocumentBlocks } from '$lib/features/documents/server';
-import { resolvePluginBlockData } from '$lib/features/pluginHost/server';
+} from '#lib/features/content/index.ts';
+import { listCustomStyleRefs, getSiteTheme } from '#lib/features/site/server.ts';
+import { getAssetSizes } from '#lib/features/media/server.ts';
+import { resolveQueryBlocks } from '#lib/features/query/server.ts';
+import { resolveCollectionBlocks } from '#lib/features/collections/server.ts';
+import { resolveDocumentBlocks } from '#lib/features/documents/server.ts';
+import { resolvePluginBlockData } from '#lib/features/pluginHost/server.ts';
 
 /**
  * Who a page is rendered for. The caller has already decided this reader may

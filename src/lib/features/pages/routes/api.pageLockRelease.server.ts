@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/lock/release/+server.ts.
-import { releaseLock } from '$lib/features/pages/server';
+import { releaseLock } from '#lib/features/pages/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 
 type Params = { id: string };

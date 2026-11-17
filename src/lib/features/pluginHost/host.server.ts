@@ -7,16 +7,16 @@
 // each rule is enforced here once: only the plugin's own nodes, each checked for
 // the viewer; secrets and connections opened only for whom and where they were
 // sealed; one client pinned to the plugin's origin; redirects only to this app.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { logEvent, type Logger } from '$lib/platform/logger.server';
-import { secretBox, SecretKeyMissing } from '$lib/platform/secretBox.server';
-import { upstreamClient } from '$lib/platform/upstream.server';
-import { servedFileHeaders } from '$lib/platform/servedFile';
-import type { SessionUser } from '$lib/features/auth/server';
-import { nodePath, type Visibility } from '$lib/features/nodes';
-import { documentContentPath } from '$lib/features/documents';
-import { getNodeType, resolveShareLink } from '$lib/features/nodes/server';
-import { getPage, userCanWritePage } from '$lib/features/pages/server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { logEvent, type Logger } from '#lib/platform/logger.server.ts';
+import { secretBox, SecretKeyMissing } from '#lib/platform/secretBox.server.ts';
+import { upstreamClient } from '#lib/platform/upstream.server.ts';
+import { servedFileHeaders } from '#lib/platform/servedFile.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { nodePath, type Visibility } from '#lib/features/nodes/index.ts';
+import { documentContentPath } from '#lib/features/documents/index.ts';
+import { getNodeType, resolveShareLink } from '#lib/features/nodes/server.ts';
+import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import {
   addMember,
   createCollection,
@@ -30,7 +30,7 @@ import {
   userCanReadCollection,
   userCanWriteCollection,
   type CollectionRow,
-} from '$lib/features/collections/server';
+} from '#lib/features/collections/server.ts';
 import {
   createPluginDocument,
   findPluginDocument,
@@ -42,17 +42,17 @@ import {
   userCanReadDocument,
   userCanWriteDocument,
   type DocumentRow,
-} from '$lib/features/documents/server';
-import { pluginManifest } from '$lib/plugins';
-import type { PluginFile, PluginHost, PluginNode, PluginNodes, PluginOpenConnection, PluginViewerConnection, PluginWriteResult } from '$lib/plugins/api';
-import * as m from '$lib/paraglide/messages';
+} from '#lib/features/documents/server.ts';
+import { pluginManifest } from '#lib/plugins/index.ts';
+import type { PluginFile, PluginHost, PluginNode, PluginNodes, PluginOpenConnection, PluginViewerConnection, PluginWriteResult } from '#lib/plugins/api.ts';
+import * as m from '#lib/paraglide/messages.js';
 import { getPluginSettings, pluginOrigin } from './settings.server';
 import { sealedSecretOf, storeSealedSecret } from './secrets.server';
 import { bindSecret, openBoundSecret, type SecretBinding } from './boundSecret';
 import { createGrants } from './grants.server';
 import { indexSourceSearch } from './sourceSearch.server';
 import { connectionOf, markRevoked, openCredential, touchConnection, type ConnectionRow } from './connections.server';
-import { apiErrorBody, isApiErrorCode, pluginError, textError } from '$lib/platform/apiErrors';
+import { apiErrorBody, isApiErrorCode, pluginError, textError } from '#lib/platform/apiErrors.ts';
 
 export interface HostContext {
   user: SessionUser | null;

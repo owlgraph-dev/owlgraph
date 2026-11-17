@@ -5,7 +5,7 @@
 -->
 <script lang="ts">
   import { browser } from '$app/env';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import type { LegendEntry } from '../nodeColor';
 
   let { entries }: { entries: LegendEntry[] } = $props();

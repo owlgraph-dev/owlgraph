@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Pure, so it is unit-testable without Paraglide; the concrete tree is tree.ts.
-import type { Action } from '$lib/features/auth';
+import type { Action } from '#lib/features/auth/index.ts';
 
 export interface SettingsItem {
   id: string;

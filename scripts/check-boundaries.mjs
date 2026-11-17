@@ -20,7 +20,7 @@
 //   9. The core never names a plugin.
 //  10. No module cycle through a registry: it would leave a list half-initialised.
 //  11. Only the routes, the server hooks and the shell import the shell.
-//  12. Only tests import the test harness ($tests).
+//  12. Only tests import the test harness (#tests).
 // `--root <dir>` checks another tree (src/lib/plugins/boundaries.test.ts).
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname, resolve, sep } from 'node:path';
@@ -86,8 +86,8 @@ for (const f of files) {
   while ((m = IMPORT_RE.exec(src))) {
     const spec = m[1] ?? m[2] ?? m[3];
     let to = null;
-    if (spec.startsWith('$lib/')) to = 'lib/' + spec.slice(5);
-    else if (spec.startsWith('$tests/')) to = '../tests/' + spec.slice(7);
+    if (spec.startsWith('#lib/')) to = 'lib/' + spec.slice(5);
+    else if (spec.startsWith('#tests/')) to = '../tests/' + spec.slice(7);
     else if (spec.startsWith('.')) to = rel(resolve(dirname(f), spec));
     if (to) to = to.replace(/\.(ts|js|mjs|svelte)$/, '');
     const typeOnly = /^(?:import|export)\s+type\s/.test(m[0]);
@@ -177,7 +177,7 @@ if (existsSync(FEATURES_DIR)) {
     } else if (e.to === GRAPHQL_BUILDER && fromKind?.name === 'GraphQL adapter') {
       // The one module an adapter imports by direct path.
     } else if (!barrels.includes(e.to) && !e.to.endsWith('.css')) {
-      problems.push(`Deep import into feature '${target}': ${e.from} imports '${e.spec}' (use $lib/features/${target}, …/components or …/server)`);
+      problems.push(`Deep import into feature '${target}': ${e.from} imports '${e.spec}' (use #lib/features/${target}/index.ts, …/components.ts or …/server.ts)`);
     }
     if (source && !e.typeOnly && !fromAdapter) {
       // A feature's server half and client half are separate nodes: the server
@@ -315,7 +315,7 @@ if (existsSync(PLUGINS_DIR)) {
         for (const m of css.matchAll(/@import\s+(?:url\(\s*)?['"]([^'"]+)['"]/g)) {
           const spec = m[1];
           let to = null;
-          if (spec.startsWith('$lib/')) to = 'lib/' + spec.slice(5);
+          if (spec.startsWith('#lib/')) to = 'lib/' + spec.slice(5);
           else if (spec.startsWith('.')) to = rel(resolve(dirname(p), spec));
           cssEdges.push({ from: rel(p), spec, to });
         }

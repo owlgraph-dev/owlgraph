@@ -6,10 +6,10 @@
 <script lang="ts">
   // The block settings panel's one-line path to the selection; ancestors above the last
   // two collapse into a "…" menu, so the path never wraps.
-  import * as m from '$lib/paraglide/messages';
-  import type { SelectionChainEntry } from '$lib/features/content/editor';
-  import { Button, DropdownMenu, DropdownMenuItem, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { SelectionChainEntry } from '#lib/features/content/editor.ts';
+  import { Button, DropdownMenu, DropdownMenuItem, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import { splitCrumbs } from './sections';
   import { labelFor } from './blockLabels';
 

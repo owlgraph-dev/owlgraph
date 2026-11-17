@@ -123,8 +123,8 @@ A plugin block follows the Svelte block contract
 block, reached through the content feature's entry points: the render contract
 (`BlockRenderer`, `RenderContext`), the block wrapper (`wrapperHtml`, `applyWrapper`),
 the island marker and the attrs a copied block carries in data attributes
-(`dataAttr`, `textValue`, `flagValue`) from `$lib/features/content`, the NodeView
-(`svelteNodeView`) from `$lib/features/content/editor`. Its component is
+(`dataAttr`, `textValue`, `flagValue`) from `#lib/features/content/index.ts`, the NodeView
+(`svelteNodeView`) from `#lib/features/content/editor.ts`. Its component is
 rendered through `RenderContext.ssr` — the same `ssrBlock` a core block
 imports, handed over by the walker, since a renderer outside content must not
 import content's server half back. What a block needs from outside the document

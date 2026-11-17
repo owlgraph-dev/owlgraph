@@ -13,7 +13,7 @@ import type { SessionUser } from '../lib/features/auth/server';
 import { getPage, userCanReadPage, userCanWritePage, type PageRow } from '../lib/features/pages/server';
 import { getDocument, userCanReadDocument, type DocumentRow } from '../lib/features/documents/server';
 import { logEvent, logger, newId, type Logger } from '../lib/platform/logger.server';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 export interface ToolResult {
   content: { type: 'text'; text: string }[];

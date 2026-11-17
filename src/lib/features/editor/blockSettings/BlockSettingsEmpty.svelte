@@ -4,8 +4,8 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import * as m from '$lib/paraglide/messages';
-  import { EmptyState as DsEmptyState } from '$lib/design-system';
+  import * as m from '#lib/paraglide/messages.js';
+  import { EmptyState as DsEmptyState } from '#lib/design-system/index.ts';
   import type { EmptyKind } from './sections';
 
   let { kind }: { kind: EmptyKind } = $props();

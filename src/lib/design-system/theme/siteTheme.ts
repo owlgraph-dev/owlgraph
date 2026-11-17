@@ -8,10 +8,10 @@
 // the server and the browser emit identical CSS.
 import { contrastRatio, fromOklch, mixSrgb, parseColor, toHex, toOklch, type Rgba } from './color';
 import { emitSchemeCss } from './emit';
-import { LAYER_ORDER, inLayer } from '$lib/platform/cssLayers';
+import { LAYER_ORDER, inLayer } from '#lib/platform/cssLayers.ts';
 import { readableScheme } from './readableScheme';
 import { DEFAULT_SCHEMES, SCHEME_NAMES, resolveSchemeValue, setActiveSchemes, type SchemeName, type SchemeSets } from './tokens';
-import type { StoredBlockDefaults } from '$lib/features/content';
+import type { StoredBlockDefaults } from '#lib/features/content/index.ts';
 
 export interface BrandColor {
   /** Stable: content references it, so renaming never breaks a page. */

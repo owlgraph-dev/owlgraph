@@ -8,16 +8,16 @@
   // sections. A block writes by id; a structural cell, a container or a list
   // by its chain position (target.ts).
   import { onDestroy } from 'svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { blockSupportsCapability, setSurfaceField, editTier } from '$lib/features/content';
-  import type { ContentScheme } from '$lib/features/content';
-  import { setSectionSingle, sectionMovesAt } from '$lib/features/content/editor';
+  import * as m from '#lib/paraglide/messages.js';
+  import { blockSupportsCapability, setSurfaceField, editTier } from '#lib/features/content/index.ts';
+  import type { ContentScheme } from '#lib/features/content/index.ts';
+  import { setSectionSingle, sectionMovesAt } from '#lib/features/content/editor.ts';
   import BlockBreadcrumb from './BlockBreadcrumb.svelte';
   import BreakpointSwitcher from './BreakpointSwitcher.svelte';
   import BlockSettingsEmpty from './BlockSettingsEmpty.svelte';
   import CapabilitySections from './CapabilitySections.svelte';
   import { blockSettingsOf } from '../blocks/settings';
-  import { pluginEditorBlock } from '$lib/plugins/editor';
+  import { pluginEditorBlock } from '#lib/plugins/editor.ts';
   import BlockSettingsSection from './BlockSettingsSection.svelte';
   import { anyAttrModified } from './modified';
   import { capabilitySectionsFor, emptyKindFor } from './sections';

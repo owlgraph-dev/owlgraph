@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/apply-picks/+server.ts.
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getPage, userCanWritePage, applyPicksToPage } from '$lib/features/pages/server';
-import { droppedSummary, type BlockPick } from '$lib/features/pages';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage, userCanWritePage, applyPicksToPage } from '#lib/features/pages/server.ts';
+import { droppedSummary, type BlockPick } from '#lib/features/pages/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

@@ -7,8 +7,8 @@
 import type { LockHolder, LockStatus } from './types';
 import type { BlockPick } from './pageDiff';
 import { ACKNOWLEDGE_DROPPED_HEADER, UNKNOWN_DROPPED_CODE } from './unknownGuard';
-import { readApiError } from '$lib/platform/readApiError';
-import { rememberAssetSize, type ImageSize } from '$lib/features/content';
+import { readApiError } from '#lib/platform/readApiError.ts';
+import { rememberAssetSize, type ImageSize } from '#lib/features/content/index.ts';
 
 /** `unknownDropped`: refused by the unknown-block guard (unknownGuard.ts); resending changes nothing. */
 export type SaveResult = { ok: true } | { ok: false; lockLost: boolean; unknownDropped?: boolean };

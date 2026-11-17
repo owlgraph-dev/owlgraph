@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { txt, doc, para, cell } from '$tests/e2e/doc';
-import { blockSettings } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { txt, doc, para, cell } from '#tests/e2e/doc.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const note = (id: string) => ({ type: 'callout', attrs: { blockId: id, variant: 'info' }, content: [txt(id)] });
 const section = (id: string, attrs: Record<string, unknown>, ...cells: unknown[]) => ({ type: 'pageSection', attrs: { blockId: id, ...attrs }, content: cells });

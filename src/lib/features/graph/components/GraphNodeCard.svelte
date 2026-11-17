@@ -6,10 +6,10 @@
 <script lang="ts">
   // A plain positioned element, not a bits-ui overlay: a virtual anchor is
   // measured only as it opens, and this card must follow a node still settling.
-  import { Button, Badge } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import type { NodeType } from '$lib/features/nodes';
+  import { Button, Badge } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   let {
     title,

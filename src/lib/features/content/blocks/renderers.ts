@@ -5,7 +5,7 @@
 // One public renderer per block kind. Keyed by BlockKindName, so the compiler
 // refuses a table that misses a kind of catalog.ts or names an unknown one.
 import type { BlockKindName } from './catalog';
-import { PLUGIN_RENDERERS } from '$lib/plugins/renderers';
+import { PLUGIN_RENDERERS } from '#lib/plugins/renderers.ts';
 import type { BlockRenderer } from './blockRenderer';
 import { renderParagraph } from './paragraph/render';
 import { renderHeading } from './heading/render';

@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { PUT, PATCH, DELETE } from '$lib/features/pages/routes/api.page.server';
+export { PUT, PATCH, DELETE } from '#lib/features/pages/routes/api.page.server.ts';

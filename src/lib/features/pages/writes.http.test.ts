@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createSession } from '$lib/features/auth/server';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf, type Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession } from '#lib/features/auth/server.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 // What is stored is read back from the database, not from the app. The agents'
 // half is src/mcp/mcp.int.test.ts; the lock's own rules are locks.int.test.ts.

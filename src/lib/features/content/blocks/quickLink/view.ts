@@ -4,7 +4,7 @@
 
 // The attrs as the wrapper, the card's override set and the component's props,
 // shared by the editor and the page so the two can't disagree.
-import { isIconName } from '$lib/design-system/icons';
+import { isIconName } from '#lib/design-system/icons.ts';
 import { spaceAboveOverrides } from '../../capabilities/spacing/spacing';
 import { surfaceVars } from '../../capabilities/surface/surface';
 import { placementClass, placementVars } from '../../capabilities/placement/placement';

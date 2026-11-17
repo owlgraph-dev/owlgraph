@@ -169,7 +169,7 @@ a layout.
 | Small anchored panel with controls | `Popover` (trigger face: `TriggerFace`, name via `triggerProps`) | `src/lib/design-system/ColorPickerField.svelte`; a button-look trigger: `src/lib/features/editor/meta/TagsPopover.svelte` | `docs/architecture/design-system/patterns.md#composing-toolbar-with-overlay-triggers` |
 | Modal task | `Dialog` (sizes `sm`–`xl`, `variant="danger"` for a confirm); bounded to the viewport, body scrolls, footer stays — never add height/overflow rules on its content (a fixed head over a scrolling list is `body="fill"`); fields are `FormField` (label, hint, error; the control wires itself; optional fields pass `optionalLabel`), an action error is `<Alert tone="danger">` in the body above the footer | any `*Modal.svelte` under a feature's `components/` | `docs/architecture/design-system/primitives.md#primitive-api-convention` |
 | Editor command row | `Toolbar` / `ToolbarButton` / `ToolbarGroup` | `src/lib/features/editor/desktop/toolbar/EditorToolbar.svelte` | `docs/architecture/design-system/patterns.md#composing-toolbar-with-overlay-triggers` |
-| Picking a page, document or collection | the search feature's `NodePicker` (`$lib/features/search/picker`: a large `Dialog`, a sheet on the phone shell; types, a caller's `mark`, `rowAction`, `create`) — never a `Command` of the feature's own | `src/lib/features/editor/collection/MembersEditor.svelte` | `docs/architecture/search.md#the-node-picker` |
+| Picking a page, document or collection | the search feature's `NodePicker` (`#lib/features/search/picker.ts`: a large `Dialog`, a sheet on the phone shell; types, a caller's `mark`, `rowAction`, `create`) — never a `Command` of the feature's own | `src/lib/features/editor/collection/MembersEditor.svelte` | `docs/architecture/search.md#the-node-picker` |
 
 Also fixed:
 
@@ -248,7 +248,7 @@ Also fixed:
 ### 5. Writing
 
 - Every user-visible string in `features/`, `shell/` and `routes/` goes
-  through Paraglide: `import * as m from '$lib/paraglide/messages'`, a
+  through Paraglide: `import * as m from '#lib/paraglide/messages.js'`, a
   `snake_case` key with the feature prefix, added to **both**
   `messages/de.json` and `messages/en.json`. English is the catalogues' base
   locale; which languages are offered and which is the default is a site

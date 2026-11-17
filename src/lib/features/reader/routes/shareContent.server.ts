@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/share/[id]/content/+server.ts.
-import { resolveShareLink } from '$lib/features/nodes/server';
-import { getNodeType } from '$lib/features/nodes/server';
-import { getDocument, getDocumentBytes, documentBytesResponse, externalContentResponse } from '$lib/features/documents/server';
-import { servePluginDocument } from '$lib/features/pluginHost/server';
+import { resolveShareLink } from '#lib/features/nodes/server.ts';
+import { getNodeType } from '#lib/features/nodes/server.ts';
+import { getDocument, getDocumentBytes, documentBytesResponse, externalContentResponse } from '#lib/features/documents/server.ts';
+import { servePluginDocument } from '#lib/features/pluginHost/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { textError } from '$lib/platform/apiErrors';
+import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

@@ -9,11 +9,11 @@ import { graphql as executeGraphql, parse, printSchema, Kind } from 'graphql';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text, errText } from '../../../mcp/registry';
 import { traversalQueryShape } from './nodeFilterSchema.server';
-import { can } from '$lib/features/auth/server';
-import { traverse } from '$lib/features/query/server';
-import { schema } from '$lib/features/query/server';
-import { getPropertySuggestions, listRelationshipTypes, listNodeClasses, listTags } from '$lib/features/semantic/server';
-import { localize, hasText } from '$lib/platform/i18n/localizedText';
+import { can } from '#lib/features/auth/server.ts';
+import { traverse } from '#lib/features/query/server.ts';
+import { schema } from '#lib/features/query/server.ts';
+import { getPropertySuggestions, listRelationshipTypes, listNodeClasses, listTags } from '#lib/features/semantic/server.ts';
+import { localize, hasText } from '#lib/platform/i18n/localizedText.ts';
 
 export function registerQueryTools({ user, tool }: ToolRegistry): void {
   tool(

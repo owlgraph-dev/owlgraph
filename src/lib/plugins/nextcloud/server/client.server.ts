@@ -5,7 +5,7 @@
 // Requests to the configured Nextcloud, all through the host's pinned client
 // (docs/architecture/plugins.md). An upstream address carries a share's token or a person's
 // id, so a failure is logged by operation, kind and status, never by address.
-import type { PluginHost, PluginOpenConnection, PluginUpstream, UpstreamResult } from '$lib/plugins/api';
+import type { PluginHost, PluginOpenConnection, PluginUpstream, UpstreamResult } from '#lib/plugins/api.ts';
 import { isShareToken } from '../sharePath';
 import { davPath, isUid, SEARCH_PATH } from './davRoot';
 import { parseMultistatus, PROPFIND_BODY, searchBody, type DavEntry } from './propfind.server';

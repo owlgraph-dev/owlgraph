@@ -6,8 +6,8 @@
 <script lang="ts">
   // The folder block's Display section. Block attrs, not capabilities: they hold
   // for every viewport, whatever the tier switcher shows.
-  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, Switch } from '$lib/design-system';
-  import type { PluginSectionProps } from '$lib/plugins/api';
+  import { FieldRow, NumberField, SegmentedControl, SegmentedControlItem, Select, Switch } from '#lib/design-system/index.ts';
+  import type { PluginSectionProps } from '#lib/plugins/api.ts';
   import { t } from '../../messages';
   import { folderConfig, MAX_FOLDER_PAGE_SIZE, type FolderSortDir, type FolderSortKey } from './model';
 

@@ -6,9 +6,9 @@
 <script lang="ts">
   // Inline colours can't follow the page's scheme, so an author pins the one
   // they were picked for (docs/architecture/theming.md).
-  import { FieldRow, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import { pinnedScheme } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import { pinnedScheme } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';

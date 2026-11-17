@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent, type Locator } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '$app/forms';
-import type { ActionAnswer } from '$tests/component/forms';
+import type { ActionAnswer } from '#tests/component/forms.ts';
 import ClassesPage from './classes/+page.svelte';
 import PropertiesPage from './properties/+page.svelte';
 import GroupsPage from './groups/+page.svelte';

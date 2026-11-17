@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect, vi } from 'vitest';
-import { nodePath, type NodeMetaClient } from '$lib/features/nodes';
+import { nodePath, type NodeMetaClient } from '#lib/features/nodes/index.ts';
 import { nodeActions, type NodeRow } from './nodeActions';
 
 const NAMESPACES = [

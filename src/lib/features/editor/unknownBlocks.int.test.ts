@@ -4,11 +4,11 @@
 
 import { describe, expect, it } from 'vitest';
 import sharp from 'sharp';
-import { createImageAsset } from '$lib/features/media/server';
-import { createPage, saveDoc } from '$lib/features/pages/server';
-import { connectAs, textOf, userOf } from '$tests/integration/mcp';
-import { textPara } from '$tests/e2e/doc';
-import { storedDoc } from '$tests/support/storedDoc';
+import { createImageAsset } from '#lib/features/media/server.ts';
+import { createPage, saveDoc } from '#lib/features/pages/server.ts';
+import { connectAs, textOf, userOf } from '#tests/integration/mcp.ts';
+import { textPara } from '#tests/e2e/doc.ts';
+import { storedDoc } from '#tests/support/storedDoc.ts';
 
 // docs/architecture/blocks/anatomy.md, "Unknown blocks". The agent is the real MCP server
 // in-process (tests/integration/mcp.ts). The kinds are invented: a plugin

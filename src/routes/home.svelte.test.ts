@@ -7,8 +7,8 @@ import { render } from 'vitest-browser-svelte';
 import { page as screen } from 'vitest/browser';
 import { page } from '$app/state';
 import HomePage from './+page.svelte';
-import AppBar from '$lib/shell/AppBar.svelte';
-import { createDialog } from '$lib/shell/appbar/createDialog.svelte';
+import AppBar from '#lib/shell/AppBar.svelte';
+import { createDialog } from '#lib/shell/appbar/createDialog.svelte.ts';
 import type { PageData } from './$types';
 
 // Beside the app bar, which hosts the shared Create dialog, as the root layout draws them.

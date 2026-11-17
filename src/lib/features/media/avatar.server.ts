@@ -4,10 +4,10 @@
 
 // A user's avatar is an `assets` row (kind 'avatar', scope 'user'); a partial
 // unique index on owner_user_id keeps it to one per user.
-import { db } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
 import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from './media.server';
-import { logEvent, logger } from '$lib/platform/logger.server';
-import { CodedError } from '$lib/platform/codedError';
+import { logEvent, logger } from '#lib/platform/logger.server.ts';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 // No GIF.
 const ALLOWED_AVATAR_MIME = new Set(

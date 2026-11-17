@@ -5,15 +5,15 @@
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import sharp from 'sharp';
 import type { ServerLoadEvent } from '@sveltejs/kit';
-import { createPage, getPage, saveDoc } from '$lib/features/pages/server';
-import { createShareLink, getNodeBySlug } from '$lib/features/nodes/server';
-import { getDefaultNamespace } from '$lib/features/namespaces/server';
-import { createImageAsset } from '$lib/features/media/server';
-import { logger } from '$lib/platform/logger.server';
+import { createPage, getPage, saveDoc } from '#lib/features/pages/server.ts';
+import { createShareLink, getNodeBySlug } from '#lib/features/nodes/server.ts';
+import { getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { createImageAsset } from '#lib/features/media/server.ts';
+import { logger } from '#lib/platform/logger.server.ts';
 import { renderPage } from './server';
 import { load as readLoad } from './routes/read.server';
 import { load as shareLoad } from './routes/share.server';
-import { connectAs, textOf, userOf, type Role } from '$tests/integration/mcp';
+import { connectAs, textOf, userOf, type Role } from '#tests/integration/mcp.ts';
 
 // One page holds what tells the readers apart: a link an anonymous reader may
 // not follow, a gone target with a cached slug, a hero image with copies, its

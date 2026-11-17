@@ -6,9 +6,9 @@
 <script lang="ts">
   // `canEdit` is this node's write permission, not AppBar's role-only
   // `userCanEdit`, which would show Edit to people who can't write the node.
-  import { Button } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { canEdit, href }: { canEdit: boolean; href: string | null } = $props();
 </script>

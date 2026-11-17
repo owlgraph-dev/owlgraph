@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState, seed } from '$tests/e2e/seed-data';
-import { createPage } from '$tests/e2e/api';
-import { txt, doc, para, cell } from '$tests/e2e/doc';
-import { blockSettings } from '$tests/e2e/editor';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState, seed } from '#tests/e2e/seed-data.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { txt, doc, para, cell } from '#tests/e2e/doc.ts';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 const note = (id: string) => ({ type: 'callout', attrs: { blockId: id, variant: 'info' }, content: [txt(id)] });
 // The seeded asset is no real picture: a fixed box height gives the image a

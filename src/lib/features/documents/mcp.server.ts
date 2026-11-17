@@ -6,11 +6,11 @@
 import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text, errText } from '../../../mcp/registry';
-import { logEvent } from '$lib/platform/logger.server';
-import { listDocumentsForUser, getDocumentText, createLinkDocument } from '$lib/features/documents/server';
-import { parseExternalUrl, MAX_EXTERNAL_URL_LENGTH } from '$lib/features/documents';
-import { getNodeProperties } from '$lib/features/semantic/server';
-import { pluginLabel } from '$lib/plugins';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { listDocumentsForUser, getDocumentText, createLinkDocument } from '#lib/features/documents/server.ts';
+import { parseExternalUrl, MAX_EXTERNAL_URL_LENGTH } from '#lib/features/documents/index.ts';
+import { getNodeProperties } from '#lib/features/semantic/server.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
 
 export function registerDocumentTools({ user, log, tool, documentTool }: ToolRegistry): void {
   tool(

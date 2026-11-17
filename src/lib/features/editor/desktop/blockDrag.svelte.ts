@@ -5,7 +5,7 @@
 // A block's drag-and-drop by its grip. Pointer-based, so each drop is
 // validated against the schema, which keeps containers out of cells. Public
 // methods are arrow fields, as the window's listeners need one identity.
-import { canDropRelative, moveBlockRelative } from '$lib/features/content/editor';
+import { canDropRelative, moveBlockRelative } from '#lib/features/content/editor.ts';
 import type { EditorCore } from '../core/editorCore.svelte';
 import type { BlockHover } from './hover.svelte';
 

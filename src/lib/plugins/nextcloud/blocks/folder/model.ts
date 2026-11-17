@@ -6,8 +6,8 @@
 // listing of a collection's share from a folder in it; the block stores none
 // of what it lists. Read by the manifest, so it imports nothing at runtime
 // outside the plugin.
-import type { Attrs, BlockFacets, BlockEdge, JsonNode, SurfaceData } from '$lib/features/content';
-import type { PluginBlockKind } from '$lib/plugins/api';
+import type { Attrs, BlockFacets, BlockEdge, JsonNode, SurfaceData } from '#lib/features/content/index.ts';
+import type { PluginBlockKind } from '#lib/plugins/api.ts';
 import { checkSharePath } from '../../sharePath';
 
 export const FOLDER_BLOCK = 'nextcloudFolder';

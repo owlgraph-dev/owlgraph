@@ -5,7 +5,7 @@
 // What the edit route adds to the node client: the loaded row kept in sync,
 // URL changes, data reloads, and the lock around delete. The route's
 // navigation is passed in.
-import { nodePath, type NodeMetaClient } from '$lib/features/nodes';
+import { nodePath, type NodeMetaClient } from '#lib/features/nodes/index.ts';
 import type { NodeMetaActions } from './nodeMeta';
 
 export type NodeRow = { id: string; title: string; slug: string; namespace_id: string; namespace_slug: string | null };

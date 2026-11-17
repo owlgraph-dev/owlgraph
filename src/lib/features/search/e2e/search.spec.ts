@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { createPage } from '$tests/e2e/api';
-import { seed, authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { seed, authState } from '#tests/e2e/seed-data.ts';
 
 function searchDialog(page: Page) {
   return page.getByRole('dialog', { name: 'Search' });

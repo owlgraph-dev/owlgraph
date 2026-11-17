@@ -4,8 +4,8 @@
 
 import { describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { db } from '$lib/platform/db.server';
-import { schema } from '$lib/features/query/server';
+import { db } from '#lib/platform/db.server.ts';
+import { schema } from '#lib/features/query/server.ts';
 import {
   createApiToken,
   createSession,
@@ -19,7 +19,7 @@ import {
   setUserPassword,
   setUserRole,
 } from './server';
-import { userOf } from '$tests/integration/users';
+import { userOf } from '#tests/integration/users.ts';
 
 // Accounts of each test's own, so no seeded session or token is spent.
 

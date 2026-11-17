@@ -6,7 +6,7 @@
 // `filter` and `traversal` are mutually exclusive, as in the block's own attrs.
 import type { WireNodeFilter, WireOrderByInput } from './nodeFilter';
 import type { WireTraversalQuery } from './traversal';
-import type { WrapperMapping } from '$lib/features/content';
+import type { WrapperMapping } from '#lib/features/content/index.ts';
 
 export interface QueryDefinition {
   filter: WireNodeFilter | null;

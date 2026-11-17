@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 const app = await startApp();
 

@@ -9,12 +9,12 @@
   // onPick (a link needs the selection the close clears), since bits-ui calls
   // onOpenChange only for its own closes.
   import { MediaQuery } from 'svelte/reactivity';
-  import { BottomSheet, Dialog, PHONE_SHELL_MEDIA, getSheetPageOutlet } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { BottomSheet, Dialog, PHONE_SHELL_MEDIA, getSheetPageOutlet } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { NodeSearchResult } from '../types';
   import NodePickerPanel from './NodePickerPanel.svelte';
   import type { NodeMark, NodePickerCreate, PickerRow } from './nodePicker';
-  import type { NodeType } from '$lib/features/nodes';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   let {
     open,

@@ -7,10 +7,10 @@
   // One store sets both the tier the sections edit and the canvas
   // preview width, so the two never disagree. Icons, since three words don't
   // fit beside "Values for" in the 270px column.
-  import { FieldRow, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { editTier, type Tier } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { FieldRow, SegmentedControl, SegmentedControlItem } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { editTier, type Tier } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   const items: { value: Tier; icon: string; title: () => string; aria: () => string }[] = [
     { value: 'desktop', icon: 'monitor', title: m.editor_toolbar_tier_desktop_title, aria: m.editor_toolbar_tier_desktop_aria },

@@ -5,11 +5,11 @@
 -->
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import { PagePicker } from '$lib/features/search/picker';
-  import { Button, SettingsRow, SettingsWell, EmptyState } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { nodePath } from '$lib/features/nodes';
-  import * as m from '$lib/paraglide/messages';
+  import { PagePicker } from '#lib/features/search/picker.ts';
+  import { Button, SettingsRow, SettingsWell, EmptyState } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { nodePath } from '#lib/features/nodes/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data } = $props();
 

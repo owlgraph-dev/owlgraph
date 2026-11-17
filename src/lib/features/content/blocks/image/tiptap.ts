@@ -7,7 +7,7 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { widthVars, parseWidthVar, WIDTH_ATTR } from './imageWidth';
 import { boxImgOverrides, boxDataAttr, positionDataAttr, backdropAttrs, normalizeBoxMode, parseBoxHeight, parseBoxAspect } from './imageBox';
-import { mediaUrl } from '$lib/features/media';
+import { mediaUrl } from '#lib/features/media/index.ts';
 import { imageSources, imageSizeOverrides } from './imageSources';
 import { assetSizeOf } from './assetSizeRegistry';
 import { mergeOverrides, styleAttr } from '../../capabilities/overrides';

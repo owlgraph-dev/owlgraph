@@ -4,9 +4,9 @@
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
-import { setNodeTags } from '$lib/features/semantic/server';
+import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { schema } from './server';
-import { userOf, type Role } from '$tests/integration/users';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 const seed = inject('seed');
 

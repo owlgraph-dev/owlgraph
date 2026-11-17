@@ -5,8 +5,8 @@
 // The file block's model (docs/architecture/nextcloud.md, "The file block"): one document by
 // id and how it is drawn; what the file is comes from the document, never the
 // block. Read by the manifest, so it imports nothing at runtime outside the plugin.
-import type { Attrs, BlockFacets, BlockEdge, JsonNode, SurfaceData } from '$lib/features/content';
-import type { PluginBlockKind } from '$lib/plugins/api';
+import type { Attrs, BlockFacets, BlockEdge, JsonNode, SurfaceData } from '#lib/features/content/index.ts';
+import type { PluginBlockKind } from '#lib/plugins/api.ts';
 
 export const FILE_BLOCK = 'nextcloudFile';
 

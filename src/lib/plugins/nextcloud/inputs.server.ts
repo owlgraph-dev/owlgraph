@@ -7,7 +7,7 @@
 // only what it may read, and nothing while the plugin is off. The nodes are sparse.
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { definePluginInputs, type PluginBlockInput, type PluginHost } from '$lib/plugins/api';
+import { definePluginInputs, type PluginBlockInput, type PluginHost } from '#lib/plugins/api.ts';
 import { nextcloud } from './index';
 import { checkSharePath } from './sharePath';
 import { FOLDER_BLOCK, MAX_FOLDER_PAGE_SIZE } from './blocks/folder/model';

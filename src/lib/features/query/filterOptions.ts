@@ -4,10 +4,10 @@
 
 // Picker items for the closed-value intrinsic fields, shared by the query
 // builder and the graph view's filters so a class reads the same in both.
-import * as m from '$lib/paraglide/messages';
-import type { NodeClassOption } from '$lib/features/semantic';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
-import { localeName } from '$lib/platform/i18n/localeNames';
+import * as m from '#lib/paraglide/messages.js';
+import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
+import { localeName } from '#lib/platform/i18n/localeNames.ts';
 
 export interface PickerItem {
   value: string;

@@ -368,10 +368,9 @@ The shared harness stays in `tests/`. What every layer uses is in
 `tests/support/` (`databases.ts`, the run's databases; `seed.ts`, the seed),
 the integration and component projects' setup in `tests/integration/` and
 `tests/component/`, and Playwright's in `tests/e2e/`. A test under `src/` imports
-it as `$tests/…` (`$tests/e2e/fixtures`): the alias is the `sveltekit()`
-plugin's `alias` in `vite.config.ts` (and so the paths of the tsconfig
-SvelteKit generates, which Playwright reads), `vitest.config.ts` and the Node
-loader hook. Only tests import it, a
+it as `#tests/…` (`#tests/e2e/fixtures.ts`), a subpath import declared in
+`package.json`'s `imports`, which Vite, Vitest, Playwright and the Node loader
+hook all resolve. Only tests import it, a
 spec's helpers in an `e2e/` folder included (`check-boundaries`):
 
 | File | Role |
@@ -614,7 +613,7 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
 
 ### Writing specs
 
-- **Import `test` and `expect` from `$tests/e2e/fixtures`,** never from
+- **Import `test` and `expect` from `#tests/e2e/fixtures.ts`,** never from
   `@playwright/test`. Types and `request` still come from `@playwright/test`.
 - **Select by behaviour:** roles, accessible names, labels, `data-testid`.
   Never a `style` attribute, a generated class or the presence of inline

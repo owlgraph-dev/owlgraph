@@ -7,17 +7,17 @@
   // The graph view's settings (docs/architecture/graph-view.md). Pure controls: GraphView
   // owns the state. One body, two presentations: the floating panel, and the
   // phone's bottom sheet, where every section folds so the sheet stays short.
-  import { SegmentedControl, SegmentedControlItem, MultiSelect, Select, Switch, Button, Accordion, AccordionItem, Slider } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import { typeItems, classItems, namespaceItems, type NamespaceOption, type PickerItem } from '$lib/features/query';
-  import type { NodeClassOption } from '$lib/features/semantic';
+  import { SegmentedControl, SegmentedControlItem, MultiSelect, Select, Switch, Button, Accordion, AccordionItem, Slider } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { typeItems, classItems, namespaceItems, type NamespaceOption, type PickerItem } from '#lib/features/query/index.ts';
+  import type { NodeClassOption } from '#lib/features/semantic/index.ts';
   import { LABEL_MODES, NODE_SIZES, type ColorBy, type GraphSettings, type LabelMode, type NodeSize } from '../settings';
   import { EMPTY_FILTER, isFilterEmpty, type GraphFilter } from '../graphFilter';
   import { VIEW_MODE_IDS, type ViewModeId } from '../layout/viewModes';
   import { DEFAULT_FORCES, FORCE_RANGES, type ForceParams } from '../layout/forceParams';
   import { loadOpenSections, saveOpenSections } from '../panelSections';
   import { untrack } from 'svelte';
-  import type { NodeType } from '$lib/features/nodes';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   let {
     settings,

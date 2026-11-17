@@ -8,10 +8,10 @@
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
   import FooterLinkList from './FooterLinkList.svelte';
-  import TreeEditor from '$lib/features/site/routes/TreeEditor.svelte';
-  import { Badge, Button, Icon, Input, Textarea, Switch, SettingsGroup, SettingsRow, EmptyState } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import TreeEditor from '#lib/features/site/routes/TreeEditor.svelte';
+  import { Badge, Button, Icon, Input, Textarea, Switch, SettingsGroup, SettingsRow, EmptyState } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 

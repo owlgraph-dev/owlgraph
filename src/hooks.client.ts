@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { ClientInit } from '@sveltejs/kit/hooks';
-import { setKnownNamespaceSlugs } from '$lib/features/namespaces';
-import { baseLocale, isLocale, overwriteGetLocale } from '$lib/paraglide/runtime';
+import { setKnownNamespaceSlugs } from '#lib/features/namespaces/index.ts';
+import { baseLocale, isLocale, overwriteGetLocale } from '#lib/paraglide/runtime.js';
 
 // The interface language is the server's decision, read from <html lang>:
 // Paraglide's own getLocale() would negotiate over every catalogue and write a

@@ -4,7 +4,7 @@
 
 // How a collection block's attrs become what is drawn, shared by the editor
 // and the page so the two cannot disagree.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { spaceAboveOverrides, type SpacingData } from '../../capabilities/spacing/spacing';
 import { surfaceVars, type SurfaceData } from '../../capabilities/surface/surface';
 import { placementClass, placementVars, type PlacementData } from '../../capabilities/placement/placement';
@@ -17,7 +17,7 @@ import { groupClass } from '../catalog';
 import type { BlockWrapper } from '../scaffold/blockWrapper';
 import type { EmbedSource } from '../embeds';
 import { COLLECTION_BLOCK, collectionConfig, type CollectionBlockConfig, type CollectionBlockData } from './model';
-import type { NodeType } from '$lib/features/nodes';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 type CapabilityAttrs = { blockId?: string | null; spacing?: SpacingData | null; surface?: SurfaceData | null; typography?: TypographyData | null; placement?: PlacementData | null };
 

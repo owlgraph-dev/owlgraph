@@ -5,14 +5,14 @@
 // The `edges` table (source -> target, optionally typed) is regenerated from a
 // page's content on every save, so the graph never drifts from the content.
 // Viewer scoping is readableNodes throughout.
-import { db, type TxSql } from '$lib/platform/db.server';
-import { labelCache, type LocalizedText } from '$lib/platform/i18n/localizedText';
-import { timed } from '$lib/platform/logger.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { timed } from '#lib/platform/logger.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { applyEdgeProperties, getEdgeProperties } from './edges.server';
-import { blockEdges, isUnknownType, type BlockEdge, type JsonNode } from '$lib/features/content';
-import type { NodeType } from '$lib/features/nodes';
+import { blockEdges, isUnknownType, type BlockEdge, type JsonNode } from '#lib/features/content/index.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 // A block's declared link, or an inline pageLink/docLink mark (always untyped).
 export type EdgeDraft = BlockEdge;

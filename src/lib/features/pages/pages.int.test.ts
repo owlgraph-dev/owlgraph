@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { db, type JsonArg } from '$lib/platform/db.server';
-import { unknownKeys, type JsonNode } from '$lib/features/content';
-import { createImageAsset } from '$lib/features/media/server';
-import { connectAs, textOf, userOf } from '$tests/integration/mcp';
+import { db, type JsonArg } from '#lib/platform/db.server.ts';
+import { unknownKeys, type JsonNode } from '#lib/features/content/index.ts';
+import { createImageAsset } from '#lib/features/media/server.ts';
+import { connectAs, textOf, userOf } from '#tests/integration/mcp.ts';
 import {
   acquireLock,
   applyPicksToPage,
@@ -22,8 +22,8 @@ import {
   siteReadiness,
 } from './server';
 import { isUnknownDropped } from './unknownGuard';
-import { retiredWidget, textPara, txt } from '$tests/e2e/doc';
-import { storedDoc } from '$tests/support/storedDoc';
+import { retiredWidget, textPara, txt } from '#tests/e2e/doc.ts';
+import { storedDoc } from '#tests/support/storedDoc.ts';
 
 // The agent is the real MCP server in-process (tests/integration/mcp.ts).
 

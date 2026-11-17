@@ -7,7 +7,7 @@ import { colorCss, colorToken, colorTokenName } from './colorTokens';
 import { safeColor, safeLiteralColor } from '../capabilities/parse';
 import { surfaceVars } from '../capabilities/surface/surface';
 import { typographyVars } from '../capabilities/typography/typography';
-import { DEFAULT_SCHEMES } from '$lib/design-system/theme/tokens';
+import { DEFAULT_SCHEMES } from '#lib/design-system/theme/tokens.ts';
 import { CONTENT_COLOR_TOKENS, colorTokenProperty } from './colorTokens';
 
 describe('colour references', () => {

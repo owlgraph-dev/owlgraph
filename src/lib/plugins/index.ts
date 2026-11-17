@@ -6,8 +6,8 @@
 // pure data, so the content catalogue, the settings tree and Node tooling read
 // it at no cost. The registry files here are the only core modules that import
 // a plugin (scripts/check-boundaries.mjs, rule 7).
-import type { BlockFacets } from '$lib/features/content';
-import type { LocalizedText } from '$lib/platform/i18n/localizedText';
+import type { BlockFacets } from '#lib/features/content/index.ts';
+import type { LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import type { PluginBlockKind, PluginConnectionsManifest, PluginManifest, PluginSettingsSection } from './api';
 import { nextcloud } from './nextcloud';
 

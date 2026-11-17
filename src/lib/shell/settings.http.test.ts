@@ -4,10 +4,10 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { PLUGINS_WITH_SETTINGS } from '$lib/plugins';
-import { call, startApp, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { PLUGINS_WITH_SETTINGS } from '#lib/plugins/index.ts';
+import { call, startApp, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 import { SETTINGS_TREE } from './settings/tree';
 
 // What the search and the phone sheet do in a browser is the component and e2e

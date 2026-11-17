@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { activeFilterCount, applyGraphFilter, EMPTY_FILTER, expandClassIds, isFilterEmpty, relationshipTypeItems, type GraphFilter } from './graphFilter';
 import type { GraphNode, GraphEdge } from './types';
-import type { NodeClassOption } from '$lib/features/semantic';
+import type { NodeClassOption } from '#lib/features/semantic/index.ts';
 
 const cls = (id: string, parentId: string | null, depth: number): NodeClassOption => ({
   id, slug: id, label: id, description: '', kind: depth === 1 ? 'type' : 'domain', parentId, nodeType: 'page', depth,

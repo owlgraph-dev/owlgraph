@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { pluginFailed } from './pluginFailure.server';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 describe("a plugin's failure in the log", () => {
   it('names its class and step, and nothing the error said', () => {

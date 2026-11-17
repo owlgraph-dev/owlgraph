@@ -6,7 +6,7 @@
 // as the viewer"): their own connection where the root lies in their files, else
 // the node's share, never the other way round. Nothing here writes to the node:
 // what one viewer finds says nothing of it to others.
-import type { PluginHost, PluginNode } from '$lib/plugins/api';
+import type { PluginHost, PluginNode } from '#lib/plugins/api.ts';
 import { decodeSecret, shareAccess, userAccess, type DavProblem, type ShareAccess, type UserAccess } from './client.server';
 import { locate } from './locate.server';
 import { collectionRef, documentRef, type PathHint } from './refs';

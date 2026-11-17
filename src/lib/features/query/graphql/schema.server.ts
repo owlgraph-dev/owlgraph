@@ -5,11 +5,11 @@
 // The GraphQL host: the query root and the filter grammar. Other features add
 // fields through their `graphql.server.ts` adapters, registered in a fixed order
 // below, which fixes the printed schema the MCP `schema` tool hands to agents.
-import { getNodeProperties } from '$lib/features/semantic/server';
+import { getNodeProperties } from '#lib/features/semantic/server.ts';
 import { builder, NodeTypeEnum, type GraphQLContext } from './builder.server';
-import { NodeProperty, registerSemanticQueryFields, LocaleType } from '$lib/features/semantic/graphql.server';
-import { registerSearchQueryFields } from '$lib/features/search/graphql.server';
-import { registerPageNodeFields } from '$lib/features/pages/graphql.server';
+import { NodeProperty, registerSemanticQueryFields, LocaleType } from '#lib/features/semantic/graphql.server.ts';
+import { registerSearchQueryFields } from '#lib/features/search/graphql.server.ts';
+import { registerPageNodeFields } from '#lib/features/pages/graphql.server.ts';
 import { getNodes, type ContentNodeHit } from './nodes.server';
 import { traverse } from './traverse.server';
 import type { NodeFilterInput, PropertyOperator, OrderByInput, OrderByKind, OrderDirection, EdgeDirection, IntrinsicField, ClassMatch, TagOperator } from '../nodeFilter';

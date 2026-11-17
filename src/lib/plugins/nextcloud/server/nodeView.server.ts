@@ -5,7 +5,7 @@
 // A collection's own page (docs/architecture/plugins.md, "Node views"). It never waits on
 // Nextcloud: the body starts from the listing held for this viewer, or
 // `loading` with a fetch started. A page never carries the share's token.
-import type { PluginHost, PluginNode, PluginNodeAction, PluginNodeViewData } from '$lib/plugins/api';
+import type { PluginHost, PluginNode, PluginNodeAction, PluginNodeViewData } from '#lib/plugins/api.ts';
 import { t } from '../messages';
 import { PLUGIN_ROUTES } from '../blocks/routes';
 import { decodeSecret } from './client.server';

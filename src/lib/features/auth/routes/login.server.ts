@@ -5,11 +5,11 @@
 // Route adapter for /login, re-exported by src/routes/login/+page.server.ts.
 import { redirect } from '@sveltejs/kit';
 import { dev } from '$app/env';
-import { login } from '$lib/features/auth/server';
-import { logEvent, requestLogger } from '$lib/platform/logger.server';
-import { safeRedirect } from '$lib/features/auth';
+import { login } from '#lib/features/auth/server.ts';
+import { logEvent, requestLogger } from '#lib/platform/logger.server.ts';
+import { safeRedirect } from '#lib/features/auth/index.ts';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 const dest = (url: URL) => safeRedirect(url.searchParams.get('redirect'), url.origin);
 

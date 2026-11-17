@@ -8,7 +8,7 @@ import { page as screen } from 'vitest/browser';
 import { page } from '$app/state';
 import AppBar from './AppBar.svelte';
 import { createDialog } from './appbar/createDialog.svelte';
-import type { Role } from '$lib/features/auth';
+import type { Role } from '#lib/features/auth/index.ts';
 
 // The Create button is UX only: the routes refuse the creates themselves
 // (create.http.test.ts).

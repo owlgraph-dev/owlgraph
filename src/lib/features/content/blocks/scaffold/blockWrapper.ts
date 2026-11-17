@@ -6,7 +6,7 @@
 // root (applyWrapper) and the page's opening tag (wrapperOpen). Both emit the same
 // classes, block id and content-addressed rule id; a block's component never
 // touches it (docs/architecture/blocks/anatomy.md, "Svelte leaf blocks").
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import type { OverrideSet } from '../../capabilities/overrides';
 import { RULE_ID_ATTR, ruleIdAttribute } from '../../capabilities/pageStyles';
 import type { LiveStyles } from '../../capabilities/liveStyles';

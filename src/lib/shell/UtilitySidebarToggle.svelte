@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
   // Labelled "sidebar", not "graph", so a second panel needs no relabel.
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { localGraphOpen, localGraphWidth } from '$lib/features/graph';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import { localGraphOpen, localGraphWidth } from '#lib/features/graph/index.ts';
 
 </script>
 

@@ -7,7 +7,7 @@
 // a fenced block word by word, and the comment lines of src/, tests/, scripts/
 // and the root configs; never migrations/, whose comments keep their day's paths.
 // A path starts from a root (a top folder, lib/, a folder of src/lib/ or of
-// src/lib/features/, $lib/, ./, ../) and resolves as written or as a module;
+// src/lib/features/, #lib/, #tests/, ./, ../) and resolves as written or as a module;
 // [slug] stands for any route parameter folder, and a placeholder (<…>, {…}, *,
 // …, ?, 00NN) is no path. A markdown page's relative links must reach a file
 // too, and a #anchor a heading of it, by GitHub's rule for a heading's id; so
@@ -26,7 +26,6 @@ const ALLOWED = [
   { path: /^\.\/backups\//, reason: 'the dumps the backup and restore commands in docs/guides/backup.md write and read (gitignored)' },
   { path: /^tests\/e2e\/\.(?:seed\.json|servers\/)/, reason: "the e2e harness's run state, which a run writes (gitignored), so CI's check runs before it exists" },
   { path: /^migrations\/0002_add_some_index\.no-tx\.sql$/, reason: "docs/architecture/migrations.md's example of a migration run outside a transaction" },
-  { path: /^\$lib\/server$/, reason: "SvelteKit's server-only folder, named for the rule it enforces; this codebase marks a server module *.server.ts instead" },
 ];
 
 const MARKDOWN_ROOT = ['README.md', 'CONTRIBUTING.md', 'AGENTS.md', 'SECURITY.md'];
@@ -97,7 +96,8 @@ function existsUnder(base, path) {
 function basesOf(word, file) {
   if (word.startsWith('./')) return [dirname(file), ROOT];
   if (word.startsWith('../')) return [dirname(file)];
-  if (word.startsWith('$lib/')) return [join(ROOT, 'src', 'lib')];
+  if (word.startsWith('#lib/')) return [join(ROOT, 'src', 'lib')];
+  if (word.startsWith('#tests/')) return [join(ROOT, 'tests')];
   const first = word.slice(0, word.indexOf('/'));
   const bases = ROOTS.filter(([, names]) => names.has(first)).map(([base]) => base);
   return bases.length ? bases : null;
@@ -112,12 +112,13 @@ let checkedSections = 0;
 
 function checkText(text, file, line) {
   for (const raw of text.split(WORD_BREAK)) {
-    // A line reference, an anchor or a sentence's full stop is not part of the path.
-    const word = raw.replace(/#.*$/, '').replace(/:\d+(?:-\d+)?$/, '').replace(/[.:]+$/, '');
+    // A line reference, an anchor or a sentence's full stop is not part of the
+    // path; a # that starts the word is a subpath import's.
+    const word = raw.replace(/(?!^)#.*$/, '').replace(/:\d+(?:-\d+)?$/, '').replace(/[.:]+$/, '');
     if (!word.includes('/') || word.startsWith('/') || PLACEHOLDER.test(word)) continue;
     const bases = basesOf(word, file);
     if (!bases) continue;
-    const found = bases.map((base) => existsUnder(base, word.replace(/^\$lib\//, '')));
+    const found = bases.map((base) => existsUnder(base, word.replace(/^#(?:lib|tests)\//, '')));
     if (!found.includes(true) && found.includes(null)) continue;
     checkedPaths++;
     if (found.includes(true) || isAllowed(word)) continue;

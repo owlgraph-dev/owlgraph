@@ -6,7 +6,7 @@
 // a literal, the same in every scheme, or a reference that follows the scheme:
 // `token:<name>` from the closed set below, or `token:brand.<id>` for a site
 // brand colour. A reference to a removed brand colour renders as nothing.
-import { BRAND_ID, brandProperty } from '$lib/design-system/theme/siteTheme';
+import { BRAND_ID, brandProperty } from '#lib/design-system/theme/siteTheme.ts';
 
 export const CONTENT_COLOR_TOKENS = [
   'text',

@@ -5,8 +5,8 @@
 // The text-search configuration per content language (docs/architecture/languages.md). The
 // generated search_tsv columns hold the same map as a CASE, which
 // contentRegconfig.test.ts keeps in step. A language without one is 'simple'.
-import type { Locale } from '$lib/paraglide/runtime';
-import { SUPPORTED_LOCALES } from '$lib/platform/i18n/siteLocales';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { SUPPORTED_LOCALES } from '#lib/platform/i18n/siteLocales.ts';
 
 export const CONTENT_REGCONFIG: Record<Locale, string> = {
   de: 'german',

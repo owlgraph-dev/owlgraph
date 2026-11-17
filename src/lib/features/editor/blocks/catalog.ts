@@ -6,7 +6,7 @@
 // a row is a box with all four Surface fields and no Edit action. Pure (no
 // Svelte, no Tiptap) so the block settings panel's logic stays unit-testable
 // (docs/architecture/blocks/anatomy.md).
-import { pluginEditorBlock } from '$lib/plugins/editor';
+import { pluginEditorBlock } from '#lib/plugins/editor.ts';
 import {
   QUICK_LINK_VARIANT_FIELDS,
   quickLinkDefaults,
@@ -16,7 +16,7 @@ import {
   type PlacementKind,
   type ResolvedBlockDefaults,
   type SurfaceBoxField,
-} from '$lib/features/content';
+} from '#lib/features/content/index.ts';
 
 type Attrs = Record<string, unknown>;
 

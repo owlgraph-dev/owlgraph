@@ -4,8 +4,8 @@
 
 // The token vocabulary a custom style should be written in (docs/architecture/theming.md,
 // "Content palette"), derived from the scheme sets so it can't drift from them.
-import { DEFAULT_SCHEMES } from '$lib/design-system/theme/tokens';
-import { getBrandColors, typeScaleOptions } from '$lib/features/content';
+import { DEFAULT_SCHEMES } from '#lib/design-system/theme/tokens.ts';
+import { getBrandColors, typeScaleOptions } from '#lib/features/content/index.ts';
 
 export interface ContentToken {
   name: string;

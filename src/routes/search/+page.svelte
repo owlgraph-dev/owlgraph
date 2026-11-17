@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import SearchPage from '$lib/features/search/routes/SearchPage.svelte';
+  import SearchPage from '#lib/features/search/routes/SearchPage.svelte';
   let { data } = $props();
 </script>
 

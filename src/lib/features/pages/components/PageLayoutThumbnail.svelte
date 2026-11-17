@@ -6,7 +6,7 @@
 <script lang="ts">
   // A page layout drawn from its data, one frame per tier. Beside its label
   // it is decoration, so it is hidden from assistive technology unless labelled.
-  import { TIERS, type ColumnTemplate, type Tier } from '$lib/features/content';
+  import { TIERS, type ColumnTemplate, type Tier } from '#lib/features/content/index.ts';
 
   let { template, label = undefined }: { template: ColumnTemplate | null; label?: string } = $props();
 

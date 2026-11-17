@@ -14,7 +14,7 @@ import {
   UNIVERSAL_TRANSFORM_IDS,
   type TransformId
 } from './templateTransforms';
-import { overwriteGetLocale, baseLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale, baseLocale } from '#lib/paraglide/runtime.js';
 
 // Every test starts pinned to 'de', whose formatting differs most from the raw
 // value; under node getLocale() would give 'en'. The override is permanent, so reset it.

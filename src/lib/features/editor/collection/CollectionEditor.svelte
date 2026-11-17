@@ -12,17 +12,17 @@
   import { MetaMirror } from '../meta/metaMirror.svelte';
   import { DeleteRequest } from '../meta/deleteRequest.svelte';
   import type { CollectionEditorProps } from '../meta/nodeMeta';
-  import { AccessControlPanel } from '$lib/features/nodes/components';
-  import { NODE_TYPE_LABEL } from '$lib/features/nodes';
-  import { PagePropertiesDialog, ClassFieldsPanel } from '$lib/features/semantic/components';
-  import { classPropertySlots } from '$lib/features/semantic';
-  import { Alert, Badge, Button } from '$lib/design-system';
+  import { AccessControlPanel } from '#lib/features/nodes/components.ts';
+  import { NODE_TYPE_LABEL } from '#lib/features/nodes/index.ts';
+  import { PagePropertiesDialog, ClassFieldsPanel } from '#lib/features/semantic/components.ts';
+  import { classPropertySlots } from '#lib/features/semantic/index.ts';
+  import { Alert, Badge, Button } from '#lib/design-system/index.ts';
   import DeleteCollectionModal from './DeleteCollectionModal.svelte';
   import CollectionConnectModal from './CollectionConnectModal.svelte';
   import MembersEditor from './MembersEditor.svelte';
-  import { pickerNamespace } from '$lib/features/search/picker';
-  import { formatDateTime } from '$lib/platform/i18n/format';
-  import * as m from '$lib/paraglide/messages';
+  import { pickerNamespace } from '#lib/features/search/picker.ts';
+  import { formatDateTime } from '#lib/platform/i18n/format.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     title,

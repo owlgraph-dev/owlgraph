@@ -4,12 +4,12 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { randomBytes } from 'node:crypto';
-import { db } from '$lib/platform/db.server';
-import { createSecretBox, secretBox } from '$lib/platform/secretBox.server';
-import { createCollection } from '$lib/features/collections/server';
-import { connectionOf, openCredential, sealCredential, sealedSecretOf, storeConnection, storeSealedSecret } from '$lib/features/pluginHost/server';
-import { runScript } from '$tests/integration/scripts';
-import { userOf, type Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createSecretBox, secretBox } from '#lib/platform/secretBox.server.ts';
+import { createCollection } from '#lib/features/collections/server.ts';
+import { connectionOf, openCredential, sealCredential, sealedSecretOf, storeConnection, storeSealedSecret } from '#lib/features/pluginHost/server.ts';
+import { runScript } from '#tests/integration/scripts.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 // The script runs as an operator runs it; what it stored is opened as the
 // deployment would, under the new key alone. The integration is made up: the

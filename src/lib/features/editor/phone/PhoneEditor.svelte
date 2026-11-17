@@ -10,19 +10,19 @@
   import { onMount, onDestroy, untrack } from 'svelte';
   import type { PageEditorProps } from '../meta/nodeMeta';
   import { createPageEditing, reportLockLost } from '../session/pageEditing.svelte';
-  import { editTier, STRUCTURAL_BLOCK_TYPES, canvasTier } from '$lib/features/content';
-  import type { ClassFields, NodeClassOption } from '$lib/features/semantic';
-  import { Alert } from '$lib/design-system';
+  import { editTier, STRUCTURAL_BLOCK_TYPES, canvasTier } from '#lib/features/content/index.ts';
+  import type { ClassFields, NodeClassOption } from '#lib/features/semantic/index.ts';
+  import { Alert } from '#lib/design-system/index.ts';
   import EditorCanvas from '../shared/EditorCanvas.svelte';
   import { CanvasScheme } from '../shared/canvasScheme.svelte';
   import { SelectedBox } from '../shared/selectedBox.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import PhoneHeader from './PhoneHeader.svelte';
   import PhoneToolbar from './PhoneToolbar.svelte';
   import PhoneCanvasOverlay from './PhoneCanvasOverlay.svelte';
   import PhoneBlockSettingsSheet from './PhoneBlockSettingsSheet.svelte';
   import { embedActions } from '../blocks/embedPicker';
-  import { pickerNamespace } from '$lib/features/search/picker';
+  import { pickerNamespace } from '#lib/features/search/picker.ts';
   import type { BlockSettingsActions } from '../blockSettings/types';
   import { embedTarget } from '../blockSettings/target';
 

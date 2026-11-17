@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // editorA owns the seeded restricted page and document; editorB is shared on both.
 

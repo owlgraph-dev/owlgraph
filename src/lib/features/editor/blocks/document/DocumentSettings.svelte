@@ -7,14 +7,14 @@
   // Block attrs, not capabilities: they hold for every viewport
   // (docs/architecture/blocks/node-embeds.md, "Collection and document blocks").
   import { onDestroy } from 'svelte';
-  import { Button, FieldRow, SegmentedControl, SegmentedControlItem, Select, Switch } from '$lib/design-system';
-  import { documentConfig, type DocumentBlockData, type DocumentTitleMode } from '$lib/features/content';
-  import type { NodeSearchResult } from '$lib/features/search';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, FieldRow, SegmentedControl, SegmentedControlItem, Select, Switch } from '#lib/design-system/index.ts';
+  import { documentConfig, type DocumentBlockData, type DocumentTitleMode } from '#lib/features/content/index.ts';
+  import type { NodeSearchResult } from '#lib/features/search/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import BlockSettingsSection from '../../blockSettings/BlockSettingsSection.svelte';
   import { anyAttrModified } from '../../blockSettings/modified';
   import { labelFor } from '../../blockSettings/blockLabels';
-  import { NodePicker } from '$lib/features/search/picker';
+  import { NodePicker } from '#lib/features/search/picker.ts';
   import type { BlockSettingsProps } from '../../blockSettings/types';
   import { documentEmbeds } from '../../core/embeds';
   import { embedMark, embedRowAction, pickEmbed } from '../embedPicker';

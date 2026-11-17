@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, beforeAll, describe, expect, inject, it } from 'vitest';
-import { STYLE_SRC_PHASE, parseCsp } from '$lib/platform/csp';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { txt } from '$tests/e2e/doc';
+import { STYLE_SRC_PHASE, parseCsp } from '#lib/platform/csp.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { txt } from '#tests/e2e/doc.ts';
 
 // The strict style-src as the production build serves it (docs/architecture/overview.md,
 // "Content Security Policy"); what a browser does with it is csp-style-src.spec.ts's.

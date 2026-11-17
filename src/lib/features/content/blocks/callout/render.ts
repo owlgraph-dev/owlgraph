@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { esc } from '$lib/platform/htmlEscape';
+import { esc } from '#lib/platform/htmlEscape.ts';
 import { attrsOf } from '../../doc/doc';
 import { blockIdAttribute, spaceAboveAttribute, type BlockRenderer } from '../blockRenderer';
 

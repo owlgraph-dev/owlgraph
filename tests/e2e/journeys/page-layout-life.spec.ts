@@ -9,7 +9,7 @@ import { createPage, unique } from '../api';
 import { doc, para } from '../doc';
 import { db } from '../../../src/lib/platform/db.server';
 import { posting } from '../api';
-import { blockSettings } from '$tests/e2e/editor';
+import { blockSettings } from '#tests/e2e/editor.ts';
 
 /** Where the editor's own caret is (tests/e2e/editor.ts): the nodes it sits in, each with its index in its parent (`gridCell#2`). */
 function caretSteps(editor: Locator): Promise<string[]> {

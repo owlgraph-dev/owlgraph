@@ -4,9 +4,9 @@
 
 // The source picker's labels and groups per context: a condition row (every
 // kind), sorting (fields and properties) and a template parameter's mapping.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import type { WirePropertyOperator, WireIntrinsicField, WireTagOperator } from '../nodeFilter';
-import { labelWithKey, type RelationshipTypeOption } from '$lib/features/semantic';
+import { labelWithKey, type RelationshipTypeOption } from '#lib/features/semantic/index.ts';
 
 export interface PropertyOption {
   name: string;

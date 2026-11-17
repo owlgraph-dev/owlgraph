@@ -9,15 +9,15 @@
   // inline row and the compact row show the one state; CSS picks one.
   import { afterNavigate, goto } from '$app/navigation';
   import { navigating } from '$app/state';
-  import * as m from '$lib/paraglide/messages';
-  import { Button, ChipInput, EmptyState, Pagination, SearchField, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
-  import type { NodeClassOption } from '$lib/features/semantic';
-  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchResultCard as Result, type SearchSort } from '$lib/features/search';
+  import * as m from '#lib/paraglide/messages.js';
+  import { Button, ChipInput, EmptyState, Pagination, SearchField, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
+  import type { NodeClassOption } from '#lib/features/semantic/index.ts';
+  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchResultCard as Result, type SearchSort } from '#lib/features/search/index.ts';
   import SearchResultCard from './SearchResultCard.svelte';
   import SearchCompactRow from './SearchCompactRow.svelte';
   import { countLine } from './countLine';
   import { ALL, orNull, classPickerItems, matchItems, typePickerItems, namespacePickerItems, sortItems } from './filterItems';
-  import type { NodeType } from '$lib/features/nodes';
+  import type { NodeType } from '#lib/features/nodes/index.ts';
 
   interface SearchPageData {
     applied: SearchParams;

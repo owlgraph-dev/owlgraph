@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /settings/footer, re-exported by src/routes/settings/footer/+page.server.ts.
-import { requireAction, settingsAudit } from '$lib/features/auth/routes/requireAction.server';
-import { getCurrentLogo } from '$lib/features/site/server';
+import { requireAction, settingsAudit } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getCurrentLogo } from '#lib/features/site/server.ts';
 import {
   getFooterAdmin,
   listFooterLegalLinksAdmin,
@@ -15,7 +15,7 @@ import {
   setFooterLegalText,
   setFooterBranding,
   type FooterLinkInput,
-} from '$lib/features/site/server';
+} from '#lib/features/site/server.ts';
 import {
   createTreeNode,
   updateTreeNode,
@@ -23,10 +23,10 @@ import {
   moveTreeNode,
   indentTreeNode,
   outdentTreeNode,
-} from '$lib/features/site/server';
+} from '#lib/features/site/server.ts';
 import { readTreeCreateInput, readTreeUpdateInput } from './treeInput.server';
 import type { Actions, ServerLoadEvent } from '@sveltejs/kit';
-import { formError } from '$lib/platform/formError.server';
+import { formError } from '#lib/platform/formError.server.ts';
 
 // docs/architecture/logging.md, "The audit subset".
 const audit = settingsAudit('footer', 'footer:manage');

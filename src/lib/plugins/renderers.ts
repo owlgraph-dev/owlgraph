@@ -4,7 +4,7 @@
 
 // One line per plugin that adds blocks. Keyed by the manifests' block names, so
 // a plugin block without a renderer does not compile.
-import type { BlockRenderer } from '$lib/features/content';
+import type { BlockRenderer } from '#lib/features/content/index.ts';
 import type { PluginBlockKindName } from './index';
 import { nextcloudRenderers } from './nextcloud/renderers';
 

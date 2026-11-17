@@ -7,15 +7,15 @@
   // Labels are LocalizedText (docs/architecture/languages.md): shown resolved, searched in every
   // language, with the missing-translation indicator the filter narrows to.
   import { enhance } from '$app/forms';
-  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import CatalogFilterBar from '$lib/features/semantic/routes/CatalogFilterBar.svelte';
-  import CatalogLabel from '$lib/features/semantic/routes/CatalogLabel.svelte';
-  import { rowMatches, rowMissingLocales } from '$lib/features/semantic/routes/catalogFilter';
-  import { localize } from '$lib/platform/i18n/localizedText';
-  import PropertyDefinitionModal from '$lib/features/semantic/routes/PropertyDefinitionModal.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Table, TableRow, TableCell, type TableColumn, EmptyState } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import CatalogFilterBar from '#lib/features/semantic/routes/CatalogFilterBar.svelte';
+  import CatalogLabel from '#lib/features/semantic/routes/CatalogLabel.svelte';
+  import { rowMatches, rowMissingLocales } from '#lib/features/semantic/routes/catalogFilter.ts';
+  import { localize } from '#lib/platform/i18n/localizedText.ts';
+  import PropertyDefinitionModal from '#lib/features/semantic/routes/PropertyDefinitionModal.svelte';
+  import * as m from '#lib/paraglide/messages.js';
   let { data, form } = $props();
 
   type Row = (typeof data.definitions)[number];

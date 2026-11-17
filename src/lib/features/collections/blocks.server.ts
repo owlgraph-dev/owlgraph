@@ -5,12 +5,12 @@
 // Resolved for each reader before the page renders, never from the author's
 // view (docs/architecture/blocks/node-embeds.md, "Collection and document blocks"). The page waits for
 // it, so two queries serve all of a page's blocks, whatever their number.
-import { db } from '$lib/platform/db.server';
-import { errorClass, logEvent, type Logger } from '$lib/platform/logger.server';
-import type { SessionUser } from '$lib/features/auth/server';
-import { nodePath } from '$lib/features/nodes';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
-import { collectBlocks, collectionConfig, COLLECTION_BLOCK, MAX_COLLECTION_LIMIT, type CollectionBlockData, type EmbedMember } from '$lib/features/content';
+import { db } from '#lib/platform/db.server.ts';
+import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { collectBlocks, collectionConfig, COLLECTION_BLOCK, MAX_COLLECTION_LIMIT, type CollectionBlockData, type EmbedMember } from '#lib/features/content/index.ts';
 import { membersOfMany } from './members.server';
 import type { CollectionMember } from './types';
 

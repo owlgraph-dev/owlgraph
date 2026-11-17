@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createPage } from '$lib/features/pages/server';
+import { db } from '#lib/platform/db.server.ts';
+import { createPage } from '#lib/features/pages/server.ts';
 import {
   deleteNodeClass,
   deletePropertyDefinition,
@@ -22,7 +22,7 @@ import {
 } from './server';
 import { inheritedGroups, subtreeOf } from './nodeClassTree';
 import { classPropertySlots } from './propertyGroups';
-import { userOf } from '$tests/integration/users';
+import { userOf } from '#tests/integration/users.ts';
 
 // Each settings form action calls the function used here and answers its
 // refusal as a failure carrying the message.

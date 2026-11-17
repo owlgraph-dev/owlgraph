@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, inject, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createLinkDocument } from '$lib/features/documents/server';
-import { createPage, userCanWritePage } from '$lib/features/pages/server';
-import { setNodeVisibility, userCanReadNode, type NodeAccessRow } from '$lib/features/nodes/server';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createLinkDocument } from '#lib/features/documents/server.ts';
+import { createPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { setNodeVisibility, userCanReadNode, type NodeAccessRow } from '#lib/features/nodes/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 import {
   createNamespace,
   deleteNamespace,

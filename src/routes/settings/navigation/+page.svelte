@@ -4,9 +4,9 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import TreeEditor from '$lib/features/site/routes/TreeEditor.svelte';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import TreeEditor from '#lib/features/site/routes/TreeEditor.svelte';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
 </script>

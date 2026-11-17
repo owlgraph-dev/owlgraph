@@ -5,7 +5,7 @@
 // The theme colours an author can pick (colorTokens.ts) as picker options:
 // what is stored, how the swatch paints, and the translated name — and the
 // name of a stored value for hints and labels.
-import * as m from '$lib/paraglide/messages';
+import * as m from '#lib/paraglide/messages.js';
 import { CONTENT_COLOR_TOKENS, brandColorId, brandColorToken, colorCss, colorToken, colorTokenName, type ContentColorToken } from './colorTokens';
 import { getBrandColors } from './brandColors';
 import { PAGE_GROUND_TOKENS } from '../page/pageAttrs';

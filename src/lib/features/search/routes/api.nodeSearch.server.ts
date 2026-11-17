@@ -3,15 +3,15 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /api/node-search, re-exported by src/routes/api/node-search/+server.ts.
-import { documentPlugins } from '$lib/features/documents/server';
-import { collectionPlugins } from '$lib/features/collections/server';
-import { searchNodesForUser } from '$lib/features/nodes/server';
-import { nodePath } from '$lib/features/nodes';
-import { pluginLabel } from '$lib/plugins';
+import { documentPlugins } from '#lib/features/documents/server.ts';
+import { collectionPlugins } from '#lib/features/collections/server.ts';
+import { searchNodesForUser } from '#lib/features/nodes/server.ts';
+import { nodePath } from '#lib/features/nodes/index.ts';
+import { pluginLabel } from '#lib/plugins/index.ts';
 import { parseNodeSearchParams } from '../nodeSearchParams';
 import { recentNodesForUser } from '../recentNodes.server';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 // The node picker's search, filtered to what the viewer may read (docs/architecture/search.md,
 // "The node picker").

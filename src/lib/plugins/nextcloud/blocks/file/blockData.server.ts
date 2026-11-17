@@ -6,7 +6,7 @@
 // as last recorded; null where the viewer may not read it or the plugin is off.
 // A document of someone's own files shows only to a viewer with an active
 // connection; anyone else is told to connect. Nothing here asks Nextcloud.
-import type { PluginBlockDataResolver } from '$lib/plugins/api';
+import type { PluginBlockDataResolver } from '#lib/plugins/api.ts';
 import { documentView, ownAccess, type DocumentView } from '../../server/documents.server';
 import { fileConfig } from './model';
 

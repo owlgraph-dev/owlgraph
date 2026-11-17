@@ -11,7 +11,7 @@ import { fileTexts } from './texts';
 import { fileProps } from './view';
 import { PLUGIN_ROUTES } from '../routes';
 import type { DocumentView } from '../../server/documents.server';
-import { stubFetch, type Call } from '$tests/component/fetch';
+import { stubFetch, type Call } from '#tests/component/fetch.ts';
 
 // The file block as tiptap.ts mounts it in the editor, the plugin's routes
 // answered by a stand-in.

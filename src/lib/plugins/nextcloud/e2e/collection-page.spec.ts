@@ -5,13 +5,13 @@
 // E2E because: a collection's own page in the browser: a new page per
 // collection, its sort and tabs under the strict style policy, on a phone too.
 import type { APIRequestContext, Browser, BrowserContext, Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage, throwawayUserState } from '$tests/e2e/api';
-import { horizontalOverflow, touchTargets } from '$tests/e2e/responsive';
-import { authState } from '$tests/e2e/seed-data';
-import { db } from '$lib/platform/db.server';
-import { addMember } from '$lib/features/collections/server';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage, throwawayUserState } from '#tests/e2e/api.ts';
+import { horizontalOverflow, touchTargets } from '#tests/e2e/responsive.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { db } from '#lib/platform/db.server.ts';
+import { addMember } from '#lib/features/collections/server.ts';
 import { startMockNextcloud, type MockNextcloud, type MockShare, type MockUser } from './mockNextcloud';
 import { configure } from './settings';
 

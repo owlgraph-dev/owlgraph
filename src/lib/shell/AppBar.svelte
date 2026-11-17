@@ -5,20 +5,20 @@
 -->
 <script lang="ts">
   import { page } from '$app/state';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { Logo } from '$lib/features/site/components';
-  import { SearchTrigger } from '$lib/features/search/components';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { Logo } from '#lib/features/site/components.ts';
+  import { SearchTrigger } from '#lib/features/search/components.ts';
   import CreateButton from './appbar/CreateButton.svelte';
   import { createDialog } from './appbar/createDialog.svelte';
   import PageActions from './appbar/PageActions.svelte';
   import AccountMenu from './appbar/AccountMenu.svelte';
-  import { NavigationMenu, Button } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
-  import type { NavMenuItem } from '$lib/design-system/NavigationMenu.svelte';
-  import { canEdit as computeCanEdit } from '$lib/features/auth';
-  import type { ResolvedTreeNode } from '$lib/features/site';
-  import type { SessionUser } from '$lib/features/auth';
-  import { nodePath } from '$lib/features/nodes';
+  import { NavigationMenu, Button } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import type { NavMenuItem } from '#lib/design-system/NavigationMenu.svelte';
+  import { canEdit as computeCanEdit } from '#lib/features/auth/index.ts';
+  import type { ResolvedTreeNode } from '#lib/features/site/index.ts';
+  import type { SessionUser } from '#lib/features/auth/index.ts';
+  import { nodePath } from '#lib/features/nodes/index.ts';
 
   let {
     user,

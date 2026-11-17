@@ -5,12 +5,12 @@
 // Route adapter for /api/collections/[id]/source, re-exported by src/routes/api/collections/[id]/source/+server.ts.
 // Connects a mirrored collection to its source anew (docs/architecture/plugins.md, "Sources"): its writers may, and each
 // check spends the writer's failed credential checks, as a plugin route's does.
-import { logEvent } from '$lib/platform/logger.server';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getCollection, userCanReadCollection, userCanWriteCollection } from '$lib/features/collections/server';
-import { connectCollectionSource, credentialChecks } from '$lib/features/pluginHost/server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getCollection, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { connectCollectionSource, credentialChecks } from '#lib/features/pluginHost/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

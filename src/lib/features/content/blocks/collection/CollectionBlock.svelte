@@ -8,8 +8,8 @@
   // nothing hydrates (docs/architecture/blocks/node-embeds.md, "Collection and document blocks"). The
   // page's members were resolved for its reader, unreadable ones left out.
   import { untrack } from 'svelte';
-  import type { Locale } from '$lib/paraglide/runtime';
-  import { localize } from '$lib/platform/i18n/localizedText';
+  import type { Locale } from '#lib/paraglide/runtime.js';
+  import { localize } from '#lib/platform/i18n/localizedText.ts';
   import EntryList from '../../listing/EntryList.svelte';
   import { fill } from '../../listing/format';
   import { memberRows } from '../../listing/members';

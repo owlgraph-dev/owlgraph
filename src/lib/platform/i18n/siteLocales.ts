@@ -6,7 +6,7 @@
 // LocalizedText may hold), enabled (the admin's subset under Languages) and the
 // site default (one of the enabled). The server and the browser both set it
 // here, so readers need not thread it; until then it is every catalog.
-import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
+import { baseLocale, locales, type Locale } from '#lib/paraglide/runtime.js';
 
 export const SUPPORTED_LOCALES: readonly Locale[] = locales;
 

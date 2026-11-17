@@ -4,11 +4,11 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { createPluginDocument } from '$lib/features/documents/server';
-import { createCollection } from '$lib/features/collections/server';
-import { call, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createPluginDocument } from '#lib/features/documents/server.ts';
+import { createCollection } from '#lib/features/collections/server.ts';
+import { call, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 // Nodes of a made-up integration are seeded in-process.
 

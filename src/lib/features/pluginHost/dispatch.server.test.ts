@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import type { PluginHost, PluginRoute, PluginServer } from '$lib/plugins/api';
+import type { PluginHost, PluginRoute, PluginServer } from '#lib/plugins/api.ts';
 import { dispatchPluginRequest, matchRoute, splitPath, MAX_BODY_BYTES, type DispatchDeps, type DispatchRequest } from './dispatch.server';
 
 // A fake plugin whose routes echo what they were called with.

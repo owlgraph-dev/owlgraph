@@ -6,12 +6,12 @@
 // it turns the block into that kind, while the integration is on
 // (docs/architecture/blocks/node-embeds.md, "One family in the editor").
 import type { Editor } from '@tiptap/core';
-import { embedKindFor, type EmbedDispatch, type EmbedFamily } from '$lib/features/content';
-import { replaceBlockKind } from '$lib/features/content/editor';
-import type { NodeSearchResult } from '$lib/features/search';
-import type { NodeMark, NodePickerCreate } from '$lib/features/search/picker';
-import { pluginEditorBlock } from '$lib/plugins/editor';
-import * as m from '$lib/paraglide/messages';
+import { embedKindFor, type EmbedDispatch, type EmbedFamily } from '#lib/features/content/index.ts';
+import { replaceBlockKind } from '#lib/features/content/editor.ts';
+import type { NodeSearchResult } from '#lib/features/search/index.ts';
+import type { NodeMark, NodePickerCreate } from '#lib/features/search/picker.ts';
+import { pluginEditorBlock } from '#lib/plugins/editor.ts';
+import * as m from '#lib/paraglide/messages.js';
 import { labelFor } from '../blockSettings/blockLabels';
 import type { BlockSettingsActions, Target } from '../blockSettings/types';
 

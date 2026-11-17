@@ -6,7 +6,7 @@
 <script lang="ts">
   // Inline in a settings form: it takes no focus of its own, and Enter picks,
   // never submits the form. After a pick it starts over with an empty search.
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import NodePickerPanel from './NodePickerPanel.svelte';
 
   type PageResult = { id: string; slug: string; title: string };

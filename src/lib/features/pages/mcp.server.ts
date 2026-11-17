@@ -6,8 +6,8 @@
 import { z } from 'zod';
 import type { ToolRegistry, ToolResult } from '../../../mcp/registry';
 import { text, errText } from '../../../mcp/registry';
-import { logEvent } from '$lib/platform/logger.server';
-import { blockShape, leafBlockShape, cellStyleShape, pageSettingsShape, spacingShape, containerSurfaceShape, minHeightShape, columnsByTierShape, gapByTierShape } from '$lib/features/content/server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { blockShape, leafBlockShape, cellStyleShape, pageSettingsShape, spacingShape, containerSurfaceShape, minHeightShape, columnsByTierShape, gapByTierShape } from '#lib/features/content/server.ts';
 import {
   listPagesForUser,
   createPage,
@@ -21,20 +21,20 @@ import {
   assertPageAssetRefs,
   setPageContentScheme,
   setPageSettings,
-} from '$lib/features/pages/server';
-import { setNodeLocale } from '$lib/features/nodes/server';
+} from '#lib/features/pages/server.ts';
+import { setNodeLocale } from '#lib/features/nodes/server.ts';
 import { listPageLayoutPresets } from './pageLayoutPresets.server';
-import { pageAttrsOf, pageColumnsOf, pageGround, pageGutter, pageWidth, CUSTOM_PRESET_ID, STANDARD_PRESET_ID, EMBED_KINDS } from '$lib/features/content';
+import { pageAttrsOf, pageColumnsOf, pageGround, pageGutter, pageWidth, CUSTOM_PRESET_ID, STANDARD_PRESET_ID, EMBED_KINDS } from '#lib/features/content/index.ts';
 import { presetName, resolvePageLayoutPreset } from './pageLayoutPresets';
-import { getCollection, resolveCollectionBlocks, userCanReadCollection } from '$lib/features/collections/server';
-import { getDocument, resolveDocumentBlocks, userCanReadDocument } from '$lib/features/documents/server';
-import { createPluginHost } from '$lib/features/pluginHost/server';
-import { renderPage } from '$lib/features/reader/server';
-import { isUuid } from '$lib/features/nodes';
-import { pluginInputDescriptions, pluginInputKindOfBlock } from '$lib/plugins/inputs.server';
-import { getLocale } from '$lib/paraglide/runtime';
-import type { CollectionBlockData, DocumentBlockData } from '$lib/features/content';
-import type { WriterRefs } from '$lib/features/pages/server';
+import { getCollection, resolveCollectionBlocks, userCanReadCollection } from '#lib/features/collections/server.ts';
+import { getDocument, resolveDocumentBlocks, userCanReadDocument } from '#lib/features/documents/server.ts';
+import { createPluginHost } from '#lib/features/pluginHost/server.ts';
+import { renderPage } from '#lib/features/reader/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
+import { pluginInputDescriptions, pluginInputKindOfBlock } from '#lib/plugins/inputs.server.ts';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import type { CollectionBlockData, DocumentBlockData } from '#lib/features/content/index.ts';
+import type { WriterRefs } from '#lib/features/pages/server.ts';
 import { describeDropped, droppedSummary, isUnknownDropped } from './unknownGuard';
 
 function collectionPreview(data: CollectionBlockData): string {

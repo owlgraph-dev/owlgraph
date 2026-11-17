@@ -6,7 +6,7 @@
 // transport: every tool and gate as an agent meets them, without HTTP.
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 import { buildServer } from '../../src/mcp/server';
 import { userOf, type Role } from './users';
 

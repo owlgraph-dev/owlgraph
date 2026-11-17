@@ -9,11 +9,11 @@
   // own property (membership.ts) keeps its group, name and datatype.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Input, Select, Alert, FormField } from '$lib/design-system';
+  import { Dialog, Button, Input, Select, Alert, FormField } from '#lib/design-system/index.ts';
   import LocalizedField from '../components/LocalizedField.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { localize, type LocalizedText } from '$lib/platform/i18n/localizedText';
-  import { siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
+  import * as m from '#lib/paraglide/messages.js';
+  import { localize, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+  import { siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
   import { PROPERTY_DATATYPES } from '../propertyDatatypes';
   import { MEMBERSHIP_PROPERTY_GROUP } from '../membership';
 

@@ -7,15 +7,15 @@
 // Never a credential, a settings value beyond a service host, or a character
 // of APP_SECRET_KEY: only whether it is there and fit.
 import { join } from 'node:path';
-import { db } from '$lib/platform/db.server';
-import { appVersion } from '$lib/platform/logger.server';
-import { migrationStatus } from '$lib/platform/migrate.server';
-import { sourceInfo } from '$lib/platform/source.server';
-import { secretKeySummary } from '$lib/platform/secretBox.server';
-import { currentSiteLocaleConfig } from '$lib/platform/i18n/siteLocales.server';
-import { countConnections, getPluginSettings, pluginOrigin } from '$lib/features/pluginHost/server';
-import { PLUGINS } from '$lib/plugins';
-import type { PluginManifest } from '$lib/plugins/api';
+import { db } from '#lib/platform/db.server.ts';
+import { appVersion } from '#lib/platform/logger.server.ts';
+import { migrationStatus } from '#lib/platform/migrate.server.ts';
+import { sourceInfo } from '#lib/platform/source.server.ts';
+import { secretKeySummary } from '#lib/platform/secretBox.server.ts';
+import { currentSiteLocaleConfig } from '#lib/platform/i18n/siteLocales.server.ts';
+import { countConnections, getPluginSettings, pluginOrigin } from '#lib/features/pluginHost/server.ts';
+import { PLUGINS } from '#lib/plugins/index.ts';
+import type { PluginManifest } from '#lib/plugins/api.ts';
 import type { InstallationInfo, IntegrationState } from './types';
 
 async function integrationState(plugin: PluginManifest): Promise<IntegrationState> {

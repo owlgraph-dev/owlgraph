@@ -7,7 +7,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Every query parks until the test answers it, so the test decides the order
 // in which overlapping refreshes finish.
 const pending: Array<(rows: { slug: string }[]) => void> = [];
-vi.mock('$lib/platform/db.server', () => ({
+vi.mock('#lib/platform/db.server.ts', () => ({
   db: () => new Promise((resolve) => pending.push(resolve)),
 }));
 

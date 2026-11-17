@@ -3,15 +3,15 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/media/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getPage, userCanWritePage } from '$lib/features/pages/server';
-import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '$lib/features/media/server';
-import { mediaUrl } from '$lib/features/media';
-import { readFormData } from '$lib/platform/formData';
-import { logEvent } from '$lib/platform/logger.server';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '#lib/features/media/server.ts';
+import { mediaUrl } from '#lib/features/media/index.ts';
+import { readFormData } from '#lib/platform/formData.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { isCodedError } from '$lib/platform/codedError';
-import { apiError } from '$lib/platform/apiErrors';
+import { isCodedError } from '#lib/platform/codedError.ts';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 // The filename is never logged: it is user content, often personal
 // (docs/architecture/logging.md, "Never logged").

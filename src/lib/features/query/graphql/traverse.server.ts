@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { GraphQLError } from 'graphql';
-import type { SessionUser } from '$lib/features/auth/server';
-import { getPropertyDatatypes } from '$lib/features/semantic/server';
-import { getExistingRelationshipTypeSlugs } from '$lib/features/semantic/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { getPropertyDatatypes } from '#lib/features/semantic/server.ts';
+import { getExistingRelationshipTypeSlugs } from '#lib/features/semantic/server.ts';
 import { traverseNodes, hydrateContentNodes } from '../traversal.server';
 import {
   validateTraversalShape,
@@ -14,7 +14,7 @@ import {
   type TraversalQueryInput
 } from '../traversal';
 import { validateFilterOperators } from '../nodeFilter';
-import { clampFirst, clampOffset } from '$lib/platform/pagination';
+import { clampFirst, clampOffset } from '#lib/platform/pagination.ts';
 import type { ContentNodeHit } from './nodes.server';
 
 export interface TraverseArgs {

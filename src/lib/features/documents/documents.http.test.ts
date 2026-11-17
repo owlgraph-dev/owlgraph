@@ -6,12 +6,12 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { parseCsp } from '$lib/platform/csp';
-import { upsertRelationshipType } from '$lib/features/semantic/server';
-import { call, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { connectAs, textOf } from '$tests/integration/mcp';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { parseCsp } from '#lib/platform/csp.ts';
+import { upsertRelationshipType } from '#lib/features/semantic/server.ts';
+import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { connectAs, textOf } from '#tests/integration/mcp.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 // A redirect is read, never followed.
 

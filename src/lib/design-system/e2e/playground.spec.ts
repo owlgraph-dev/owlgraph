@@ -6,10 +6,10 @@
 // field, a field row, the toasts, a command search and a sheet page do is
 // specimens.svelte.test.ts's.
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
+import { test, expect } from '#tests/e2e/fixtures.ts';
 import AxeBuilder from '@axe-core/playwright';
-import { authState } from '$tests/e2e/seed-data';
-import { touchTargets } from '$tests/e2e/responsive';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { touchTargets } from '#tests/e2e/responsive.ts';
 
 test.use({ storageState: authState('admin') });
 

@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import type { PluginBlockDataResolver, PluginBlockRef, PluginHost } from '$lib/plugins/api';
+import type { PluginBlockDataResolver, PluginBlockRef, PluginHost } from '#lib/plugins/api.ts';
 import { collectPluginBlocks, resolveBlockData, type BlockDataDeps } from './blockData.server';
 
 // A fake plugin's two block kinds.

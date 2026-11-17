@@ -4,7 +4,7 @@
 
 // The Nextcloud plugin's manifest (docs/architecture/nextcloud.md):
 // what every surface knows about it.
-import { definePlugin } from '$lib/plugins/api';
+import { definePlugin } from '#lib/plugins/api.ts';
 import { t } from './messages';
 import { folderKind } from './blocks/folder/model';
 import { fileKind } from './blocks/file/model';

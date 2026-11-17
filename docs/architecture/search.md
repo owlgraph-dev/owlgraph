@@ -223,7 +223,7 @@ document a block shows ([blocks/node-embeds.md](blocks/node-embeds.md#collection
 the page or document a link goes to ([blocks/node-embeds.md](blocks/node-embeds.md#quick-link-targets)),
 the page a setting names (a nav entry, a footer link, the home page, a class's
 overview page — `PagePicker`, the picker inline in the form, each page with its
-address) — the search feature's node picker (`$lib/features/search/picker`) finds it by its
+address) — the search feature's node picker (`#lib/features/search/picker.ts`) finds it by its
 title. It is a picker, not a
 search: a title holds the term or it does not, and the picker says so.
 

@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { call, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf } from '$tests/integration/users';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { call, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf } from '#tests/integration/users.ts';
 
 // Each test signs in from a client address of its own: the limits are keyed by it.
 

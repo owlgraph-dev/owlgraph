@@ -7,12 +7,12 @@
   // The page margin (docs/architecture/blocks/layout.md, "Page settings"). Each viewport stands
   // alone: Auto is the site's margin at this tier (capability defaults),
   // never the page's larger one, so a phone never inherits a desktop inset.
-  import { editTier } from '$lib/features/content';
-  import { FieldRow, NumberField, Popover, SegmentedControl, SegmentedControlItem, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import * as m from '$lib/paraglide/messages';
-  import { GUTTER_PRESETS, STEP_TOKENS } from '$lib/features/content';
-  import { convertLength, formatLength, LENGTH_UNITS, PAGE_GUTTER_BOUNDS, pageGutter, parseLength, type LengthUnit, type PageLayout } from '$lib/features/content';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { FieldRow, NumberField, Popover, SegmentedControl, SegmentedControlItem, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import * as m from '#lib/paraglide/messages.js';
+  import { GUTTER_PRESETS, STEP_TOKENS } from '#lib/features/content/index.ts';
+  import { convertLength, formatLength, LENGTH_UNITS, PAGE_GUTTER_BOUNDS, pageGutter, parseLength, type LengthUnit, type PageLayout } from '#lib/features/content/index.ts';
 
   let {
     value,

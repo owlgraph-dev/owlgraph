@@ -4,14 +4,14 @@
 
 // Route adapter for /api/plugins/[plugin]/[...path], re-exported by src/routes/api/plugins/[plugin]/[...path]/+server.ts.
 // The dispatcher enforces what each plugin route declares; the host keeps every node read and write to the viewer's access.
-import { logEvent } from '$lib/platform/logger.server';
-import { RateLimiter } from '$lib/platform/rateLimit';
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { can } from '$lib/features/auth/server';
-import { createPluginHost, credentialChecks, dispatchPluginRequest } from '$lib/features/pluginHost/server';
-import { pluginServer } from '$lib/plugins/server';
+import { logEvent } from '#lib/platform/logger.server.ts';
+import { RateLimiter } from '#lib/platform/rateLimit.ts';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { createPluginHost, credentialChecks, dispatchPluginRequest } from '#lib/features/pluginHost/server.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
 import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { plugin: string; path: string };
 

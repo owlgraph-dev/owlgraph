@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
+import { db } from '#lib/platform/db.server.ts';
 import { LOCK_TTL_SECONDS, acquireLock, createPage, getLock, heartbeatLock, releaseLock } from './server';
-import { userOf } from '$tests/integration/users';
+import { userOf } from '#tests/integration/users.ts';
 
 // A heartbeat is made stale by moving its timestamp back, not by waiting.
 

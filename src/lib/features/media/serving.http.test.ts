@@ -4,10 +4,10 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import sharp from 'sharp';
-import { db } from '$lib/platform/db.server';
-import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { userOf } from '$tests/integration/users';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { userOf } from '#tests/integration/users.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 // editorA owns the seeded restricted page and document; editorB is shared on
 // both; editorC on neither.

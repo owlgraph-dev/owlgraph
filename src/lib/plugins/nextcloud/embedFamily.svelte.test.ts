@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen } from 'vitest/browser';
 import { page } from '$app/state';
-import { DesktopEditor } from '$lib/features/editor/components';
+import { DesktopEditor } from '#lib/features/editor/components.ts';
 
 // The page editor is the smallest surface the Insert menu is drawn in
 // (docs/architecture/blocks/node-embeds.md, "One family in the editor"); nothing it asks the server matters here.

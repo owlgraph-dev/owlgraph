@@ -4,8 +4,8 @@
 
 // The async half of ./access.ts: looks up the one fact a restricted node needs,
 // namespace membership when it inherits, its share list when it overrides.
-import { db } from '$lib/platform/db.server';
-import type { SessionUser } from '$lib/features/auth/server';
+import { db } from '#lib/platform/db.server.ts';
+import type { SessionUser } from '#lib/features/auth/server.ts';
 import { canReadNode, canWriteNode, type NodeAccess, type Visibility } from './access';
 import { isNamespaceMember } from './nodes.server';
 import type { NodeType } from './types';

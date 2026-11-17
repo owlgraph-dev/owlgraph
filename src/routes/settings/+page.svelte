@@ -5,10 +5,10 @@
 -->
 <script lang="ts">
   // The overview: the sidebar's filtered tree, a list per group.
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { SETTINGS_TREE } from '$lib/shell/settings/tree';
-  import { leavesSettings, visibleTree } from '$lib/shell/settings/treeModel';
-  import * as m from '$lib/paraglide/messages';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { SETTINGS_TREE } from '#lib/shell/settings/tree.ts';
+  import { leavesSettings, visibleTree } from '#lib/shell/settings/treeModel.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data } = $props();
   const groups = $derived(visibleTree(SETTINGS_TREE, new Set(data.permissions)));

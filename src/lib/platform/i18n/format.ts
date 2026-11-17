@@ -4,7 +4,7 @@
 
 // Dates and numbers in the interface language, never the browser's default.
 // getLocale() is the request's on the server and the viewer's in the browser.
-import { getLocale } from '$lib/paraglide/runtime';
+import { getLocale } from '#lib/paraglide/runtime.js';
 
 export function formatDate(date: Date | string | number, options?: Intl.DateTimeFormatOptions): string {
   return new Intl.DateTimeFormat(getLocale(), options).format(new Date(date));

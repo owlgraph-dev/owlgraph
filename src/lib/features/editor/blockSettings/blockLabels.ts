@@ -4,8 +4,8 @@
 
 // A block kind's name in the breadcrumb; the block settings panel's block sections title
 // themselves with these words too.
-import * as m from '$lib/paraglide/messages';
-import { pluginEditorBlock } from '$lib/plugins/editor';
+import * as m from '#lib/paraglide/messages.js';
+import { pluginEditorBlock } from '#lib/plugins/editor.ts';
 
 const BLOCK_TYPE_LABELS: Record<string, () => string> = {
   page: m.editor_breadcrumb_page,

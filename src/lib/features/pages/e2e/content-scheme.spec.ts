@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Locator } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { createPage } from '$tests/e2e/api';
-import { doc, txt } from '$tests/e2e/doc';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, txt } from '#tests/e2e/doc.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 
 // What a page is served per scheme is pages.http.test.ts's.
 

@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // Namespaces are made through the settings, where the served app's route
 // matcher learns of them.

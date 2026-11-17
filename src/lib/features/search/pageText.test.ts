@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { extractSearchText } from './pageText.server';
-import { txt } from '$tests/e2e/doc';
+import { txt } from '#tests/e2e/doc.ts';
 
 const para = (...content: unknown[]) => ({ type: 'paragraph', content });
 const heading = (level: number, text: string) => ({ type: 'heading', attrs: { level }, content: [txt(text)] });

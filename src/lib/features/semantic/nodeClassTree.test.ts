@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { orderClassTree } from './nodeClassTree';
-import { localize, compareLabels, type LocalizedText } from '$lib/platform/i18n/localizedText';
+import { localize, compareLabels, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 
 type Row = { id: string; parent_id: string | null; slug: string; label: LocalizedText };
 

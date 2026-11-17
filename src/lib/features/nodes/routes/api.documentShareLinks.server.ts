@@ -3,11 +3,11 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/share-links/+server.ts.
-import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
-import { getDocument, userCanWriteDocument } from '$lib/features/documents/server';
-import { createShareLink, listShareLinks } from '$lib/features/nodes/server';
+import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { getDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { createShareLink, listShareLinks } from '#lib/features/nodes/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '$lib/platform/apiErrors';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

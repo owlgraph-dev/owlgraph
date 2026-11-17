@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   // Only the controls: each catalogue page filters its own rows with catalogFilter.ts.
-  import { Input, Switch } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Input, Switch } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     query = $bindable(''),

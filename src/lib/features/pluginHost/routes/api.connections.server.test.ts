@@ -5,7 +5,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 const ran = vi.hoisted(() => ({ calls: [] as string[] }));
-vi.mock('$lib/features/pluginHost/server', () => ({
+vi.mock('#lib/features/pluginHost/server.ts', () => ({
   flowDepsFor: (plugin: string) => (plugin === 'acme' ? { plugin: 'acme' } : null),
   beginConnect: async () => (ran.calls.push('begin'), { ok: true, approveUrl: 'https://cloud.example/login' }),
   pollConnect: async () => (ran.calls.push('poll'), { state: 'pending' }),
@@ -15,7 +15,7 @@ vi.mock('$lib/features/pluginHost/server', () => ({
 }));
 
 import { begin, cancel } from './api.connections.server';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 const log = (() => {
   const l = { info: () => {}, warn: () => {}, error: () => {}, debug: () => {}, child: () => l };

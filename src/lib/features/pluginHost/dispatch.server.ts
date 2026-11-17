@@ -7,8 +7,8 @@
 // enforced here. Every request counts against the rate limit, an unknown one too
 // (probing is traffic). A write's body must be JSON: a form on another site
 // cannot post it, and a script there cannot without a CORS grant.
-import type { PluginHost, PluginRoute, PluginServer } from '$lib/plugins/api';
-import { apiError } from '$lib/platform/apiErrors';
+import type { PluginHost, PluginRoute, PluginServer } from '#lib/plugins/api.ts';
+import { apiError } from '#lib/platform/apiErrors.ts';
 
 export const MAX_BODY_BYTES = 64 * 1024;
 

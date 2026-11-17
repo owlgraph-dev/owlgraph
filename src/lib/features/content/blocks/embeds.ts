@@ -5,7 +5,7 @@
 // What the blocks that embed a node share, and which kind shows a node: the
 // core's for a node no integration keeps, a plugin's for its own
 // (docs/architecture/blocks/node-embeds.md, "One family in the editor").
-import { pluginOfBlockKind } from '$lib/plugins';
+import { pluginOfBlockKind } from '#lib/plugins/index.ts';
 import { BLOCK_KINDS, type BlockKind, type EmbedFamily } from './catalog';
 
 export interface EmbedNode {

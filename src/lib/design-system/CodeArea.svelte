@@ -9,7 +9,7 @@
   // `highlight` comes from the consumer, so the design system carries no
   // grammars. The ground is dark in both schemes: the .hljs-* palette is dark.
   import { getFormFieldContext } from './formField';
-  import { esc } from '$lib/platform/htmlEscape';
+  import { esc } from '#lib/platform/htmlEscape.ts';
 
   let {
     value = $bindable(''),

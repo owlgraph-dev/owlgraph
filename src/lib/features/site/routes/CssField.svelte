@@ -6,10 +6,10 @@
 <script lang="ts">
   // A CSS editor with the compiler's errors, the soft warnings and a token picker
   // that makes --content-* tokens the easy path (docs/architecture/custom-styles.md).
-  import { CodeArea, Popover, TriggerFace, Command, CommandSearch, CommandList, CommandItem, FieldError, FieldWarning, insertAtCaret, restoreCaret } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { highlightToHtml } from '$lib/features/content';
-  import * as m from '$lib/paraglide/messages';
+  import { CodeArea, Popover, TriggerFace, Command, CommandSearch, CommandList, CommandItem, FieldError, FieldWarning, insertAtCaret, restoreCaret } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { highlightToHtml } from '#lib/features/content/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { CssIssue } from '../customStyles/compile';
   import type { StyleWarning } from '../customStyles/warnings';
   import type { ContentToken } from '../customStyles/contentTokens';

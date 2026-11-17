@@ -6,11 +6,11 @@
 <script lang="ts">
   // A new token is shown once.
   import { enhance } from '$app/forms';
-  import { formatDate, formatDateTime } from '$lib/platform/i18n/format';
-  import { Button, Table, TableRow, TableCell, SettingsWell, type TableColumn, EmptyState } from '$lib/design-system';
-  import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
-  import { ApiTokenModal } from '$lib/features/auth/components';
-  import * as m from '$lib/paraglide/messages';
+  import { formatDate, formatDateTime } from '#lib/platform/i18n/format.ts';
+  import { Button, Table, TableRow, TableCell, SettingsWell, type TableColumn, EmptyState } from '#lib/design-system/index.ts';
+  import SettingsPageHead from '#lib/shell/SettingsPageHead.svelte';
+  import { ApiTokenModal } from '#lib/features/auth/components.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let { data, form } = $props();
   let adding = $state(false);

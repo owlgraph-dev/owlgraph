@@ -8,12 +8,12 @@
   // Every change commits at once, so there is no draft to cancel and "Done" only
   // closes. The class's slots start collapsed: marking a property in the content
   // is the preferred way (docs/architecture/semantic-layer.md).
-  import { Dialog, Input, Button, Combobox, Accordion, AccordionItem, Alert, Select } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
+  import { Dialog, Input, Button, Combobox, Accordion, AccordionItem, Alert, Select } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
   import NodeClassField from './NodeClassField.svelte';
-  import { NodeLocaleField } from '$lib/features/nodes/components';
+  import { NodeLocaleField } from '#lib/features/nodes/components.ts';
   import ClassFieldsPanel from './ClassFieldsPanel.svelte';
-  import * as m from '$lib/paraglide/messages';
+  import * as m from '#lib/paraglide/messages.js';
   import { DEFAULT_PROPERTY_GROUP, classPropertySlots, type PropertyDefinitionLike } from '../propertyGroups';
   import type { NodeClassOption, ClassFieldGroup } from '../nodeClass';
 

@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { randomBytes } from 'node:crypto';
-import { secretBox } from '$lib/platform/secretBox.server';
+import { secretBox } from '#lib/platform/secretBox.server.ts';
 import { openCredential, openFlow, sealCredential, sealFlow } from './connections.server';
 
 const USER = '11111111-1111-4111-8111-111111111111';

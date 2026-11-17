@@ -5,8 +5,8 @@
 // Client-side narrowing of an already viewer-scoped graph, in the query model's
 // vocabulary (a class admits its subclasses, as IS_A). An empty set constrains nothing.
 import type { GraphNode, GraphEdge } from './types';
-import { subtreeOf, type NodeClassOption } from '$lib/features/semantic';
-import type { NodeType } from '$lib/features/nodes';
+import { subtreeOf, type NodeClassOption } from '#lib/features/semantic/index.ts';
+import type { NodeType } from '#lib/features/nodes/index.ts';
 
 export interface GraphFilter {
   types: Set<NodeType>;

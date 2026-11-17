@@ -10,8 +10,8 @@
   // the desktop's tracks, so they hide wherever the grid isn't drawn in those.
   import { untrack } from 'svelte';
   import type { Attachment } from 'svelte/attachments';
-  import { Button } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { startDragResize, previewWeights } from '../shared/gridResize';
   import { editTier } from '../../capabilities/editTierStore';
   import { ownGridColumns } from './gridColumns';

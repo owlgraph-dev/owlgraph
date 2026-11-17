@@ -4,9 +4,9 @@
 
 // The Save button: whether a save runs, when the last one landed, and the
 // toast a failed one leaves. The editor saves only on demand.
-import { toast } from '$lib/design-system';
-import { formatTime } from '$lib/platform/i18n/format';
-import * as m from '$lib/paraglide/messages';
+import { toast } from '#lib/design-system/index.ts';
+import { formatTime } from '#lib/platform/i18n/format.ts';
+import * as m from '#lib/paraglide/messages.js';
 import type { EditorCore } from '../core/editorCore.svelte';
 import type { PageEditorProps } from '../meta/nodeMeta';
 

@@ -4,9 +4,9 @@
 
 import { afterAll, beforeEach, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createPage, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 const app = await startApp();
 const seed = inject('seed');

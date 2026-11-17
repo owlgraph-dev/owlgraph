@@ -5,7 +5,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 import { getSchema } from '@tiptap/core';
-import { KNOWN_MARK_TYPES, KNOWN_NODE_TYPES, UNKNOWN_BLOCK, slotTakesBlock } from '$lib/features/content';
+import { KNOWN_MARK_TYPES, KNOWN_NODE_TYPES, UNKNOWN_BLOCK, slotTakesBlock } from '#lib/features/content/index.ts';
 import { editorExtensions } from './editorExtensions';
 
 // The server decides what the editor cannot read (content/doc/unknownBlocks.ts)

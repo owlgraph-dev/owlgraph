@@ -8,10 +8,10 @@
   // a quick-link card at the caret, or retargets the card it was opened for
   // (core/links.svelte.ts). Each pick closes it.
   import { untrack } from 'svelte';
-  import { Popover, TriggerFace } from '$lib/design-system';
-  import Icon from '$lib/design-system/Icon.svelte';
-  import { NodePickerPanel, type NodePickerCreate } from '$lib/features/search/picker';
-  import * as m from '$lib/paraglide/messages';
+  import { Popover, TriggerFace } from '#lib/design-system/index.ts';
+  import Icon from '#lib/design-system/Icon.svelte';
+  import { NodePickerPanel, type NodePickerCreate } from '#lib/features/search/picker.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { linkPickerRows } from '../../shared/linkPickerRows';
   import type { SitePage } from '../../shared/sitePages';
   import type { EditorCore } from '../../core/editorCore.svelte';

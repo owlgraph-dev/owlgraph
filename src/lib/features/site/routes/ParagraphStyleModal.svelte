@@ -10,11 +10,11 @@
   // every block using the style.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { Dialog, Button, Select, Alert, FormField } from '$lib/design-system';
-  import { PARAGRAPH_STYLE_TAGS, headingLevelOf, type ParagraphStyle, type ParagraphStyleTag } from '$lib/features/content';
-  import { LocalizedField } from '$lib/features/semantic/components';
-  import { siteDefaultLocale } from '$lib/platform/i18n/siteLocales';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Select, Alert, FormField } from '#lib/design-system/index.ts';
+  import { PARAGRAPH_STYLE_TAGS, headingLevelOf, type ParagraphStyle, type ParagraphStyleTag } from '#lib/features/content/index.ts';
+  import { LocalizedField } from '#lib/features/semantic/components.ts';
+  import { siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

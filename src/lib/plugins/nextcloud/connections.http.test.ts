@@ -4,9 +4,9 @@
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { call, formAction, startApp, type ServedApp } from '$tests/integration/http';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { call, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { startMockNextcloud, type MockNextcloud } from './e2e/mockNextcloud';
 
 // A person's own Nextcloud connection as served, against the mock's Login Flow

@@ -5,8 +5,8 @@
 -->
 <script lang="ts">
   // Deleting a collection removes its `contains` edges, never its members.
-  import { Dialog, Button, Alert } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Dialog, Button, Alert } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

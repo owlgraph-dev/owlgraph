@@ -3,12 +3,12 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/media/[id]/+server.ts.
-import { getPage, userCanReadPage } from '$lib/features/pages/server';
-import { getAssetMeta, getAssetBytes, getImageVariant, servePublicAssetBytes, servesCopy, assetEtag } from '$lib/features/media/server';
-import { MEDIA_WIDTHS } from '$lib/features/media';
-import { logEvent } from '$lib/platform/logger.server';
+import { getPage, userCanReadPage } from '#lib/features/pages/server.ts';
+import { getAssetMeta, getAssetBytes, getImageVariant, servePublicAssetBytes, servesCopy, assetEtag } from '#lib/features/media/server.ts';
+import { MEDIA_WIDTHS } from '#lib/features/media/index.ts';
+import { logEvent } from '#lib/platform/logger.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { textError } from '$lib/platform/apiErrors';
+import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 

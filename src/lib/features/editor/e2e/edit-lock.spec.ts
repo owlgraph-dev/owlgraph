@@ -2,11 +2,11 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { test, expect } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { createPage, unique } from '$tests/e2e/api';
-import { doc, para } from '$tests/e2e/doc';
-import { db } from '$lib/platform/db.server';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { createPage, unique } from '#tests/e2e/api.ts';
+import { doc, para } from '#tests/e2e/doc.ts';
+import { db } from '#lib/platform/db.server.ts';
 
 // A slug rename moves the editor with a client-side navigation, which must
 // keep the lock and its heartbeat (docs/architecture/authorization.md, "Edit lock").

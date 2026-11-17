@@ -6,7 +6,7 @@
 // a block IS (addressable, structural, transient) is declared once here and
 // every type set derives from it, so a new kind is added here first. A
 // plugin's kinds join after the core's (docs/architecture/plugins.md).
-import { PLUGIN_BLOCK_KINDS } from '$lib/plugins';
+import { PLUGIN_BLOCK_KINDS } from '#lib/plugins/index.ts';
 
 /**
  * The block-type groups capability defaults are set for: a default is per

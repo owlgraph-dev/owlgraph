@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
-import type { SessionUser } from '$lib/features/auth/server';
-import { createPage, saveDoc, setPageShares, setPageVisibility } from '$lib/features/pages/server';
-import { userOf } from '$tests/integration/users';
+import type { SessionUser } from '#lib/features/auth/server.ts';
+import { createPage, saveDoc, setPageShares, setPageVisibility } from '#lib/features/pages/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { getIncomingEdges, getGraph, getLocalGraph } from './server';
 
 // The seed's graph page (tests/support/seed.ts) links to the public page twice

@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { Page } from '@playwright/test';
-import { test, expect } from '$tests/e2e/fixtures';
-import { createPage, formAction } from '$tests/e2e/api';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect } from '#tests/e2e/fixtures.ts';
+import { createPage, formAction } from '#tests/e2e/api.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 
 // The interface font restyles every page's chrome: the test runs alone
 // (tests/e2e/fixtures.ts).

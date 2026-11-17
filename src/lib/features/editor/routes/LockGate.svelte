@@ -6,8 +6,8 @@
 <script lang="ts">
   // The cards before a page's editor opens, by the edit lock's phase:
   // opening, held by someone else, open in another tab, moved on.
-  import { Button, Spinner } from '$lib/design-system';
-  import * as m from '$lib/paraglide/messages';
+  import { Button, Spinner } from '#lib/design-system/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import type { EditLock } from '../session/editLock.svelte';
 
   let {

@@ -6,9 +6,9 @@
 <script lang="ts">
   // The element the editor mounts into, as both page shells draw it: the
   // page's own canvas variables and class, its colour scheme, its language.
-  import { pageCanvasVars, pageCanvasClass, type PageAttrs } from '$lib/features/content';
+  import { pageCanvasVars, pageCanvasClass, type PageAttrs } from '#lib/features/content/index.ts';
   // The same stylesheet the page imports.
-  import '$lib/features/content/blocks/blocks.css';
+  import '#lib/features/content/blocks/blocks.css';
 
   let {
     page,

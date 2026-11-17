@@ -17,12 +17,12 @@ const fake = vi.hoisted(() => ({
   origin: 'https://cloud.example' as string | null,
 }));
 
-vi.mock('$lib/platform/db.server', () => ({ db: { begin: async (run: (sql: unknown) => unknown) => run({}) } }));
-vi.mock('$lib/features/nodes/server', () => ({ getNodeType: async () => null, resolveShareLink: async () => null }));
-vi.mock('$lib/features/pages/server', () => ({ getPage: async () => null, userCanWritePage: async () => false }));
-vi.mock('$lib/features/collections/server', () => ({}));
-vi.mock('$lib/features/documents/server', () => ({}));
-vi.mock('$lib/plugins', () => ({
+vi.mock('#lib/platform/db.server.ts', () => ({ db: { begin: async (run: (sql: unknown) => unknown) => run({}) } }));
+vi.mock('#lib/features/nodes/server.ts', () => ({ getNodeType: async () => null, resolveShareLink: async () => null }));
+vi.mock('#lib/features/pages/server.ts', () => ({ getPage: async () => null, userCanWritePage: async () => false }));
+vi.mock('#lib/features/collections/server.ts', () => ({}));
+vi.mock('#lib/features/documents/server.ts', () => ({}));
+vi.mock('#lib/plugins/index.ts', () => ({
   pluginManifest: (id: string) => (id === 'acme' ? { id: 'acme', label: () => 'Acme', connections: { intro: () => 'Connect Acme' } } : null),
 }));
 vi.mock('./settings.server', () => ({
@@ -51,7 +51,7 @@ vi.mock('./connections.server', () => ({
 }));
 
 import { createPluginHost } from './host.server';
-import type { Logger } from '$lib/platform/logger.server';
+import type { Logger } from '#lib/platform/logger.server.ts';
 
 const quiet: Logger = (() => {
   const log = { info: () => {}, warn: () => {}, error: () => {}, debug: () => {}, child: () => log };

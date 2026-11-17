@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page as screen, userEvent } from 'vitest/browser';
 import type { ComponentProps } from 'svelte';
-import { EMPTY_SEARCH, type SearchParams, type SearchResultCard } from '$lib/features/search';
-import type { NodeClassOption } from '$lib/features/semantic';
+import { EMPTY_SEARCH, type SearchParams, type SearchResultCard } from '#lib/features/search/index.ts';
+import type { NodeClassOption } from '#lib/features/semantic/index.ts';
 import SearchPage from './SearchPage.svelte';
 
 // Every control navigates, so the test observes the address asked for; after

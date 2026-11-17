@@ -5,17 +5,17 @@
 // The footer's legal links (footer_links, the legal line), legal text and
 // branding. Its columns live in the shared tree (navTree.server.ts), its
 // background in the site theme.
-import { db } from '$lib/platform/db.server';
-import { readablePageIds } from '$lib/features/pages/server';
-import { getSetting, setSetting } from '$lib/platform/settings.server';
-import { namespaceJoin, namespaceSlugColumn } from '$lib/features/nodes/server';
+import { db } from '#lib/platform/db.server.ts';
+import { readablePageIds } from '#lib/features/pages/server.ts';
+import { getSetting, setSetting } from '#lib/platform/settings.server.ts';
+import { namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { getCurrentLogo } from './branding.server';
 import { listTreeAdmin, buildAdminTree, resolveTreeForUser, resolveNavLinkRow, type NavLinkRow } from './navTree.server';
 import type { TreeNodeAdminWithChildren, ResolvedTreeGroup, ResolvedTreeNode } from './types';
-import type { SessionUser } from '$lib/features/auth/server';
+import type { SessionUser } from '#lib/features/auth/server.ts';
 
 import type { FooterTargetType, FooterLinkRow, FooterLinkAdminRow, FooterLinkInput, FooterBrandingSettings, ResolvedFooterLink, ResolvedFooterBranding, ResolvedFooter } from './types';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 export type { FooterTargetType, FooterLinkRow, FooterLinkAdminRow, FooterLinkInput, FooterBrandingSettings, ResolvedFooterLink, ResolvedFooterBranding, ResolvedFooter };
 
 const KEY_LEGAL_TEXT = 'footer_legal_text';

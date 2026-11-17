@@ -45,10 +45,6 @@ export default defineConfig({
     sveltekit({
       preprocess: vitePreprocess(),
       adapter: adapter(),
-      // $lib, which SvelteKit no longer declares itself, and the test harness,
-      // for the tests beside the code (docs/guides/testing.md); the app never
-      // imports $tests.
-      alias: { $lib: 'src/lib', $tests: 'tests' },
       // Mode 'auto' nonces SvelteKit's inline hydration script; script-src has no
       // 'unsafe-inline'. style-src is strict: hooks.server.ts adds the style nonce,
       // and 'unsafe-inline' on the authenticated tools' routes (platform/csp.ts).

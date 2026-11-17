@@ -8,10 +8,10 @@
   // "Sources"). The values are sent once and never shown again: the dialog
   // mounts fresh each time it opens.
   import { untrack } from 'svelte';
-  import { readApiError } from '$lib/platform/readApiError';
-  import { Dialog, Button, Alert, FormField, Input } from '$lib/design-system';
-  import type { CollectionSourceView } from '$lib/features/pluginHost';
-  import * as m from '$lib/paraglide/messages';
+  import { readApiError } from '#lib/platform/readApiError.ts';
+  import { Dialog, Button, Alert, FormField, Input } from '#lib/design-system/index.ts';
+  import type { CollectionSourceView } from '#lib/features/pluginHost/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
 
   let {
     open,

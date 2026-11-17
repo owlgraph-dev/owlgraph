@@ -4,11 +4,11 @@
 
 import sharp from 'sharp';
 import type { APIRequestContext } from '@playwright/test';
-import { test, expect, sameOrigin } from '$tests/e2e/fixtures';
-import { PHONE } from '$tests/e2e/devices';
-import { createPage } from '$tests/e2e/api';
-import { doc, para } from '$tests/e2e/doc';
-import { authState } from '$tests/e2e/seed-data';
+import { test, expect, sameOrigin } from '#tests/e2e/fixtures.ts';
+import { PHONE } from '#tests/e2e/devices.ts';
+import { createPage } from '#tests/e2e/api.ts';
+import { doc, para } from '#tests/e2e/doc.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
 
 // What the server stores and answers is serving.http.test.ts's.
 

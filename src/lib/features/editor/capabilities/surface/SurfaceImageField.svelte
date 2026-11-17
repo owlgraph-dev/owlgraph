@@ -6,14 +6,14 @@
 <script lang="ts">
   // The file input is the editor's (the image block's hidden one); the
   // caller of `onPickImage` uploads and writes the asset.
-  import { Button, ColorPickerField, FieldRow, PositionGrid, SegmentedControl, SegmentedControlItem, Slider, type Position } from '$lib/design-system';
-  import { mediaVariantUrl } from '$lib/features/media';
-  import * as m from '$lib/paraglide/messages';
-  import { editTier } from '$lib/features/content';
-  import { themeColorOptions } from '$lib/features/content';
-  import { COLOR_SWATCHES } from '$lib/features/content';
-  import { IMAGE_DEFAULTS, IMAGE_FITS, type ImageField, type ImageFit, type SurfaceData } from '$lib/features/content';
-  import { resolvedImageLayer } from '$lib/features/content';
+  import { Button, ColorPickerField, FieldRow, PositionGrid, SegmentedControl, SegmentedControlItem, Slider, type Position } from '#lib/design-system/index.ts';
+  import { mediaVariantUrl } from '#lib/features/media/index.ts';
+  import * as m from '#lib/paraglide/messages.js';
+  import { editTier } from '#lib/features/content/index.ts';
+  import { themeColorOptions } from '#lib/features/content/index.ts';
+  import { COLOR_SWATCHES } from '#lib/features/content/index.ts';
+  import { IMAGE_DEFAULTS, IMAGE_FITS, type ImageField, type ImageFit, type SurfaceData } from '#lib/features/content/index.ts';
+  import { resolvedImageLayer } from '#lib/features/content/index.ts';
 
   let {
     value,

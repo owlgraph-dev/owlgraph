@@ -4,11 +4,11 @@
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { call, cookieFor, formAction, startApp, type ServedApp } from '$tests/integration/http';
-import { connectAs as agentAs } from '$tests/integration/mcp';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { call, cookieFor, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { connectAs as agentAs } from '#tests/integration/mcp.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { startMockNextcloud, type MockNextcloud, type MockShare, type MockUser } from './e2e/mockNextcloud';
 
 // Nextcloud read as the viewer, against the mock (docs/architecture/authorization.md,

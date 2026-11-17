@@ -8,7 +8,7 @@ import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import EditPage from './EditPage.svelte';
 import type { EditPageData } from './edit.server';
-import { stubFetch } from '$tests/component/fetch';
+import { stubFetch } from '#tests/component/fetch.ts';
 
 // The edit route with its load's data. A document's requests are answered by
 // a stand-in for the documents API; refreshAll is inert here, so a reload

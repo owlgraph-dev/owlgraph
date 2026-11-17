@@ -3,10 +3,10 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { APIResponse, Page, Response } from '@playwright/test';
-import { test, expect, waitForHydration } from '$tests/e2e/fixtures';
-import { authState } from '$tests/e2e/seed-data';
-import { seedProbePage } from '$tests/e2e/probe-doc';
-import { createPage, formAction, unique } from '$tests/e2e/api';
+import { test, expect, waitForHydration } from '#tests/e2e/fixtures.ts';
+import { authState } from '#tests/e2e/seed-data.ts';
+import { seedProbePage } from '#tests/e2e/probe-doc.ts';
+import { createPage, formAction, unique } from '#tests/e2e/api.ts';
 import { db } from '../../platform/db.server';
 import { STYLE_SRC_PHASE, parseCsp } from '../../platform/csp';
 

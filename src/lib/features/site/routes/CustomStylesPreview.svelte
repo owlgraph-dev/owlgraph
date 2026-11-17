@@ -9,10 +9,10 @@
   // compiler loads on demand (customStyles/load.ts): postcss is heavy and would
   // otherwise ride the components barrel onto every page. The rules stay
   // unchanged: this sample is the only `.page-canvas` in Settings.
-  import { SegmentedControl, SegmentedControlItem, EmptyState } from '$lib/design-system';
-  import { inLayer } from '$lib/platform/cssLayers';
-  import { SCHEME_NAMES, type SchemeName } from '$lib/design-system/theme/tokens';
-  import * as m from '$lib/paraglide/messages';
+  import { SegmentedControl, SegmentedControlItem, EmptyState } from '#lib/design-system/index.ts';
+  import { inLayer } from '#lib/platform/cssLayers.ts';
+  import { SCHEME_NAMES, type SchemeName } from '#lib/design-system/theme/tokens.ts';
+  import * as m from '#lib/paraglide/messages.js';
   import { styleClass } from '../customStyles/slug';
   import { loadCustomStyleTools, type CustomStyleTools } from '../customStyles/load';
   import type { CompileSheet } from '../customStyles/compile';

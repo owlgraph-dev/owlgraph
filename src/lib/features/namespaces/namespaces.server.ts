@@ -6,11 +6,11 @@
 // of every node without a visibility of its own, and a restricted one's members
 // read those nodes (docs/architecture/authorization.md). Free of SvelteKit-only imports: the
 // MCP server imports it too.
-import { db, type TxSql } from '$lib/platform/db.server';
-import type { Visibility } from '$lib/features/nodes';
-import { isReservedSlug, cleanSlug, narrowOverridesToNamespace } from '$lib/features/nodes/server';
+import { db, type TxSql } from '#lib/platform/db.server.ts';
+import type { Visibility } from '#lib/features/nodes/index.ts';
+import { isReservedSlug, cleanSlug, narrowOverridesToNamespace } from '#lib/features/nodes/server.ts';
 import { setKnownNamespaceSlugs } from './namespaceRegistry';
-import { CodedError } from '$lib/platform/codedError';
+import { CodedError } from '#lib/platform/codedError.ts';
 
 export interface NamespaceRow {
   id: string;

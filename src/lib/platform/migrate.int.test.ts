@@ -11,9 +11,9 @@ import path from 'node:path';
 import { db } from './db.server';
 import { markApplied, migrationStatus, runMigrations } from './migrate.server';
 import { MigrationRefused, migrationChecksums } from './baseline.server';
-import { createEmptyDatabase, dropDatabase, urlFor } from '$tests/support/databases';
-import { databaseName } from '$tests/e2e/testDb';
-import { runScript } from '$tests/integration/scripts';
+import { createEmptyDatabase, dropDatabase, urlFor } from '#tests/support/databases.ts';
+import { databaseName } from '#tests/e2e/testDb.ts';
+import { runScript } from '#tests/integration/scripts.ts';
 
 // The file's clone, and the run's base database it is named after.
 const clone = databaseName(process.env.DATABASE_URL!);

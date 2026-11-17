@@ -2,4 +2,4 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-export { POST } from '$lib/features/media/routes/api.media.server';
+export { POST } from '#lib/features/media/routes/api.media.server.ts';

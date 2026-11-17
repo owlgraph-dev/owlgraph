@@ -4,10 +4,10 @@
 
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { db } from '$lib/platform/db.server';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '$tests/integration/http';
-import { connectAs, textOf } from '$tests/integration/mcp';
-import type { Role } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { connectAs, textOf } from '#tests/integration/mcp.ts';
+import type { Role } from '#tests/integration/users.ts';
 
 const app = await startApp();
 

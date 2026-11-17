@@ -3,9 +3,9 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { db } from '$lib/platform/db.server';
-import { createSession, createUser } from '$lib/features/auth/server';
-import { userOf } from '$tests/integration/users';
+import { db } from '#lib/platform/db.server.ts';
+import { createSession, createUser } from '#lib/features/auth/server.ts';
+import { userOf } from '#tests/integration/users.ts';
 import { beginFlow, sealCredential, sealFlow, storeConnection } from './connections.server';
 
 // A made-up integration: what is stored is the core's, whatever plugin a connection is for.

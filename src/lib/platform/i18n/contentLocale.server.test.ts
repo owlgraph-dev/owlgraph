@@ -3,8 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, it, expect } from 'vitest';
-import { getLocale } from '$lib/paraglide/runtime';
-import * as m from '$lib/paraglide/messages';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import * as m from '#lib/paraglide/messages.js';
 import { withContentLocale } from './contentLocale.server';
 
 describe('withContentLocale() — rendering in the content language', () => {

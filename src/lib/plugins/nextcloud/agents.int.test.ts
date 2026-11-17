@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { logger } from '$lib/platform/logger.server';
-import { can } from '$lib/features/auth/server';
-import { createCollection, renameCollection } from '$lib/features/collections/server';
-import { setNodeVisibility } from '$lib/features/nodes/server';
-import { createPluginHost, dispatchPluginRequest, savePluginSettings } from '$lib/features/pluginHost/server';
-import { createPage, getPage, saveDoc } from '$lib/features/pages/server';
-import { load as searchPage } from '$lib/features/search/routes/searchPage.server';
-import { pluginServer } from '$lib/plugins/server';
+import { logger } from '#lib/platform/logger.server.ts';
+import { can } from '#lib/features/auth/server.ts';
+import { createCollection, renameCollection } from '#lib/features/collections/server.ts';
+import { setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { createPluginHost, dispatchPluginRequest, savePluginSettings } from '#lib/features/pluginHost/server.ts';
+import { createPage, getPage, saveDoc } from '#lib/features/pages/server.ts';
+import { load as searchPage } from '#lib/features/search/routes/searchPage.server.ts';
+import { pluginServer } from '#lib/plugins/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
-import { connectAs, textOf, userOf, type Role } from '$tests/integration/mcp';
+import { connectAs, textOf, userOf, type Role } from '#tests/integration/mcp.ts';
 import { nextcloud } from './index';
 import { startMockNextcloud, type MockNextcloud } from './e2e/mockNextcloud';
 

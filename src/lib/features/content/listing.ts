@@ -10,4 +10,4 @@ export { default as DocumentEntry } from './listing/DocumentEntry.svelte';
 export type { DocumentEntryFile, DocumentPlaceholder, EntryPlaceholder, EntryRow, EntryTarget } from './listing/types';
 export { dateText, fileGlyph, fill, opensInline, sizeText, typeLabel } from './listing/format';
 export { memberRows, type MemberEntry, type MemberTexts } from './listing/members';
-export type { NodeType } from '$lib/features/nodes';
+export type { NodeType } from '#lib/features/nodes/index.ts';
