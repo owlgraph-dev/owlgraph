@@ -7,7 +7,7 @@ is in [`docs/`](docs/), indexed in [docs/README.md](docs/README.md).
 
 **Prerequisites:**
 
-- **Node.js 22.22.2 or later** (`.nvmrc`; `npm` refuses an older one).
+- **Node.js 26 or later** (`.nvmrc`; `npm` refuses an older one).
 - **PostgreSQL 16**, reachable from your machine, with the `pgcrypto`
   extension available (any standard Postgres package or image has it). The
   Docker stack's database is not published to the host, so development needs

@@ -10,7 +10,7 @@
   },
   "private": true,
   "engines": {
-    "node": ">=22.22.2"
+    "node": ">=26"
   },
   "type": "module",
   "scripts": {
@@ -51,7 +51,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@types/express": "^4.17.21",
     "@types/jsdom": "^28.0.3",
-    "@types/node": "^22.0.0",
+    "@types/node": "^26.6.6",
     "@types/sanitize-html": "^2.16.2",
     "@vitest/browser": "^5.1.0",
     "@vitest/browser-playwright": "^5.1.0",
