@@ -7,6 +7,7 @@
 //   1. The MCP closure reaches neither SvelteKit, jsdom nor a stylesheet.
 //   2. A feature is imported from outside only through an entry point, and an
 //      adapter (routes/**, mcp.server.ts, graphql.server.ts) only from its channel.
+//      The acceptance tests (tests/acceptance/) are such outsiders.
 //   3. No cycles between features, a feature's server and client halves apart.
 //   4. The server graph follows LAYERS.
 //   5. A module never imports its own feature's entry points.
@@ -60,14 +61,19 @@ const isEntryPoint = (mod) => {
 const GRAPHQL_BUILDER = 'lib/features/query/graphql/builder.server';
 
 const files = [];
-(function walk(d) {
+function walk(d) {
   for (const entry of readdirSync(d)) {
     const p = join(d, entry);
     if (statSync(p).isDirectory()) {
       if (entry !== 'paraglide') walk(p);
     } else if (/\.(ts|js|mjs|svelte)$/.test(entry)) files.push(p);
   }
-})(SRC);
+}
+walk(SRC);
+// The acceptance tests are read too: outside every feature, they take rule 2's
+// entry points as any other outsider does (docs/guides/testing.md, "Acceptance tests").
+const ACCEPTANCE = join(ROOT, 'tests', 'acceptance');
+if (existsSync(ACCEPTANCE)) walk(ACCEPTANCE);
 
 const toPosix = (p) => p.split(sep).join('/');
 const rel = (p) => toPosix(relative(SRC, p));

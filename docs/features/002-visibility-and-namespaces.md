@@ -59,7 +59,8 @@ Who may read:
    with, its owner and admins. Membership of its namespace alone does not
    open it, and being shared one node opens no other.
 5. A node the asker may not read is answered as not found, exactly as a node
-   that does not exist.
+   that does not exist. The one exception: a signed-out visitor to an
+   internal node is sent to sign in.
 6. The answer is the same whichever way the node is asked for: its address,
    the API, search, the graph, a query block, an agent's tool, its file or
    its images. Lists leave out what the viewer may not read, and their counts
@@ -69,13 +70,13 @@ Inheriting and narrowing:
 
 7. A node with no visibility of its own has its namespace's access level.
    Changing that level changes who can read the node, without touching it.
-8. A node cannot be set more open than its namespace. Asking for the
-   namespace's own level stores no setting, so the node goes on inheriting.
+8. A node cannot be set more open than its namespace. A node asked to be
+   public keeps no setting of its own and goes on inheriting.
 9. Lowering a namespace's access level, or moving a node into a closer
    namespace, narrows every setting that would now be too open, and never
    fails because of one.
-10. Before an admin changes a namespace's access level, the settings say how
-    many nodes inherit it.
+10. Before an admin opens a namespace wider, the settings say how many nodes
+    inherit it.
 11. On a new installation an anonymous visitor finds no content, until an
     admin makes the default namespace public.
 
@@ -141,8 +142,41 @@ None blocks the work.
 - Should a node's ownership be transferable, so that removing a member can
   remove all of their access?
 - Should deleting a namespace warn when its content would become more open?
+- Should the settings also say how many nodes a namespace closes, before an
+  admin narrows it?
 
 ## Implementation notes
 
-- Written after the fact, from the architecture pages. The criteria are not
-  yet matched to tests, and none is checked against the code.
+- Written after the fact, from the architecture pages, then checked against
+  the code. Every criterion but 002.10 has an acceptance test that passes, in
+  `tests/acceptance/002-visibility-and-namespaces/`. Where the code does not
+  do what a criterion says, the case is pinned there as a known bug and not
+  fixed, as the notes below say.
+- 002.4 holds for a collection with no one to share it with: a collection has
+  no share list, so one set to restricted by itself is its owner's and
+  admins' alone.
+- 002.5 does not hold in five cases, each pinned:
+  - a signed-out visitor to a restricted document is sent to sign in;
+  - the not-found answer for a page or document the asker may not read
+    carries other words than a missing address's ("Page not found" for "Not
+    found"), in the page's data, not in what it shows;
+  - the edit address sends an editor who may not read the node to the front
+    page, where a missing address is not found;
+  - a write to a page or document the caller may not read is answered as
+    forbidden, where a write to a missing one is not found, and so is a
+    signed-out caller's write to a document's file;
+  - an agent's link to a page its user may not read is made, and with no
+    label of its own takes the page's title.
+- 002.9 does not hold when a namespace is deleted while the default
+  namespace is closer than it: its nodes move with their settings as they
+  were. Pinned.
+- 002.10 has no acceptance test: only a browser shows it, and the gate runs
+  no component test. The namespace journey sees the notice, and a component
+  test holds it beside the silence when a namespace is narrowed.
+- 002.15 does not hold for a link: a page's link to a node in a restricted
+  namespace carries that namespace's slug in its address, for every reader.
+  Pinned. The address of a node the reader may not read, in a namespace they
+  can reach, shows the same way; no criterion covers that.
+- 002.18 does not hold when a namespace is deleted while one of its nodes is
+  named as another namespace: the node arrives at the root under that name.
+  Pinned.

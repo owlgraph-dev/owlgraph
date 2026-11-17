@@ -23,7 +23,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-kit sync && npm run messages && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings && node scripts/check-boundaries.mjs && node scripts/check-ui.mjs && node scripts/check-console.mjs && node scripts/check-paths.mjs && node scripts/license-headers.mjs --check",
+    "check": "svelte-kit sync && npm run messages && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings && node scripts/check-boundaries.mjs && node scripts/check-ui.mjs && node scripts/check-console.mjs && node scripts/check-paths.mjs && node scripts/check-criteria.mjs && node scripts/license-headers.mjs --check",
     "check:ui": "node scripts/check-ui.mjs",
     "license-headers": "node scripts/license-headers.mjs",
     "notices": "node scripts/notices.mjs",

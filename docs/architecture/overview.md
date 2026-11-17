@@ -263,7 +263,9 @@ seam has rules of its own — only the registry imports a plugin, a plugin
 imports the core through an allowlist, the core never names a plugin, no module
 cycle runs through a registry ([plugins.md](plugins.md#boundaries)) — and the
 shell sits above the features: an import of it from anywhere but the routes,
-the hooks and the shell itself is refused. All of this is checked
+the hooks and the shell itself is refused. The acceptance tests in
+`tests/acceptance/` are read too, and reach a feature as any module outside
+it does ([testing.md](../guides/testing.md#acceptance-tests)). All of this is checked
 statically by `scripts/check-boundaries.mjs`, which `npm run check` runs; the
 MCP server's import closure is additionally kept free of `@sveltejs/kit` and
 `$app/*`, because it runs under `tsx` outside the SvelteKit build, of
