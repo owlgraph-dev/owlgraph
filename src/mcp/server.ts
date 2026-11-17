@@ -68,7 +68,21 @@ app.disable('x-powered-by');
 // Behind the proxy every caller would share its IP and one pre-auth bucket.
 // Exactly XFF_DEPTH hops, so a client can't choose its address by sending the header.
 if (process.env.ADDRESS_HEADER) app.set('trust proxy', Number(process.env.XFF_DEPTH ?? 1));
-app.use(express.json());
+// The JSON-RPC body, held whole in memory and parsed before the token is read.
+// 100 KB holds any tool call; bytes an agent uploads take a route of their own,
+// not a larger limit here. Before it grows, zod 4.6.6 or later: an older zod
+// collects an issue for every invalid element of an array, without bound
+// (GHSA-mrhx-c7xc-m3w5).
+app.use(express.json({ limit: '100kb' }));
+
+// A body over the limit, or not JSON, refused as the route refuses.
+const refuseBody: express.ErrorRequestHandler = (err, req, res, next) => {
+  const type = (err as { type?: unknown } | null)?.type;
+  const code: ApiErrorCode | null = type === 'entity.too.large' ? 'too_large' : type === 'entity.parse.failed' ? 'invalid_json' : null;
+  if (!code) return next(err);
+  anonymousLocale(req).then((locale) => refuse(res, code, locale), next);
+};
+app.use(refuseBody);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
