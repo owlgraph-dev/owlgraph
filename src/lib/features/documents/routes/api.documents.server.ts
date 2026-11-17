@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { createDocument, createLinkDocument } from '$lib/features/documents/server';
 import { parseExternalUrl } from '$lib/features/documents';
@@ -44,7 +43,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       actorId: locals.user?.id ?? null,
       source: 'upload',
     });
-    return json({ id, slug });
+    return Response.json({ id, slug });
   } catch (e) {
     return createFailed(locals, e);
   }
@@ -71,7 +70,7 @@ async function createLink(locals: App.Locals, form: FormData | null, namespaceId
       actorId: locals.user?.id ?? null,
       source: 'link',
     });
-    return json({ id, slug });
+    return Response.json({ id, slug });
   } catch (e) {
     return createFailed(locals, e);
   }

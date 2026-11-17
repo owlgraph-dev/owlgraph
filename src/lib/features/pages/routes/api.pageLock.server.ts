@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/lock/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { getPage, userCanWritePage } from '$lib/features/pages/server';
 import { getLock, acquireLock, releaseLock, forceReleaseLock } from '$lib/features/pages/server';
@@ -17,7 +16,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const page = await getPage(params.id);
   if (!page) return apiError('not_found', { kind: 'page' });
   if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
-  return json(await getLock(params.id));
+  return Response.json(await getLock(params.id));
 };
 
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
@@ -27,7 +26,7 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
   const body = await request.json().catch(() => ({}));
   const force = body?.force === true && locals.user?.role === 'admin';
   const result = await acquireLock(params.id, locals.user!.id, force);
-  if (result.granted) return json({ ok: true, token: result.token, status: result.status });
+  if (result.granted) return Response.json({ ok: true, token: result.token, status: result.status });
   return apiError('lock_lost', { status: result.status });
 };
 
@@ -39,9 +38,9 @@ export const DELETE: RequestHandler<Params> = async ({ params, request, locals }
   const token = typeof body?.token === 'string' ? body.token : null;
   if (token) {
     await releaseLock(params.id, token);
-    return json({ ok: true });
+    return Response.json({ ok: true });
   }
   if (locals.user?.role !== 'admin') return apiForbidden(locals.log, { action: 'page:lock_takeover', resourceType: 'page', resourceId: params.id });
   await forceReleaseLock(params.id);
-  return json({ ok: true });
+  return Response.json({ ok: true });
 };

@@ -4,12 +4,12 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  // invalidateAll() after each action refreshes the app bar's name and avatar.
+  // refreshAll() after each action refreshes the app bar's name and avatar.
   // Language and appearance are device preferences in a cookie, with no action.
   import { untrack } from 'svelte';
   import { enhance } from '$app/forms';
-  import { browser } from '$app/environment';
-  import { invalidateAll } from '$app/navigation';
+  import { browser } from '$app/env';
+  import { refreshAll } from '$app/navigation';
   import { Button, Input, Avatar, SettingsGroup, SettingsRow, SettingsWell, SegmentedControl, SegmentedControlItem } from '$lib/design-system';
   import { applyColorPref, currentColorPref } from '$lib/design-system/theme/applyColorPref';
   import { COLOR_PREFS, type ColorPref } from '$lib/design-system/theme/preference';
@@ -48,7 +48,7 @@
       action="?/updateName"
       use:enhance={() => async ({ update }) => {
         await update();
-        await invalidateAll();
+        await refreshAll();
       }}
     >
       <Input id="profile-name" name="name" bind:value={name} placeholder={m.settings_profile_name_placeholder()} autocomplete="off" />
@@ -69,7 +69,7 @@
             class="inline"
             use:enhance={() => async ({ update }) => {
               await update();
-              await invalidateAll();
+              await refreshAll();
             }}
           >
             <Button type="submit" variant="ghost-danger" size="sm">{m.settings_profile_avatar_remove()}</Button>
@@ -87,7 +87,7 @@
         uploading = true;
         return async ({ update }) => {
           await update();
-          await invalidateAll();
+          await refreshAll();
           uploading = false;
           if (fileInput) fileInput.value = '';
         };

@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { browser } from '$app/environment';
+  import { browser } from '$app/env';
   import * as m from '$lib/paraglide/messages';
   import type { LegendEntry } from '../nodeColor';
 

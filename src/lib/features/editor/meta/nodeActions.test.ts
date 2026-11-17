@@ -29,10 +29,10 @@ function fixture(client: Partial<Record<keyof NodeMetaClient, unknown>> = {}) {
     ...client,
   };
   const goto = vi.fn(async () => {});
-  const invalidateAll = vi.fn(async () => {});
+  const refreshAll = vi.fn(async () => {});
   const beforeDelete = vi.fn();
-  const actions = nodeActions(fake as unknown as NodeMetaClient, row, { deleteFallback: 'Could not delete', beforeDelete, namespaces: () => NAMESPACES, goto, invalidateAll });
-  return { actions, row, client: fake, goto, invalidateAll, beforeDelete };
+  const actions = nodeActions(fake as unknown as NodeMetaClient, row, { deleteFallback: 'Could not delete', beforeDelete, namespaces: () => NAMESPACES, goto, refreshAll });
+  return { actions, row, client: fake, goto, refreshAll, beforeDelete };
 }
 
 const STAY = { replaceState: true, noScroll: true, keepFocus: true };
@@ -72,12 +72,12 @@ describe("a node's actions in its editor", () => {
     await f.actions.onSetLocale!('de');
     await f.actions.onDismissLocaleSuggestion!();
     await f.actions.onSetVisibility!('restricted');
-    expect(f.invalidateAll).toHaveBeenCalledTimes(4);
+    expect(f.refreshAll).toHaveBeenCalledTimes(4);
 
     const refused = fixture({ setVisibility: vi.fn(async () => ({ ok: false })), setLocale: vi.fn(async () => ({ ok: false, error: 'no' })) });
     await refused.actions.onSetVisibility!('public');
     await refused.actions.onSetLocale!('fr');
-    expect(refused.invalidateAll).not.toHaveBeenCalled();
+    expect(refused.refreshAll).not.toHaveBeenCalled();
   });
 
   it('hand tags, properties and shares straight to the client, without a reload', async () => {
@@ -85,7 +85,7 @@ describe("a node's actions in its editor", () => {
     expect(await f.actions.onSetTags!(['a'])).toEqual({ ok: true, tags: ['a'] });
     await f.actions.onSetShares!(['u-1']);
     expect(f.client.setShares).toHaveBeenCalledWith(['u-1']);
-    expect(f.invalidateAll).not.toHaveBeenCalled();
+    expect(f.refreshAll).not.toHaveBeenCalled();
   });
 
   it('delete with the fallback sentence, let go of what needs letting go, then leave for the home page', async () => {

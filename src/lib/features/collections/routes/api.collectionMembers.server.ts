@@ -4,7 +4,6 @@
 
 // Route adapter, re-exported by src/routes/api/collections/[id]/members/+server.ts.
 // Each answer carries the members and the basis of their order afresh.
-import { json } from '@sveltejs/kit';
 import { addCuratedMember, membersWithBasis, reorderCuratedMembers } from '$lib/features/collections/server';
 import { isUuid } from '$lib/features/nodes';
 import { arrangeableCollection } from './membership.server';
@@ -16,7 +15,7 @@ type Params = { id: string };
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const collection = await arrangeableCollection(locals, params.id);
   if (collection instanceof Response) return collection;
-  return json(await membersWithBasis(collection.id, locals.user));
+  return Response.json(await membersWithBasis(collection.id, locals.user));
 };
 
 // 201 when added; 200 with `existed` for a node that is a member already.
@@ -27,7 +26,7 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
   if (!isUuid(body.nodeId)) return apiError('invalid_request', { field: 'nodeId' });
   try {
     const { added } = await addCuratedMember(collection.id, body.nodeId, locals.user);
-    return json({ existed: !added, ...(await membersWithBasis(collection.id, locals.user)) }, { status: added ? 201 : 200 });
+    return Response.json({ existed: !added, ...(await membersWithBasis(collection.id, locals.user)) }, { status: added ? 201 : 200 });
   } catch (error) {
     return apiErrorFrom(error);
   }
@@ -44,7 +43,7 @@ export const PUT: RequestHandler<Params> = async ({ params, request, locals }) =
   }
   try {
     await reorderCuratedMembers(collection.id, order as string[], body.basis, locals.user);
-    return json(await membersWithBasis(collection.id, locals.user));
+    return Response.json(await membersWithBasis(collection.id, locals.user));
   } catch (error) {
     return apiErrorFrom(error);
   }

@@ -10,7 +10,7 @@
   // the route's lifecycle, navigation, reloads, the shell the viewport picks.
   import { onMount, onDestroy, untrack } from 'svelte';
   import { MediaQuery } from 'svelte/reactivity';
-  import { beforeNavigate, goto, invalidateAll } from '$app/navigation';
+  import { beforeNavigate, goto, refreshAll } from '$app/navigation';
   import DesktopEditor from '../desktop/DesktopEditor.svelte';
   import PhoneEditor from '../phone/PhoneEditor.svelte';
   import DocumentEditor from '../document/DocumentEditor.svelte';
@@ -103,14 +103,14 @@
     lock.leave();
   });
 
-  const routing = { namespaces: () => data.namespaces, goto, invalidateAll };
+  const routing = { namespaces: () => data.namespaces, goto, refreshAll };
   const pageActions = $derived(page ? nodeActions(nodeMetaClient('pages', page.id), page, { deleteFallback: m.editor_delete_page_failed(), beforeDelete: lock.release, ...routing }) : null);
 
   // The canvas and the dialog read the scheme from the route data.
   async function setContentScheme(scheme: string | null) {
     if (!page) return { ok: false };
     const res = await nodeMetaClient('pages', page.id).setContentScheme(scheme);
-    if (res.ok) await invalidateAll();
+    if (res.ok) await refreshAll();
     return res;
   }
   const docActions = $derived(doc ? nodeActions(nodeMetaClient('documents', doc.id), doc, { deleteFallback: m.editor_delete_document_failed(), ...routing }) : null);
@@ -129,7 +129,7 @@
   async function replaceFile(file: File) {
     if (!doc) return { ok: false, error: m.editor_document_not_found() };
     const res = await replaceDocumentFile(doc.id, file);
-    if (res.ok) await invalidateAll();
+    if (res.ok) await refreshAll();
     return res;
   }
 
@@ -137,7 +137,7 @@
   async function setLink(url: string) {
     if (!doc) return { ok: false as const, error: m.editor_document_not_found() };
     const res = await setDocumentLink(doc.id, url);
-    if (res.ok) await invalidateAll();
+    if (res.ok) await refreshAll();
     return res;
   }
 
@@ -225,7 +225,7 @@
     slug={collection.slug}
     namespaceSlug={collection.namespace_slug}
     source={data.source}
-    onSourceConnected={() => invalidateAll()}
+    onSourceConnected={() => refreshAll()}
     members={data.members}
     membersBasis={data.membersBasis}
     tags={data.tags}

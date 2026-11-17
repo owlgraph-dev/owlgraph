@@ -8,7 +8,7 @@
   // named like the page canvas, so its listing folds for a phone as on a page;
   // the listing's stylesheet is imported here, the canvas's not being on this page.
   import '$lib/features/content/listing/entryList.css';
-  import { invalidateAll } from '$app/navigation';
+  import { refreshAll } from '$app/navigation';
   import { Tabs, TabsContent, TabsTrigger } from '$lib/design-system';
   import * as m from '$lib/paraglide/messages';
   import { getLocale } from '$lib/paraglide/runtime';
@@ -48,7 +48,7 @@
             {canWrite}
             data={source.data}
             locale={getLocale()}
-            onChange={() => void invalidateAll()}
+            onChange={() => void refreshAll()}
           />
         </div>
       </TabsContent>

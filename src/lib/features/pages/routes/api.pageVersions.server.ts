@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/versions/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { getPage, userCanWritePage } from '$lib/features/pages/server';
 import { listVersions, captureStandaloneVersion } from '$lib/features/pages/server';
@@ -18,7 +17,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const page = await getPage(params.id);
   if (!page) return apiError('not_found', { kind: 'page' });
   if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
-  return json({ versions: await listVersions(params.id) });
+  return Response.json({ versions: await listVersions(params.id) });
 };
 
 // Keeps an unsaved doc whose edit lock was taken over, without touching the
@@ -38,5 +37,5 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
     authorId: locals.user?.id ?? null,
     baseVersionId: typeof body.baseVersionId === 'string' ? body.baseVersionId : null,
   });
-  return json({ versionId, currentDoc: page.doc });
+  return Response.json({ versionId, currentDoc: page.doc });
 };

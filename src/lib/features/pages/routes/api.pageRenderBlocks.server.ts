@@ -4,7 +4,6 @@
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/render-blocks/+server.ts.
 import type { JsonNode } from '$lib/features/content';
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { getPage, userCanWritePage } from '$lib/features/pages/server';
 import { linkSlugMap } from '$lib/features/graph/server';
@@ -47,5 +46,5 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
   const html = await withContentLocale(page.locale, () =>
     blocks.map((b: unknown) => renderDoc({ type: 'doc', content: [b as JsonNode] }, slugMap, {}, opts).html)
   );
-  return json({ html, css: styles.css(), canvasRuleId });
+  return Response.json({ html, css: styles.css(), canvasRuleId });
 };

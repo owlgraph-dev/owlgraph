@@ -19,10 +19,10 @@ export function nodeActions(
     /** The namespaces the route loaded, read when the node moves. */
     namespaces: () => readonly { id: string; slug: string | null; isDefault: boolean }[];
     goto: (href: string, opts?: { replaceState?: boolean; noScroll?: boolean; keepFocus?: boolean }) => Promise<void>;
-    invalidateAll: () => Promise<void>;
+    refreshAll: () => Promise<void>;
   }
 ): NodeMetaActions {
-  const { goto, invalidateAll } = opts;
+  const { goto, refreshAll } = opts;
   const editHref = () => nodePath(row.namespace_slug, row.slug, { edit: true });
   return {
     async onRename(changes) {
@@ -42,24 +42,24 @@ export function nodeActions(
     // so the data is reloaded; the editor reads `doc` only at mount.
     async onSetNodeClass(nodeClassId) {
       const res = await client.setNodeClass(nodeClassId);
-      if (res.ok) await invalidateAll();
+      if (res.ok) await refreshAll();
       return res;
     },
     // Reloaded so the canvas's lang follows.
     async onSetLocale(locale) {
       const res = await client.setLocale(locale);
-      if (res.ok) await invalidateAll();
+      if (res.ok) await refreshAll();
       return res;
     },
     async onDismissLocaleSuggestion() {
       const res = await client.dismissLocaleSuggestion();
-      if (res.ok) await invalidateAll();
+      if (res.ok) await refreshAll();
       return res;
     },
     // The document editor reads the visibility from the route data.
     async onSetVisibility(visibility) {
       const res = await client.setVisibility(visibility);
-      if (res.ok) await invalidateAll();
+      if (res.ok) await refreshAll();
       return res;
     },
     onSetShares: (shares) => client.setShares(shares),

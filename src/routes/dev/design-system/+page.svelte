@@ -6,15 +6,15 @@
 <script lang="ts">
   // The route reads `?section=<id>` and `?scheme=dark` for the playground,
   // which like the rest of the design system imports nothing from $app/*.
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import Playground from '$lib/design-system/playground/Playground.svelte';
 
-  const section = $derived($page.url.searchParams.get('section'));
-  const scheme = $derived($page.url.searchParams.get('scheme') === 'dark' ? 'dark' : 'light');
+  const section = $derived(page.url.searchParams.get('section'));
+  const scheme = $derived(page.url.searchParams.get('scheme') === 'dark' ? 'dark' : 'light');
 
   function setScheme(next: 'light' | 'dark') {
-    const url = new URL($page.url);
+    const url = new URL(page.url);
     if (next === 'dark') url.searchParams.set('scheme', 'dark');
     else url.searchParams.delete('scheme');
     goto(url, { replaceState: true, noScroll: true, keepFocus: true });

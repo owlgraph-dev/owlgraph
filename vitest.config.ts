@@ -85,9 +85,8 @@ export default defineConfig({
         resolve: {
           alias: {
             '$app/state': path.resolve('./tests/component/app/state.svelte.ts'),
-            '$app/stores': path.resolve('./tests/component/app/stores.ts'),
             '$app/navigation': path.resolve('./tests/component/app/navigation.ts'),
-            '$app/environment': path.resolve('./tests/component/app/environment.ts'),
+            '$app/env': path.resolve('./tests/component/app/env.ts'),
             '$app/forms': path.resolve('./tests/component/app/forms.ts'),
           },
         },

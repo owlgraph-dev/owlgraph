@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/apply-picks/+server.ts.
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { getPage, userCanWritePage, applyPicksToPage } from '$lib/features/pages/server';
@@ -25,7 +24,7 @@ export const POST: RequestHandler<Params> = async ({ params, request, locals }) 
   if (!picks.length) return apiError('invalid_request', { field: 'picks' });
 
   const result = await applyPicksToPage(params.id, picks, { lockToken, authorId: locals.user?.id ?? null });
-  if (result.ok) return json({ ok: true });
+  if (result.ok) return Response.json({ ok: true });
   if (result.reason === 'lock') return apiError('lock_lost');
   if (result.reason === 'unknown_dropped') {
     logEvent(locals.log, 'page.unknown_drop_refused', { pageId: params.id, via: 'apply-picks', ...droppedSummary(result.dropped) });

@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/+server.ts.
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { createBlankPage } from '$lib/features/pages/server';
@@ -26,7 +25,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       namespaceId: page.namespace_id ?? null,
       actorId: locals.user?.id ?? null,
     });
-    return json({ id: page.id, slug: page.slug, namespaceSlug: page.namespace_slug });
+    return Response.json({ id: page.id, slug: page.slug, namespaceSlug: page.namespace_slug });
   } catch (e) {
     if (isCodedError(e, 'namespace_membership_required')) {
       return apiForbidden(locals.log, { action: 'namespace:place', resourceType: 'namespace', code: 'namespace_membership_required' });

@@ -5,7 +5,7 @@
 // The design-system playground (docs/architecture/design-system/overview.md, "Playground"): on under
 // `vite dev`, off in a build unless ENABLE_DESIGN_PLAYGROUND=true, and behind a
 // session. Gated here because the design system stays free of $app/*.
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

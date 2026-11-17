@@ -23,7 +23,7 @@ import { t } from './messages';
 const navigation = vi.hoisted(() => ({ invalidated: 0, onInvalidate: async () => {} }));
 vi.mock('$app/navigation', async (original) => ({
   ...(await original<typeof import('$app/navigation')>()),
-  invalidateAll: async () => {
+  refreshAll: async () => {
     navigation.invalidated++;
     await navigation.onInvalidate();
   },
@@ -138,7 +138,7 @@ describe("a person's Nextcloud connection", () => {
       call.method === 'DELETE' && call.url === `/api/connections/${nextcloud.id}` ? Response.json({ removed: true, remoteRevoked }) : undefined
     );
     const view = await render(ConnectionsPage, { data: connectionsData(true) });
-    // invalidateAll reloads the connection as the server now holds it.
+    // refreshAll reloads the connection as the server now holds it.
     navigation.onInvalidate = () => view.rerender({ data: connectionsData(false) });
 
     const row = screen.getByRole('group', { name: 'Nextcloud' });

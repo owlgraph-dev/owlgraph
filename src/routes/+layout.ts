@@ -6,7 +6,7 @@
 // the first warm-up is hooks.client.ts's init(), which runs earlier. Browser
 // only: on the server the registry is the process-wide one, and this viewer's
 // namespaces written there would drop the others from routing for everyone.
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import { setKnownNamespaceSlugs } from '$lib/features/namespaces';
 import { setSiteLocaleConfig } from '$lib/platform/i18n/siteLocales';
 import type { LayoutLoad } from './$types';
