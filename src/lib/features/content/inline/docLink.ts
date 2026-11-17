@@ -12,7 +12,7 @@ export const DocLink = Mark.create({
 
   addOptions() {
     // Configured by editorCore.svelte.ts, like pageLink's.
-    return { resolveHref: (_id: string) => '#' };
+    return { resolveHref: (_id: string): string => '#' };
   },
 
   addAttributes() {
