@@ -174,7 +174,7 @@ test.describe('page settings', () => {
     await value.press('Tab');
     await expect.poll(() => widthOf(page, 'lead')).toBe(640);
 
-    await panel.getByRole('button', { name: 'Background', exact: true }).click();
+    await panel.getByRole('button', { name: /^Background: / }).click();
     await page.getByRole('button', { name: 'Subtle background' }).click();
     await page.keyboard.press('Escape');
     await expect.poll(() => bgOf(page, '.editor.page-canvas')).not.toBe(WHITE);
@@ -207,7 +207,7 @@ test.describe('page settings', () => {
     await expect(resets).toHaveCount(1);
     await resets.first().click();
     await expect(resets).toHaveCount(0);
-    await panel.getByRole('button', { name: 'Background', exact: true }).click();
+    await panel.getByRole('button', { name: /^Background: / }).click();
     await page.getByRole('button', { name: "The theme's page background" }).click();
     await page.keyboard.press('Escape');
     await expect.poll(() => widthOf(page, 'lead')).toBe(760);

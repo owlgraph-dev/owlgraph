@@ -84,7 +84,7 @@ test.describe('site theme', () => {
       await page.locator('.editor .grid-cell .ph-content, .editor .grid-cell p').first().click();
       await page.getByRole('navigation', { name: 'Block ancestry' }).getByRole('button', { name: 'Cell', exact: true }).click({ timeout: 1000 });
     }).toPass({ timeout: 15000 });
-    await blockSettings(page).getByRole('button', { name: 'Background', exact: true }).click();
+    await blockSettings(page).getByRole('button', { name: /^Background: / }).click();
     await expect(page.getByRole('group', { name: 'Theme' }).getByRole('button', { name: 'Ocean', exact: true })).toBeVisible();
   });
 
