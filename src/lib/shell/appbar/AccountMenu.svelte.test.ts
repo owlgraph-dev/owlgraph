@@ -4,7 +4,7 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, type Locator } from '@vitest/browser/context';
+import { page as screen, type Locator } from 'vitest/browser';
 import AccountMenu from './AccountMenu.svelte';
 import { canEdit, type Role } from '$lib/features/auth';
 
@@ -13,9 +13,9 @@ import { canEdit, type Role } from '$lib/features/auth';
 
 const user = (role: Role) => ({ id: `u-${role}`, email: `${role}@example.test`, name: `${role} person`, role, avatarVersion: null });
 
-function accountMenu(role: Role) {
+async function accountMenu(role: Role) {
   const signedIn = user(role);
-  const view = render(AccountMenu, {
+  const view = await render(AccountMenu, {
     user: signedIn,
     navEntries: [],
     canEdit: canEdit(signedIn),
@@ -41,7 +41,7 @@ beforeEach(async () => {
 
 describe('the account menu', () => {
   it('is an identity header with the Admin badge, then exactly Profile, Settings and Sign out, with no language picker', async () => {
-    accountMenu('admin');
+    await accountMenu('admin');
     const menu = await open();
 
     await expect.element(menu.getByText('admin@example.test')).toBeVisible();
@@ -51,7 +51,7 @@ describe('the account menu', () => {
   });
 
   it('shows an editor the Editor badge and the same Profile, Settings and Sign out', async () => {
-    accountMenu('editor');
+    await accountMenu('editor');
     const menu = await open();
 
     await expect.element(menu.getByText('Editor', { exact: true })).toBeVisible();

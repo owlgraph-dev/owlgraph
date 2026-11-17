@@ -3,19 +3,24 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { flushSync } from 'svelte';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import EditorHeader from './EditorHeader.svelte';
 
 // The head row every node editor draws, its tags handed back as an editor's
-// mirror hands them: at once. Unbound, its open flags are its own.
+// mirror hands them: at once. Unbound, its open flags are its own. The props
+// are a reactive object the test changes one at a time (`set`), as a parent
+// passes them: `rerender` hands in a new object, which every prop reads as
+// changed.
 
 type Props = Parameters<typeof EditorHeader>[1];
 
-function header(props: Partial<Props> = {}) {
+async function header(overrides: Partial<Props> = {}) {
   const sent: string[][] = [];
-  const view = render(EditorHeader, {
+  const set = (next: Partial<Props>) => flushSync(() => void Object.assign(props, next));
+  const props: Props = $state({
     title: 'Plans',
     slug: 'plans',
     namespaceSlug: null,
@@ -29,11 +34,12 @@ function header(props: Partial<Props> = {}) {
     onRequestDelete: () => {},
     onSetTags: (next: string[]) => {
       sent.push(next);
-      void view.rerender({ tags: next });
+      props.tags = next;
     },
-    ...props,
+    ...overrides,
   });
-  return { sent, view };
+  await render(EditorHeader, props);
+  return { sent, set };
 }
 
 afterEach(() => {
@@ -43,7 +49,7 @@ afterEach(() => {
 describe("a node editor's head row", () => {
   it('adds a tag once whatever its case, removes one, and sends the whole list each time', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
-    const { sent } = header();
+    const { sent } = await header();
     await screen.getByRole('button', { name: 'Tags' }).click();
     const add = screen.getByPlaceholder('Add a tag…');
     await expect.element(add).toBeVisible();
@@ -64,16 +70,16 @@ describe("a node editor's head row", () => {
 
   it('draws the block settings toggle only for an editor that has the panel', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
-    const { view } = header();
+    const { set } = await header();
     await expect.element(screen.getByRole('button', { name: 'Toggle block settings' })).toBeVisible();
-    await view.rerender({ blockSettingsOpen: undefined });
+    set({ blockSettingsOpen: undefined });
     await expect.element(screen.getByRole('button', { name: 'Toggle block settings' })).not.toBeInTheDocument();
   });
 
   it('shows a refused rename under the row, the field kept open on what was typed', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     const onRename = vi.fn(async () => ({ ok: false, error: 'That title is taken' }));
-    header({ onRename });
+    await header({ onRename });
 
     await screen.getByRole('button', { name: 'Plans', exact: true }).click();
     const field = screen.getByRole('textbox', { name: 'Page title' });

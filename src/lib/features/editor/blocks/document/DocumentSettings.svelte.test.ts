@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import { embedKindFor } from '$lib/features/content';
 import DocumentSettings from './DocumentSettings.svelte';
@@ -18,7 +18,7 @@ const NAMESPACE = { id: 'ns-default', name: 'Default', slug: null };
 // A block holds its document by a UUID (documentConfig).
 const MADE = 'd0000000-0000-4000-8000-000000000001';
 
-function panel() {
+async function panel() {
   const updates: Record<string, unknown>[] = [];
   const actions: BlockSettingsActions = {
     overlayOpenChange: vi.fn(),
@@ -37,7 +37,7 @@ function panel() {
   });
   // `target` is a mount option's name too: the props go under `props`, beside the element to mount into.
   const mountEl = document.body.appendChild(document.createElement('div'));
-  const view = render(DocumentSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
+  const view = await render(DocumentSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
   return { updates };
 }
 
@@ -65,7 +65,7 @@ describe('the document block', () => {
           },
         });
     });
-    const { updates } = panel();
+    const { updates } = await panel();
 
     await screen.getByRole('button', { name: 'Choose…' }).click();
     const picker = screen.getByRole('dialog', { name: 'Choose a document' });

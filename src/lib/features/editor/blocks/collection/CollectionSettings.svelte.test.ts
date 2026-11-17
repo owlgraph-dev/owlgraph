@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import { EMBED_KINDS, embedKindFor } from '$lib/features/content';
 import { pluginLabel } from '$lib/plugins';
@@ -22,7 +22,7 @@ const MADE = 'c0000000-0000-4000-8000-000000000003';
 const MIRRORED = 'c0000000-0000-4000-8000-000000000004';
 
 /** The panel for a collection block, its target following each update as the block settings panel's does. */
-function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
+async function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
   const updates: Record<string, unknown>[] = [];
   const overlay = vi.fn();
   const swapEmbed = vi.fn();
@@ -43,7 +43,7 @@ function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
   });
   // `target` is a mount option's name too: the props go under `props`, beside the element to mount into.
   const mountEl = document.body.appendChild(document.createElement('div'));
-  const view = render(CollectionSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
+  const view = await render(CollectionSettings, { target: mountEl, props: { target: target({ blockId: 'block-1', nodeId: null }), editor: null, actions } });
   return { updates, overlay, swapEmbed };
 }
 
@@ -74,13 +74,13 @@ describe('the collection block', () => {
       }
       if (call.url === `/api/collections/${SECOND}`) return embed(SECOND, title);
     });
-    const { updates } = panel();
+    const { updates } = await panel();
     const picker = await openPicker();
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), title);
     const make = picker.getByRole('option', { name: /^New collection “/ });
     await make.click();
-    await expect.element(picker.getByRole('alert')).toHaveTextContent('could not be made');
+    await expect.element(picker.getByRole('alert')).toMatchTextContent('could not be made');
     expect(updates).toEqual([]);
 
     await make.click();
@@ -101,7 +101,7 @@ describe('the collection block', () => {
       if (call.method === 'POST' && call.url === '/api/collections') return Response.json({ id: MADE, slug: 'made-in-the-picker', namespaceSlug: null }, { status: 201 });
       if (call.url === `/api/collections/${MADE}`) return embed(MADE, title);
     });
-    const { updates, overlay } = panel();
+    const { updates, overlay } = await panel();
     const picker = await openPicker();
     expect(overlay).toHaveBeenLastCalledWith(true);
 
@@ -109,8 +109,8 @@ describe('the collection block', () => {
     // One type, so one row — named for the page's namespace.
     const make = picker.getByRole('option', { name: /^New / });
     await vi.waitFor(() => expect(make.elements()).toHaveLength(1));
-    await expect.element(make).toHaveTextContent(`New collection “${title}”`);
-    await expect.element(make).toHaveTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(make).toMatchTextContent(`New collection “${title}”`);
+    await expect.element(make).toMatchTextContent(`in ${NAMESPACE.name}`);
     expect(new URL(calls.find((c) => c.url.startsWith('/api/node-search'))!.url, 'http://localhost').searchParams.get('types')).toBe('collection');
     await make.click();
 
@@ -133,12 +133,12 @@ describe('a plugin’s collections in the collection block’s picker', () => {
     const label = pluginLabel(source);
     const mirrored = { type: 'collection', id: MIRRORED, title: 'Ablage', slug: 'ablage', href: '/ablage', namespace: NAMESPACE.name, plugin: source, pluginLabel: label };
     stubFetch((call) => (call.url.startsWith('/api/node-search') ? Response.json({ results: [mirrored], more: false, exact: ['collection'] }) : undefined));
-    const { updates, swapEmbed } = panel(new Set());
+    const { updates, swapEmbed } = await panel(new Set());
     const picker = await openPicker();
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), 'Ablage');
     const option = picker.getByRole('option', { name: /^Ablage/ });
-    await expect.element(option).toHaveTextContent(`${label} is turned off`);
+    await expect.element(option).toMatchTextContent(`${label} is turned off`);
     await expect.element(option).toHaveAttribute('aria-disabled', 'true');
     await option.click({ force: true });
     await expect.element(picker).toBeVisible();

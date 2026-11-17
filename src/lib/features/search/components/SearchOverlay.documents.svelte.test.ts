@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { HL_START, HL_STOP } from '../searchSnippet';
 import { searchOverlayOpen } from '../searchOverlayStore';
 import SearchOverlay from './SearchOverlay.svelte';
@@ -35,7 +35,7 @@ afterEach(() => {
 describe('the search overlay', () => {
   it('lists a link document found by its metadata as a document, as it does an upload', async () => {
     const asked = api();
-    render(SearchOverlay);
+    await render(SearchOverlay);
     searchOverlayOpen.set(true);
     const dialog = screen.getByRole('dialog', { name: 'Search' });
     await expect.element(dialog).toBeVisible();
@@ -52,8 +52,8 @@ describe('the search overlay', () => {
       [upload, 'survey, page one'],
       [link, 'Society annual census'],
     ] as const) {
-      await expect.element(row).toHaveTextContent(/^\s*document/);
-      await expect.element(row).toHaveTextContent(rest);
+      await expect.element(row).toMatchTextContent(/^\s*document/);
+      await expect.element(row).toMatchTextContent(rest);
       expect(row.element().querySelector('mark')?.textContent?.toLowerCase()).toBe('heron');
     }
 

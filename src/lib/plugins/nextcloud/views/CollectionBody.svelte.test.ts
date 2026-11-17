@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import { CollectionNodeView } from '$lib/features/collections/components';
 import type { CollectionMember } from '$lib/features/collections';
 import { PLUGIN_ROUTES } from '../blocks/routes';
@@ -89,7 +89,7 @@ afterEach(() => {
 describe("a Nextcloud collection's own page", () => {
   it('lets a writer make a document of a file, and counts it among the linked documents', async () => {
     const calls = api();
-    const view = render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: true });
+    const view = await render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: true });
     navigation.onInvalidate = () => view.rerender({ members: [linkedDocument] });
 
     await expect.element(screen.getByRole('tab', { name: 'Contents' })).toHaveAttribute('aria-selected', 'true');
@@ -111,13 +111,13 @@ describe("a Nextcloud collection's own page", () => {
     await linked.click();
     const rows = screen.getByRole('tabpanel').getByRole('listitem');
     await vi.waitFor(() => expect(rows.elements()).toHaveLength(1));
-    await expect.element(rows).toHaveTextContent('Bericht.pdf');
-    await expect.element(rows).toHaveTextContent('Document · Nextcloud');
+    await expect.element(rows).toMatchTextContent('Bericht.pdf');
+    await expect.element(rows).toMatchTextContent('Document · Nextcloud');
   });
 
   it('offers a reader who may not write no way to make a document', async () => {
     api();
-    render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: false });
+    await render(CollectionNodeView, { collection: COLLECTION, members: [], source, canWrite: false });
     const row = screen.getByRole('tabpanel').getByRole('listitem').filter({ hasText: 'Bericht.pdf' });
     await expect.element(row).toBeVisible();
     await expect.element(row.getByRole('button', { name: 'Create as document' })).not.toBeInTheDocument();

@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import PagePropertiesDialog from './PagePropertiesDialog.svelte';
 import type { NodeClassOption } from '../nodeClass';
 
@@ -28,7 +28,7 @@ describe('a classified page’s properties dialog', () => {
       await view.rerender({ nodeClassId: id, classDefinitions: id === WORK_PACKAGE.id ? CORE_FIELDS : [], classGroups: id === WORK_PACKAGE.id ? [CORE_GROUP] : [] });
       return { ok: true };
     });
-    const view = render(PagePropertiesDialog, {
+    const view = await render(PagePropertiesDialog, {
       open: true,
       manualProperties: [{ name: 'core:status', value: STATUS }],
       onSetManualProperties: vi.fn(),
@@ -50,7 +50,7 @@ describe('a classified page’s properties dialog', () => {
     await classSelect.selectOptions(WORK_PACKAGE.id);
     expect(onSetNodeClass).toHaveBeenCalledWith(WORK_PACKAGE.id);
     await expect.element(classSelect).toHaveValue(WORK_PACKAGE.id);
-    await expect.element(classFields).toHaveTextContent('Class fields (2)');
+    await expect.element(classFields).toMatchTextContent('Class fields (2)');
     await classFields.click();
     await expect.element(dialog.getByLabelText('Status', { exact: true })).toHaveValue(STATUS);
     await expect.element(dialog.getByLabelText('Priority', { exact: true })).toHaveValue('');

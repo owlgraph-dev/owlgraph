@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import DeletePageModal from './DeletePageModal.svelte';
 
 // The dialog alone; the delete itself and who may make it are the e2e test's
@@ -14,7 +14,7 @@ describe('the delete-page dialog', () => {
   it('closes on Cancel without confirming', async () => {
     const onConfirm = vi.fn();
     const onOpenChange = vi.fn();
-    const view = render(DeletePageModal, {
+    const view = await render(DeletePageModal, {
       open: true,
       isHomePage: false,
       busy: false,

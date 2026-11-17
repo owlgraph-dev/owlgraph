@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent, type Locator } from '@vitest/browser/context';
+import { page as screen, userEvent, type Locator } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import ClassesPage from './classes/+page.svelte';
 import PropertiesPage from './properties/+page.svelte';
@@ -83,7 +83,7 @@ describe('the class catalog', () => {
   const data = (classes: Row[]) => ({ classes, groups: [CORE, DOCUMENTS] }) as unknown as ClassesData;
 
   it('posts a new class’s key, English label, parent and property group to the save action, and its row’s Delete posts its id', async () => {
-    const view = render(ClassesPage, { data: data([ROOT, PAGE, DOCUMENT]), form: null });
+    const view = await render(ClassesPage, { data: data([ROOT, PAGE, DOCUMENT]), form: null });
     // The save reloads the catalogue: the class is listed under its parent.
     forms.applied = (result) => view.rerender({ data: data([ROOT, PAGE, WORK_PACKAGE, DOCUMENT]), form: result.type === 'success' ? { saved: true } : null });
 
@@ -106,8 +106,8 @@ describe('the class catalog', () => {
     await expect.element(dialog()).not.toBeInTheDocument();
 
     const row = rowOf('work-package');
-    await expect.element(row).toHaveTextContent('Work package');
-    await expect.element(row).toHaveTextContent('core');
+    await expect.element(row).toMatchTextContent('Work package');
+    await expect.element(row).toMatchTextContent('core');
     const remove = row.getByRole('button', { name: 'Delete' });
     await expect.element(remove).toBeEnabled();
     await remove.click();
@@ -122,12 +122,12 @@ describe('the properties catalog', () => {
   const STATUS: Row = { name: 'core:status', group_slug: 'core', label: { en: 'Status', de: 'Status' }, datatype: 'text', description: {} };
 
   it('keeps the modal open on a rejected save and shows the server’s error inside it', async () => {
-    const view = render(PropertiesPage, { data: { definitions: [STATUS], groups: [CORE, DOCUMENTS] } as unknown as PropertiesData, form: null });
+    const view = await render(PropertiesPage, { data: { definitions: [STATUS], groups: [CORE, DOCUMENTS] } as unknown as PropertiesData, form: null });
     const refusal = 'Invalid property name: not a valid name';
     forms.answer = () => ({ type: 'failure', status: 400, data: { error: { code: 'invalid_key', message: refusal } } });
     forms.applied = (result) => view.rerender({ form: result.type === 'failure' ? (result.data as { error: { code: string; message: string } }) : null });
 
-    await expect.element(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Properties');
+    await expect.element(screen.getByRole('heading', { level: 1 })).toMatchTextContent('Properties');
     await screen.getByRole('button', { name: 'Add property' }).click();
     await expect.element(dialog().getByRole('heading', { name: 'Add property' })).toBeVisible();
     await dialog().getByLabelText('Name', { exact: true }).fill('not a valid name');
@@ -140,7 +140,7 @@ describe('the properties catalog', () => {
     expect(lastPost().formData.get('groupSlug')).toBe('core');
     expect(lastPost().formData.get('label.en')).toBe('E2E label');
     await expect.element(dialog()).toBeVisible();
-    await expect.element(dialog().getByRole('alert')).toHaveTextContent(refusal);
+    await expect.element(dialog().getByRole('alert')).toMatchTextContent(refusal);
   });
 });
 
@@ -151,7 +151,7 @@ describe('the property groups catalog', () => {
 
   it('opens the modal empty to add and loaded to edit, the label in place before it is typed over, and posts the key and the label', async () => {
     let groups: Row[] = [CORE, DOCUMENTS];
-    const view = render(GroupsPage, { data: data(groups), form: null });
+    const view = await render(GroupsPage, { data: data(groups), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();
@@ -177,7 +177,7 @@ describe('the property groups catalog', () => {
     await expect.element(dialog()).not.toBeInTheDocument();
 
     const row = rowOf('e2egrp');
-    await expect.element(row).toHaveTextContent('E2E group');
+    await expect.element(row).toMatchTextContent('E2E group');
     await row.getByRole('button', { name: 'Edit' }).click();
     await expect.element(dialog().getByRole('heading', { name: 'Update group' })).toBeVisible();
     await expect.element(dialog().getByLabelText('Key', { exact: true })).toHaveValue('e2egrp');
@@ -190,7 +190,7 @@ describe('the property groups catalog', () => {
     expect(lastPost().formData.get('slug')).toBe('e2egrp');
     expect(lastPost().formData.get('label.en')).toBe('E2E group edited');
     await expect.element(dialog()).not.toBeInTheDocument();
-    await expect.element(row).toHaveTextContent('E2E group edited');
+    await expect.element(row).toMatchTextContent('E2E group edited');
 
     await row.getByRole('button', { name: 'Delete' }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(3));
@@ -200,7 +200,7 @@ describe('the property groups catalog', () => {
 
   it('marks the row missing a translation, narrows to such rows, matches a label in any language, and drops the mark once translated', async () => {
     let groups: Row[] = [DOCUMENTS, mine({ en: 'Labels English' })];
-    const view = render(GroupsPage, { data: data(groups), form: null });
+    const view = await render(GroupsPage, { data: data(groups), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();
@@ -210,9 +210,9 @@ describe('the property groups catalog', () => {
 
     const own = rowOf('e2egrp');
     const documents = screen.getByRole('row').filter({ has: screen.getByText('documents', { exact: true }) });
-    await expect.element(own).toHaveTextContent('Deutsch missing');
-    await expect.element(documents).toHaveTextContent('Documents');
-    await expect.element(documents).not.toHaveTextContent('missing');
+    await expect.element(own).toMatchTextContent('Deutsch missing');
+    await expect.element(documents).toMatchTextContent('Documents');
+    await expect.element(documents).not.toMatchTextContent('missing');
 
     // Missing translations only: the fully translated group goes.
     const filter = screen.getByRole('switch', { name: /Missing translations only/ });
@@ -256,7 +256,7 @@ describe('the property groups catalog', () => {
     expect(lastPost().formData.get('label.en')).toBe('Labels English');
     expect(lastPost().formData.get('label.de')).toBe('Labels Deutsch');
     await expect.element(dialog()).not.toBeInTheDocument();
-    await expect.element(own).not.toHaveTextContent('missing');
+    await expect.element(own).not.toMatchTextContent('missing');
   });
 });
 
@@ -272,7 +272,7 @@ describe('the relationship types catalog', () => {
   it('posts slug and label, locks the slug when editing, and its properties dialog commits a searched definition as a chip on Enter and posts it', async () => {
     let types: Row[] = [];
     let properties: Properties = {};
-    const view = render(RelationshipsPage, { data: data(types), form: null });
+    const view = await render(RelationshipsPage, { data: data(types), form: null });
     forms.applied = async (result) => {
       if (result.type !== 'success') return;
       const post = lastPost();
@@ -296,7 +296,7 @@ describe('the relationship types catalog', () => {
     await expect.element(dialog()).not.toBeInTheDocument();
 
     const row = rowOf('e2e-rel-x');
-    await expect.element(row).toHaveTextContent('E2E relates to');
+    await expect.element(row).toMatchTextContent('E2E relates to');
 
     // Editing keeps the slug locked (it is the key) but changes the label.
     await row.getByRole('button', { name: 'Edit' }).click();
@@ -310,7 +310,7 @@ describe('the relationship types catalog', () => {
     expect(lastPost().formData.get('slug')).toBe('e2e-rel-x');
     expect(lastPost().formData.get('label.en')).toBe('E2E relates to (edited)');
     await expect.element(dialog()).not.toBeInTheDocument();
-    await expect.element(row).toHaveTextContent('E2E relates to (edited)');
+    await expect.element(row).toMatchTextContent('E2E relates to (edited)');
 
     // The per-row properties dialog.
     await row.getByRole('button', { name: 'Manage properties' }).click();
@@ -325,7 +325,7 @@ describe('the relationship types catalog', () => {
     expect(lastPost().formData.get('slug')).toBe('e2e-rel-x');
     expect(lastPost().formData.getAll('propertyNames')).toEqual(['documents:author']);
     await expect.element(dialog()).not.toBeInTheDocument();
-    await expect.element(row).toHaveTextContent('Author');
+    await expect.element(row).toMatchTextContent('Author');
 
     await row.getByRole('button', { name: 'Delete' }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(4));

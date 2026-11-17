@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import UsersPage from './+page.svelte';
 import type { PageData } from './$types';
@@ -61,7 +61,7 @@ afterEach(() => {
 describe('the user accounts', () => {
   it('adds a user through the modal, edits its role, and deactivates and reactivates it', async () => {
     let users: Row[] = [ME];
-    const view = render(UsersPage, { data: data(users), form: null });
+    const view = await render(UsersPage, { data: data(users), form: null });
 
     // The server: a password under the policy is refused, everything else saved.
     forms.answer = ({ formData }) => {
@@ -99,8 +99,8 @@ describe('the user accounts', () => {
     await expect.element(dialog).not.toBeInTheDocument();
 
     const row = screen.getByRole('row').filter({ hasText: EMAIL });
-    await expect.element(row).toHaveTextContent(/viewer/);
-    await expect.element(row).toHaveTextContent(/Active/);
+    await expect.element(row).toMatchTextContent(/viewer/);
+    await expect.element(row).toMatchTextContent(/Active/);
 
     await row.getByRole('button', { name: 'Edit' }).click();
     await expect.element(dialog.getByRole('heading', { name: 'Edit user' })).toBeVisible();
@@ -113,18 +113,18 @@ describe('the user accounts', () => {
     expect(lastPost().formData.get('id')).toBe('u-new');
     expect(lastPost().formData.get('role')).toBe('editor');
     await expect.element(dialog).not.toBeInTheDocument();
-    await expect.element(row).toHaveTextContent(/editor/);
+    await expect.element(row).toMatchTextContent(/editor/);
 
     await row.getByRole('button', { name: 'deactivate' }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(4));
     expect(lastPost().action).toBe('?/setActive');
     expect(Object.fromEntries(lastPost().formData)).toEqual({ id: 'u-new', active: 'false' });
-    await expect.element(row).toHaveTextContent(/Inactive/);
+    await expect.element(row).toMatchTextContent(/Inactive/);
 
     await row.getByRole('button', { name: 'activate', exact: true }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(5));
     expect(Object.fromEntries(lastPost().formData)).toEqual({ id: 'u-new', active: 'true' });
-    await expect.element(row).not.toHaveTextContent(/Inactive/);
-    await expect.element(row).toHaveTextContent(/Active/);
+    await expect.element(row).not.toMatchTextContent(/Inactive/);
+    await expect.element(row).toMatchTextContent(/Active/);
   });
 });

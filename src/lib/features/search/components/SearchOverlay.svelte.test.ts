@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { get } from 'svelte/store';
 import { searchOverlayOpen } from '../searchOverlayStore';
 import SearchOverlay from './SearchOverlay.svelte';
@@ -45,7 +45,7 @@ afterEach(() => {
 describe('the search overlay’s results', () => {
   it('closes the overlay and goes to a result’s address when it is clicked', async () => {
     const asked = api();
-    render(SearchOverlay);
+    await render(SearchOverlay);
     searchOverlayOpen.set(true);
     const dialog = screen.getByRole('dialog', { name: 'Search' });
     await expect.element(dialog).toBeVisible();

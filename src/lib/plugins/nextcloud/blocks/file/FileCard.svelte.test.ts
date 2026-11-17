@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import FileCard from './FileCard.svelte';
 import { documentEditing } from './documents';
 import { fileTexts } from './texts';
@@ -38,7 +38,7 @@ function documentView(id: string, extra: Partial<DocumentView> = {}): DocumentVi
   };
 }
 
-function inEditor(documentId: string) {
+async function inEditor(documentId: string) {
   return render(
     FileCard,
     fileProps({ documentId }, { mode: 'editor', initial: undefined, texts: fileTexts(true), locale: 'en', ruleId: '', editing: documentEditing(documentId) })
@@ -58,14 +58,14 @@ describe('the Nextcloud file block in the editor', () => {
     const calls = stubFetch((call) =>
       isCheck(call, id) ? Response.json({ document: documentView(id, revoked ? { status: 'revoked' } : {}) }) : undefined
     );
-    inEditor(id);
+    await inEditor(id);
 
     // The editor checks the file as it opens.
     const problem = screen.getByRole('status').filter({ hasText: 'Share revoked' });
     await expect.element(problem).toBeVisible();
-    await expect.element(problem).toHaveTextContent('Bericht.pdf');
-    await expect.element(problem).toHaveTextContent('file id 401');
-    await expect.element(problem).toHaveTextContent('the node stays');
+    await expect.element(problem).toMatchTextContent('Bericht.pdf');
+    await expect.element(problem).toMatchTextContent('file id 401');
+    await expect.element(problem).toMatchTextContent('the node stays');
     await expect.element(problem.getByRole('button', { name: 'Choose another file' })).toBeVisible();
     expect(calls.filter((c) => isCheck(c, id))).toHaveLength(1);
 
@@ -87,12 +87,12 @@ describe('the Nextcloud file block in the editor', () => {
     // As the plugin answers while turned off (documents.server.ts).
     const off = documentView(id, { title: 'Quartalsbericht', content: null, file: null, path: null, fileid: null, modified: null, status: 'disabled', checkedAt: null, seenAt: null, collectionId: null, location: null });
     stubFetch((call) => (isCheck(call, id) ? Response.json({ document: off, problem: 'disabled' }) : undefined));
-    inEditor(id);
+    await inEditor(id);
 
     const problem = screen.getByRole('status').filter({ hasText: 'Integration turned off' });
     await expect.element(problem).toBeVisible();
-    await expect.element(problem).toHaveTextContent('Quartalsbericht');
-    await expect.element(problem).toHaveTextContent('the node stays');
+    await expect.element(problem).toMatchTextContent('Quartalsbericht');
+    await expect.element(problem).toMatchTextContent('the node stays');
     await expect.element(problem.getByRole('button', { name: 'Check again' })).toBeVisible();
     await expect.element(problem.getByRole('button', { name: 'Choose another file' })).not.toBeInTheDocument();
     const block = document.querySelector('.de');
@@ -125,7 +125,7 @@ describe('the Nextcloud file block in the editor', () => {
       if (call.url.startsWith(`${PLUGIN_ROUTES}/listing?`)) return Response.json(listing(new URL(call.url, 'http://localhost').searchParams.get('p') ?? ''));
       if (call.method === 'PATCH' && call.url === `${PLUGIN_ROUTES}/documents/${id}`) return Response.json({ document: rebound });
     });
-    inEditor(id);
+    await inEditor(id);
 
     const problem = screen.getByRole('status').filter({ hasText: 'File not found in Nextcloud' });
     await expect.element(problem).toBeVisible();

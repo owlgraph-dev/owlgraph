@@ -300,10 +300,16 @@ proxy (`ADDRESS_HEADER`, set before the server is imported) is the request's
 ### Component tests
 
 A `*.svelte.test.ts` file renders one component in Chromium through Vitest's
-browser mode (the `component` project) with `vitest-browser-svelte`, and
-drives it with `@vitest/browser/context` (`page`, `userEvent`). They are not
-part of the gate: a change to a component runs its tests
-([Running tests](#running-tests)).
+browser mode (the `component` project) with `vitest-browser-svelte`, whose
+`render` is awaited, and drives it with `vitest/browser` (`page`,
+`userEvent`). They are not part of the gate: a change to a component runs its
+tests ([Running tests](#running-tests)).
+
+- **Text matches part of an element's:** a locator's text or name
+  (`getByText`, `getByRole`'s `name`) matches a part unless the test passes
+  `exact: true` (the project sets `locators.exact: false`), and
+  `toMatchTextContent` asserts on a part or a regex, `toHaveTextContent` on the
+  whole text.
 
 - **No SvelteKit.** `$app/state`, `$app/stores`, `$app/navigation`,
   `$app/environment` and `$app/forms` are stand-ins (`tests/component/app/`).

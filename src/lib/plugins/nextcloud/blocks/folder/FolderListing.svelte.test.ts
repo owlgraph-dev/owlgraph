@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import FolderListing from './FolderListing.svelte';
 import { editingFor } from './editing';
 import { folderTexts } from './texts';
@@ -62,7 +62,7 @@ function api(answer: (call: Call) => Response | undefined) {
 
 const listings = (calls: Call[]) => calls.filter((c) => c.url.startsWith(`${PLUGIN_ROUTES}/listing?`));
 
-function inEditor(attrs: Record<string, unknown> = {}) {
+async function inEditor(attrs: Record<string, unknown> = {}) {
   const collectionId = (attrs.collectionId as string | undefined) ?? COLLECTION;
   return render(
     FolderListing,
@@ -86,11 +86,11 @@ describe('the Nextcloud folder block in the editor', () => {
   ] as const) {
     it(`tells the editor why the share fails: ${said}`, async () => {
       const { calls } = api((call) => (call.url.startsWith(`${PLUGIN_ROUTES}/listing?`) ? Response.json(view({ state: 'unavailable', reason, via: null })) : undefined));
-      inEditor();
+      await inEditor();
 
       const placeholder = screen.getByRole('status').filter({ hasText: said });
       await expect.element(placeholder).toBeVisible();
-      await expect.element(placeholder).toHaveTextContent('5 entries,');
+      await expect.element(placeholder).toMatchTextContent('5 entries,');
       const repair = placeholder.getByRole('link', { name: 'Reconnect the share' });
       await expect.element(repair).toHaveAttribute('href', `${COLLECTION_HREF}/edit`);
       await expect.element(repair).toHaveAttribute('target', '_blank');
@@ -101,7 +101,7 @@ describe('the Nextcloud folder block in the editor', () => {
 
   it('tells the editor, under a listing it still holds, that the server cannot be reached now', async () => {
     api((call) => (call.url.startsWith(`${PLUGIN_ROUTES}/listing?`) ? Response.json({ ...READY, state: 'stale', reason: 'unreachable' }) : undefined));
-    const block = inEditor().container.querySelector('.el')!;
+    const block = (await inEditor()).container.querySelector('.el')!;
 
     await expect.element(screen.getByText('Bericht.pdf')).toBeVisible();
     await vi.waitFor(() => expect(block.querySelector('.el-provenance')?.textContent).toContain('not current · Not reachable'));
@@ -110,7 +110,7 @@ describe('the Nextcloud folder block in the editor', () => {
 
   it("says 'Path not found' for a start folder that is gone, with the way to reconnect the share", async () => {
     const { calls } = api((call) => (call.url.startsWith(`${PLUGIN_ROUTES}/listing?`) ? Response.json(view({ state: 'unavailable', reason: 'notFound', via: null, path: 'Weg' })) : undefined));
-    inEditor({ startPath: 'Weg' });
+    await inEditor({ startPath: 'Weg' });
 
     const placeholder = screen.getByRole('status').filter({ hasText: 'Path not found' });
     await expect.element(placeholder).toBeVisible();
@@ -124,7 +124,7 @@ describe('the Nextcloud folder block in the editor', () => {
       if (call.url.startsWith(`${PLUGIN_ROUTES}/listing?`)) return Response.json(READY);
       if (call.method === 'POST' && call.url === `${PLUGIN_ROUTES}/documents`) return Response.json({ document: { ...made, title: 'Notizen.txt' } }, { status: 201 });
     });
-    inEditor();
+    await inEditor();
 
     const row = screen.getByRole('listitem').filter({ hasText: 'Notizen.txt' });
     const create = row.getByRole('button', { name: 'Create as document' });
@@ -150,7 +150,7 @@ describe('a folder read from each viewer’s own files', () => {
     // The server's render already holds the refusal.
     const refused = view({ state: 'unavailable', via: null, access: 'renew', connectHref, collection: { title: 'Mein Ordner', href: '/mein-ordner', count: null, checkedAt: null, own: true } });
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] });
-    render(
+    await render(
       FolderListing,
       folderProps(
         { collectionId: COLLECTION, startPath: '' },
@@ -162,7 +162,7 @@ describe('a folder read from each viewer’s own files', () => {
 
     const placeholder = screen.getByRole('status').filter({ hasText: 'Nextcloud no longer accepts your connection' });
     await expect.element(placeholder).toBeVisible();
-    await expect.element(placeholder).toHaveTextContent('Connect again to see this folder.');
+    await expect.element(placeholder).toMatchTextContent('Connect again to see this folder.');
     const again = placeholder.getByRole('link', { name: 'Connect again' });
     await expect.element(again).toHaveAttribute('href', connectHref);
     // A full load, under the connections page's own CSP.
@@ -177,7 +177,7 @@ describe('a folder read from each viewer’s own files', () => {
         ? Response.json(view({ state: 'unavailable', via: null, access: 'renew', connectHref, collection: { title: 'Mein Ordner', href: '/mein-ordner', count: null, checkedAt: null, own: true } }))
         : undefined
     );
-    render(
+    await render(
       FolderListing,
       folderProps(
         { collectionId: COLLECTION, startPath: '' },

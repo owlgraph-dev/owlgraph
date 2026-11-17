@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import CreateModal from './CreateModal.svelte';
 
@@ -27,9 +27,9 @@ function api(answer: () => Response) {
   return calls;
 }
 
-function createDialog() {
+async function createDialog() {
   const onOpenChange = vi.fn();
-  const view = render(CreateModal, {
+  const view = await render(CreateModal, {
     open: true,
     onOpenChange: (open: boolean) => {
       onOpenChange(open);
@@ -47,7 +47,7 @@ afterEach(() => {
 describe('the Create dialog’s document upload', () => {
   it('asks for a file when Upload is pressed without one, sends nothing and stays open', async () => {
     const calls = api(() => Response.json({ id: 'doc-1', slug: 'doc-1' }));
-    const { dialog, onOpenChange } = createDialog();
+    const { dialog, onOpenChange } = await createDialog();
 
     await dialog.getByRole('button', { name: 'Document' }).click();
     await expect.element(dialog.getByRole('heading', { name: 'Add a document' })).toBeVisible();
@@ -61,7 +61,7 @@ describe('the Create dialog’s document upload', () => {
 
   it('shows the error the upload’s answer carries (a 415 for an unsupported type) and stays open', async () => {
     const calls = api(() => Response.json({ error: { code: 'unsupported_file_type', message: "Files of type image/png can't be uploaded here.", type: 'image/png' } }, { status: 415 }));
-    const { dialog, onOpenChange } = createDialog();
+    const { dialog, onOpenChange } = await createDialog();
 
     await dialog.getByRole('button', { name: 'Document' }).click();
     await userEvent.upload(dialog.getByLabelText('File (PDF, .txt, .md)'), new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], 'image.png', { type: 'image/png' }));
@@ -79,7 +79,7 @@ describe('the Create dialog’s document upload', () => {
 describe('closing the Create dialog', () => {
   it('closes on Escape, and reopened it starts again at the grid of cards', async () => {
     api(() => Response.json({ id: 'doc-1', slug: 'doc-1' }));
-    const { dialog, onOpenChange, rerender } = createDialog();
+    const { dialog, onOpenChange, rerender } = await createDialog();
 
     await dialog.getByRole('button', { name: 'Document' }).click();
     await expect.element(dialog.getByRole('heading', { name: 'Add a document' })).toBeVisible();

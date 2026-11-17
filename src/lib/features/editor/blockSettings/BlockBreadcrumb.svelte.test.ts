@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import BlockBreadcrumb from './BlockBreadcrumb.svelte';
 import type { SelectionChainEntry } from '$lib/features/content/editor';
 
@@ -16,9 +16,9 @@ const entry = (type: string, pos: number): SelectionChainEntry => ({ type, id: n
 // Page › Container › Cell › Paragraph.
 const CHAIN = [entry('page', -1), entry('grid', 0), entry('gridCell', 1), entry('paragraph', 2)];
 
-function breadcrumb() {
+async function breadcrumb() {
   const onSelect = vi.fn();
-  const view = render(BlockBreadcrumb, {
+  const view = await render(BlockBreadcrumb, {
     chain: CHAIN,
     selectedIndex: CHAIN.length - 1,
     onSelect: (i: number) => {
@@ -31,7 +31,7 @@ function breadcrumb() {
 
 describe('the block breadcrumb', () => {
   it('collapses deep ancestry into a More levels menu that still selects any ancestor, and ↑ stops at the page', async () => {
-    const { onSelect, nav } = breadcrumb();
+    const { onSelect, nav } = await breadcrumb();
 
     await expect.element(nav.getByRole('button', { name: 'Paragraph', exact: true })).toHaveAttribute('aria-current', 'true');
     await expect.element(nav.getByRole('button', { name: 'Cell', exact: true })).toBeVisible();

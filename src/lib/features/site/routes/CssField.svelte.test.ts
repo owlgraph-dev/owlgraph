@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import CssField from './CssField.svelte';
 import { contentTokens } from '../customStyles/contentTokens';
 
@@ -13,7 +13,7 @@ import { contentTokens } from '../customStyles/contentTokens';
 
 describe('the CSS field’s token picker', () => {
   it('finds a token by its family and inserts it at the caret', async () => {
-    render(CssField, { tokens: contentTokens(), id: 'free-css', name: 'css', ariaLabel: 'Free CSS' });
+    await render(CssField, { tokens: contentTokens(), id: 'free-css', name: 'css', ariaLabel: 'Free CSS' });
     const css = screen.getByRole('textbox', { name: 'Free CSS' });
 
     await userEvent.fill(css, '.lead { color:  }');

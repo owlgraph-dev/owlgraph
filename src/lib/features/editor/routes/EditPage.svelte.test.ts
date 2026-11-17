@@ -4,7 +4,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import EditPage from './EditPage.svelte';
 import type { EditPageData } from './edit.server';
@@ -87,7 +87,7 @@ describe('a document in its editor', () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     const address = 'https://cloud.example.org/s/abc';
     const calls = stubFetch((call) => (call.method === 'PUT' && call.url === `/api/documents/${DOC_ID}/content` ? Response.json({ externalUrl: address }) : undefined));
-    const view = render(EditPage, { data: documentData() });
+    const view = await render(EditPage, { data: documentData() });
     await expect.element(screen.getByText('Minutes.txt', { exact: false })).toBeVisible();
 
     await screen.getByRole('radio', { name: 'Link', exact: true }).click();
@@ -119,7 +119,7 @@ describe('a document in its editor', () => {
   it('offers a language detected in the upload as a suggestion, and taking it sends it', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     const calls = stubFetch((call) => (call.method === 'PATCH' && call.url === `/api/documents/${DOC_ID}` ? Response.json({ ok: true }) : undefined));
-    const view = render(EditPage, { data: documentData({ locale: 'en', localeSuggestion: 'de' }, { detected_locale: 'de' }) });
+    const view = await render(EditPage, { data: documentData({ locale: 'en', localeSuggestion: 'de' }, { detected_locale: 'de' }) });
 
     const offer = screen.getByRole('status').filter({ hasText: 'Detected: German' });
     await expect.element(offer).toBeVisible();
@@ -141,7 +141,7 @@ describe('a document in its editor', () => {
   it("shows a restricted document's access control reading Restricted, the header's access panel opening on it", async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     stubFetch(() => undefined);
-    render(EditPage, {
+    await render(EditPage, {
       data: documentData(
         { visibility: 'restricted', shares: ['u-bea'], users: [{ id: 'u-bea', name: 'Bea Reader', email: 'bea@example.org' }] },
         { visibility: 'restricted' }
@@ -151,7 +151,7 @@ describe('a document in its editor', () => {
     await screen.getByRole('button', { name: 'Access control' }).click();
     const panel = screen.getByRole('dialog', { name: 'Access control' });
     await expect.element(panel).toBeVisible();
-    await expect.element(panel.getByRole('combobox', { name: 'Who can view this page' })).toHaveTextContent('Restricted — only selected users');
+    await expect.element(panel.getByRole('combobox', { name: 'Who can view this page' })).toMatchTextContent('Restricted — only selected users');
     await expect.element(panel.getByText('You (the owner) and admins always have access.', { exact: false })).toBeVisible();
     await expect.element(panel.getByRole('checkbox', { name: /Bea Reader/ })).toBeChecked();
   });
@@ -264,7 +264,7 @@ describe('opening a page in its editor', () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     let grant: (res: Response) => void = () => {};
     const calls = server((c) => (isLock(c, 'POST') ? new Promise<Response>((resolve) => (grant = resolve)) : undefined));
-    render(EditPage, { data: pageData() });
+    await render(EditPage, { data: pageData() });
 
     await expect.element(screen.getByText('Opening editor…')).toBeVisible();
     await vi.waitFor(() => expect(requests(calls, LOCK)).toEqual([{ method: 'POST', url: LOCK, body: {} }]));
@@ -278,7 +278,7 @@ describe('opening a page in its editor', () => {
   it('names who holds the page, and an editor is offered no takeover', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     server((c) => (isLock(c, 'POST') ? heldBy('Ada Admin') : undefined));
-    render(EditPage, { data: pageData('editor') });
+    await render(EditPage, { data: pageData('editor') });
 
     await expect.element(screen.getByRole('heading', { name: 'Page is being edited' })).toBeVisible();
     await expect.element(screen.getByText('Ada Admin currently has this page open for editing.')).toBeVisible();
@@ -292,7 +292,7 @@ describe('opening a page in its editor', () => {
     const calls = server((c) => (isLock(c, 'POST') ? ((c.body as { force?: boolean }).force ? granted('tok-forced') : heldBy('Ada Admin')) : undefined));
     const confirm = vi.fn(() => false);
     vi.stubGlobal('confirm', confirm);
-    render(EditPage, { data: pageData('admin') });
+    await render(EditPage, { data: pageData('admin') });
 
     const takeOver = screen.getByRole('button', { name: 'Take over' });
     await expect.element(takeOver).toBeVisible();
@@ -313,7 +313,7 @@ describe('opening a page in its editor', () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
     let free = false;
     const calls = server((c) => (isLock(c, 'POST') ? (free ? granted() : heldBy('Ada Admin', true)) : undefined));
-    render(EditPage, { data: pageData('admin') });
+    await render(EditPage, { data: pageData('admin') });
 
     await expect.element(screen.getByText('Their session looks inactive, so you should be able to take over shortly.', { exact: false })).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Take over' })).not.toBeInTheDocument();
@@ -336,7 +336,7 @@ describe('opening a page in its editor', () => {
       if (isLock(c, 'GET')) return lockStatus(held);
       return undefined;
     });
-    render(EditPage, { data: pageData() });
+    await render(EditPage, { data: pageData() });
 
     await expect.element(screen.getByText('Ada Admin currently has this page open for editing.')).toBeVisible();
     expect(requests(calls, LOCK).filter((c) => c.method === 'GET')).toEqual([]);
@@ -367,7 +367,7 @@ describe('editing with the lock', () => {
       if (c.method === 'PUT' && c.url === `/api/pages/${PAGE_ID}`) return Response.json({ ok: true });
       return undefined;
     });
-    render(EditPage, { data: pageData() });
+    await render(EditPage, { data: pageData() });
     await expect.element(toolbar()).toBeVisible();
 
     await toolbar().getByRole('button', { name: 'Save', exact: true }).click();
@@ -381,7 +381,7 @@ describe('editing with the lock', () => {
   it('gives the lock back when the editor closes', async () => {
     page.data = { user: { id: 'u-editor', role: 'editor' } };
     const calls = server((c) => (isLock(c, 'POST') ? granted('tok-9') : undefined));
-    const view = render(EditPage, { data: pageData() });
+    const view = await render(EditPage, { data: pageData() });
     await expect.element(toolbar()).toBeVisible();
 
     view.unmount();
@@ -401,7 +401,7 @@ describe('editing with the lock', () => {
       if (c.method === 'POST' && c.url === `/api/pages/${PAGE_ID}/versions`) return Response.json({ versionId: 'v-draft', currentDoc: DOC });
       return undefined;
     });
-    render(EditPage, { data: pageData() });
+    await render(EditPage, { data: pageData() });
     await expect.element(toolbar()).toBeVisible();
 
     await vi.advanceTimersByTimeAsync(20_000);
@@ -431,7 +431,7 @@ describe('editing with the lock', () => {
       if (c.method === 'POST' && c.url === `${LOCK}/heartbeat`) return heldBy('Ada Admin');
       return undefined;
     });
-    render(EditPage, { data: pageData() });
+    await render(EditPage, { data: pageData() });
     await expect.element(toolbar()).toBeVisible();
 
     await vi.advanceTimersByTimeAsync(20_000);

@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import TreeBrowser from './TreeBrowser.svelte';
 import { PLUGIN_ROUTES } from './routes';
 import type { TreeSource } from './tree';
@@ -30,8 +30,8 @@ function turnedOff() {
   );
 }
 
-const browser = (source: TreeSource) =>
-  render(TreeBrowser, { open: true, source, select: 'folder', title: 'Choose a folder', description: 'Where to start.', chooseLabel: 'Choose', onOpenChange: vi.fn(), onChoose: vi.fn() });
+const browser = async (source: TreeSource) =>
+  await render(TreeBrowser, { open: true, source, select: 'folder', title: 'Choose a folder', description: 'Where to start.', chooseLabel: 'Choose', onOpenChange: vi.fn(), onChoose: vi.fn() });
 
 describe('the tree browser while the plugin is turned off', () => {
   it.each([
@@ -39,7 +39,7 @@ describe('the tree browser while the plugin is turned off', () => {
     ['the plugin’s collections', { kind: 'collection', collectionId: null } as const],
   ])('says so at once over %s, and nothing can be chosen', async (_, source) => {
     turnedOff();
-    browser(source);
+    await browser(source);
 
     const dialog = screen.getByRole('dialog', { name: 'Choose a folder' });
     await expect.element(dialog.getByText('The Nextcloud integration is turned off.')).toBeVisible();

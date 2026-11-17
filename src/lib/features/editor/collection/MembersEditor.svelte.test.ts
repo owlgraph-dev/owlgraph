@@ -4,7 +4,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen, userEvent } from '@vitest/browser/context';
+import { page as screen, userEvent } from 'vitest/browser';
 import { page } from '$app/state';
 import type { CollectionMember } from '$lib/features/collections';
 import type { NodeSearchResult } from '$lib/features/search';
@@ -29,8 +29,8 @@ function node(id: string, title: string, type: NodeSearchResult['type'] = 'colle
 const membersAnswer = (members: CollectionMember[], basis = 'b2') => Response.json({ members, basis, existed: false });
 const searchParams = (call: Call) => new URL(call.url, 'http://localhost').searchParams;
 
-function editor(members: CollectionMember[]) {
-  render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', namespace: NAMESPACE });
+async function editor(members: CollectionMember[]) {
+  await render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', namespace: NAMESPACE });
   return screen.getByRole('region', { name: 'Contents' });
 }
 
@@ -56,7 +56,7 @@ describe('a curated collection in its editor', () => {
       if (call.method === 'DELETE' && call.url === `/api/collections/${COLLECTION}/members/p-b`)
         return membersAnswer([{ ...a, label: 'Chapter one', labelText: { en: 'Chapter one' } }]);
     });
-    const section = editor([a, b]);
+    const section = await editor([a, b]);
 
     await section.getByRole('button', { name: 'Actions for Alpha page' }).click();
     await screen.getByRole('menuitem', { name: 'Label…' }).click();
@@ -85,7 +85,7 @@ describe("the members editor's picker", () => {
       const offset = Number(searchParams(call).get('offset') ?? 0);
       return offset === 0 ? Response.json({ results: all.slice(0, 12), more: true, exact: [] }) : Response.json({ results: all.slice(12), more: false, exact: [] });
     });
-    editor([]);
+    await editor([]);
     const { picker, field } = await openPicker();
 
     await expect.element(field).toHaveFocus();
@@ -141,22 +141,22 @@ describe("the members editor's picker", () => {
         return membersAnswer(members);
       }
     });
-    const section = editor([]);
+    const section = await editor([]);
     const { picker, field } = await openPicker();
     const newRows = picker.getByRole('option', { name: /^New / });
 
     // A page with this exact title exists, so no new page is offered.
     await userEvent.type(field, token);
-    await expect.element(picker.getByRole('option').first()).toHaveTextContent(token);
+    await expect.element(picker.getByRole('option').first()).toMatchTextContent(token);
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(2));
     await expect.element(picker.getByRole('option', { name: new RegExp(`^New collection “${token}”`) })).toBeVisible();
-    await expect.element(picker.getByRole('option', { name: /^New document/ })).toHaveTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(picker.getByRole('option', { name: /^New document/ })).toMatchTextContent(`in ${NAMESPACE.name}`);
     expect(picker.getByRole('option', { name: /^New page/ }).elements()).toHaveLength(0);
     await picker.getByRole('radio', { name: 'Pages' }).click();
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(0));
     await picker.getByRole('radio', { name: 'Collections' }).click();
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(1));
-    await expect.element(newRows).toHaveTextContent(`New collection “${token}”`);
+    await expect.element(newRows).toMatchTextContent(`New collection “${token}”`);
     await picker.getByRole('radio', { name: 'All' }).click();
 
     await userEvent.fill(field, fresh);

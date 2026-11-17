@@ -4,7 +4,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { page as screen } from '@vitest/browser/context';
+import { page as screen } from 'vitest/browser';
 import type { ActionResult, SubmitFunction } from '@sveltejs/kit';
 import TypographyTokenCard from './TypographyTokenCard.svelte';
 
@@ -35,9 +35,9 @@ const LEGACY = { id: 'tok-1', name: 'Legacy px', family: null, size: 44, weight:
 
 describe('a typography token card', () => {
   it('shows a px size as the literal it is, and a save of the untouched card posts it back', async () => {
-    render(TypographyTokenCard, { token: LEGACY, customFonts: [] });
+    await render(TypographyTokenCard, { token: LEGACY, customFonts: [] });
 
-    await expect.element(screen.getByRole('combobox', { name: 'Size' })).toHaveTextContent('44px (custom)');
+    await expect.element(screen.getByRole('combobox', { name: 'Size' })).toMatchTextContent('44px (custom)');
 
     await screen.getByRole('button', { name: 'save', exact: true }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(1));
