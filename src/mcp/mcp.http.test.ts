@@ -49,7 +49,7 @@ describe('the request body', () => {
   const post = (body: string) =>
     fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'x-forwarded-for': '10.4.0.1', authorization: `Bearer ${seed.tokens.editorA}` },
+      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'x-forwarded-for': '10.5.0.1', authorization: `Bearer ${seed.tokens.editorA}` },
       body,
     });
 
