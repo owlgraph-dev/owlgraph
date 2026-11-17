@@ -9,7 +9,8 @@
 //
 // From package-lock.json, not node_modules, so every machine writes the same:
 // what npm installs differs by platform. A platform-specific binary is named
-// with its licence and no text, since only its own platform installs it.
+// with its licence and no text, since only its own platform installs it; so
+// is a package only such binaries depend on, which npm installs with them.
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -35,14 +36,45 @@ function licenseOf(entry, dir) {
   return value || 'UNKNOWN';
 }
 
+/** The lockfile path `name` resolves to from the package at `from`, as Node looks it up. */
+function resolve(from, name) {
+  for (let dir = from; ; dir = dir.includes('/node_modules/') ? dir.slice(0, dir.lastIndexOf('/node_modules/')) : '') {
+    const path = `${dir && `${dir}/`}node_modules/${name}`;
+    if (lock.packages[path]) return path;
+    if (!dir) return null;
+  }
+}
+
+// Who depends on each lockfile path, the root project included.
+const dependents = new Map();
+for (const [path, entry] of Object.entries(lock.packages)) {
+  const names = { ...entry.dependencies, ...entry.optionalDependencies, ...entry.peerDependencies, ...(path ? {} : entry.devDependencies) };
+  for (const name of Object.keys(names)) {
+    const target = resolve(path, name);
+    if (target) dependents.set(target, [...(dependents.get(target) ?? []), path]);
+  }
+}
+
+// Platform-specific: built for one platform, or depended on by such packages alone.
+const platform = new Set(Object.entries(lock.packages).filter(([, e]) => e.os || e.cpu).map(([path]) => path));
+for (let grew = true; grew; ) {
+  grew = false;
+  for (const [path, from] of dependents) {
+    if (platform.has(path) || !from.every((p) => platform.has(p))) continue;
+    platform.add(path);
+    grew = true;
+  }
+}
+
 const packages = new Map(); // `${name}@${version}` -> { name, version, license, section, dir }
 for (const [path, entry] of Object.entries(lock.packages)) {
   if (!path || entry.link) continue;
   const name = entry.name ?? path.slice(path.lastIndexOf('node_modules/') + 'node_modules/'.length);
   const key = `${name}@${entry.version}`;
-  if (packages.has(key)) continue;
+  const section = platform.has(path) ? 'platform' : entry.dev || entry.devOptional ? 'tools' : 'runtime';
+  // A copy installed everywhere outweighs one only a platform's binary brings.
+  if (packages.has(key) && !(packages.get(key).section === 'platform' && section !== 'platform')) continue;
   const dir = join(ROOT, path);
-  const section = entry.os || entry.cpu ? 'platform' : entry.dev || entry.devOptional ? 'tools' : 'runtime';
   packages.set(key, { name, version: entry.version, license: licenseOf(entry, dir), section, dir });
 }
 
@@ -77,9 +109,10 @@ const out = [
   ...of('tools').map(block),
   `== Platform-specific binaries (${of('platform').length}) ==`,
   '',
-  'Installed only on the platform each is built for, so their licence texts',
-  'are not reproduced here; each package carries its own. The libvips',
-  'binaries are LGPL-3.0-or-later: see THIRD-PARTY-NOTICES.md for their source.',
+  'Installed only on the platform each is built for, or only with such a',
+  'binary, so their licence texts are not reproduced here; each package',
+  'carries its own. The libvips binaries are LGPL-3.0-or-later: see',
+  'THIRD-PARTY-NOTICES.md for their source.',
   '',
   ...of('platform').map((p) => `${p.name}@${p.version} — ${p.license}`),
   '',
