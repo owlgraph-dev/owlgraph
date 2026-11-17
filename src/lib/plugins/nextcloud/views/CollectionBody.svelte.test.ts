@@ -12,13 +12,13 @@ import type { ListingView } from '../server/listing.server';
 import type { CollectionBodyData } from '../server/nodeView.server';
 
 // The core's collection body around the plugin's (docs/architecture/plugins.md, "Node
-// views"), the plugin's routes a stand-in; invalidateAll is played back by
+// views"), the plugin's routes a stand-in; refreshAll is played back by
 // re-rendering with the members the load would give next.
 
 const navigation = vi.hoisted(() => ({ invalidated: 0, onInvalidate: async () => {} }));
 vi.mock('$app/navigation', async (original) => ({
   ...(await original<typeof import('$app/navigation')>()),
-  invalidateAll: async () => {
+  refreshAll: async () => {
     navigation.invalidated++;
     await navigation.onInvalidate();
   },

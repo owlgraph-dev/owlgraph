@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/collections/[id]/+server.ts.
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import {
@@ -45,7 +44,7 @@ async function writableCollection(id: string, locals: App.Locals): Promise<Colle
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const embed = isUuid(params.id) ? await collectionEmbed(params.id, locals.user) : null;
   if (!embed || embed.state === 'hidden') return apiError('not_found', { kind: 'collection' });
-  return json({ embed });
+  return Response.json({ embed });
 };
 
 // PATCH /api/documents/[id] field for field, without shares: a collection has none.
@@ -93,7 +92,7 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       out.locale = body.locale;
     }
     if ('tags' in out || 'properties' in out) await refreshCollectionSearchMeta(params.id);
-    return json(out);
+    return Response.json(out);
   } catch (e) {
     // A slug taken in a race is the unique index's refusal.
     if ((e as { code?: string }).code === '23505') return apiError('slug_taken');
@@ -111,5 +110,5 @@ export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
   if (collection instanceof Response) return collection;
   await deleteNode(collection.id);
   logEvent(locals.log, 'node.deleted', { nodeId: collection.id, nodeType: 'collection', actorId: locals.user?.id ?? null });
-  return json({ ok: true });
+  return Response.json({ ok: true });
 };

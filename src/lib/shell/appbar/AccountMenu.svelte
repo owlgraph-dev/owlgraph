@@ -10,7 +10,7 @@
   // Only anonymous visitors get the language picker here: the signed-in set it
   // on /settings/profile. The settings scope themselves by permission, so the
   // role badge is context, not a gate.
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { MediaQuery } from 'svelte/reactivity';
   import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, BottomSheet, BottomSheetItem, Avatar, Badge, TriggerFace, PHONE_SHELL_MEDIA } from '$lib/design-system';
   import Icon from '$lib/design-system/Icon.svelte';
@@ -64,7 +64,7 @@
 
   const avatarSrc = $derived(user ? avatarUrl(user.id, user.avatarVersion) : null);
   const roleLabel = $derived(user ? ROLE_LABELS[user.role]() : '');
-  const path = $derived($page.url.pathname);
+  const path = $derived(page.url.pathname);
 
   // SSR emits the desktop markup; harmless, since the menu starts closed.
   const phoneShell = new MediaQuery(PHONE_SHELL_MEDIA);

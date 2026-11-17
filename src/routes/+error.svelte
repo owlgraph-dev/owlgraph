@@ -6,16 +6,16 @@
 <script lang="ts">
   // Every word here is the interface's: the server's error message is for
   // the log, so an unexpected error reads the same in every language.
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import * as m from '$lib/paraglide/messages';
 </script>
 
 <div class="error-page">
-  <p class="code">{$page.status}</p>
-  {#if $page.status === 404}
+  <p class="code">{page.status}</p>
+  {#if page.status === 404}
     <h1>{m.error_page_not_found_title()}</h1>
     <p class="msg">{m.error_page_not_found_body()}</p>
-  {:else if $page.status === 403}
+  {:else if page.status === 403}
     <h1>{m.error_page_forbidden_title()}</h1>
     <p class="msg">{m.error_page_forbidden_body()}</p>
   {:else}
@@ -23,8 +23,8 @@
     <p class="msg">{m.error_page_failed_body()}</p>
     <!-- The request's reqId, on every line it logged (docs/architecture/logging.md,
          "Correlation"); a 404 has nothing to look up. -->
-    {#if $page.error?.id}
-      <p class="error-id">{m.error_page_error_id()} <code>{$page.error.id}</code></p>
+    {#if page.error?.id}
+      <p class="error-id">{m.error_page_error_id()} <code>{page.error.id}</code></p>
     {/if}
   {/if}
   <p class="actions"><a href="/">{m.error_page_home()}</a></p>

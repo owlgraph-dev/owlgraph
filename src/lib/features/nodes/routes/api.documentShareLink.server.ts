@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/share-links/[linkId]/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { logEvent } from '$lib/platform/logger.server';
 import { getDocument, userCanWriteDocument } from '$lib/features/documents/server';
@@ -24,5 +23,5 @@ export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
     nodeId: params.id,
     actorId: locals.user?.id ?? null,
   });
-  return json({ ok: true });
+  return Response.json({ ok: true });
 };

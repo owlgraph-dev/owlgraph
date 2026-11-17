@@ -311,13 +311,11 @@ tests ([Running tests](#running-tests)).
   `toMatchTextContent` asserts on a part or a regex, `toHaveTextContent` on the
   whole text.
 
-- **No SvelteKit.** `$app/state`, `$app/stores`, `$app/navigation`,
-  `$app/environment` and `$app/forms` are stand-ins (`tests/component/app/`).
-  `page` from `$app/state` is a plain reactive object the test fills before it
-  renders, with the signed-in user in `page.data.user`. `$app/stores`' `page`
-  and `navigating` are that same object as stores, so a component reading
-  `$page` sees it too.
-- **Navigation and forms are inert:** `goto` and `invalidateAll` do nothing
+- **No SvelteKit.** `$app/state`, `$app/navigation`, `$app/env` and
+  `$app/forms` are stand-ins (`tests/component/app/`). `page` from
+  `$app/state` is a plain reactive object the test fills before it renders,
+  with the signed-in user in `page.data.user`; `navigating` is one too.
+- **Navigation and forms are inert:** `goto` and `refreshAll` do nothing
   and `use:enhance` leaves a form as it is. A test that asserts where a
   component goes spies on the stand-in (`vi.mock('$app/navigation', { spy:
   true })`). A test that submits an enhanced form mocks `$app/forms` with an

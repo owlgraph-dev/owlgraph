@@ -6,8 +6,7 @@
 // The language picker's one write (docs/architecture/languages.md): the explicit-choice cookie,
 // which nothing else writes, and a signed-in viewer's preference, so the choice
 // follows them to every device. Public; only an enabled language is accepted.
-import { json } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import { setOwnLocale } from '$lib/features/auth/server';
 import { UI_LOCALE_COOKIE } from '$lib/platform/i18n/negotiate';
 import { currentSiteLocaleConfig } from '$lib/platform/i18n/siteLocales.server';

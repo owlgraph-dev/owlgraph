@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import Icon from '$lib/design-system/Icon.svelte';
   import { Logo } from '$lib/features/site/components';
   import { SearchTrigger } from '$lib/features/search/components';
@@ -38,7 +38,7 @@
 
   let menuOpen = $state(false);
 
-  const path = $derived($page.url.pathname);
+  const path = $derived(page.url.pathname);
 
   const navMenuItems = $derived<NavMenuItem[]>(
     navEntries.map((entry) =>
@@ -48,13 +48,13 @@
     )
   );
 
-  // Edit follows /[slug]'s `canEdit` in $page.data, this node's write
+  // Edit follows /[slug]'s `canEdit` in page.data, this node's write
   // permission; userCanEdit is role-only and looser. onPageView stays
   // page-only: it also gates the page-only local-graph toggle.
-  const onPageView = $derived($page.route.id === '/[[namespace=namespace]]/[slug]' && $page.data.kind === 'page');
-  const onDocumentView = $derived($page.route.id === '/[[namespace=namespace]]/[slug]' && ($page.data.kind === 'document' || $page.data.kind === 'collection'));
-  const pageCanEdit = $derived((onPageView || onDocumentView) && !!$page.data.canEdit);
-  const pageEditHref = $derived((onPageView || onDocumentView) ? nodePath($page.params.namespace, $page.params.slug ?? '', { edit: true }) : null);
+  const onPageView = $derived(page.route.id === '/[[namespace=namespace]]/[slug]' && page.data.kind === 'page');
+  const onDocumentView = $derived(page.route.id === '/[[namespace=namespace]]/[slug]' && (page.data.kind === 'document' || page.data.kind === 'collection'));
+  const pageCanEdit = $derived((onPageView || onDocumentView) && !!page.data.canEdit);
+  const pageEditHref = $derived((onPageView || onDocumentView) ? nodePath(page.params.namespace, page.params.slug ?? '', { edit: true }) : null);
 </script>
 
 <!-- On a route under the looser style-src every link out of the bar is a full

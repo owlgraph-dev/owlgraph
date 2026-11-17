@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /api/relationship-types, re-exported by src/routes/api/relationship-types/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { listRelationshipTypes, getAllRelationshipTypeProperties } from '$lib/features/semantic/server';
 import { localizeRelationshipType, byLabel } from '$lib/features/semantic';
@@ -18,5 +17,5 @@ export const GET: RequestHandler = async ({ locals }) => {
   const [types, propsByType] = await Promise.all([listRelationshipTypes(), getAllRelationshipTypeProperties()]);
 
   const results = types.map((t) => localizeRelationshipType(t, propsByType.get(t.slug) ?? [])).sort(byLabel);
-  return json({ results });
+  return Response.json({ results });
 };

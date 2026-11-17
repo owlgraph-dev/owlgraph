@@ -4,17 +4,17 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import * as m from '$lib/paraglide/messages';
 
   // A size step, not a pixel prop: the reader's routes carry no style
   // attributes (platform/csp.ts), so the mark's height is a class rule.
   let { size = 'md' }: { size?: 'md' | 'lg' } = $props();
 
-  const logoUrl = $derived($page.data.logoUrl as string | null | undefined);
+  const logoUrl = $derived(page.data.logoUrl as string | null | undefined);
   // With a dark logo both render and the scheme tokens show one, so the logo
   // follows the scheme of wherever it sits.
-  const logoDarkUrl = $derived($page.data.logoDarkUrl as string | null | undefined);
+  const logoDarkUrl = $derived(page.data.logoDarkUrl as string | null | undefined);
   let imgError = $state(false);
   let darkError = $state(false);
   const dark = $derived(!!logoDarkUrl && !darkError);

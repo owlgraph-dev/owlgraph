@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/+server.ts.
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import {
@@ -46,7 +45,7 @@ export const PUT: RequestHandler<Params> = async ({ params, request, locals }) =
   try {
     const saved = await saveDoc(params.id, doc, { lockToken, authorId: locals.user?.id ?? null, acknowledgeDropped });
     if (!saved) return apiError('not_found', { kind: 'page' });
-    return json({ ok: true, updated_at: saved.updated_at });
+    return Response.json({ ok: true, updated_at: saved.updated_at });
   } catch (e) {
     const err = e as Error & { code?: string };
     if (err.code === 'lock_lost') {
@@ -131,7 +130,7 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       await setNodeLocale(params.id, body.locale);
       out.locale = body.locale;
     }
-    return json(out);
+    return Response.json(out);
   } catch (e) {
     // A slug taken in a race is the unique index's refusal.
     if ((e as { code?: string }).code === '23505') return apiError('slug_taken');
@@ -153,5 +152,5 @@ export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
   }
   await deletePage(page.id);
   logEvent(locals.log, 'node.deleted', { nodeId: page.id, nodeType: 'page', actorId: locals.user?.id ?? null });
-  return json({ ok: true });
+  return Response.json({ ok: true });
 };

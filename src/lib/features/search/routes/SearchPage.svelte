@@ -8,7 +8,7 @@
   // URL, so a filter set is a link and Back steps through the filters tried. The
   // inline row and the compact row show the one state; CSS picks one.
   import { afterNavigate, goto } from '$app/navigation';
-  import { navigating } from '$app/stores';
+  import { navigating } from '$app/state';
   import * as m from '$lib/paraglide/messages';
   import { Button, ChipInput, EmptyState, Pagination, SearchField, SegmentedControl, SegmentedControlItem, Select } from '$lib/design-system';
   import type { NodeClassOption } from '$lib/features/semantic';
@@ -44,7 +44,7 @@
 
   const count = $derived(countLine({ total: data.total, applied, classLabel: data.classLabel, namespaceName: data.namespaceName }));
   const filtered = $derived(!!(applied.q || applied.class || applied.tags.length || applied.type || applied.namespace));
-  const busy = $derived($navigating?.to?.route.id === '/search');
+  const busy = $derived(navigating.to?.route.id === '/search');
 
   // A change of filter starts over at the first page; the view keeps it.
   function go(change: Partial<SearchParams>) {

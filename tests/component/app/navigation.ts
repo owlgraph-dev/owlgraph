@@ -5,7 +5,7 @@
 // `$app/navigation` for component tests: navigation does nothing.
 export const goto = async (_url: string | URL, _opts?: unknown): Promise<void> => {};
 export const invalidate = async (_dep: unknown): Promise<void> => {};
-export const invalidateAll = async (): Promise<void> => {};
+export const refreshAll = async (): Promise<void> => {};
 export const preloadData = async (_href: string): Promise<unknown> => ({ type: 'loaded', status: 200, data: {} });
 export const preloadCode = async (..._urls: string[]): Promise<void> => {};
 export const afterNavigate = (_fn: unknown): void => {};

@@ -4,7 +4,7 @@
 
 // Route adapter for /login, re-exported by src/routes/login/+page.server.ts.
 import { redirect } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import { login } from '$lib/features/auth/server';
 import { logEvent, requestLogger } from '$lib/platform/logger.server';
 import { safeRedirect } from '$lib/features/auth';

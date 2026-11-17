@@ -7,7 +7,7 @@
   // Dependency-free force-directed graph. The physics lives behind a
   // LayoutEngine (../layout); this component owns rendering, camera and interaction.
   import { onDestroy, untrack } from 'svelte';
-  import { browser } from '$app/environment';
+  import { browser } from '$app/env';
   import { goto } from '$app/navigation';
   import { MediaQuery } from 'svelte/reactivity';
   import { Badge, BottomSheet, Button, Tooltip, EmptyState } from '$lib/design-system';

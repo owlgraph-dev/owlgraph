@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/media/+server.ts.
-import { json } from '@sveltejs/kit';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import { getPage, userCanWritePage } from '$lib/features/pages/server';
 import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '$lib/features/media/server';
@@ -65,7 +64,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   try {
     // The editor offers the image's copies by its size (docs/architecture/media.md).
     const { id, size } = await createImageAsset({ bytes, mime: file.type, ownerPageId: pageId, createdBy: locals.user!.id, scope: 'page' });
-    return json({ id, url: mediaUrl(id), size });
+    return Response.json({ id, url: mediaUrl(id), size });
   } catch (e) {
     if (!isCodedError(e, 'invalid_image')) throw e;
     rejected(locals, 'content', bytes.length);

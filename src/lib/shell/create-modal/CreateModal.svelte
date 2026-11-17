@@ -13,7 +13,7 @@
   // The editor runs under a looser style-src (platform/cspRoutes.ts) and a
   // policy belongs to the document: a full navigation, never goto().
   const openEditor = (href: string) => window.location.assign(href);
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { Dialog, Button, Alert, FormField, Select } from '$lib/design-system';
   import Icon from '$lib/design-system/Icon.svelte';
   import { CREATE_CARDS, type CreateCard } from './createCards';
@@ -27,7 +27,7 @@
   let view = $state<View>('grid');
 
   // The root layout loads these for every request.
-  const namespaces = $derived($page.data.namespaces as { id: string; name: string; slug: string | null; isDefault: boolean }[] ?? []);
+  const namespaces = $derived(page.data.namespaces as { id: string; name: string; slug: string | null; isDefault: boolean }[] ?? []);
   let namespaceId = $state<string | null>(null);
   $effect(() => {
     if (open) namespaceId = namespaces.find((n) => n.isDefault)?.id ?? null;

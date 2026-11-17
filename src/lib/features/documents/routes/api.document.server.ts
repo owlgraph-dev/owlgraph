@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/+server.ts.
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import {
@@ -35,7 +34,7 @@ const VISIBILITIES = ['public', 'internal', 'restricted'];
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const embed = isUuid(params.id) ? await documentEmbed(params.id, locals.user) : null;
   if (!embed || embed.state === 'hidden') return apiError('not_found', { kind: 'document' });
-  return json({ embed });
+  return Response.json({ embed });
 };
 
 // Mirrors PATCH /api/pages/[id].
@@ -109,7 +108,7 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       out.dismissLocaleSuggestion = true;
     }
     if ('tags' in out || 'properties' in out) await refreshDocumentSearchMeta(params.id);
-    return json(out);
+    return Response.json(out);
   } catch (e) {
     // A slug taken in a race is the unique index's refusal.
     if ((e as { code?: string }).code === '23505') return apiError('slug_taken');
@@ -128,5 +127,5 @@ export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
   if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   await deleteNode(doc.id);
   logEvent(locals.log, 'node.deleted', { nodeId: doc.id, nodeType: 'document', actorId: locals.user?.id ?? null });
-  return json({ ok: true });
+  return Response.json({ ok: true });
 };

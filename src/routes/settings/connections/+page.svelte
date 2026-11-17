@@ -8,7 +8,7 @@
   // opens the service's approval page in its own window and polls here, again
   // after a reload; the waiting row links to that page in case the window was
   // blocked or closed.
-  import { invalidateAll } from '$app/navigation';
+  import { refreshAll } from '$app/navigation';
   import { Alert, Button, EmptyState, SettingsRow, Spinner } from '$lib/design-system';
   import SettingsPageHead from '$lib/shell/SettingsPageHead.svelte';
   import { formatDate, formatDateTime } from '$lib/platform/i18n/format';
@@ -75,7 +75,7 @@
         approval.opener = null;
         approval.location.href = approveUrl;
       }
-      await invalidateAll();
+      await refreshAll();
     } else {
       approval?.close();
       notes[service.id] = { tone: 'danger', text: failure((res?.body.error as { code?: unknown } | undefined)?.code, service.label) };
@@ -86,7 +86,7 @@
   async function cancel(service: ServiceConnectionView) {
     busy[service.id] = 'cancel';
     await request('DELETE', api(service, '/flow'));
-    await invalidateAll();
+    await refreshAll();
     busy[service.id] = null;
   }
 
@@ -99,7 +99,7 @@
     if (status === 'active') notes[service.id] = { tone: 'success', text: m.settings_connections_check_active({ service: service.label }) };
     else if (status === 'unreachable' || status === 'disabled') notes[service.id] = { tone: 'danger', text: failure(status, service.label) };
     else if (!res?.ok) notes[service.id] = { tone: 'danger', text: failure(null, service.label) };
-    await invalidateAll();
+    await refreshAll();
     busy[service.id] = null;
   }
 
@@ -111,7 +111,7 @@
     else if (res.body.removed === true && res.body.remoteRevoked !== true) {
       notes[service.id] = { tone: 'warning', text: m.settings_connections_remote_kept({ service: service.label, client: data.clientName }) };
     }
-    await invalidateAll();
+    await refreshAll();
     busy[service.id] = null;
   }
 
@@ -125,7 +125,7 @@
       // No answer, or too many questions: the next tick asks again.
       if (!res?.ok || res.body.state === 'pending') return;
       if (res.body.state === 'failed') notes[service.id] = { tone: 'danger', text: failure(res.body.reason, service.label) };
-      await invalidateAll();
+      await refreshAll();
     } finally {
       asking.delete(service.id);
     }

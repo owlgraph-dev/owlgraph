@@ -11,7 +11,7 @@ import type { EditPageData } from './edit.server';
 import { stubFetch } from '$tests/component/fetch';
 
 // The edit route with its load's data. A document's requests are answered by
-// a stand-in for the documents API; invalidateAll is inert here, so a reload
+// a stand-in for the documents API; refreshAll is inert here, so a reload
 // is played back by rendering the page with the data the load would give next.
 // A page's: the edit lock's lifecycle around the desktop editor, its requests
 // answered by a stand-in for the page API. The heartbeat and the blocked poll

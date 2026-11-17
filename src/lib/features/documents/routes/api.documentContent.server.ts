@@ -4,7 +4,6 @@
 
 // Route adapter, re-exported by src/routes/api/documents/[id]/content/+server.ts
 // (docs/architecture/documents.md, "The content endpoint").
-import { json } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { apiForbidden } from '$lib/features/auth/routes/requireAction.server';
 import {
@@ -79,7 +78,7 @@ async function putFile(doc: DocumentRow, request: Request, locals: App.Locals): 
   const before = await replaceDocumentBytes(doc.id, upload);
   if (!before) return apiError('not_found', { kind: 'document' });
   sourceChanged(locals, doc.id, before, 'upload');
-  return json({ ok: true, source: 'upload', filename: upload.filename, mime: upload.mime, size: upload.bytes.length });
+  return Response.json({ ok: true, source: 'upload', filename: upload.filename, mime: upload.mime, size: upload.bytes.length });
 }
 
 async function putLink(doc: DocumentRow, request: Request, locals: App.Locals): Promise<Response> {
@@ -90,7 +89,7 @@ async function putLink(doc: DocumentRow, request: Request, locals: App.Locals): 
   const before = await setDocumentLink(doc.id, parsed.url);
   if (!before) return apiError('not_found', { kind: 'document' });
   sourceChanged(locals, doc.id, before, 'link');
-  return json({ ok: true, source: 'link', externalUrl: parsed.url });
+  return Response.json({ ok: true, source: 'link', externalUrl: parsed.url });
 }
 
 // Replacing a file or editing an address within one source is not a switch.

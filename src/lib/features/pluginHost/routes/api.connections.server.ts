@@ -5,7 +5,7 @@
 // Route adapters for /api/connections/[plugin] (+ /poll, /check, /flow), re-exported by src/routes/api/connections/[plugin]/**/+server.ts.
 // A signed-in person's own connection (docs/architecture/plugins.md, "Connections"): each acts on the session's and the
 // person's own rows only, and a write is JSON, which a form on another site cannot send.
-import { json, type RequestEvent, type RequestHandler } from '@sveltejs/kit';
+import { type RequestEvent, type RequestHandler } from '@sveltejs/kit';
 import { logEvent } from '$lib/platform/logger.server';
 import { RateLimiter } from '$lib/platform/rateLimit';
 import { beginConnect, cancelConnect, disconnect, flowDepsFor, pollConnect, recheck, type FlowDeps } from '$lib/features/pluginHost/server';
@@ -42,7 +42,7 @@ export const begin: RequestHandler<Params> = async (event) => {
   if (deps instanceof Response) return deps;
   const started = await beginConnect(deps);
   return started.ok
-    ? json({ approveUrl: started.approveUrl }, { headers: noStore })
+    ? Response.json({ approveUrl: started.approveUrl }, { headers: noStore })
     : apiError(BEGIN_REFUSAL[started.reason], {}, { headers: noStore });
 };
 
@@ -57,14 +57,14 @@ export const poll: RequestHandler<Params> = async (event) => {
       : result.state === 'failed'
         ? { state: result.state, reason: result.reason }
         : { state: result.state };
-  return json(answer, { headers: noStore });
+  return Response.json(answer, { headers: noStore });
 };
 
 /** POST /api/connections/[plugin]/check */
 export const check: RequestHandler<Params> = async (event) => {
   const deps = prepare(event);
   if (deps instanceof Response) return deps;
-  return json({ status: await recheck(deps) }, { headers: noStore });
+  return Response.json({ status: await recheck(deps) }, { headers: noStore });
 };
 
 /** DELETE /api/connections/[plugin]/flow */
@@ -72,12 +72,12 @@ export const cancel: RequestHandler<Params> = async (event) => {
   const deps = prepare(event);
   if (deps instanceof Response) return deps;
   await cancelConnect(deps);
-  return json({ ok: true }, { headers: noStore });
+  return Response.json({ ok: true }, { headers: noStore });
 };
 
 /** DELETE /api/connections/[plugin] */
 export const remove: RequestHandler<Params> = async (event) => {
   const deps = prepare(event);
   if (deps instanceof Response) return deps;
-  return json(await disconnect(deps), { headers: noStore });
+  return Response.json(await disconnect(deps), { headers: noStore });
 };

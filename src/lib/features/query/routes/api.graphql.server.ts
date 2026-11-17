@@ -4,7 +4,7 @@
 
 // Route adapter for /api/graphql, re-exported by src/routes/api/graphql/+server.ts.
 import { createYoga } from 'graphql-yoga';
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import { schema, type GraphQLContext } from '$lib/features/query/server';
 import type { RequestEvent } from '@sveltejs/kit';
 

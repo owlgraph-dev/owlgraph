@@ -3,7 +3,6 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter for /api/node-search, re-exported by src/routes/api/node-search/+server.ts.
-import { json } from '@sveltejs/kit';
 import { documentPlugins } from '$lib/features/documents/server';
 import { collectionPlugins } from '$lib/features/collections/server';
 import { searchNodesForUser } from '$lib/features/nodes/server';
@@ -27,7 +26,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
     documentPlugins(hits.filter((h) => h.type === 'document').map((h) => h.id)),
     collectionPlugins(hits.filter((h) => h.type === 'collection').map((h) => h.id)),
   ]);
-  return json({
+  return Response.json({
     results: hits.map((h) => {
       const plugin = documents.get(h.id) ?? collections.get(h.id) ?? null;
       return {

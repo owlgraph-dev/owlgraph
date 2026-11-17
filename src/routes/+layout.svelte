@@ -7,7 +7,7 @@
   import '../app.css';
   import { onMount, tick, untrack } from 'svelte';
   import { beforeNavigate } from '$app/navigation';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import AppBar from '$lib/shell/AppBar.svelte';
   import { Footer } from '$lib/features/site/components';
   import { LocalGraph } from '$lib/features/graph/components';
@@ -34,7 +34,7 @@
 
   // A style policy belongs to the document (platform/cspRoutes.ts): under the
   // looser style-src the app bar's links leave with a full navigation.
-  const looseStyleRoute = $derived(styleRouteKind($page.route.id) === 'loose');
+  const looseStyleRoute = $derived(styleRouteKind(page.route.id) === 'loose');
 
   // So does any other client navigation into the other policy's routes.
   beforeNavigate((navigation) => {
@@ -91,27 +91,27 @@
   // Page and document reads share a route id, so the page chrome keys off
   // data.kind; a share link reads onto the same shape.
   const isPageRead = $derived(
-    ($page.route.id === '/[[namespace=namespace]]/[slug]' || $page.route.id === '/share/[id]') &&
-      $page.data.kind === 'page'
+    (page.route.id === '/[[namespace=namespace]]/[slug]' || page.route.id === '/share/[id]') &&
+      page.data.kind === 'page'
   );
   // On a phone the panel overlays the page, and the CSS zeroes the reflow.
   const reflow = $derived($localGraphOpen && isPageRead);
   // The panel renders here, not inside <main>: main takes the page's content
   // scheme, which would leave the panel light in a dark app.
-  const localGraph = $derived(isPageRead ? ($page.data.localGraph as { nodes: []; edges: []; focusId: string | null } | undefined) : undefined);
+  const localGraph = $derived(isPageRead ? (page.data.localGraph as { nodes: []; edges: []; focusId: string | null } | undefined) : undefined);
   // A share link shows the panel but offers no tab.
-  const showSidebarToggle = $derived(!!localGraph && $page.route.id === '/[[namespace=namespace]]/[slug]');
+  const showSidebarToggle = $derived(!!localGraph && page.route.id === '/[[namespace=namespace]]/[slug]');
   const canvasRoute = $derived(isPageRead);
   // The Mermaid render frame gets this layout's head and no chrome.
-  const frameRoute = $derived($page.route.id === MERMAID_FRAME_ROUTE);
+  const frameRoute = $derived(page.route.id === MERMAID_FRAME_ROUTE);
   // The editor brings its own fixed shell (DesktopEditor.svelte).
-  const showAppBar = $derived($page.route.id !== '/[[namespace=namespace]]/[slug]/edit' && !frameRoute);
+  const showAppBar = $derived(page.route.id !== '/[[namespace=namespace]]/[slug]/edit' && !frameRoute);
   // Settings and dev tooling bring their own frame and render no footer.
-  const settingsRoute = $derived($page.route.id?.startsWith('/settings') ?? false);
-  const devRoute = $derived($page.route.id?.startsWith('/dev/') ?? false);
+  const settingsRoute = $derived(page.route.id?.startsWith('/settings') ?? false);
+  const devRoute = $derived(page.route.id?.startsWith('/dev/') ?? false);
   const chromeRoute = $derived(settingsRoute || devRoute);
   // A grid of results or a collection's contents widen the reading column.
-  const browseRoute = $derived($page.route.id === '/search' || ($page.route.id === '/[[namespace=namespace]]/[slug]' && $page.data.kind === 'collection'));
+  const browseRoute = $derived(page.route.id === '/search' || (page.route.id === '/[[namespace=namespace]]/[slug]' && page.data.kind === 'collection'));
 </script>
 
 <svelte:head>
@@ -157,7 +157,7 @@
   <!-- Undefined until the panel opens, so the server renders no style
        attribute under the reader's strict style-src (platform/csp.ts). -->
   <div class="content" class:with-bar={showAppBar} style:--lg-pad={reflow ? `${$localGraphWidth}px` : undefined}>
-    <main class:canvas-route={canvasRoute} class:settings-route={chromeRoute} class:browse-route={browseRoute} data-scheme={canvasRoute ? canvasScheme($page.data.contentScheme ?? CONTENT_SCHEME_FALLBACK) : undefined} data-b={(canvasRoute && $page.data.groundRuleId) || undefined}>
+    <main class:canvas-route={canvasRoute} class:settings-route={chromeRoute} class:browse-route={browseRoute} data-scheme={canvasRoute ? canvasScheme(page.data.contentScheme ?? CONTENT_SCHEME_FALLBACK) : undefined} data-b={(canvasRoute && page.data.groundRuleId) || undefined}>
       {@render children()}
     </main>
 
