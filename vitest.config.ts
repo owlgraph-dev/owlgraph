@@ -20,7 +20,7 @@ const TEST_DATABASE_URL = process.env.DATABASE_URL ?? 'postgres://user:password@
 export default defineConfig({
   // The public renderer server-renders a block's Svelte component
   // (blocks/scaffold/ssrBlock.ts). No svelte.config.js: Kit's options are the app's.
-  plugins: [svelte({ configFile: false, hot: false })],
+  plugins: [svelte({ configFile: false, compilerOptions: { hmr: false } })],
   resolve: {
     alias: { $lib: path.resolve('./src/lib'), $tests: path.resolve('./tests') },
   },
