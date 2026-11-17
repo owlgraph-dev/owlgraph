@@ -91,6 +91,10 @@ A test asserts what can be seen at its layer: "an anonymous request gets a
 - **A flaky test is a bug** in the test or the app. Reproduce it alone with
   `--repeat-each=3` (Playwright) or by running its file again, find the race,
   and fix it. Nothing is retried: Playwright's `retries` is `0` by design.
+- **An acceptance test names its criterion.** A test that proves a spec's
+  acceptance criterion starts its name with the criterion's id: `'002.5 a
+  node the asker may not read is answered as not found'`. One criterion may
+  have several tests, at different layers; searching for the id finds them.
 
 ## Running tests
 

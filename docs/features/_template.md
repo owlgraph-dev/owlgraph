@@ -21,7 +21,8 @@ What it deliberately leaves out.
 
 ## Acceptance criteria
 
-- Each an outcome someone can observe, which together say the feature is done.
+1. Each an outcome someone can observe, which together say what the
+   capability must do. Numbered; a number is never reused.
 
 ## Affected components
 
