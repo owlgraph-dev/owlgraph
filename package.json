@@ -61,7 +61,7 @@
     "@vitest/browser-playwright": "^5.1.0",
     "devalue": "^5.9.4",
     "pino-pretty": "^13.2.0",
-    "playwright": "1.65.0",
+    "playwright": "1.65.1",
     "svelte-check": "^4.7.8",
     "typescript": "^6.0.3",
     "vite": "^8.3.8",
