@@ -132,10 +132,10 @@ Authoring:
 ## Decisions and constraints
 
 - [0020. The core is the graph, and a node's body comes from a plugin](../adr/0020-the-core-is-the-graph-and-a-body-comes-from-a-plugin.md)
-  is `proposed`. It names this capability among its consequences.
+  names this capability among its consequences.
 - [0023. A plugin from outside the build runs beside the core and reaches it through the public API](../adr/0023-a-plugin-from-outside-the-build-runs-beside-the-core.md)
-  is `proposed`: how such a plugin runs. This spec is `ready` only once 0020
-  and 0023 are accepted, or 0023 is replaced by another record.
+  is `proposed`: how such a plugin runs. This spec is `ready` only once it
+  is accepted, or replaced by another record.
 - [0014. AGPL with a plugin exception](../adr/0014-agpl-with-a-plugin-exception.md):
   the plugin loading mechanism is part of the Plugin Interface, so whatever
   this spec adds is designated public for each release, and a plugin that

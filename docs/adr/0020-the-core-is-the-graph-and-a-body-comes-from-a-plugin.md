@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 date: 2026-11-25
 ---
 
@@ -16,9 +16,15 @@ from the page outwards, and the graph is now shaped by it in several places:
 - **The class hierarchy holds the storage.** The node types `page`,
   `document` and `collection` head every class's chain, each with a table of
   its own, and foreign keys hold a node's class to its type
-  ([semantic-layer.md](../architecture/semantic-layer.md#node-type-is-derived--and-cached)).
+  ([semantic-layer.md](../architecture/semantic-layer.md)).
   A class under `document` can only be given to documents, and a node's type
   never changes. What a node *is* and how it is *stored* are one choice.
+- **Access and queries follow the type.** Who may change a node depends on
+  its type — a document only its owner or an admin — and a node's share list
+  is a table of its type; a collection has none
+  ([authorization.md](../architecture/authorization.md)). The flat node query
+  lists pages only, so that a filter written for pages never starts listing
+  documents ([dynamic-rendering.md](../architecture/dynamic-rendering.md)).
 - **Edges are written by page content.** `syncEdges`
   (`graph/graph.server.ts`) rebuilds a page's edges from its document on
   every save and deletes the rest, and an edge records no origin. Apart from
@@ -31,7 +37,7 @@ from the page outwards, and the graph is now shaped by it in several places:
   namespaces are managed through form actions, and only the MCP server
   accepts a bearer token.
 - **Plugins add blocks, sources and node views, not node types**, and they
-  are built into the app ([plugins.md](../architecture/plugins.md#the-registry)).
+  are built into the app ([plugins.md](../architecture/plugins.md)).
 
 What lies ahead needs the graph to stand on its own: owlgraph run headless,
 as the backend of a frontend someone else builds; RDF for nodes and a
@@ -68,13 +74,20 @@ Three things follow, and each is part of this decision:
 - Headless operation, RDF and models build on the same separation instead of
   each working around the page. A statement's origin maps onto an RDF named
   graph.
-- The class hierarchy changes shape: the node types leave it, and the foreign
-  keys that hold a class to a type go. Existing classes are kept; how they
-  are migrated is open. Every instance's class tree grows on the current
-  shape, so the change gets dearer the later it comes.
+- The class hierarchy changes shape: a class no longer carries a node type's
+  machinery, and the foreign keys that hold a class to a type go. Existing
+  classes are kept. What becomes of the three type classes — stored filters
+  name them to mean every page, document or collection — and how the classes
+  below them migrate is open. Every instance's class tree grows on the
+  current shape, so the change gets dearer the later it comes.
 - Edges get an origin, as property values already have one. Edges from
   content and edges stated directly live side by side, and saving a page no
   longer deletes what the page did not state.
+- Who may change a node, and whom it is shared with, become the core's for
+  every node, with a body or without. Which rule a kind of body may ask for —
+  a document's is stricter today — is open.
+- Queries reach every node. A query stored in a page today lists pages only,
+  and keeps doing so.
 - A body has to be stored, and [decision 0012](0012-a-plugin-keeps-its-state-in-the-hosts-seams.md)
   rules out plugin tables. The host needs a seam for bodies, stored,
   versioned and locked by the core on the plugin's behalf, or 0012 is

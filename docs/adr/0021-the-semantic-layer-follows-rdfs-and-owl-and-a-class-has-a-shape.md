@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 date: 2026-11-25
 ---
 
@@ -20,8 +20,15 @@ and the fourth does five jobs:
 
 A node has exactly one class, and the class decides the node's storage
 ([decision 0020](0020-the-core-is-the-graph-and-a-body-comes-from-a-plugin.md)
-separates the two). A property of the `page` datatype names a node, but no
-edge records it, so the graph, traversal and a node's relationships miss it.
+separates the two). A property of the `page` datatype is meant to name a
+node, but its value is stored as text and no edge records it, so the graph,
+traversal and a node's relationships miss it.
+
+Only a property's name carries a prefix. A relationship type and a class are
+named by a bare slug (`contains`, `invoice`), and page content and query
+filters store those slugs. A property name may be in use with no definition
+behind it. A relationship type's inverse is a label on it, not a term, and
+neither a property nor a relationship type has a parent.
 
 owlgraph aims at RDF and OWL: a node's classes stated or inferred, in an open
 world, and exported as RDF. OWL does not say which fields a class's nodes
@@ -37,15 +44,22 @@ vocabulary they export to:
 
 - **Vocabulary**: a set of terms under a prefix and a namespace IRI. An
   instance has its own and may take in others (Dublin Core, schema.org,
-  SKOS). A term is named `prefix:name`; today's group prefixes become
-  vocabulary prefixes, so every stored name keeps its meaning.
+  SKOS). A term is named `prefix:name`, or by its bare name in the
+  instance's own vocabulary, which has no prefix. Today's group prefixes
+  become vocabulary prefixes, and today's relationship types and classes are
+  terms of the instance's own vocabulary, so every stored name keeps its
+  meaning.
 - **Class** (`owl:Class`): what a node is. Classes form a hierarchy
   (`rdfs:subClassOf`). A node has any number of classes, stated or inferred.
   A class says nothing about how a node is stored or what body it has.
-- **Property** (`owl:DatatypeProperty`): a value of a datatype on a node.
+- **Property** (`owl:DatatypeProperty`): a value of a datatype on a node. A
+  name used without a definition stays legal: an undeclared term of its
+  vocabulary, valued as text and part of no shape.
 - **Relationship type** (`owl:ObjectProperty`): from a node to a node, with
-  its inverse and the properties its edges may carry. A value that is a node
-  is a relationship, never a property.
+  the properties its edges may carry and its inverse. An inverse may be
+  given a name of its own and is then a term, for queries and for the
+  export; an edge is stored once, in the direction it was stated. A value
+  that is a node is a relationship, never a property.
 
 A property or a relationship type may declare a domain and a range, each
 term choosing how: as a **suggestion**, the default — offered by pickers,
@@ -73,11 +87,16 @@ semantic layer for the query templates.
 
 ## Consequences
 
-- Property groups go. Their prefixes become vocabularies, the groups a class
-  carries become its shape, `collection:` becomes what `contains` edges
-  carry, and `parameter:` belongs to the templates.
-- Property names stored in page content, query filters and templates keep
-  working unchanged.
+- Property groups go. Their prefixes become vocabularies, and so does a
+  prefix that is in use with no group behind it. The groups a class carries
+  become its shape. `collection` stays a prefix, a vocabulary of the two
+  properties `contains` edges carry, and `parameter` stays reserved for the
+  templates and is no vocabulary.
+- Names stored in page content, query filters and templates keep working
+  unchanged: properties with their prefix, relationship types and classes
+  without one.
+- Properties and relationship types get a parent of their own
+  (`rdfs:subPropertyOf`), which neither has today.
 - A node's class becomes a set. Every reader of it — the node header,
   queries, GraphQL, the MCP tools — handles several. The header shows the
   stated classes first and marks an inferred one as inferred, with what it
@@ -85,8 +104,9 @@ semantic layer for the query templates.
 - The nearest-wins rule goes: fields are a union of terms with one identity
   each, so nothing collides, and a class may later get several parents with
   no new rule.
-- Properties of the `page` datatype become relationships, and their values
-  edges.
+- What becomes of the `page` datatype is open. Its definitions name what
+  should be relationships, but their values are text and cannot be turned
+  into edges as they stand.
 - Inference makes queries larger. The subset is chosen so that each
   expansion stays a bounded rewrite of the query; storing inferences is the
   answer only if that proves too slow.
