@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { createCollection, getCollection, userCanReadCollection } from '#lib/features/collections/server.ts';
 import { createLinkDocument, getDocument, userCanReadDocument } from '#lib/features/documents/server.ts';
@@ -148,27 +148,25 @@ describe('inheriting and narrowing', () => {
     }
   });
 
-  describe('a space deleted while the default space is closer than it', () => {
-    /** Whether a viewer reads a page that was set to internal, after its internal space is deleted into a restricted default space. */
-    let viewerReads: boolean;
-    let defaultSpace: string;
-    beforeAll(async () => {
-      defaultSpace = (await getDefaultSpace()).id;
-      const leaving = await space('internal');
-      const page = await make('page', leaving, 'internal');
-      expect(await reads('page', page, askers.viewer)).toBe(true);
-      await setSpaceAccessLevel(defaultSpace, 'restricted');
-      await deleteSpace(leaving);
-      viewerReads = await reads('page', page, askers.viewer);
-    });
-    // As the suite's seed has it (tests/support/seed.ts).
-    afterAll(() => setSpaceAccessLevel(defaultSpace, 'public'));
-
-    // Today the nodes move with their settings as they were, so one set to
-    // internal stays readable by every signed-in user in a restricted space
-    // (spaces/spaces.server.ts, deleteSpace).
-    it.fails('002.9 deleting a space narrows the settings of the nodes it moves into a closer default space', () => {
-      expect(viewerReads).toBe(false);
-    });
+  it('002.9 deleting a space narrows the settings of the nodes it moves into a closer default space, and succeeds', async () => {
+    const defaultSpace = (await getDefaultSpace()).id;
+    const leaving = await space('internal');
+    const nodes: [Kind, string][] = [];
+    for (const kind of KINDS) {
+      const id = await make(kind, leaving, 'internal');
+      expect(await reads(kind, id, askers.viewer), `a viewer and the ${kind} set to internal`).toBe(true);
+      nodes.push([kind, id]);
+    }
+    await setSpaceAccessLevel(defaultSpace, 'restricted');
+    try {
+      await expect(deleteSpace(leaving)).resolves.toBeUndefined();
+      for (const [kind, id] of nodes) {
+        expect((await row(kind, id))!.space_id, `the ${kind}'s space`).toBe(defaultSpace);
+        expect(await reads(kind, id, askers.viewer), `a viewer and the ${kind}, now in the restricted default space`).toBe(false);
+      }
+    } finally {
+      // As the suite's seed has it (tests/support/seed.ts).
+      await setSpaceAccessLevel(defaultSpace, 'public');
+    }
   });
 });

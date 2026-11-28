@@ -91,27 +91,25 @@ describe('the names an address may take', () => {
     expect((await listSpaces()).map((ns) => ns.slug)).toEqual(expect.arrayContaining([guild.slug, elsewhere.slug]));
   });
 
-  describe('a space deleted while one of its nodes is named as another space', () => {
-    /** The page's slug at the root, after its space is deleted. */
-    let slugAtRoot: string;
-    beforeAll(async () => {
-      await createSpace({ name: 'Harbour', slug: 'harbour', accessLevel: 'internal' });
-      const leaving = await createSpace({ name: 'Leaving with a name', slug: 'leaving-with-a-name', accessLevel: 'internal' });
-      const page = await make('page', leaving.id);
-      await renamePage(page, { slug: 'harbour' });
-      await deleteSpace(leaving.id);
-      const moved = (await getPage(page))!;
-      expect(moved.space_id).toBe((await getDefaultSpace()).id);
-      slugAtRoot = moved.slug;
-    });
-
-    // Today the node keeps its slug: only a slug another root node holds gets a
-    // suffix, so the page stands at /harbour beside the space, and its
-    // /harbour/edit leads into the space
-    // (spaces/spaces.server.ts, deleteSpace).
-    it.fails('002.18 deleting a space leaves no root node under another space’s name', () => {
-      expect(slugAtRoot).not.toBe('harbour');
-    });
+  it('002.18 deleting a space leaves no root node under another space’s name: one named so arrives with a suffix', async () => {
+    const root = (await getDefaultSpace()).id;
+    const leaving = await createSpace({ name: 'Leaving with names', slug: 'leaving-with-names', accessLevel: 'internal' });
+    // Inside a space a node may take another space's name; at the root it may not.
+    const named: { kind: Kind; id: string; space: string }[] = [];
+    for (const kind of KINDS) {
+      const other = await createSpace({ name: `Harbour ${kind}`, slug: `harbour-${kind}`, accessLevel: 'internal' });
+      const id = await make(kind, leaving.id);
+      await rename(kind, id, other.slug!);
+      named.push({ kind, id, space: other.slug! });
+    }
+    await deleteSpace(leaving.id);
+    for (const { kind, id, space } of named) {
+      const moved = await node(kind, id);
+      expect(moved.space_id, `the ${kind}'s space`).toBe(root);
+      expect(moved.slug, `the ${kind} named as the space ${space}`).toBe(`${space}-${id.slice(0, 6)}`);
+    }
+    expect((await listSpaces()).map((ns) => ns.slug)).toEqual(expect.arrayContaining(named.map((n) => n.space)));
+    expect(await db`select n.slug from nodes n join spaces ns on ns.slug = n.slug where n.space_id = ${root}`, 'root nodes named as a space').toEqual([]);
   });
 });
 

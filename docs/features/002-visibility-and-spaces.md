@@ -154,18 +154,10 @@ None blocks the work.
 
 - Written after the fact, from the architecture pages, then checked against
   the code. Every criterion but 002.10 has an acceptance test that passes, in
-  `tests/acceptance/002-visibility-and-spaces/`. Where the code does not
-  do what a criterion says, the case is pinned there as a known bug and not
-  fixed, as the notes below say.
-- 002.9 does not hold when a space is deleted while the default
-  space is closer than it: its nodes move with their settings as they
-  were. Pinned.
+  `tests/acceptance/002-visibility-and-spaces/`.
 - 002.10 has no acceptance test: only a browser shows it, and the gate runs
   no component test. The space journey sees the notice, and a component
   test holds it beside the silence when a space is narrowed.
-- 002.18 does not hold when a space is deleted while one of its nodes is
-  named as another space: the node arrives at the root under that name.
-  Pinned.
 - 002.20 holds for a page as it is read: at its address, through a share
   link, by an agent. In the editor a link still carries the slug it was made
   with, for whoever may edit the page.

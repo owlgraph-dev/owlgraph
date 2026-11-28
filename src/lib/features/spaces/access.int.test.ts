@@ -5,7 +5,7 @@
 import { describe, expect, inject, it } from 'vitest';
 import { db } from '#lib/platform/db.server.ts';
 import { createLinkDocument } from '#lib/features/documents/server.ts';
-import { createPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { createPage, renamePage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { setNodeVisibility, userCanReadNode, type NodeAccessRow } from '#lib/features/nodes/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 import {
@@ -40,6 +40,14 @@ describe('a space as an admin manages it', () => {
     const ns = await createSpace({ name: 'To delete', slug: 'to-delete', accessLevel: 'internal' });
     await deleteSpace(ns.id);
     expect((await listSpaces()).map((n) => n.id)).not.toContain(ns.id);
+  });
+
+  it('a node named like the space deleted keeps its name at the root: that space is gone', async () => {
+    const ns = await createSpace({ name: 'Own name', slug: 'own-name', accessLevel: 'internal' });
+    const page = await createPage('Own name', await userOf('admin'), { spaceId: ns.id });
+    await renamePage(page.id, { slug: 'own-name' });
+    await deleteSpace(ns.id);
+    expect((await db<{ slug: string }[]>`select slug from nodes where id = ${page.id}`)[0].slug).toBe('own-name');
   });
 
   it('a prefix reserved for a built-in route, another space’s, or a page’s slug at the site root is refused, on create and on rename', async () => {
