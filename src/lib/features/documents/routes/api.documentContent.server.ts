@@ -59,7 +59,7 @@ export const GET: RequestHandler<Params> = async ({ params, url, locals }) => {
 export const PUT: RequestHandler<Params> = async ({ params, request, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   // A document from an integration keeps its source.
   if (doc.source === 'plugin') return apiError('source_fixed');
 

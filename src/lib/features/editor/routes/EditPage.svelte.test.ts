@@ -157,6 +157,74 @@ describe('a document in its editor', () => {
   });
 });
 
+const COLLECTION_ID = 'c0000000-0000-4000-8000-0000000000b1';
+
+/** What the edit route's load gives for a curated collection, restricted by itself. */
+function collectionData(extra: Partial<Extract<EditPageData, { kind: 'collection' }>> = {}): EditPageData {
+  return {
+    kind: 'collection',
+    collection: {
+      id: COLLECTION_ID,
+      title: 'Reading list',
+      slug: 'reading-list',
+      space_id: 'ns-default',
+      space_slug: null,
+      plugin: null,
+      visibility: 'restricted',
+      space_access_level: 'public',
+      created_by: 'u-editor',
+      created_at: '2026-10-01T09:00:00.000Z',
+      updated_at: '2026-10-01T09:00:00.000Z',
+      class_id: 'class-collection',
+      locale: 'en',
+    },
+    source: null,
+    members: [],
+    membersBasis: '',
+    tags: [],
+    manualProperties: [],
+    propSuggestions: [],
+    propertyGroups: [],
+    tagSuggestions: [],
+    nodeClassId: 'class-collection',
+    locale: 'en',
+    nodeClasses: [],
+    classFields: null,
+    visibility: 'restricted',
+    spaceAccessLevel: 'public',
+    spaceMembers: [],
+    shares: ['u-bea'],
+    users: [
+      { id: 'u-bea', name: 'Bea Reader', email: 'bea@example.org' },
+      { id: 'u-dina', name: 'Dina Writer', email: 'dina@example.org' },
+    ],
+    spaces: SPACES,
+    ...extra,
+  } as EditPageData;
+}
+
+describe('a collection in its editor', () => {
+  it('shares a collection restricted by itself with chosen people, sending the list to the collection', async () => {
+    page.data = { user: { id: 'u-editor', role: 'editor' } };
+    const calls = server((call) => (call.method === 'PATCH' ? Response.json({ shares: (call.body as { shares: string[] }).shares }) : undefined));
+    await render(EditPage, { data: collectionData() });
+
+    await screen.getByRole('button', { name: 'Access control' }).click();
+    const panel = screen.getByRole('dialog', { name: 'Access control' });
+    await expect.element(panel.getByText('You (the owner) and admins always have access.', { exact: false })).toBeVisible();
+    await expect.element(panel.getByRole('checkbox', { name: /Bea Reader/ })).toBeChecked();
+    await expect.element(panel.getByRole('checkbox', { name: /Dina Writer/ })).not.toBeChecked();
+
+    await panel.getByRole('checkbox', { name: /Dina Writer/ }).click();
+    await panel.getByRole('button', { name: 'Apply' }).click();
+    await vi.waitFor(() =>
+      expect(requests(calls, `/api/collections/${COLLECTION_ID}`)).toEqual([
+        { method: 'PATCH', url: `/api/collections/${COLLECTION_ID}`, body: { shares: ['u-bea', 'u-dina'] } },
+      ])
+    );
+  });
+});
+
 const PAGE_ID = 'p0000000-0000-4000-8000-0000000000c1';
 const LOCK = `/api/pages/${PAGE_ID}/lock`;
 const DOC = { type: 'doc', content: [{ type: 'paragraph', attrs: { blockId: 'p-1' }, content: [{ type: 'text', text: 'Hello' }] }] };

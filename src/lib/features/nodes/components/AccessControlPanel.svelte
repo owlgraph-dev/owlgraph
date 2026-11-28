@@ -24,7 +24,6 @@
     onSetVisibility,
     onSetShares,
     onSetSpace,
-    shareList = true,
     shareLinkSection = true,
     onClose,
   }: {
@@ -46,8 +45,7 @@
     onSetVisibility?: (visibility: string | null) => Promise<{ ok: boolean; visibility?: string | null } | undefined>;
     onSetShares?: (shares: string[]) => Promise<{ ok: boolean; shares?: string[] } | undefined>;
     onSetSpace?: (spaceId: string) => Promise<{ ok: boolean; error?: string } | undefined>;
-    // Off for a node kind without a share list (a collection) or share links.
-    shareList?: boolean;
+    // Off for a node kind without share links (a collection).
     shareLinkSection?: boolean;
     onClose: () => void;
   } = $props();
@@ -226,9 +224,7 @@
       </ul>
     {/if}
   {/if}
-  {#if draftVisibility === 'restricted' && !shareList}
-    <p class="prop-hint">{m.editor_access_control_restricted_owner_only()}</p>
-  {:else if draftVisibility === 'restricted'}
+  {#if draftVisibility === 'restricted'}
     <p class="prop-hint">{m.editor_access_control_restricted_hint()}</p>
     {#if users.length === 0}
       <div class="ac-empty"><EmptyState size="sm">{m.editor_access_control_no_other_users()}</EmptyState></div>

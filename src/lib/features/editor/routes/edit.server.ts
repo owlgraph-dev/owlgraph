@@ -10,7 +10,6 @@ import { nodePath } from '#lib/features/nodes/index.ts';
 import {
   getPage,
   listPagesForUser,
-  getPageShares,
   userCanReadPage,
   userCanWritePage,
 } from '#lib/features/pages/server.ts';
@@ -19,7 +18,7 @@ import { listEnabledPageLayoutPresets } from '#lib/features/pages/server.ts';
 import { collectAssetIds, type JsonNode } from '#lib/features/content/index.ts';
 import { getAssetSizes } from '#lib/features/media/server.ts';
 import { getNodeTags, listTags } from '#lib/features/semantic/server.ts';
-import { listDocumentsForUser, getDocument, getDocumentShares, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { listDocumentsForUser, getDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
 import { getCollection, membersWithBasis, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
 import { describeCollectionSource, enabledPlugins } from '#lib/features/pluginHost/server.ts';
 // Labels arrive resolved for the request's locale (docs/architecture/languages.md).
@@ -31,7 +30,7 @@ import { listUsers } from '#lib/features/auth/server.ts';
 import { latestVersionId } from '#lib/features/pages/server.ts';
 import { getContentSchemeDefault } from '#lib/features/content/server.ts';
 import { can } from '#lib/features/auth/server.ts';
-import { listShareLinks } from '#lib/features/nodes/server.ts';
+import { getNodeShares, listShareLinks } from '#lib/features/nodes/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { space?: string; slug: string };
@@ -46,7 +45,7 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
   if (node.type === 'document') {
     const doc = await getDocument(node.id);
     if (!doc) throw error(404, 'Document not found');
-    if (!userCanWriteDocument(locals.user, doc)) {
+    if (!(await userCanWriteDocument(locals.user, doc))) {
       if (await userCanReadDocument(locals.user, doc)) throw redirect(303, nodePath(doc.space_slug, doc.slug));
       throw redirect(303, '/');
     }
@@ -76,7 +75,7 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       visibility: doc.visibility,
       spaceAccessLevel: doc.space_access_level,
       spaceMembers,
-      shares: await getDocumentShares(doc.id),
+      shares: await getNodeShares(doc.id),
       users: allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email })),
       shareLinks: (await listShareLinks(doc.id)).map((l) => ({ id: l.id, label: l.label, createdAt: l.created_at })),
       spaces: (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
@@ -119,6 +118,8 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       visibility: collection.visibility,
       spaceAccessLevel: collection.space_access_level,
       spaceMembers,
+      shares: await getNodeShares(collection.id),
+      users: allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email })),
       spaces: (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
     };
   }
@@ -169,7 +170,7 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
     visibility: page.visibility,
     spaceAccessLevel: page.space_access_level,
     spaceMembers,
-    shares: await getPageShares(page.id),
+    shares: await getNodeShares(page.id),
     users: allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email })),
     shareLinks: (await listShareLinks(page.id)).map((l) => ({ id: l.id, label: l.label, createdAt: l.created_at })),
     me: locals.user ? { id: locals.user.id, name: locals.user.name, role: locals.user.role } : null,

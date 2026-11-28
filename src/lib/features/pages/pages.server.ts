@@ -194,29 +194,13 @@ export async function setPageSpace(pageId: string, spaceId: string, user: Sessio
   await setNodeSpace(pageId, spaceId, user);
 }
 
-export async function getPageShares(pageId: string): Promise<string[]> {
-  const rows = await db<{ user_id: string }[]>`select user_id from page_shares where page_id = ${pageId}`;
-  return rows.map((r) => r.user_id);
-}
-
-export async function setPageShares(pageId: string, userIds: unknown): Promise<string[]> {
-  const ids = Array.isArray(userIds) ? [...new Set(userIds.map((u) => String(u)))] : [];
-  await db.begin(async (sql) => {
-    await sql`delete from page_shares where page_id = ${pageId}`;
-    for (const uid of ids) {
-      await sql`insert into page_shares (page_id, user_id) values (${pageId}, ${uid}) on conflict do nothing`;
-    }
-  });
-  return ids;
-}
-
-// The node model's checks (nodes/access.server.ts) with kind 'page'.
+// The node model's checks (nodes/access.server.ts), one rule for every node.
 export async function userCanReadPage(user: SessionUser | null, page: NodeAccessRow): Promise<boolean> {
-  return userCanReadNode(user, page, 'page');
+  return userCanReadNode(user, page);
 }
 
 export async function userCanWritePage(user: SessionUser | null, page: NodeAccessRow): Promise<boolean> {
-  return userCanWriteNode(user, page, 'page');
+  return userCanWriteNode(user, page);
 }
 
 // Page settings (pageAttrs.ts) live on the doc's root node, so a doc rebuilt

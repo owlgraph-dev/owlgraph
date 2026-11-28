@@ -95,89 +95,73 @@ describe('canReadNode()', () => {
   });
 });
 
-describe('canWriteNode() on a page', () => {
+describe('canWriteNode()', () => {
   it('viewers and anonymous never write', () => {
-    expect(canWriteNode(viewer, page('internal', null), 'page')).toBe(false);
-    expect(canWriteNode(null, page('public', null), 'page')).toBe(false);
+    expect(canWriteNode(viewer, page('internal', null))).toBe(false);
+    expect(canWriteNode(null, page('public', null))).toBe(false);
   });
 
   it('admin writes anything, including others’ restricted pages', () => {
-    expect(canWriteNode(admin, page('restricted', 'someone-else'), 'page')).toBe(true);
+    expect(canWriteNode(admin, page('restricted', 'someone-else'))).toBe(true);
   });
 
   it('editor writes public/internal pages', () => {
-    expect(canWriteNode(editor, page('public', 'someone'), 'page')).toBe(true);
-    expect(canWriteNode(editor, page('internal', 'someone'), 'page')).toBe(true);
+    expect(canWriteNode(editor, page('public', 'someone'))).toBe(true);
+    expect(canWriteNode(editor, page('internal', 'someone'))).toBe(true);
   });
 
   it('editor writes a restricted page without being shared/a member ONLY if they own it', () => {
-    expect(canWriteNode(editor, page('restricted', editor.id), 'page')).toBe(true);
-    expect(canWriteNode(editor, page('restricted', 'someone-else'), 'page')).toBe(false);
+    expect(canWriteNode(editor, page('restricted', editor.id))).toBe(true);
+    expect(canWriteNode(editor, page('restricted', 'someone-else'))).toBe(false);
   });
 
   // Write resolves the effective visibility, as read does, not the raw column.
   it('owner of an inherited-restricted page can still write it', () => {
-    expect(canWriteNode(editor, inheriting('restricted', editor.id), 'page')).toBe(true);
+    expect(canWriteNode(editor, inheriting('restricted', editor.id))).toBe(true);
   });
 
   describe('restricted access subjects grant read AND write (symmetric trust)', () => {
     it('a space member (non-owner) can write an inherited-restricted page', () => {
       const p = inheriting('restricted', 'someone-else');
       expect(canReadNode(editor, p, false, /* isSpaceMember */ true)).toBe(true);
-      expect(canWriteNode(editor, p, 'page', false, /* isSpaceMember */ true)).toBe(true);
+      expect(canWriteNode(editor, p, false, /* isSpaceMember */ true)).toBe(true);
     });
 
     it('a non-member (non-owner) editor cannot write an inherited-restricted page', () => {
       const p = inheriting('restricted', 'someone-else');
-      expect(canWriteNode(editor, p, 'page', false, /* isSpaceMember */ false)).toBe(false);
+      expect(canWriteNode(editor, p, false, /* isSpaceMember */ false)).toBe(false);
     });
 
     it('a user on an explicitly-overridden page\'s share list (non-owner) can write it', () => {
       const p = page('restricted', 'someone-else');
       expect(canReadNode(editor, p, /* isShared */ true, false)).toBe(true);
-      expect(canWriteNode(editor, p, 'page', /* isShared */ true, false)).toBe(true);
+      expect(canWriteNode(editor, p, /* isShared */ true, false)).toBe(true);
     });
 
     it('a non-shared (non-owner) editor cannot write an explicitly-overridden restricted page', () => {
       const p = page('restricted', 'someone-else');
-      expect(canWriteNode(editor, p, 'page', /* isShared */ false, false)).toBe(false);
+      expect(canWriteNode(editor, p, /* isShared */ false, false)).toBe(false);
     });
 
     it('the two subjects do not cross-apply: a space member is not automatically on a different page\'s explicit share list, and vice versa', () => {
       const inheritedPage = inheriting('restricted', 'someone-else');
       const overriddenPage = page('restricted', 'someone-else');
-      expect(canWriteNode(editor, overriddenPage, 'page', false, /* isSpaceMember */ true)).toBe(false);
-      expect(canWriteNode(editor, inheritedPage, 'page', /* isShared */ true, false)).toBe(false);
+      expect(canWriteNode(editor, overriddenPage, false, /* isSpaceMember */ true)).toBe(false);
+      expect(canWriteNode(editor, inheritedPage, /* isShared */ true, false)).toBe(false);
     });
 
     it('viewers never write, even as a member or on the share list', () => {
-      expect(canWriteNode(viewer, inheriting('restricted', 'someone-else'), 'page', false, true)).toBe(false);
-      expect(canWriteNode(viewer, page('restricted', 'someone-else'), 'page', true, false)).toBe(false);
+      expect(canWriteNode(viewer, inheriting('restricted', 'someone-else'), false, true)).toBe(false);
+      expect(canWriteNode(viewer, page('restricted', 'someone-else'), true, false)).toBe(false);
     });
   });
 });
 
-describe('canWriteNode() per node type', () => {
-  it('writes a collection like a page, a document only as its owner', () => {
-    const collection = page('internal', 'someone');
-    expect(canWriteNode(editor, collection, 'collection')).toBe(true);
-    expect(canWriteNode(viewer, collection, 'collection')).toBe(false);
-    expect(canWriteNode(null, collection, 'collection')).toBe(false);
-    expect(canWriteNode(editor, page('internal', 'someone'), 'document')).toBe(false);
-    expect(canWriteNode(editor, page('internal', 'editor'), 'document')).toBe(true);
-  });
-
-  it('never lets a viewer write, not even a document they uploaded before their role was lowered', () => {
-    expect(canWriteNode(viewer, page('internal', 'viewer'), 'document')).toBe(false);
-    expect(canWriteNode(viewer, page('restricted', 'viewer'), 'document')).toBe(false);
-    expect(canWriteNode(viewer, page('restricted', 'viewer'), 'collection')).toBe(false);
-    expect(canWriteNode(viewer, page('restricted', 'viewer'), 'page')).toBe(false);
-  });
-
-  it('writes a restricted collection only as its owner, a space member while it inherits, or an admin', () => {
-    expect(canWriteNode(editor, page('restricted', 'someone'), 'collection')).toBe(false);
-    expect(canWriteNode(editor, page('restricted', 'editor'), 'collection')).toBe(true);
-    expect(canWriteNode(editor, inheriting('restricted', 'someone'), 'collection', false, true)).toBe(true);
-    expect(canWriteNode(admin, page('restricted', 'someone'), 'collection')).toBe(true);
+describe('canWriteNode() for every node, whatever it holds', () => {
+  // One rule (docs/adr/0027-one-rule-says-who-may-change-a-node.md): nothing
+  // here asks what a node holds.
+  it('never lets a viewer write, not even a node they made before their role was lowered', () => {
+    expect(canWriteNode(viewer, page('internal', 'viewer'))).toBe(false);
+    expect(canWriteNode(viewer, page('restricted', 'viewer'))).toBe(false);
   });
 });

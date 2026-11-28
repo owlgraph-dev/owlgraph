@@ -7,7 +7,7 @@ import { JSDOM } from 'jsdom';
 import { db } from '#lib/platform/db.server.ts';
 import { call, createSpace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { connectAs, textOf } from '#tests/integration/mcp.ts';
-import type { Role } from '#tests/integration/users.ts';
+import { userOf, type Role } from '#tests/integration/users.ts';
 
 const app = await startApp();
 
@@ -120,6 +120,21 @@ describe.skipIf(app.skipped)('collections, served', () => {
       expect((await call(served, `/api/collections/${c.id}`, { as: 'admin', method: 'DELETE' })).ok).toBe(true);
       expect((await call(served, `/${c.slug}`, { as: 'admin' })).status).toBe(404);
       expect((await call(served, `/${c.first.slug}`, { as: 'admin' })).status).toBe(200);
+    });
+
+    it('restricted by itself, is shared with chosen people, who then read and change it; whoever it is not shared with gets 404', async () => {
+      const c = await curated({ restricted: true });
+      const editorB = (await userOf('editorB')).id;
+      expect((await call(served, `/${c.slug}`, { as: 'editorB' })).status).toBe(404);
+
+      const shared = await call(served, `/api/collections/${c.id}`, { as: 'admin', method: 'PATCH', json: { shares: [editorB] } });
+      expect(shared.ok).toBe(true);
+      expect(((await shared.json()) as { shares: string[] }).shares).toEqual([editorB]);
+
+      expect((await call(served, `/${c.slug}`, { as: 'editorB' })).status).toBe(200);
+      expect((await call(served, `/api/collections/${c.id}`, { as: 'editorB', method: 'PATCH', json: { title: 'Renamed by its sharee' } })).ok).toBe(true);
+      expect((await call(served, `/${c.slug}`, { as: 'editorC' })).status).toBe(404);
+      expect((await call(served, `/api/collections/${c.id}`, { as: 'editorC', method: 'PATCH', json: { title: 'no' } })).status).toBe(404);
     });
 
     it('is found by search, and by its type on the search page without its members', async () => {

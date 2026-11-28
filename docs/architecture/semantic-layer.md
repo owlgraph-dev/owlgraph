@@ -65,10 +65,9 @@ A **collection** is an ordered set of nodes: pages, documents and
 collections someone put in a sequence, or a folder another service holds,
 mirrored through an integration ([plugins.md](plugins.md)). It is a node like
 any other — a class (its L1 type or a domain class below it), properties,
-tags, an access level, a place in search, the graph and queries — and is
-written like a page: an editor may change a public or internal one, a
-restricted one its owner, its space's members while it inherits, or an
-admin. It has no per-user share list.
+tags, an access level and a share list, a place in search, the graph and
+queries — and is changed like every node: by any editor who may read it
+([authorization.md](authorization.md#two-checks)).
 
 Its row (`collections`) says where its members come from — its **membership
 source**, derived, never stored as such:
@@ -217,7 +216,7 @@ Where a class sits decides what it applies to: a class under `document` can
 only be assigned to documents. This is why the editor's class picker offers
 the node's own type (the baseline, e.g. "Page") plus the domain classes under
 that type, and nothing else. Assignment is an ordinary content write
-(`page:write` / document ownership), transported as `nodeClassId` in the
+(`page:write` and the node check), transported as `nodeClassId` in the
 node's `PATCH` body; `null` means "back to just the node type". Admins define
 domain classes (key, label, description, **parent**, property group,
 optional overview page) under `/settings/schema/classes`, gated by

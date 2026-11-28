@@ -25,7 +25,7 @@ const accessRow = async (id: string): Promise<NodeAccessRow> =>
       select n.id, n.visibility, n.created_by, n.space_id, ns.access_level as space_access_level
       from nodes n join spaces ns on ns.id = n.space_id where n.id = ${id}`
   )[0];
-const anonymousReads = async (id: string) => userCanReadNode(null, await accessRow(id), 'document');
+const anonymousReads = async (id: string) => userCanReadNode(null, await accessRow(id));
 const storedVisibility = async (id: string) => (await db<{ visibility: string | null }[]>`select visibility from nodes where id = ${id}`)[0].visibility;
 const levelOf = async (id: string) => (await listSpaces()).find((ns) => ns.id === id)?.access_level;
 
@@ -94,9 +94,9 @@ describe('the access a space gives its content', () => {
     const page = await accessRow((await createPage('Members page', admin, { spaceId: ns.id })).id);
     expect(page.visibility).toBeNull();
 
-    expect(await userCanReadNode(editorB, page, 'page')).toBe(true);
+    expect(await userCanReadNode(editorB, page)).toBe(true);
     expect(await userCanWritePage(editorB, page)).toBe(true);
-    expect(await userCanReadNode(editorC, page, 'page')).toBe(false);
+    expect(await userCanReadNode(editorC, page)).toBe(false);
     expect(await userCanWritePage(editorC, page)).toBe(false);
   });
 });

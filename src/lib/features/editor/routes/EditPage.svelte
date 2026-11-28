@@ -240,6 +240,8 @@
     visibility={data.visibility}
     spaceAccessLevel={data.spaceAccessLevel}
     spaceMembers={data.spaceMembers}
+    shares={data.shares}
+    users={data.users}
     spaceId={collection.space_id}
     spaces={data.spaces}
     {...collectionActions}

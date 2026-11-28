@@ -1100,7 +1100,6 @@
 	"editor_access_control_visibility_restricted_option": "Restricted — only selected users",
 	"editor_access_control_public_needs_space": "To make it public, an admin sets the space to public under Settings → Spaces.",
 	"editor_access_control_restricted_hint": "You (the owner) and admins always have access. Select who else can read:",
-	"editor_access_control_restricted_owner_only": "Only you (the owner) and admins have access.",
 	"editor_access_control_no_other_users": "No other users to share with.",
 	"editor_access_control_cancel": "Cancel",
 	"editor_access_control_apply": "Apply",

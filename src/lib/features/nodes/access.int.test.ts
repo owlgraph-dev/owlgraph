@@ -64,7 +64,7 @@ describe('who may read a node: the per-node check and the SQL filter agree for e
       const bySql = await readableBySql(readers[reader]);
       for (const node of Object.keys(EXPECTED) as Node[]) {
         const expected = EXPECTED[node].includes(reader);
-        const byNode = await userCanReadNode(readers[reader], await accessRow(nodes[node]), 'page');
+        const byNode = await userCanReadNode(readers[reader], await accessRow(nodes[node]));
         expect(byNode, `${reader} reading ${node} (per node)`).toBe(expected);
         expect(bySql.has(nodes[node]), `${reader} reading ${node} (SQL)`).toBe(expected);
       }

@@ -7,12 +7,10 @@ import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import {
   getPage,
-  getPageShares,
   saveDoc,
   renamePage,
   setPageVisibility,
   setPageSpace,
-  setPageShares,
   setPageContentScheme,
   userCanWritePage,
   deletePage,
@@ -21,7 +19,7 @@ import { getHomePageId } from '#lib/features/site/server.ts';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
 import { setNodeClass } from '#lib/features/semantic/server.ts';
-import { setNodeLocale } from '#lib/features/nodes/server.ts';
+import { setNodeLocale, setNodeShares } from '#lib/features/nodes/server.ts';
 import { getLock } from '#lib/features/pages/server.ts';
 import { isContentScheme } from '#lib/features/content/index.ts';
 import { ACKNOWLEDGE_DROPPED_HEADER, droppedSummary, isUnknownDropped, parseAcknowledged } from '#lib/features/pages/index.ts';
@@ -99,18 +97,16 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       out.visibility = stored;
     }
     if (Array.isArray(body.shares)) {
-      // Read first: added and removed exist only as a diff.
-      const before = await getPageShares(params.id);
-      const granteeIds = await setPageShares(params.id, body.shares);
+      const change = await setNodeShares(params.id, body.shares);
       logEvent(locals.log, 'node.shares_changed', {
         nodeId: params.id,
         nodeType: 'page',
-        granteeIds,
-        addedIds: granteeIds.filter((id) => !before.includes(id)),
-        removedIds: before.filter((id) => !granteeIds.includes(id)),
+        granteeIds: change.shares,
+        addedIds: change.added,
+        removedIds: change.removed,
         actorId: locals.user?.id ?? null,
       });
-      out.shares = granteeIds;
+      out.shares = change.shares;
     }
     if (body.contentScheme !== undefined) {
       if (body.contentScheme !== null && !isContentScheme(body.contentScheme)) return apiError('invalid_content_scheme');

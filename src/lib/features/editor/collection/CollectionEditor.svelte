@@ -5,8 +5,9 @@
 -->
 <script lang="ts">
   // A curated collection's members are arranged here; a mirrored one's come
-  // from its integration, so they're listed read-only. A collection has no
-  // per-user shares and no share links, so the access panel offers neither.
+  // from its integration, so they're listed read-only. A collection has a share
+  // list like every node, but no share links, so the access panel offers the
+  // first alone.
   import { untrack } from 'svelte';
   import EditorHeader from '../meta/EditorHeader.svelte';
   import { MetaMirror } from '../meta/metaMirror.svelte';
@@ -51,6 +52,9 @@
     spaceAccessLevel,
     spaceMembers = [],
     onSetVisibility,
+    shares = [],
+    users = [],
+    onSetShares,
     spaceId,
     spaces = [],
     onSetSpace,
@@ -158,11 +162,13 @@
   {visibility}
   {spaceAccessLevel}
   {spaceMembers}
+  {shares}
+  {users}
   {onSetVisibility}
+  {onSetShares}
   {spaceId}
   {spaces}
   {onSetSpace}
-  shareList={false}
   shareLinkSection={false}
   onClose={() => (accessControlOpen = false)}
 />

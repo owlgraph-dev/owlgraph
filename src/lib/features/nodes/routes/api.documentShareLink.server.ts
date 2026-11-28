@@ -15,7 +15,7 @@ type Params = { id: string; linkId: string };
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   await revokeShareLink(params.linkId, params.id);
   // Logged here: the adapter knows the actor, revokeShareLink doesn't.
   logEvent(locals.log, 'share.revoked', {

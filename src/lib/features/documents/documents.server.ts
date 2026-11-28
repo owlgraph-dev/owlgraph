@@ -8,7 +8,7 @@
 import { createHash } from 'node:crypto';
 import { db, type TxSql } from '#lib/platform/db.server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { canWriteNode, type Visibility } from '#lib/features/nodes/index.ts';
+import type { Visibility } from '#lib/features/nodes/index.ts';
 import {
   insertNode,
   readableNodes,
@@ -21,6 +21,7 @@ import {
   assertCanPlaceInSpace,
   assertNotWiderThanSpace,
   userCanReadNode,
+  userCanWriteNode,
 } from '#lib/features/nodes/server.ts';
 import { getSpace, getDefaultSpace } from '#lib/features/spaces/server.ts';
 import { getTypeClass } from '#lib/features/semantic/server.ts';
@@ -390,29 +391,13 @@ export async function getDocumentText(id: string): Promise<{ mime: string; text:
   return { mime: data.mime, text: await extractText(data.bytes, data.mime) };
 }
 
-export async function getDocumentShares(id: string): Promise<string[]> {
-  const rows = await db<{ user_id: string }[]>`select user_id from document_shares where document_id = ${id}`;
-  return rows.map((r) => r.user_id);
-}
-
-export async function setDocumentShares(id: string, userIds: unknown): Promise<string[]> {
-  const ids = Array.isArray(userIds) ? [...new Set(userIds.map((u) => String(u)))] : [];
-  await db.begin(async (sql) => {
-    await sql`delete from document_shares where document_id = ${id}`;
-    for (const uid of ids) {
-      await sql`insert into document_shares (document_id, user_id) values (${id}, ${uid}) on conflict do nothing`;
-    }
-  });
-  return ids;
-}
-
-// Document writes are owner or admin only, so they need no lookup and stay synchronous.
-export function userCanWriteDocument(user: SessionUser | null, doc: DocumentRow): boolean {
-  return canWriteNode(user, doc, 'document');
+// The node model's checks (nodes/access.server.ts), one rule for every node.
+export async function userCanWriteDocument(user: SessionUser | null, doc: DocumentRow): Promise<boolean> {
+  return userCanWriteNode(user, doc);
 }
 
 export async function userCanReadDocument(user: SessionUser | null, doc: DocumentRow): Promise<boolean> {
-  return userCanReadNode(user, doc, 'document');
+  return userCanReadNode(user, doc);
 }
 
 export async function listDocumentsForUser(user: SessionUser | null): Promise<DocumentRow[]> {

@@ -12,14 +12,13 @@ import { createUser, createSession, createApiToken, type Role } from '../../src/
 import {
   createPage,
   setPageVisibility,
-  setPageShares,
   appendBlock,
   withPageDoc
 } from '../../src/lib/features/pages/server';
 import { setManualProperties, upsertPropertyDefinition, upsertPropertyGroup } from '../../src/lib/features/semantic/server';
 import { upsertRelationshipType, setRelationshipTypeProperties } from '../../src/lib/features/semantic/server';
-import { createDocument, setDocumentShares } from '../../src/lib/features/documents/server';
-import { setNodeVisibility } from '../../src/lib/features/nodes/server';
+import { createDocument } from '../../src/lib/features/documents/server';
+import { setNodeShares, setNodeVisibility } from '../../src/lib/features/nodes/server';
 import { ensureCoreClasses, getTypeClass, upsertNodeClass } from '../../src/lib/features/semantic/server';
 import { CORE_GROUP_SEED, DOCUMENTS_GROUP_SEED, DOCUMENT_PROPERTY_SEEDS, TYPE_CLASS_SEEDS } from '../../src/lib/features/semantic/server';
 import { getDefaultSpace, setSpaceAccessLevel } from '../../src/lib/features/spaces/server';
@@ -80,7 +79,7 @@ async function reset() {
     // The cascade reports every table it reaches as a NOTICE.
     await sql`set local client_min_messages = warning`;
     await sql.unsafe(`truncate table
-      users, nodes, pages, sessions, api_tokens, page_shares, edges, edge_properties,
+      users, nodes, pages, sessions, api_tokens, node_shares, edges, edge_properties,
       node_properties, node_tags, property_definitions, relationship_types, site_settings, assets, documents,
       footer_links, themes, page_layout_presets, stylesheets, custom_styles,
       font_families, font_variants
@@ -163,7 +162,7 @@ export async function prepareTestDatabase(): Promise<PreparedSeed> {
 
   const restricted = await createPage('Restricted Page', editorA);
   await setPageVisibility(restricted.id, 'restricted');
-  await setPageShares(restricted.id, [editorB.id]);
+  await setNodeShares(restricted.id, [editorB.id]);
   await appendBlock(restricted.id, { kind: 'paragraph', text: restrictedBody });
 
   // Properties across the three visibility tiers, for authorization under a
@@ -265,7 +264,7 @@ export async function prepareTestDatabase(): Promise<PreparedSeed> {
     user: editorA,
   });
   await setNodeVisibility(restrictedDoc.id, 'restricted', { touch: true });
-  await setDocumentShares(restrictedDoc.id, [editorB.id]);
+  await setNodeShares(restrictedDoc.id, [editorB.id]);
   // Known text, for text extraction.
   const mdDoc = await createDocument({
     bytes: Buffer.from('# Heading\n\nSearchable body text for extraction.'),

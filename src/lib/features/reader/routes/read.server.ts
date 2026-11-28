@@ -147,7 +147,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
     // The badge shows the effective value, never null.
     doc: { ...doc, visibility: doc.visibility ?? doc.space_access_level },
     referencedBy: await getIncomingEdges(doc.id, locals.user),
-    canEdit: userCanWriteDocument(locals.user, doc),
+    canEdit: await userCanWriteDocument(locals.user, doc),
     tags: await getNodeTags(doc.id),
     manualProperties: await getManualProperties(doc.id),
     classFields: await getNodeClassFields(doc.class_id),

@@ -180,12 +180,12 @@ export async function setCollectionSourceSearch(id: string, text: string, sql: T
   if (rows.length > 0) await refreshCollectionSearchMeta(id, sql);
 }
 
-// Written like a page (docs/architecture/authorization.md): whoever may read a restricted
-// one (the space's members while it inherits) may write it too.
+// The node model's checks (nodes/access.server.ts), one rule for every node:
+// whoever may read a restricted one may write it too.
 export async function userCanReadCollection(user: SessionUser | null, row: CollectionRow): Promise<boolean> {
-  return userCanReadNode(user, row, 'collection');
+  return userCanReadNode(user, row);
 }
 
 export async function userCanWriteCollection(user: SessionUser | null, row: CollectionRow): Promise<boolean> {
-  return userCanWriteNode(user, row, 'collection');
+  return userCanWriteNode(user, row);
 }

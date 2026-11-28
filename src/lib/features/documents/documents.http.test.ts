@@ -180,16 +180,34 @@ describe.skipIf(app.skipped)('documents, served', () => {
       expect(await documentCount()).toBe(before);
     });
 
-    it('is read by an editor who does not own it, who can neither replace its content nor switch its source, and it stays as it was', async () => {
+    it('has its content replaced by an editor who does not own it but may read it, as every node is changed (decision 0027)', async () => {
       const own = await upload('Owned by editorA', 'the original text');
       expect((await call(served, contentPath(own.id), { as: 'editorB' })).status).toBe(200);
       const form = new FormData();
-      form.append('file', new File(['replaced'], 'replaced.txt', { type: 'text/plain' }));
-      expect((await call(served, contentPath(own.id), { as: 'editorB', method: 'PUT', body: form })).ok).toBe(false);
-      expect((await call(served, contentPath(own.id), { as: 'editorB', method: 'PUT', json: { externalUrl: 'https://example.org/elsewhere' } })).ok).toBe(false);
+      form.append('file', new File(['replaced by editorB'], 'replaced.txt', { type: 'text/plain' }));
+      expect((await call(served, contentPath(own.id), { as: 'editorB', method: 'PUT', body: form })).ok).toBe(true);
       const content = await call(served, contentPath(own.id), { as: 'editorA' });
       expect(content.status).toBe(200);
+      expect(await content.text()).toBe('replaced by editorB');
+    });
+
+    it('is changed by no viewer, whose every write is refused and leaves it as it was: its metadata, its share list, its content, its share links, its deletion', async () => {
+      const own = await upload('Read by a viewer', 'the original text');
+      const path = `/api/documents/${own.id}`;
+      expect((await call(served, contentPath(own.id), { as: 'viewer' })).status).toBe(200);
+      const form = new FormData();
+      form.append('file', new File(['replaced'], 'replaced.txt', { type: 'text/plain' }));
+      const writes = [
+        call(served, path, { as: 'viewer', method: 'PATCH', json: { title: 'Renamed by a viewer' } }),
+        call(served, path, { as: 'viewer', method: 'PATCH', json: { shares: [] } }),
+        call(served, contentPath(own.id), { as: 'viewer', method: 'PUT', body: form }),
+        call(served, `${path}/share-links`, { as: 'viewer', json: {} }),
+        call(served, path, { as: 'viewer', method: 'DELETE' }),
+      ];
+      for (const res of await Promise.all(writes)) expect(res.status).toBe(403);
+      const content = await call(served, contentPath(own.id), { as: 'editorA' });
       expect(await content.text()).toBe('the original text');
+      expect((await db<{ title: string }[]>`select title from nodes where id = ${own.id}`)[0].title).toBe('Read by a viewer');
     });
 
     it('served as text through a share link carries the same sandbox, default-src none and nosniff, and its download is an attachment', async () => {
