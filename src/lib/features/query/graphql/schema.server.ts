@@ -65,14 +65,14 @@ const EdgeConditionInputType = builder.inputType('EdgeCondition', {
 
 const IntrinsicFieldType = builder.enumType('IntrinsicField', {
   description:
-    'A node-level intrinsic field (slug, title, timestamps, type, namespace, creator, class) — a column of the node itself, as opposed to a semantic property (optional, user-defined, in node_properties). CLASS_ID is the node\'s class (a node_classes id, see the `nodeClasses` query); every node has one, at least its node type (page/document/collection) — TYPE is that class\'s nearest node-type ancestor. A CLASS_ID condition is polymorphic by default (see IntrinsicCondition.classMatch). EXTERNAL_URL is a link document\'s external URL — null for a page and an uploaded document, so it alone takes EXISTS/NOT_EXISTS (no value) as well as EQ, NEQ, CONTAINS and STARTS_WITH. LOCALE is the language the node\'s content is in (a language code such as "de" or "en"; EQ, NEQ, IN) — not the language of the interface.',
+    'A node-level intrinsic field (slug, title, timestamps, type, space, creator, class) — a column of the node itself, as opposed to a semantic property (optional, user-defined, in node_properties). CLASS_ID is the node\'s class (a node_classes id, see the `nodeClasses` query); every node has one, at least its node type (page/document/collection) — TYPE is that class\'s nearest node-type ancestor. A CLASS_ID condition is polymorphic by default (see IntrinsicCondition.classMatch). EXTERNAL_URL is a link document\'s external URL — null for a page and an uploaded document, so it alone takes EXISTS/NOT_EXISTS (no value) as well as EQ, NEQ, CONTAINS and STARTS_WITH. LOCALE is the language the node\'s content is in (a language code such as "de" or "en"; EQ, NEQ, IN) — not the language of the interface.',
   values: {
     SLUG: { value: 'slug' },
     TITLE: { value: 'title' },
     CREATED_AT: { value: 'createdAt' },
     UPDATED_AT: { value: 'updatedAt' },
     TYPE: { value: 'type' },
-    NAMESPACE_ID: { value: 'namespaceId' },
+    SPACE_ID: { value: 'spaceId' },
     CREATED_BY: { value: 'createdBy' },
     CLASS_ID: { value: 'classId' },
     EXTERNAL_URL: { value: 'externalUrl' },
@@ -88,7 +88,7 @@ const ClassMatchType = builder.enumType('ClassMatch', {
 
 const IntrinsicConditionInputType = builder.inputType('IntrinsicCondition', {
   description:
-    'A single intrinsic node-field condition, e.g. type = PAGE or createdAt >= "2026-01-01". Allowed operators depend on the field\'s category (text/date/type/namespace/creator/class) — see IntrinsicField. CLASS_ID filters the EXPLICIT class assignment (never class-implied properties) with EQ ("is a"), NEQ ("is not a") and IN ("is any of"), all polymorphic by default — see classMatch.',
+    'A single intrinsic node-field condition, e.g. type = PAGE or createdAt >= "2026-01-01". Allowed operators depend on the field\'s category (text/date/type/space/creator/class) — see IntrinsicField. CLASS_ID filters the EXPLICIT class assignment (never class-implied properties) with EQ ("is a"), NEQ ("is not a") and IN ("is any of"), all polymorphic by default — see classMatch.',
   fields: (t) => ({
     field: t.field({ type: IntrinsicFieldType, required: true }),
     operator: t.field({ type: PropertyOperatorType, required: true }),
@@ -200,7 +200,7 @@ const ContentNode = builder.objectRef<ContentNodeHit>('ContentNode').implement({
     slug: t.exposeString('slug'),
     createdAt: t.exposeString('createdAt', { description: 'ISO timestamp.' }),
     updatedAt: t.exposeString('updatedAt', { description: 'ISO timestamp.' }),
-    namespaceId: t.exposeID('namespaceId'),
+    spaceId: t.exposeID('spaceId'),
     createdBy: t.exposeID('createdBy', { nullable: true }),
     classId: t.exposeID('classId', { description: "The node's class (see nodeClasses) — always set: every node carries a class, at least its node type." }),
     className: t.exposeString('className', {

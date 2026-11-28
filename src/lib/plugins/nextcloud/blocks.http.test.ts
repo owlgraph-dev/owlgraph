@@ -78,7 +78,7 @@ describe.skipIf(app.skipped)('the Nextcloud plugin, served', () => {
     expect(result.type, JSON.stringify(result.data)).toBe('success');
   }
 
-  /** The collection and its anchor page both inherit the public default namespace. */
+  /** The collection and its anchor page both inherit the public default space. */
   async function connect(share: MockShare) {
     const token = `HttpShare${++shares}`;
     mock.shares.set(token, share);

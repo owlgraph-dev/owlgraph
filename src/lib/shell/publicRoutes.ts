@@ -8,7 +8,7 @@
 import { publicRoutes as auth } from '#lib/features/auth/routes/publicRoutes.ts';
 import { publicRoutes as site } from '#lib/features/site/routes/publicRoutes.ts';
 import { publicRoutes as reader } from '#lib/features/reader/routes/publicRoutes.ts';
-import { publicRoutes as namespaces } from '#lib/features/namespaces/routes/publicRoutes.ts';
+import { publicRoutes as spaces } from '#lib/features/spaces/routes/publicRoutes.ts';
 import { publicRoutes as content } from '#lib/features/content/routes/publicRoutes.ts';
 import { publicRoutes as documents } from '#lib/features/documents/routes/publicRoutes.ts';
 import { publicRoutes as media } from '#lib/features/media/routes/publicRoutes.ts';
@@ -26,7 +26,7 @@ export const PUBLIC_ROUTES: ReadonlySet<string> = new Set<string>([
   ...auth,
   ...site,
   ...reader,
-  ...namespaces,
+  ...spaces,
   ...content,
   ...documents,
   ...media,

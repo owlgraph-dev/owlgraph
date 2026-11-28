@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { NodeSearchResult } from '#lib/features/search/index.ts';
-import { appendPage, createRowTypes, pickerNamespace, scopeTypes } from './nodePicker';
+import { appendPage, createRowTypes, pickerSpace, scopeTypes } from './nodePicker';
 import { NODE_TYPES, type NodeType } from '#lib/features/nodes/index.ts';
 
 const ALL: NodeType[] = [...NODE_TYPES];
@@ -52,23 +52,23 @@ describe('scopeTypes', () => {
   });
 });
 
-describe('pickerNamespace', () => {
-  const namespaces = [
+describe('pickerSpace', () => {
+  const spaces = [
     { id: 'n1', name: 'Default', slug: 'default', isDefault: true },
     { id: 'n2', name: 'Research', slug: 'research', isDefault: false },
   ];
-  it('names the namespace asked for; the default one has no address part', () => {
-    expect(pickerNamespace(namespaces, 'n2')).toEqual({ id: 'n2', name: 'Research', slug: 'research' });
-    expect(pickerNamespace(namespaces, 'n1')).toEqual({ id: 'n1', name: 'Default', slug: null });
+  it('names the space asked for; the default one has no address part', () => {
+    expect(pickerSpace(spaces, 'n2')).toEqual({ id: 'n2', name: 'Research', slug: 'research' });
+    expect(pickerSpace(spaces, 'n1')).toEqual({ id: 'n1', name: 'Default', slug: null });
   });
   it('is null for none, or one not among them', () => {
-    expect(pickerNamespace(namespaces, null)).toBeNull();
-    expect(pickerNamespace(namespaces, 'n9')).toBeNull();
+    expect(pickerSpace(spaces, null)).toBeNull();
+    expect(pickerSpace(spaces, 'n9')).toBeNull();
   });
 });
 
 describe('appendPage', () => {
-  const node = (id: string): NodeSearchResult => ({ type: 'page', id, title: id, slug: id, href: `/${id}`, namespace: null, plugin: null, pluginLabel: null });
+  const node = (id: string): NodeSearchResult => ({ type: 'page', id, title: id, slug: id, href: `/${id}`, space: null, plugin: null, pluginLabel: null });
   it('keeps the order and shows each node once', () => {
     expect(appendPage([node('a'), node('b')], [node('b'), node('c')]).map((n) => n.id)).toEqual(['a', 'b', 'c']);
   });

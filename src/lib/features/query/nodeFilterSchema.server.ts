@@ -21,7 +21,7 @@ const edgeConditionShape = z.object({
   direction: edgeDirectionEnum,
   property: propertyConditionShape.optional(),
 });
-const intrinsicFieldEnum = z.enum(['slug', 'title', 'createdAt', 'updatedAt', 'type', 'namespaceId', 'createdBy', 'classId', 'externalUrl', 'locale']);
+const intrinsicFieldEnum = z.enum(['slug', 'title', 'createdAt', 'updatedAt', 'type', 'spaceId', 'createdBy', 'classId', 'externalUrl', 'locale']);
 const intrinsicConditionShape = z.object({
   field: intrinsicFieldEnum,
   operator: propertyOperatorEnum,

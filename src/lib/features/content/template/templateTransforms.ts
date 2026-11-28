@@ -84,7 +84,7 @@ export function categoryForDatatype(datatype: string | null | undefined): Transf
 }
 
 // templateBinding.ts's bindingMap keys, not the filter's IntrinsicField ids:
-// mapping uses the label keys ('namespace'), the filter the ids ('namespaceId').
+// mapping uses the label keys ('space'), the filter the ids ('spaceId').
 export const INTRINSIC_SOURCE_CATEGORY: Record<string, TransformCategory> = {
   title: 'text',
   slug: 'text',
@@ -92,7 +92,7 @@ export const INTRINSIC_SOURCE_CATEGORY: Record<string, TransformCategory> = {
   createdAt: 'date',
   updatedAt: 'date',
   type: 'reference',
-  namespace: 'reference',
+  space: 'reference',
   creator: 'reference',
   // Text, not a reference: a class name shows as a chip, where case and truncate help.
   class: 'text',

@@ -5,7 +5,7 @@
 import { describe, expect, inject, it } from 'vitest';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { createLinkDocument } from '#lib/features/documents/server.ts';
-import { createNamespace } from '#lib/features/namespaces/server.ts';
+import { createSpace } from '#lib/features/spaces/server.ts';
 import { searchNodesForUser } from '#lib/features/nodes/server.ts';
 import { createPage, saveDoc } from '#lib/features/pages/server.ts';
 import { setNodeClass, setNodeTags, upsertNodeClass } from '#lib/features/semantic/server.ts';
@@ -21,12 +21,12 @@ import { userOf, type Role } from '#tests/integration/users.ts';
 const seed = inject('seed');
 
 type Loaded = {
-  applied: { sort: string | null; view: string; page: number; type: string | null; class: string | null; namespace: string | null };
+  applied: { sort: string | null; view: string; page: number; type: string | null; class: string | null; space: string | null };
   results: { title: string; excerpt: string; highlighted: boolean }[];
   total: number;
   classOptions: { id: string; slug: string }[];
   tagOptions: string[];
-  namespaces: { slug: string | null; name: string }[];
+  spaces: { slug: string | null; name: string }[];
 };
 
 async function searchAs(role: Role | 'anonymous', query: string): Promise<Loaded> {
@@ -35,10 +35,10 @@ async function searchAs(role: Role | 'anonymous', query: string): Promise<Loaded
 }
 const titlesOf = (loaded: Loaded) => loaded.results.map((r) => r.title);
 
-async function listedPage(setup: { title: string; tags?: string[]; visibility?: 'public' | 'internal' | 'restricted'; namespaceId?: string; body?: string; classId?: string }) {
-  // A page in a namespace of its own inherits it; one at the root is opened to the signed-in.
-  const visibility = setup.visibility ?? (setup.namespaceId ? undefined : 'internal');
-  const page = await createPage(setup.title, await userOf('admin'), { visibility, namespaceId: setup.namespaceId });
+async function listedPage(setup: { title: string; tags?: string[]; visibility?: 'public' | 'internal' | 'restricted'; spaceId?: string; body?: string; classId?: string }) {
+  // A page in a space of its own inherits it; one at the root is opened to the signed-in.
+  const visibility = setup.visibility ?? (setup.spaceId ? undefined : 'internal');
+  const page = await createPage(setup.title, await userOf('admin'), { visibility, spaceId: setup.spaceId });
   if (setup.tags) await setNodeTags(page.id, setup.tags);
   if (setup.body) await saveDoc(page.id, { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: setup.body }] }] });
   if (setup.classId) await setNodeClass(page.id, setup.classId);
@@ -92,15 +92,15 @@ describe('the search page', () => {
     expect(titlesOf(await searchAs('editorA', `q=${term}&sort=title`))).toEqual(['Aardvark notes', `Zulu ${term}`]);
   });
 
-  it('for a viewer, drops a namespace parameter naming a restricted namespace they are not in, lists the readable tagged page elsewhere, and offers no such namespace', async () => {
-    const ns = await createNamespace({ name: 'Hidden for search', slug: 'hidden-for-search', accessLevel: 'restricted' });
-    await listedPage({ title: 'Hidden in namespace', tags: ['nsdrop'], namespaceId: ns.id });
+  it('for a viewer, drops a space parameter naming a restricted space they are not in, lists the readable tagged page elsewhere, and offers no such space', async () => {
+    const ns = await createSpace({ name: 'Hidden for search', slug: 'hidden-for-search', accessLevel: 'restricted' });
+    await listedPage({ title: 'Hidden in space', tags: ['nsdrop'], spaceId: ns.id });
     await listedPage({ title: 'Visible elsewhere', tags: ['nsdrop'] });
 
-    const loaded = await searchAs('viewer', 'namespace=hidden-for-search&tag=nsdrop');
-    expect(loaded.applied.namespace).toBeNull();
+    const loaded = await searchAs('viewer', 'space=hidden-for-search&tag=nsdrop');
+    expect(loaded.applied.space).toBeNull();
     expect(titlesOf(loaded)).toEqual(['Visible elsewhere']);
-    expect(loaded.namespaces.map((n) => n.slug)).not.toContain('hidden-for-search');
+    expect(loaded.spaces.map((n) => n.slug)).not.toContain('hidden-for-search');
   });
 
   it('offers in its pickers only the tags and classes of nodes the viewer can read', async () => {
@@ -123,13 +123,13 @@ describe('the node picker’s link search', () => {
     return (await searchNodesForUser(await userOf(role), typed.q, typed)).hits.map((h) => h.title);
   };
 
-  it('lists no node the viewer cannot read, nor one in a namespace they may not see', async () => {
-    const ns = await createNamespace({ name: 'Members of the picker', slug: 'picker-members', accessLevel: 'restricted' });
-    await listedPage({ title: 'Pickable in namespace', namespaceId: ns.id });
+  it('lists no node the viewer cannot read, nor one in a space they may not see', async () => {
+    const ns = await createSpace({ name: 'Members of the picker', slug: 'picker-members', accessLevel: 'restricted' });
+    await listedPage({ title: 'Pickable in space', spaceId: ns.id });
 
     expect(await titlesFor('editorC', seed.restrictedTitle)).not.toContain(seed.restrictedTitle);
     expect(await titlesFor('editorB', seed.restrictedTitle)).toContain(seed.restrictedTitle);
-    expect(await titlesFor('editorC', 'Pickable in namespace')).toEqual([]);
-    expect(await titlesFor('admin', 'Pickable in namespace')).toEqual(['Pickable in namespace']);
+    expect(await titlesFor('editorC', 'Pickable in space')).toEqual([]);
+    expect(await titlesFor('admin', 'Pickable in space')).toEqual(['Pickable in space']);
   });
 });

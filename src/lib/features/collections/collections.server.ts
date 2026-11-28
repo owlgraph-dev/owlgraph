@@ -15,14 +15,14 @@ import {
   slugify,
   cleanSlug,
   assertSlugAvailable,
-  namespaceJoin,
-  namespaceSlugColumn,
-  assertCanPlaceInNamespace,
-  assertNotWiderThanNamespace,
+  spaceJoin,
+  spaceSlugColumn,
+  assertCanPlaceInSpace,
+  assertNotWiderThanSpace,
   userCanReadNode,
   userCanWriteNode,
 } from '#lib/features/nodes/server.ts';
-import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getSpace, getDefaultSpace } from '#lib/features/spaces/server.ts';
 import { getTypeClass } from '#lib/features/semantic/server.ts';
 import { CodedError } from '#lib/platform/codedError.ts';
 
@@ -30,12 +30,12 @@ export interface CollectionRow {
   id: string;
   title: string;
   slug: string;
-  namespace_id: string;
-  namespace_slug: string | null;
+  space_id: string;
+  space_slug: string | null;
   // The plugin id of a mirrored collection (docs/architecture/plugins.md); null for a curated one.
   plugin: string | null;
-  visibility: string | null; // null = inherits namespace_access_level, live
-  namespace_access_level: Visibility;
+  visibility: string | null; // null = inherits space_access_level, live
+  space_access_level: Visibility;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -45,9 +45,9 @@ export interface CollectionRow {
 
 // Explicit columns: a missed join fails loudly instead of leaving visibility
 // undefined. No `source_ref`: it is its integration's business.
-export const COLLECTION_COLUMNS = `c.id, n.title, n.slug, n.namespace_id, ${namespaceSlugColumn()}, c.plugin,
-    n.visibility, ns.access_level as namespace_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, n.locale`;
-export const COLLECTION_FROM = `from collections c join nodes n on n.id = c.id ${namespaceJoin('n')}`;
+export const COLLECTION_COLUMNS = `c.id, n.title, n.slug, n.space_id, ${spaceSlugColumn()}, c.plugin,
+    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, n.locale`;
+export const COLLECTION_FROM = `from collections c join nodes n on n.id = c.id ${spaceJoin('n')}`;
 
 export async function getCollection(id: string): Promise<CollectionRow | null> {
   const [row] = await db<CollectionRow[]>`select ${db.unsafe(COLLECTION_COLUMNS)} ${db.unsafe(COLLECTION_FROM)} where c.id = ${id}`;
@@ -68,7 +68,7 @@ export async function listCollectionsForUser(
 }
 
 /**
- * `visibility` may only narrow the namespace's. Mirrored when an integration
+ * `visibility` may only narrow the space's. Mirrored when an integration
  * passes its id and source record, curated otherwise. Runs in `sql` when given.
  */
 export async function createCollection(
@@ -76,7 +76,7 @@ export async function createCollection(
     title: string;
     createdBy: string | null;
     user: SessionUser | null;
-    namespaceId?: string;
+    spaceId?: string;
     locale?: string;
     plugin?: string | null;
     sourceRef?: Record<string, unknown> | null;
@@ -89,18 +89,18 @@ export async function createCollection(
   const curated = (opts.plugin ?? null) === null;
   if (curated !== ((opts.sourceRef ?? null) === null)) throw new Error('A plugin and its source record come together');
   const run = async (tx: TxSql) => {
-    const namespace = opts.namespaceId ? await getNamespace(tx, opts.namespaceId) : await getDefaultNamespace(tx);
-    if (!namespace) throw new CodedError('unknown_namespace', 'Unknown namespace');
-    await assertCanPlaceInNamespace(tx, opts.user, namespace.id, namespace.access_level);
-    if (opts.visibility) assertNotWiderThanNamespace(opts.visibility, namespace.access_level);
+    const space = opts.spaceId ? await getSpace(tx, opts.spaceId) : await getDefaultSpace(tx);
+    if (!space) throw new CodedError('unknown_space', 'Unknown space');
+    await assertCanPlaceInSpace(tx, opts.user, space.id, space.access_level);
+    if (opts.visibility) assertNotWiderThanSpace(opts.visibility, space.access_level);
     const collectionClass = await getTypeClass(tx, 'collection');
     const slug = slugify(title);
     const node = await insertNode(tx, {
       classId: collectionClass.id,
       slug,
-      namespaceId: namespace.id,
+      spaceId: space.id,
       createdBy: opts.createdBy,
-      visibility: opts.visibility ?? null, // null inherits the namespace's access level, live
+      visibility: opts.visibility ?? null, // null inherits the space's access level, live
       title,
       locale: opts.locale,
     });
@@ -132,9 +132,9 @@ export async function renameCollection(id: string, changes: { title?: string; sl
   if (changes.slug !== undefined) {
     slug = cleanSlug(changes.slug);
     if (slug === '') throw new CodedError('slug_required', 'URL slug cannot be empty');
-    const [node] = await db<{ namespace_id: string }[]>`select namespace_id from nodes where id = ${id}`;
+    const [node] = await db<{ space_id: string }[]>`select space_id from nodes where id = ${id}`;
     if (!node) throw new CodedError('not_found', 'Not found');
-    await assertSlugAvailable(db, slug, id, node.namespace_id);
+    await assertSlugAvailable(db, slug, id, node.space_id);
   }
   if (title === undefined && slug === undefined) return getCollection(id);
   return db.begin(async (sql) => {
@@ -181,7 +181,7 @@ export async function setCollectionSourceSearch(id: string, text: string, sql: T
 }
 
 // Written like a page (docs/architecture/authorization.md): whoever may read a restricted
-// one (the namespace's members while it inherits) may write it too.
+// one (the space's members while it inherits) may write it too.
 export async function userCanReadCollection(user: SessionUser | null, row: CollectionRow): Promise<boolean> {
   return userCanReadNode(user, row, 'collection');
 }

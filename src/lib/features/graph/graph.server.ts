@@ -9,7 +9,7 @@ import { db, type TxSql } from '#lib/platform/db.server.ts';
 import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import { timed } from '#lib/platform/logger.server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { applyEdgeProperties, getEdgeProperties } from './edges.server';
 import { blockEdges, isUnknownType, type BlockEdge, type JsonNode } from '#lib/features/content/index.ts';
 import type { NodeType } from '#lib/features/nodes/index.ts';
@@ -114,19 +114,19 @@ export async function getOutgoingEdges(id: string, user: SessionUser | null = nu
 // documents have no content to link from.
 export async function getIncomingEdges(nodeId: string, user: SessionUser | null = null) {
   return db`
-    select distinct p.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, 'links_to' as relation
+    select distinct p.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, 'links_to' as relation
     from edges l
     join pages p on p.id = l.source_id
-    join nodes n on n.id = p.id ${db.unsafe(namespaceJoin('n'))}
+    join nodes n on n.id = p.id ${db.unsafe(spaceJoin('n'))}
     where l.target_id = ${nodeId} and ${readableNodes(user, 'n')}
     order by n.title`;
 }
 
 // Only the nodes the viewer may read, and the edges between them.
 export async function getGraph(user: SessionUser | null = null) {
-  const nodeRows = await db<{ id: string; type: NodeType; slug: string; namespace_slug: string | null; title: string; class_id: string; namespace_id: string }[]>`
-    select n.id, n.type, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.class_id, n.namespace_id
-    from nodes n ${db.unsafe(namespaceJoin('n'))}
+  const nodeRows = await db<{ id: string; type: NodeType; slug: string; space_slug: string | null; title: string; class_id: string; space_id: string }[]>`
+    select n.id, n.type, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.class_id, n.space_id
+    from nodes n ${db.unsafe(spaceJoin('n'))}
     where ${readableNodes(user, 'n')}
     order by n.title`;
 
@@ -142,7 +142,7 @@ export async function getGraph(user: SessionUser | null = null) {
   const label = labelCache();
 
   return {
-    nodes: nodeRows.map((n) => ({ id: n.id, type: n.type, slug: n.slug, namespaceSlug: n.namespace_slug, title: n.title, classId: n.class_id, namespaceId: n.namespace_id })),
+    nodes: nodeRows.map((n) => ({ id: n.id, type: n.type, slug: n.slug, spaceSlug: n.space_slug, title: n.title, classId: n.class_id, spaceId: n.space_id })),
     edges: edgeRows.map((e) => ({
       source: e.source,
       target: e.target,
@@ -160,9 +160,9 @@ export async function getGraph(user: SessionUser | null = null) {
 
 // A page's depth-1 neighbourhood, viewer-scoped, for the local graph.
 export async function getLocalGraph(pageId: string, user: SessionUser | null = null) {
-  const [center] = await db<{ id: string; slug: string; namespace_slug: string | null; title: string; class_id: string; namespace_id: string }[]>`
-    select n.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.class_id, n.namespace_id
-    from nodes n ${db.unsafe(namespaceJoin('n'))} where n.id = ${pageId}`;
+  const [center] = await db<{ id: string; slug: string; space_slug: string | null; title: string; class_id: string; space_id: string }[]>`
+    select n.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.class_id, n.space_id
+    from nodes n ${db.unsafe(spaceJoin('n'))} where n.id = ${pageId}`;
   if (!center) return { nodes: [], edges: [], focusId: pageId };
 
   // One row per incident edge, not per neighbour: an untyped and a typed edge
@@ -172,17 +172,17 @@ export async function getLocalGraph(pageId: string, user: SessionUser | null = n
     neighbor_id: string;
     type: NodeType;
     slug: string;
-    namespace_slug: string | null;
+    space_slug: string | null;
     title: string;
     class_id: string;
-    namespace_id: string;
+    space_id: string;
     relationship_type: string | null;
     relationship_label: LocalizedText | null;
   }[]>`
-    select l.id as edge_id, n.id as neighbor_id, n.type, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.class_id, n.namespace_id,
+    select l.id as edge_id, n.id as neighbor_id, n.type, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.class_id, n.space_id,
            l.relationship_type, rt.label as relationship_label
     from edges l
-    join nodes n on n.id = (case when l.source_id = ${pageId} then l.target_id else l.source_id end) ${db.unsafe(namespaceJoin('n'))}
+    join nodes n on n.id = (case when l.source_id = ${pageId} then l.target_id else l.source_id end) ${db.unsafe(spaceJoin('n'))}
     left join relationship_types rt on rt.slug = l.relationship_type
     where (l.source_id = ${pageId} or l.target_id = ${pageId})
       and n.id <> ${pageId}
@@ -191,14 +191,14 @@ export async function getLocalGraph(pageId: string, user: SessionUser | null = n
   const propsByEdgeId = await getEdgeProperties(rows.map((r) => r.edge_id));
   const label = labelCache();
 
-  const neighborNodes = new Map<string, { id: string; type: NodeType; slug: string; namespaceSlug: string | null; title: string; classId: string; namespaceId: string }>();
+  const neighborNodes = new Map<string, { id: string; type: NodeType; slug: string; spaceSlug: string | null; title: string; classId: string; spaceId: string }>();
   for (const r of rows) {
     if (neighborNodes.has(r.neighbor_id)) continue;
-    neighborNodes.set(r.neighbor_id, { id: r.neighbor_id, type: r.type, slug: r.slug, namespaceSlug: r.namespace_slug, title: r.title, classId: r.class_id, namespaceId: r.namespace_id });
+    neighborNodes.set(r.neighbor_id, { id: r.neighbor_id, type: r.type, slug: r.slug, spaceSlug: r.space_slug, title: r.title, classId: r.class_id, spaceId: r.space_id });
   }
 
   const nodes = [
-    { id: center.id, type: 'page' as const, slug: center.slug, namespaceSlug: center.namespace_slug, title: center.title, classId: center.class_id, namespaceId: center.namespace_id },
+    { id: center.id, type: 'page' as const, slug: center.slug, spaceSlug: center.space_slug, title: center.title, classId: center.class_id, spaceId: center.space_id },
     ...neighborNodes.values(),
   ];
   // Every edge points centre -> neighbour, incoming ones too: the local graph shows no direction.
@@ -224,7 +224,7 @@ export async function getLocalGraph(pageId: string, user: SessionUser | null = n
 export async function linkSlugMap(id: string, viewer: SessionUser | null): Promise<Record<string, string>> {
   const rows = await db<{ id: string; path: string }[]>`
     select distinct n.id, case when ns.slug is not null then ns.slug || '/' || n.slug else n.slug end as path
-    from edges l join nodes n on n.id = l.target_id ${db.unsafe(namespaceJoin('n'))}
+    from edges l join nodes n on n.id = l.target_id ${db.unsafe(spaceJoin('n'))}
     where l.source_id = ${id} and ${readableNodes(viewer, 'n')}`;
   const map: Record<string, string> = {};
   for (const r of rows) map[r.id] = r.path;

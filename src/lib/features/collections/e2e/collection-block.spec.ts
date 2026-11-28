@@ -16,14 +16,14 @@ import { blockSettings } from '#tests/e2e/editor.ts';
 
 test.use({ storageState: authState('admin') });
 
-/** Public (the default namespace) unless restricted. */
-async function curated(request: APIRequestContext, opts: { title?: string; restricted?: boolean; namespaceId?: string } = {}) {
+/** Public (the default space) unless restricted. */
+async function curated(request: APIRequestContext, opts: { title?: string; restricted?: boolean; spaceId?: string } = {}) {
   const title = opts.title ?? unique('Reading list').name;
-  const res = await request.post('/api/collections', { data: { title, ...(opts.namespaceId ? { namespaceId: opts.namespaceId } : {}) } });
+  const res = await request.post('/api/collections', { data: { title, ...(opts.spaceId ? { spaceId: opts.spaceId } : {}) } });
   expect(res.status(), await res.text()).toBe(201);
-  const made = (await res.json()) as { id: string; slug: string; namespaceSlug: string | null };
+  const made = (await res.json()) as { id: string; slug: string; spaceSlug: string | null };
   if (opts.restricted) expect((await request.patch(`/api/collections/${made.id}`, { data: { visibility: 'restricted' } })).ok()).toBe(true);
-  return { ...made, title, href: made.namespaceSlug ? `/${made.namespaceSlug}/${made.slug}` : `/${made.slug}` };
+  return { ...made, title, href: made.spaceSlug ? `/${made.spaceSlug}/${made.slug}` : `/${made.slug}` };
 }
 
 async function add(request: APIRequestContext, collectionId: string, nodeId: string, label?: string) {
@@ -44,7 +44,7 @@ const anonymous = (browser: Browser, viewport?: { width: number; height: number 
 const rows = (scope: Page, blockId: string) => scope.locator(`[data-block-id="${blockId}"] .el-row .el-name-text`);
 
 test.describe('the collection block', () => {
-  test('is inserted, picked across namespaces, and lists the members — labelled, a nested collection a row linking to it — in the editor and on the page', async ({ page, browser }) => {
+  test('is inserted, picked across spaces, and lists the members — labelled, a nested collection a row linking to it — in the editor and on the page', async ({ page, browser }) => {
     const c = await curated(page.request);
     const first = await publicPage(page.request);
     const nested = await curated(page.request);

@@ -22,7 +22,7 @@ export interface ResultProperties {
   type: string;
   // Labels, never ids: a template author never sees a UUID. creatorLabel is ''
   // without a creator; classLabel is never empty (at least the type class).
-  namespaceLabel: string;
+  spaceLabel: string;
   creatorLabel: string;
   classLabel: string;
   // A link document's external URL, '' otherwise; `url` is the node's own page.
@@ -50,7 +50,7 @@ function bindingMap(item: ResultProperties): Map<string, string> {
   map.set('createdAt', item.createdAt);
   map.set('updatedAt', item.updatedAt);
   map.set('type', item.type);
-  map.set('namespace', item.namespaceLabel);
+  map.set('space', item.spaceLabel);
   map.set('creator', item.creatorLabel);
   map.set('class', item.classLabel);
   map.set('externalUrl', item.externalUrl);

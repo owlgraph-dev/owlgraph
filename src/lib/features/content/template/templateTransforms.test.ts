@@ -132,7 +132,7 @@ describe('type-keyed registry', () => {
     expect(INTRINSIC_SOURCE_CATEGORY.title).toBe('text');
     expect(INTRINSIC_SOURCE_CATEGORY.url).toBe('url');
     expect(INTRINSIC_SOURCE_CATEGORY.externalUrl).toBe('url');
-    expect(INTRINSIC_SOURCE_CATEGORY.namespace).toBe('reference');
+    expect(INTRINSIC_SOURCE_CATEGORY.space).toBe('reference');
     // A resolved label, but text so a class chip can take case/truncate transforms.
     expect(INTRINSIC_SOURCE_CATEGORY.class).toBe('text');
   });

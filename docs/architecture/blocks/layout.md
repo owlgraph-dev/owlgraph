@@ -135,7 +135,7 @@ columns, and what a new section starts as (its span, bleed-to-top). Never a
 look: widths, surfaces and colours stay Auto, so a page keeps following the
 theme, and retuning the site's look is the block defaults' job, not a
 layout's. The registry sits on the theme scope model (a site's rows now, a
-namespace's later), in an order and each switchable. The seeded set is
+space's later), in an order and each switchable. The seeded set is
 general, named in English and German: *Standard* (the flow), *Two columns*
 (Zwei Spalten), *Main and side column* (Haupt- und Nebenspalte, 2:1), *Three
 columns* (Drei Spalten, two on a tablet) — their sections spanning the wide

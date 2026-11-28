@@ -13,7 +13,7 @@ import { getNodeProperties } from '#lib/features/semantic/server.ts';
 import { fromWireFilter, fromWireOrderBy, type WireNodeFilter, type WireOrderByInput } from './nodeFilter';
 import { fromWireTraversalQuery, type WireTraversalQuery } from './traversal';
 import { traverse } from './graphql/traverse.server';
-import { resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
+import { resolveSpaceLabels } from '#lib/features/spaces/server.ts';
 
 
 export interface QueryBlockAttrs {
@@ -88,9 +88,9 @@ async function runOne(user: SessionUser | null, attrs: QueryBlockAttrs, pageId: 
         );
     if (nodes.length === 0) return { state: 'empty' };
     // One lookup each for the whole result, not one per item.
-    const namespaceIds = [...new Set(nodes.map((n: ContentNodeHit) => n.namespaceId))];
+    const spaceIds = [...new Set(nodes.map((n: ContentNodeHit) => n.spaceId))];
     const creatorIds = [...new Set(nodes.map((n: ContentNodeHit) => n.createdBy).filter((id): id is string => id != null))];
-    const [namespaceLabels, creatorLabels] = await Promise.all([resolveNamespaceLabels(namespaceIds), resolveUserLabels(creatorIds)]);
+    const [spaceLabels, creatorLabels] = await Promise.all([resolveSpaceLabels(spaceIds), resolveUserLabels(creatorIds)]);
     const items = await Promise.all(
       nodes.map(async (n: ContentNodeHit): Promise<QueryBlockResultItem> => {
         const pageProps = await getNodeProperties(n.id);
@@ -103,7 +103,7 @@ async function runOne(user: SessionUser | null, attrs: QueryBlockAttrs, pageId: 
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
           type: n.type,
-          namespaceLabel: namespaceLabels.get(n.namespaceId) ?? '',
+          spaceLabel: spaceLabels.get(n.spaceId) ?? '',
           creatorLabel: n.createdBy ? (creatorLabels.get(n.createdBy) ?? '') : '',
           classLabel: n.className,
           externalUrl: n.externalUrl ?? '',

@@ -13,7 +13,7 @@
   const tones = ['danger', 'warning', 'info', 'success'] as const;
   const lead = { danger: 'Could not save.', warning: 'Heads up.', info: 'Note.', success: 'Saved.' } as const;
   const text = {
-    danger: 'The slug is already taken in this namespace.',
+    danger: 'The slug is already taken in this space.',
     warning: 'Two properties map to the same field; the manual value wins.',
     info: 'Two conditions use operators this editor cannot show yet.',
     success: 'The share link was created. Copy it now; it is shown only once.',

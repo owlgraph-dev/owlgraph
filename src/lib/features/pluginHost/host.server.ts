@@ -141,7 +141,7 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
       id: node.row.id,
       type: node.type,
       title: node.row.title,
-      href: nodePath(node.row.namespace_slug, node.row.slug),
+      href: nodePath(node.row.space_slug, node.row.slug),
       ref: ref ?? {},
       file: node.type === 'document' ? fileOf(node.row) : null,
       content: node.type === 'document' ? contentOf(node.row.id) : null,
@@ -188,7 +188,7 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
         id: r.id,
         type: 'document' as const,
         title: r.title,
-        href: nodePath(r.namespace_slug, r.slug),
+        href: nodePath(r.space_slug, r.slug),
         ref: r.source_ref,
         file: fileOf(r),
         content: contentOf(r.id),
@@ -230,7 +230,7 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
               title: input.title,
               createdBy: user.id,
               user,
-              namespaceId: page.namespace_id,
+              spaceId: page.space_id,
               locale: page.locale,
               // No wider than the page it is made beside.
               visibility: page.visibility as Visibility | null,
@@ -245,10 +245,10 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
       } catch (e) {
         // Without a key nothing is made: the collection would hold no credential.
         if (e instanceof SecretKeyMissing) return { ok: false, reason: 'no-secret-key' };
-        if ((e as { code?: string }).code === 'namespace_membership_required') return { ok: false, reason: 'forbidden' };
+        if ((e as { code?: string }).code === 'space_membership_required') return { ok: false, reason: 'forbidden' };
         throw e;
       }
-      logEvent(ctx.log, 'node.created', { nodeId: id, nodeType: 'collection', namespaceId: page.namespace_id, actorId: user.id });
+      logEvent(ctx.log, 'node.created', { nodeId: id, nodeType: 'collection', spaceId: page.space_id, actorId: user.id });
       await indexSourceSearch('collection', id, ctx.log);
       const node = await load(id);
       return node ? { ok: true, node: await view(node), created: true } : { ok: false, reason: 'not-found' };
@@ -262,8 +262,8 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
         if (input.ref[key] !== input.match[key]) throw new Error(`createDocument: match.${key} is not the record's`);
       }
       if (!user) return { ok: false, reason: 'forbidden' };
-      // In the namespace of what it is made from, and no wider than it.
-      const newDocument = (sql: Parameters<typeof createPluginDocument>[1], place: { namespace_id: string; locale: string; visibility: string | null }) =>
+      // In the space of what it is made from, and no wider than it.
+      const newDocument = (sql: Parameters<typeof createPluginDocument>[1], place: { space_id: string; locale: string; visibility: string | null }) =>
         createPluginDocument(
           {
             plugin: pluginId,
@@ -272,21 +272,21 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
             file: input.file,
             createdBy: user.id,
             user,
-            namespaceId: place.namespace_id,
+            spaceId: place.space_id,
             locale: place.locale,
             visibility: place.visibility as Visibility | null,
           },
           sql
         );
       let made: { id: string; created: boolean } | null;
-      let namespaceId: string;
+      let spaceId: string;
       try {
         if (input.collectionId !== undefined) {
           // A member, holding the collection's credential sealed anew for it.
           const collection = await load(input.collectionId);
           if (!collection || collection.type !== 'collection' || !(await readable(collection))) return { ok: false, reason: 'not-found' };
           if (!(await writable(collection))) return { ok: false, reason: 'forbidden' };
-          namespaceId = collection.row.namespace_id;
+          spaceId = collection.row.space_id;
           made = await db.begin(async (sql) => {
             if (!(await lockCollection(sql, collection.row.id))) return null;
             const existing = await findMemberDocument(sql, collection.row.id, pluginId, input.match);
@@ -297,13 +297,13 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
             return { id: doc.id, created: true };
           });
         } else {
-          // One per file in the page's namespace, with no credential.
+          // One per file in the page's space, with no credential.
           if (typeof input.besidePageId !== 'string' || !UUID.test(input.besidePageId)) return { ok: false, reason: 'not-found' };
           const page = await getPage(input.besidePageId);
           if (!page) return { ok: false, reason: 'not-found' };
           if (!(await userCanWritePage(user, page))) return { ok: false, reason: 'forbidden' };
-          namespaceId = page.namespace_id;
-          const where = { namespaceId: page.namespace_id, plugin: pluginId, match: input.match };
+          spaceId = page.space_id;
+          const where = { spaceId: page.space_id, plugin: pluginId, match: input.match };
           made = await db.begin(async (sql) => {
             await lockPluginDocument(sql, where);
             const existing = await findPluginDocument(sql, where);
@@ -312,7 +312,7 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
           });
         }
       } catch (e) {
-        if ((e as { code?: string }).code === 'namespace_membership_required') return { ok: false, reason: 'forbidden' };
+        if ((e as { code?: string }).code === 'space_membership_required') return { ok: false, reason: 'forbidden' };
         throw e;
       }
       if (!made) return { ok: false, reason: 'not-found' };
@@ -320,7 +320,7 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
         logEvent(ctx.log, 'node.created', {
           nodeId: made.id,
           nodeType: 'document',
-          namespaceId,
+          spaceId,
           actorId: user.id,
           source: 'plugin',
         });

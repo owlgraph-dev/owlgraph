@@ -36,8 +36,8 @@
     classDefinitions = [],
     classGroups = [],
     visibility,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     shares = [],
     users = [],
     onSetVisibility,
@@ -45,9 +45,9 @@
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
   }: {
     title?: string;
     onRename?: (changes: { title?: string; slug?: string }) => Promise<{ ok: boolean; title?: string; slug?: string; error?: string }>;
@@ -67,8 +67,8 @@
     classDefinitions?: { name: string; label: string; datatype: string }[];
     classGroups?: ClassFieldGroup[];
     visibility: string | null;
-    namespaceAccessLevel: string;
-    namespaceMembers?: { id: string; name: string; email: string }[];
+    spaceAccessLevel: string;
+    spaceMembers?: { id: string; name: string; email: string }[];
     shares?: string[];
     users?: { id: string; name: string; email: string }[];
     onSetVisibility?: (visibility: string | null) => Promise<{ ok: boolean; visibility?: string | null } | undefined>;
@@ -76,9 +76,9 @@
     shareLinks?: { id: string; label: string; createdAt: string }[];
     onCreateShareLink?: (label: string) => Promise<{ ok: boolean; id?: string; token?: string; label?: string; createdAt?: string; error?: string }>;
     onRevokeShareLink?: (id: string) => Promise<{ ok: boolean }>;
-    namespaceId?: string;
-    namespaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
-    onSetNamespace?: (namespaceId: string) => Promise<{ ok: boolean; error?: string } | undefined>;
+    spaceId?: string;
+    spaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
+    onSetSpace?: (spaceId: string) => Promise<{ ok: boolean; error?: string } | undefined>;
   } = $props();
 
   let titleVal = $state(untrack(() => title));
@@ -121,8 +121,8 @@
 <AccessControlPanel
   open={accessOpen}
   {visibility}
-  {namespaceAccessLevel}
-  {namespaceMembers}
+  {spaceAccessLevel}
+  {spaceMembers}
   {shares}
   {users}
   {onSetVisibility}
@@ -130,9 +130,9 @@
   {shareLinks}
   {onCreateShareLink}
   {onRevokeShareLink}
-  {namespaceId}
-  {namespaces}
-  {onSetNamespace}
+  {spaceId}
+  {spaces}
+  {onSetSpace}
   onClose={() => (accessOpen = false)}
 />
 

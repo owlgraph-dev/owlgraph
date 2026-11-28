@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-import { ALL, classPickerItems, namespacePickerItems, orNull, sortItems, typePickerItems } from './filterItems';
+import { ALL, classPickerItems, spacePickerItems, orNull, sortItems, typePickerItems } from './filterItems';
 
 const option = (slug: string, label: string, depth: number): NodeClassOption =>
   ({ id: `id-${slug}`, slug, label, description: '', kind: 'domain', parentId: null, nodeType: 'page', depth }) as NodeClassOption;
@@ -22,9 +22,9 @@ describe('filterItems', () => {
     expect(sortItems(true).map((s) => s.value)).toEqual(['relevance', 'updated', 'created', 'title']);
   });
 
-  it('starts type and namespace with the no-filter item, namespaces by their URL value', () => {
+  it('starts type and space with the no-filter item, spaces by their URL value', () => {
     expect(typePickerItems().map((t) => t.value)).toEqual([ALL, 'page', 'document', 'collection']);
-    expect(namespacePickerItems([{ value: '_default', name: 'Default' }, { value: 'wiki', name: 'Wiki' }]).map((n) => n.value)).toEqual([ALL, '_default', 'wiki']);
+    expect(spacePickerItems([{ value: '_default', name: 'Default' }, { value: 'wiki', name: 'Wiki' }]).map((n) => n.value)).toEqual([ALL, '_default', 'wiki']);
   });
 
   it('reads the no-filter item as null', () => {

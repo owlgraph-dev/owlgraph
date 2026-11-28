@@ -4,7 +4,7 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  // The edit route (src/routes/[[namespace=namespace]]/[slug]/edit): the node's
+  // The edit route (src/routes/[[space=space]]/[slug]/edit): the node's
   // editor by its kind, and around a page's the edit lock, its gate and the
   // reconcile of a lost lock's draft. What only a route can do stays here:
   // the route's lifecycle, navigation, reloads, the shell the viewport picks.
@@ -82,7 +82,7 @@
     client: { saveDraft: saveDraftVersion, applyPicks: applyPagePicks },
     reload: () => window.location.reload(),
     leave: () => {
-      if (page) goto(nodePath(page.namespace_slug, page.slug));
+      if (page) goto(nodePath(page.space_slug, page.slug));
     },
   });
 
@@ -97,13 +97,13 @@
     if (typeof window !== 'undefined') window.removeEventListener('pagehide', lock.beaconRelease);
   });
   // Leaving gives the lock back; the editor's own move to the page's new
-  // address (a renamed slug, another namespace) keeps it.
+  // address (a renamed slug, another space) keeps it.
   beforeNavigate((navigation) => {
-    if (page && navigation.to?.url.pathname === nodePath(page.namespace_slug, page.slug, { edit: true })) return;
+    if (page && navigation.to?.url.pathname === nodePath(page.space_slug, page.slug, { edit: true })) return;
     lock.leave();
   });
 
-  const routing = { namespaces: () => data.namespaces, goto, refreshAll };
+  const routing = { spaces: () => data.spaces, goto, refreshAll };
   const pageActions = $derived(page ? nodeActions(nodeMetaClient('pages', page.id), page, { deleteFallback: m.editor_delete_page_failed(), beforeDelete: lock.release, ...routing }) : null);
 
   // The canvas and the dialog read the scheme from the route data.
@@ -154,7 +154,7 @@
           enabledPlugins: data.enabledPlugins,
           title: page.title,
           slug: page.slug,
-          namespaceSlug: page.namespace_slug,
+          spaceSlug: page.space_slug,
           tags: data.tags,
           manualProperties: data.manualProperties,
           propSuggestions: data.propSuggestions,
@@ -165,13 +165,13 @@
           nodeClasses: data.nodeClasses,
           classFields: data.classFields,
           visibility: data.visibility,
-          namespaceAccessLevel: data.namespaceAccessLevel,
-          namespaceMembers: data.namespaceMembers,
+          spaceAccessLevel: data.spaceAccessLevel,
+          spaceMembers: data.spaceMembers,
           shares: data.shares,
           users: data.users,
           shareLinks: data.shareLinks,
-          namespaceId: page.namespace_id,
-          namespaces: data.namespaces,
+          spaceId: page.space_id,
+          spaces: data.spaces,
           onUploadImage: uploadImage,
           onLockLost: draft.onLockLost,
           isHomePage: data.isHomePage,
@@ -189,7 +189,7 @@
     documentId={doc.id}
     title={doc.title}
     slug={doc.slug}
-    namespaceSlug={doc.namespace_slug}
+    spaceSlug={doc.space_slug}
     source={doc.source}
     plugin={doc.plugin}
     externalUrl={doc.external_url}
@@ -209,13 +209,13 @@
     onReplaceFile={replaceFile}
     onSetLink={setLink}
     visibility={data.visibility}
-    namespaceAccessLevel={data.namespaceAccessLevel}
-    namespaceMembers={data.namespaceMembers}
+    spaceAccessLevel={data.spaceAccessLevel}
+    spaceMembers={data.spaceMembers}
     shares={data.shares}
     users={data.users}
     shareLinks={data.shareLinks}
-    namespaceId={doc.namespace_id}
-    namespaces={data.namespaces}
+    spaceId={doc.space_id}
+    spaces={data.spaces}
     {...docActions}
   />
 {:else if data.kind === 'collection' && collection && collectionActions}
@@ -223,7 +223,7 @@
     collectionId={collection.id}
     title={collection.title}
     slug={collection.slug}
-    namespaceSlug={collection.namespace_slug}
+    spaceSlug={collection.space_slug}
     source={data.source}
     onSourceConnected={() => refreshAll()}
     members={data.members}
@@ -238,10 +238,10 @@
     nodeClasses={data.nodeClasses}
     classFields={data.classFields}
     visibility={data.visibility}
-    namespaceAccessLevel={data.namespaceAccessLevel}
-    namespaceMembers={data.namespaceMembers}
-    namespaceId={collection.namespace_id}
-    namespaces={data.namespaces}
+    spaceAccessLevel={data.spaceAccessLevel}
+    spaceMembers={data.spaceMembers}
+    spaceId={collection.space_id}
+    spaces={data.spaces}
     {...collectionActions}
   />
 {:else if data.kind === 'page' && page && pageProps}
@@ -252,6 +252,6 @@
       <ReconcilePanel pageId={page.id} current={draft.reconcile.current} draft={draft.reconcile.draft} movedToTab={lock.lostTo === 'tab'} onApply={draft.apply} onDiscard={draft.discard} />
     {/if}
   {:else}
-    <LockGate {lock} isAdmin={data.me?.role === 'admin'} readHref={nodePath(page.namespace_slug, page.slug)} />
+    <LockGate {lock} isAdmin={data.me?.role === 'admin'} readHref={nodePath(page.space_slug, page.slug)} />
   {/if}
 {/if}

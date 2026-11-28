@@ -19,7 +19,7 @@
     steps,
     onChange,
     propertyOptions = [],
-    namespaceOptions = [],
+    spaceOptions = [],
     userOptions = [],
     classOptions = [],
     relationshipTypes = [],
@@ -28,7 +28,7 @@
     steps: TraversalStepDraft[];
     onChange: (steps: TraversalStepDraft[]) => void;
     propertyOptions?: PropertyOption[];
-    namespaceOptions?: { id: string; name: string }[];
+    spaceOptions?: { id: string; name: string }[];
     userOptions?: { id: string; name: string; email: string }[];
     classOptions?: NodeClassOption[];
     relationshipTypes?: RelationshipTypeOption[];
@@ -50,7 +50,7 @@
           onChange={(next) => onChange(steps.map((s) => (s.id === step.id ? next : s)))}
           onRemove={() => onChange(steps.filter((s) => s.id !== step.id))}
           {propertyOptions}
-          {namespaceOptions}
+          {spaceOptions}
           {userOptions}
           {classOptions}
           {relationshipTypes}

@@ -97,7 +97,7 @@
 <SpecimenGrid title="InfoTip on its own">
   <Specimen label="text" state="infotip">
     <span>Visibility</span>
-    <InfoTip text="Who can see this page. Inherited from the namespace unless set here." />
+    <InfoTip text="Who can see this page. Inherited from the space unless set here." />
   </Specimen>
 </SpecimenGrid>
 

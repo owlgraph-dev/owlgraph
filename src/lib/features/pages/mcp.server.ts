@@ -115,7 +115,7 @@ export function registerPageTools({ user, log, tool, pageTool }: ToolRegistry): 
     'create_page',
     {
       title: 'Create page',
-      description: "Create a new empty page (it follows its namespace's access level; you become its owner).",
+      description: "Create a new empty page (it follows its space's access level; you become its owner).",
       inputSchema: { title: z.string(), locale: z.string().optional().describe("The language the content is in — an enabled language code such as 'de' or 'en' (not the interface language); it decides how full-text search indexes the content. Default: the site default language.") },
     },
     'page:write',

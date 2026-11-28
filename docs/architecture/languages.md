@@ -305,7 +305,7 @@ content language.
 - **An enum (select) property type stores its option labels as
   `LocalizedText` from the start**, read through `localize()`; the stored
   property value is the option's key, never its label.
-- The other admin-named registries — custom styles, namespace display
+- The other admin-named registries — custom styles, space display
   names — still store one string. When one of them localizes, it uses this
   same primitive, as paragraph styles and page layouts do: the type, the
   resolver, the field and the gap indicator.

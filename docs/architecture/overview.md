@@ -38,7 +38,7 @@ opting a route out of SSR entirely (no route in this app does).
 Pages, documents and collections are **specializations of a common `nodes`
 identity**: `nodes` holds what's genuinely shared across content types — id,
 **class** (`class_id`, required; see [semantic-layer.md](semantic-layer.md)),
-the **type** (`page`/`document`/`collection`) derived from that class, namespace + slug,
+the **type** (`page`/`document`/`collection`) derived from that class, space + slug,
 visibility, the **content language** (`locale`, see [languages.md](languages.md#content-language)),
 `created_by` and timestamps (`src/lib/features/nodes/nodes.server.ts`) — while
 `pages`, `documents` and `collections` hold their type-specific columns
@@ -50,12 +50,12 @@ node's class sits somewhere in one hierarchy
 `node → page | document | collection → domain classes`; its type is the node
 type that class descends from, cached on the row (and held consistent by a
 foreign key) so routing stays one lookup. Every node belongs to exactly one
-**namespace** (`namespace_id`, required — see
-[routing.md](routing.md#namespaces)); identity is `(namespace_id, slug)`,
-unique per namespace rather than globally, and resolvable with a single
+**space** (`space_id`, required — see
+[routing.md](routing.md#spaces)); identity is `(space_id, slug)`,
+unique per space rather than globally, and resolvable with a single
 lookup. IDs are plain, unprefixed UUIDs; telling the types apart is always
 done via the sibling `type` field, never via id shape —
-the `/[[namespace]]/[slug]` route resolves a namespace + slug to a node and
+the `/[[space]]/[slug]` route resolves a space + slug to a node and
 dispatches on that field.
 
 Every reference between content — the `quickLink` block, inline `pageLink`/
@@ -128,8 +128,8 @@ folder under `src/lib/features/<feature>/`:
 | Feature | Owns |
 |---|---|
 | `auth` | sessions/tokens, users, the role check (`can`), the `requireAction` route guard |
-| `nodes` | the shared node identity (slugs, namespaces join, `readableNodes`), per-node access (`NodeAccess`, `canReadNode`/`canWriteNode`), share links, `nodePath` |
-| `namespaces` | namespace CRUD, membership, the client-side slug registry |
+| `nodes` | the shared node identity (slugs, spaces join, `readableNodes`), per-node access (`NodeAccess`, `canReadNode`/`canWriteNode`), share links, `nodePath` |
+| `spaces` | space CRUD, membership, the client-side slug registry |
 | `content` | the page as a document, in folders named for what they hold: `doc/` (the stored document — `JsonDoc`/`JsonNode`, the attrs every block shares, asset references), `blocks/` (every block kind, one folder each, and the per-audience lists — catalogue, Tiptap extensions, renderers, islands, `BlockInput` → node building), `capabilities/` (the capabilities and the cascade, typography tokens and fonts), `page/` (the page's own settings: widths, ground, columns, sections), `color/` (content schemes, theme colour references, scheme regions, contrast and readiness), `render/` (the public render walker, sanitization, the link policies), `inline/` (the inline marks), `template/` (query templates) |
 | `pages` | the page entity, doc persistence, block operations, locks, versions, the page diff, the page layout presets (the library a page's layout is copied from, its storage, its editing fields) |
 | `documents` | documents and their sources (uploaded files, external links, an integration's files), serving, text extraction |
@@ -205,11 +205,11 @@ subpath import as written, adding no extension and no index.
   step share. The search barrels are on every page (the root layout imports
   the search overlay) and `documents/components.ts` is the reader's surface,
   so neither carries them. Both are client-safe like `index.ts`.
-- `#lib/features/namespaces/matcher.ts` — the `[namespace]`
+- `#lib/features/spaces/matcher.ts` — the `[space]`
   params matcher, which `src/params.ts` declares
   ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).
   SvelteKit's build also loads `src/params.ts` with Node, outside Vite, so
-  the matcher imports only by paths Node resolves: the namespace registry,
+  the matcher imports only by paths Node resolves: the space registry,
   which imports nothing, by its file name.
 - The feature's **adapters** — the modules that bind it to one channel, each
   importable only from that channel (Svelte components included: a modal that
@@ -234,7 +234,7 @@ subpath import as written, adding no extension and no index.
   surface changes.
 
 The server graph is **layered and acyclic** — `auth` → `nodes` →
-`namespaces` → `semantic`/`content`/`media` → `pages`/`documents`/
+`spaces` → `semantic`/`content`/`media` → `pages`/`documents`/
 `collections`/`graph`/`search`/`query` → `editor`/`site` → `pluginHost` →
 `reader`, with the shell above all of them — a feature never imports a higher
 layer, and no two features import each other's server code. The client graph only has
@@ -295,9 +295,9 @@ harness stays in `tests/e2e/`; see [testing.md](../guides/testing.md)).
 Route files are thin: they bind URLs to feature adapters (above) and keep no
 logic of their own.
 
-- `[[namespace]]/[slug]/` — unified content read (page, document or
-  collection, dispatched by node type; namespace segment optional, absent =
-  default namespace; a collection's page under the node header, see
+- `[[space]]/[slug]/` — unified content read (page, document or
+  collection, dispatched by node type; space segment optional, absent =
+  default space; a collection's page under the node header, see
   [semantic-layer.md](semantic-layer.md#a-nodes-page)) and `.../edit` — the
   browser editor. See [routing.md](routing.md).
 - `graph/` — the knowledge-graph view (see [graph-view.md](graph-view.md)).
@@ -305,13 +305,13 @@ logic of their own.
   [search.md](search.md)).
 - `settings/` — Settings, scoped by permission (see
   [settings.md](settings.md)): personal profile and API tokens, site
-  settings, namespaces, the semantic schema catalogues under `settings/schema/`,
+  settings, spaces, the semantic schema catalogues under `settings/schema/`,
   user management, each integration's section (`settings/integrations/<id>`)
   and a person's own connections (`settings/connections`); its layout is the
   sidebar shell from `src/lib/shell/settings/`.
 - `api/` — three kinds of segment, and a new one picks the kind it belongs
   to: **entity collections** with id-scoped sub-resources (`/api/pages`,
-  `/api/documents`, `/api/collections`, `/api/media`, `/api/namespaces`,
+  `/api/documents`, `/api/collections`, `/api/media`, `/api/spaces`,
   `/api/relationship-types`); **asset namespaces**, named after what they
   serve rather than what reads it, delivering bytes rather than JSON
   (`/api/media/fonts/[id]`, `/api/styles/site/[hash]`, `/api/embed/mermaid`,
@@ -360,7 +360,7 @@ route classes by route id beside it in `src/lib/platform/cspRoutes.ts`:
   string and greps the installed dependency for it, so an upgrade that changes
   one fails there rather than in a browser. Adding an entry is a last resort —
   anything the app itself renders goes through the per-page stylesheet.
-- **loose** — `/[[namespace]]/[slug]/edit`, `/settings/**`, `/dev/**`:
+- **loose** — `/[[space]]/[slug]/edit`, `/settings/**`, `/dev/**`:
   authenticated tools whose libraries still write style attributes (Tiptap
   NodeViews, the settings previews, the playground). `'unsafe-inline'`, and
   no nonce beside it — a nonce in the same directive would switch it off.
@@ -418,7 +418,7 @@ are in its baseline.
 
 - [request-lifecycle.md](request-lifecycle.md) — one request for a page,
   from the hook to the browser, step by step.
-- [routing.md](routing.md) — the `/[[namespace]]/[slug]` resolver, namespaces, slug uniqueness, and the reserved-word/`/api` conventions.
+- [routing.md](routing.md) — the `/[[space]]/[slug]` resolver, spaces, slug uniqueness, and the reserved-word/`/api` conventions.
 - [editor.md](editor.md) — the editor's folders, its core and edit session, and the desktop/phone shared-core, forked-chrome split.
 - [blocks/overview.md](blocks/overview.md) — the block & capability model.
 - [documents.md](documents.md) — documents, their sources (upload or link), serving and search.

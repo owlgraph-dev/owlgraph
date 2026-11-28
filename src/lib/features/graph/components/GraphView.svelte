@@ -23,7 +23,7 @@
   import { DEFAULT_SETTINGS, loadSettings, saveSettings, type GraphSettings } from '../settings';
   import { activeFilterCount, applyGraphFilter, EMPTY_FILTER, isFilterEmpty, relationshipTypeItems, type GraphFilter } from '../graphFilter';
   import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-  import type { NamespaceOption } from '#lib/features/query/index.ts';
+  import type { SpaceOption } from '#lib/features/query/index.ts';
   import { hubNodeIds, labelOpacity } from '../labels';
   import { buildColorScheme } from '../nodeColor';
   import { UNIFORM_RADIUS } from '../nodeGeometry';
@@ -41,7 +41,7 @@
     chrome = 'full',
     storageKey = 'owlgraph.graph.global',
     classOptions = [],
-    namespaces = [],
+    spaces = [],
   }: {
     nodes?: GraphNode[];
     edges?: GraphEdge[];
@@ -55,7 +55,7 @@
     // Where 'full' remembers its display settings; 'minimal' persists nothing.
     storageKey?: string;
     classOptions?: NodeClassOption[];
-    namespaces?: NamespaceOption[];
+    spaces?: SpaceOption[];
   } = $props();
 
   // Filters narrow the already viewer-scoped graph client-side; the object is
@@ -94,7 +94,7 @@
       other: m.graph_legend_other(),
       classLabel: (id) => classOptions.find((c) => c.id === id)?.label ?? null,
       classKey: (id) => classOptions.find((c) => c.id === id)?.slug ?? null,
-      namespaceLabel: (id) => namespaces.find((ns) => ns.id === id)?.name ?? null,
+      spaceLabel: (id) => spaces.find((ns) => ns.id === id)?.name ?? null,
     })
   );
   const legendEntries = $derived(colorScheme.legend(visibleNodes));
@@ -262,7 +262,7 @@
   });
 
   function hrefOf(n: P): string {
-    return nodePath(n.namespaceSlug, n.slug ?? '');
+    return nodePath(n.spaceSlug, n.slug ?? '');
   }
   function open(n: P) {
     goto(hrefOf(n));
@@ -290,7 +290,7 @@
   const activeId = $derived(hovered ?? selectedId);
   const selected = $derived(selectedId ? (pos.get(selectedId) ?? null) : null);
   const selectedClassLabel = $derived(selected?.classId ? (classOptions.find((c) => c.id === selected.classId)?.label ?? null) : null);
-  const selectedNamespaceName = $derived(selected?.namespaceId ? (namespaces.find((ns) => ns.id === selected.namespaceId)?.name ?? null) : null);
+  const selectedSpaceName = $derived(selected?.spaceId ? (spaces.find((ns) => ns.id === selected.spaceId)?.name ?? null) : null);
   // In the wrapper's CSS pixels. The card hangs below the node (its label sits
   // to the right) and flips above near the bottom edge.
   const selectedAnchor = $derived.by(() => {
@@ -490,7 +490,7 @@
     {/if}
     {#if !minimal && panelOpen && !phone.current}
       <div class="graph-panel-slot">
-        <GraphPanel {settings} onSettings={updateSettings} {filter} onFilter={(next) => (filter = next)} {classOptions} {namespaces} {relationshipTypes} />
+        <GraphPanel {settings} onSettings={updateSettings} {filter} onFilter={(next) => (filter = next)} {classOptions} {spaces} {relationshipTypes} />
       </div>
     {/if}
     {#if !minimal}
@@ -504,7 +504,7 @@
         {#snippet actions()}
           {#if activeFilters > 0}<Badge tone="accent">{m.graph_panel_filter_count({ count: activeFilters })}</Badge>{/if}
         {/snippet}
-        <GraphPanel presentation="sheet" {settings} onSettings={updateSettings} {filter} onFilter={(next) => (filter = next)} {classOptions} {namespaces} {relationshipTypes} />
+        <GraphPanel presentation="sheet" {settings} onSettings={updateSettings} {filter} onFilter={(next) => (filter = next)} {classOptions} {spaces} {relationshipTypes} />
       </BottomSheet>
     {/if}
     <GraphLegend entries={legendEntries} />
@@ -608,7 +608,7 @@
         href={hrefOf(selected)}
         type={selected.type}
         className={selectedClassLabel}
-        namespaceName={selectedNamespaceName}
+        spaceName={selectedSpaceName}
         connections={selected.deg}
         x={selectedAnchor.x}
         y={selectedAnchor.y}

@@ -47,7 +47,7 @@ vi.mock('$app/forms', () => ({
 type Readiness = PageData['readiness'];
 
 // A page that follows the default and picks a text colour and an HTML block's inline one.
-const FIELD_NOTES = { id: 'p-1', slug: 'field-notes', namespace_slug: null, title: 'Field notes', text: 1, border: 0, html: 1 };
+const FIELD_NOTES = { id: 'p-1', slug: 'field-notes', space_slug: null, title: 'Field notes', text: 1, border: 0, html: 1 };
 
 const WITH_FINDINGS: Readiness = { inheriting: 2, pinned: 0, pages: [FIELD_NOTES], sample: [FIELD_NOTES] };
 

@@ -22,7 +22,7 @@ type Props = Parameters<typeof AccessControlPanel>[1];
  * `set` changes props one at a time, as the route does; `rerender` would hand
  * in a new object, which every prop reads as changed.
  */
-async function panel(initial: { visibility: string | null; namespaceAccessLevel: string; shareLinks?: { id: string; label: string; createdAt: string }[] }) {
+async function panel(initial: { visibility: string | null; spaceAccessLevel: string; shareLinks?: { id: string; label: string; createdAt: string }[] }) {
   const client = nodeMetaClient('pages', PAGE_ID);
   const set = (next: Partial<Props>) => flushSync(() => void Object.assign(props, next));
   const onClose = vi.fn(() => set({ open: false }));
@@ -43,10 +43,10 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('the access level in a public namespace', () => {
-  it("offers the namespace's level as Same as namespace, never a Public of its own, and applying it stores inherit", async () => {
+describe('the access level in a public space', () => {
+  it("offers the space's level as Same as space, never a Public of its own, and applying it stores inherit", async () => {
     const calls = stubFetch((call) => (call.method === 'PATCH' && call.url === `/api/pages/${PAGE_ID}` ? Response.json({ visibility: null }) : undefined));
-    const { dialog, onClose } = await panel({ visibility: 'internal', namespaceAccessLevel: 'public' });
+    const { dialog, onClose } = await panel({ visibility: 'internal', spaceAccessLevel: 'public' });
 
     const level = dialog.getByRole('combobox', { name: 'Who can view this page' });
     await expect.element(level).toMatchTextContent('Internal — any signed-in user');
@@ -54,14 +54,14 @@ describe('the access level in a public namespace', () => {
     const options = screen.getByRole('option');
     await vi.waitFor(() => expect(options.elements()).toHaveLength(3));
     expect(options.elements().map((o) => o.textContent?.trim())).toEqual([
-      'Same as namespace (public: anyone, even signed-out)',
+      'Same as space (public: anyone, even signed-out)',
       'Internal — any signed-in user',
       'Restricted — only selected users',
     ]);
     expect(screen.getByRole('option', { name: /^Public/ }).elements()).toHaveLength(0);
 
-    await screen.getByRole('option', { name: 'Same as namespace (public: anyone, even signed-out)' }).click();
-    await expect.element(dialog.getByText('Follows the namespace, also when an admin changes its access level later.')).toBeVisible();
+    await screen.getByRole('option', { name: 'Same as space (public: anyone, even signed-out)' }).click();
+    await expect.element(dialog.getByText('Follows the space, also when an admin changes its access level later.')).toBeVisible();
     expect(calls).toEqual([]);
     await dialog.getByRole('button', { name: 'Apply' }).click();
 
@@ -69,10 +69,10 @@ describe('the access level in a public namespace', () => {
     expect(calls).toEqual([{ method: 'PATCH', url: `/api/pages/${PAGE_ID}`, body: { visibility: null } }]);
   });
 
-  it('reads a stored Public as what it amounts to: the namespace’s level', async () => {
+  it('reads a stored Public as what it amounts to: the space’s level', async () => {
     stubFetch(() => undefined);
-    const { dialog } = await panel({ visibility: 'public', namespaceAccessLevel: 'public' });
-    await expect.element(dialog.getByRole('combobox', { name: 'Who can view this page' })).toMatchTextContent('Same as namespace (public: anyone, even signed-out)');
+    const { dialog } = await panel({ visibility: 'public', spaceAccessLevel: 'public' });
+    await expect.element(dialog.getByRole('combobox', { name: 'Who can view this page' })).toMatchTextContent('Same as space (public: anyone, even signed-out)');
   });
 });
 
@@ -84,7 +84,7 @@ describe('the share links', () => {
       if (call.method === 'POST' && call.url === `/api/pages/${PAGE_ID}/share-links`) return Response.json(link, { status: 201 });
       if (call.method === 'DELETE' && call.url === `/api/pages/${PAGE_ID}/share-links/${link.id}`) return new Response(null, { status: 204 });
     });
-    const { dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
+    const { dialog } = await panel({ visibility: null, spaceAccessLevel: 'public', shareLinks: [] });
     await expect.element(dialog.getByText('No share links yet.', { exact: false })).toBeVisible();
 
     const label = dialog.getByRole('textbox', { name: 'Label (optional)' });
@@ -113,7 +113,7 @@ describe('the share links', () => {
 
   it('opened again, shows a link made before without its address', async () => {
     stubFetch(() => undefined);
-    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
+    const { set, dialog } = await panel({ visibility: null, spaceAccessLevel: 'public', shareLinks: [{ id: link.id, label: link.label, createdAt: link.createdAt }] });
     await expect.element(dialog.getByText(link.label, { exact: true })).toBeVisible();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).not.toBeInTheDocument();
     await expect.element(dialog.getByRole('button', { name: 'Revoke' })).toBeVisible();
@@ -125,7 +125,7 @@ describe('the share links', () => {
   it('closed and opened again after a link was made, still lists that link, its address no longer shown', async () => {
     stubFetch((call) => (call.method === 'POST' && call.url === `/api/pages/${PAGE_ID}/share-links` ? Response.json(link, { status: 201 }) : undefined));
     // The route's list, which a create never reloads.
-    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
+    const { set, dialog } = await panel({ visibility: null, spaceAccessLevel: 'public', shareLinks: [] });
     await dialog.getByRole('button', { name: 'Create link' }).click();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).toBeVisible();
 
@@ -138,7 +138,7 @@ describe('the share links', () => {
 
   it('keeps a new link’s address shown while its route reloads the list, and lists the link once', async () => {
     stubFetch((call) => (call.method === 'POST' && call.url === `/api/pages/${PAGE_ID}/share-links` ? Response.json(link, { status: 201 }) : undefined));
-    const { set, dialog } = await panel({ visibility: null, namespaceAccessLevel: 'public', shareLinks: [] });
+    const { set, dialog } = await panel({ visibility: null, spaceAccessLevel: 'public', shareLinks: [] });
     await dialog.getByRole('button', { name: 'Create link' }).click();
     await expect.element(dialog.getByRole('textbox', { name: 'Share links' })).toBeVisible();
 

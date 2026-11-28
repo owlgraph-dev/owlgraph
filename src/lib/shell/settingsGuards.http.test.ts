@@ -10,7 +10,7 @@ import { ROLES, type Action, type Role as AuthRole, type SessionUser } from '#li
 import { can } from '#lib/features/auth/server.ts';
 import { pluginOrigin, sealCredential, storeConnection } from '#lib/features/pluginHost/server.ts';
 import { PLUGINS_WITH_SETTINGS } from '#lib/plugins/index.ts';
-import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { call, createSpace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { userOf, type Role } from '#tests/integration/users.ts';
 import { SETTINGS_TREE } from './settings/tree';
 import { activeItemId, leavesSettings, type SettingsItem } from './settings/treeModel';
@@ -77,7 +77,7 @@ const colors = (accent: string) => JSON.stringify({ accent, lightAccent: null, d
 /** What the admin makes first; where order matters, the second of two, so a move would move it. */
 const real = {
   user: '',
-  namespace: '',
+  space: '',
   page: '',
   editorsPage: '',
   group: 'guards',
@@ -134,7 +134,7 @@ function integrationFields(path: string, stage: 'setup' | 'sweep'): Record<strin
 /** What a missing guard would act on; a section not listed is posted nothing. */
 const FIELDS: Record<string, (action: string, path: string) => Record<string, string>> = {
   '/settings/users': () => ({ id: real.user, email: 'swept@guards.test', name: 'Swept', password: PASSWORD, role: 'admin', active: 'false' }),
-  '/settings/namespaces': () => ({ id: real.namespace, name: 'Swept space', slug: 'swept-space', accessLevel: 'public', members: real.user }),
+  '/settings/spaces': () => ({ id: real.space, name: 'Swept space', slug: 'swept-space', accessLevel: 'public', members: real.user }),
   '/settings/schema/properties': () => ({ name: real.property, localName: 'swept', groupSlug: real.group, ...label('Changed'), datatype: 'number' }),
   // A group with no property in it, which deleting would remove.
   '/settings/schema/groups': (action) => ({ slug: action === 'delete' ? real.emptyGroup : real.group, ...label('Changed') }),
@@ -221,7 +221,7 @@ describe.skipIf(app.skipped)('the settings guards', () => {
 
     await admin('/settings/users?/create', { email: 'target@guards.test', name: 'Target', password: PASSWORD, role: 'editor' });
     real.user = await idOf(db`select id from users where email = 'target@guards.test'`);
-    real.namespace = await createNamespace(served, { name: 'Guards space', slug: 'guards-space', accessLevel: 'restricted' });
+    real.space = await createSpace(served, { name: 'Guards space', slug: 'guards-space', accessLevel: 'restricted' });
 
     await admin('/settings/schema/groups?/save', { slug: real.group, ...label('Guards') });
     await admin('/settings/schema/groups?/save', { slug: real.emptyGroup, ...label('Guards, empty') });

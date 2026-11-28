@@ -8,7 +8,7 @@
 import { nodePath, type NodeMetaClient } from '#lib/features/nodes/index.ts';
 import type { NodeMetaActions } from './nodeMeta';
 
-export type NodeRow = { id: string; title: string; slug: string; namespace_id: string; namespace_slug: string | null };
+export type NodeRow = { id: string; title: string; slug: string; space_id: string; space_slug: string | null };
 
 export function nodeActions(
   client: NodeMetaClient,
@@ -16,14 +16,14 @@ export function nodeActions(
   opts: {
     deleteFallback: string;
     beforeDelete?: () => void;
-    /** The namespaces the route loaded, read when the node moves. */
-    namespaces: () => readonly { id: string; slug: string | null; isDefault: boolean }[];
+    /** The spaces the route loaded, read when the node moves. */
+    spaces: () => readonly { id: string; slug: string | null; isDefault: boolean }[];
     goto: (href: string, opts?: { replace?: boolean; reset?: boolean }) => Promise<void>;
     refreshAll: () => Promise<void>;
   }
 ): NodeMetaActions {
   const { goto, refreshAll } = opts;
-  const editHref = () => nodePath(row.namespace_slug, row.slug, { edit: true });
+  const editHref = () => nodePath(row.space_slug, row.slug, { edit: true });
   return {
     async onRename(changes) {
       const res = await client.rename(changes);
@@ -31,7 +31,7 @@ export function nodeActions(
       row.title = res.title;
       const slugChanged = changes.slug !== undefined && res.slug !== row.slug;
       row.slug = res.slug;
-      // The URL is keyed by namespace and slug, so a refresh or a shared copy
+      // The URL is keyed by space and slug, so a refresh or a shared copy
       // must follow the rename.
       if (slugChanged) await goto(editHref(), { replace: true, reset: false });
       return res;
@@ -65,13 +65,13 @@ export function nodeActions(
     onSetShares: (shares) => client.setShares(shares),
     onCreateShareLink: (label) => client.createShareLink(label),
     onRevokeShareLink: (id) => client.revokeShareLink(id),
-    // A new namespace is a new URL, as a renamed slug is.
-    async onSetNamespace(namespaceId) {
-      const res = await client.setNamespace(namespaceId);
+    // A new space is a new URL, as a renamed slug is.
+    async onSetSpace(spaceId) {
+      const res = await client.setSpace(spaceId);
       if (!res.ok) return res;
-      const target = opts.namespaces().find((n) => n.id === namespaceId);
-      row.namespace_id = namespaceId;
-      row.namespace_slug = target?.isDefault ? null : (target?.slug ?? null);
+      const target = opts.spaces().find((n) => n.id === spaceId);
+      row.space_id = spaceId;
+      row.space_slug = target?.isDefault ? null : (target?.slug ?? null);
       await goto(editHref(), { replace: true, reset: false });
       return res;
     },

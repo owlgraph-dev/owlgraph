@@ -11,18 +11,18 @@ vi.mock('#lib/features/semantic/server.ts', async (importOriginal) => ({
   ...(await importOriginal<typeof import('#lib/features/semantic/server.ts')>()),
   getNodeProperties: vi.fn(),
 }));
-vi.mock('#lib/features/namespaces/server.ts', () => ({ resolveNamespaceLabels: vi.fn() }));
+vi.mock('#lib/features/spaces/server.ts', () => ({ resolveSpaceLabels: vi.fn() }));
 vi.mock('#lib/features/auth/server.ts', () => ({ resolveUserLabels: vi.fn() }));
 
 import { getNodes } from './graphql/nodes.server';
 import { getNodeProperties } from '#lib/features/semantic/server.ts';
-import { resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
+import { resolveSpaceLabels } from '#lib/features/spaces/server.ts';
 import { resolveUserLabels } from '#lib/features/auth/server.ts';
 import { collectQueryBlocks, resolveQueryBlocks } from './queryBlockExec.server';
 
 const mockedGetNodes = vi.mocked(getNodes);
 const mockedGetNodeProperties = vi.mocked(getNodeProperties);
-const mockedResolveNamespaceLabels = vi.mocked(resolveNamespaceLabels);
+const mockedResolveSpaceLabels = vi.mocked(resolveSpaceLabels);
 const mockedResolveUserLabels = vi.mocked(resolveUserLabels);
 
 const nodeHit = (overrides: Record<string, unknown> = {}) => ({
@@ -33,7 +33,7 @@ const nodeHit = (overrides: Record<string, unknown> = {}) => ({
   slug: 'one',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-02T00:00:00.000Z',
-  namespaceId: 'ns-1',
+  spaceId: 'ns-1',
   createdBy: 'user-1',
   classId: 'class-1',
   className: 'Work package',
@@ -87,11 +87,11 @@ describe('resolveQueryBlocks()', () => {
   beforeEach(() => {
     mockedGetNodes.mockReset();
     mockedGetNodeProperties.mockReset();
-    mockedResolveNamespaceLabels.mockReset();
+    mockedResolveSpaceLabels.mockReset();
     mockedResolveUserLabels.mockReset();
     // Every result row's properties are fetched; none unless a test says so.
     mockedGetNodeProperties.mockResolvedValue([] as unknown as Awaited<ReturnType<typeof getNodeProperties>>);
-    mockedResolveNamespaceLabels.mockResolvedValue(new Map());
+    mockedResolveSpaceLabels.mockResolvedValue(new Map());
     mockedResolveUserLabels.mockResolvedValue(new Map());
   });
 
@@ -111,7 +111,7 @@ describe('resolveQueryBlocks()', () => {
 
   it('ok: maps getNodes rows to the full intrinsic-field item shape, with the full (here empty) property set always fetched', async () => {
     mockedGetNodes.mockResolvedValue([nodeHit()]);
-    mockedResolveNamespaceLabels.mockResolvedValue(new Map([['ns-1', 'Marketing']]));
+    mockedResolveSpaceLabels.mockResolvedValue(new Map([['ns-1', 'Marketing']]));
     mockedResolveUserLabels.mockResolvedValue(new Map([['user-1', 'Alex']]));
     const doc = { type: 'doc', content: [queryBlockNode('a')] };
     const result = await resolveQueryBlocks(doc, null, PAGE_ID);
@@ -126,7 +126,7 @@ describe('resolveQueryBlocks()', () => {
           createdAt: '2026-01-01T00:00:00.000Z',
           updatedAt: '2026-01-02T00:00:00.000Z',
           type: 'page',
-          namespaceLabel: 'Marketing',
+          spaceLabel: 'Marketing',
           creatorLabel: 'Alex',
           classLabel: 'Work package',
           externalUrl: '',
@@ -136,7 +136,7 @@ describe('resolveQueryBlocks()', () => {
       ]
     });
     expect(mockedGetNodeProperties).toHaveBeenCalledWith('p1');
-    expect(mockedResolveNamespaceLabels).toHaveBeenCalledWith(['ns-1']);
+    expect(mockedResolveSpaceLabels).toHaveBeenCalledWith(['ns-1']);
     expect(mockedResolveUserLabels).toHaveBeenCalledWith(['user-1']);
   });
 

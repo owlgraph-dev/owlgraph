@@ -240,7 +240,7 @@ or reads its record where it may not write the document. The block settings pane
 **Source** section picks the document — one of the plugin's documents, one
 made of a file chosen in a share's folders, or one made beside the page of a
 file chosen from the editor's own Nextcloud (one per file in the page's
-namespace) — and shows its file, its status, the way to its node and "Another
+space) — and shows its file, its status, the way to its node and "Another
 file" (of its share, or of the editor's own files); while the plugin is
 turned off it offers no file to choose, from a share's folders or from the
 editor's own files, and says the integration is off. **Display** holds the

@@ -164,11 +164,11 @@ describe('the property groups catalog', () => {
 
     await screen.getByRole('button', { name: 'Add group' }).click();
     await expect.element(dialog().getByRole('heading', { name: 'Add group' })).toBeVisible();
-    const namespace = dialog().getByLabelText('Key', { exact: true });
+    const space = dialog().getByLabelText('Key', { exact: true });
     const label = dialog().getByRole('textbox', { name: 'Label English', exact: true });
-    await expect.element(namespace).toHaveValue('');
+    await expect.element(space).toHaveValue('');
     await expect.element(label).toHaveValue('');
-    await namespace.fill('e2egrp');
+    await space.fill('e2egrp');
     await label.fill('E2E group');
     await dialog().getByRole('button', { name: 'Save' }).click();
     await vi.waitFor(() => expect(forms.posts).toHaveLength(1));

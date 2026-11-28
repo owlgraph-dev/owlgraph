@@ -20,7 +20,7 @@ export const load = async ({ locals }: ServerLoadEvent) => {
   if (homeId) {
     const page = await getPage(homeId);
     if (page && (await userCanReadPage(user, page))) {
-      throw redirect(307, nodePath(page.namespace_slug, page.slug));
+      throw redirect(307, nodePath(page.space_slug, page.slug));
     }
   }
   if (!user) return { welcome: true as const };

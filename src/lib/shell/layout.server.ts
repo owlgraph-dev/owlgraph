@@ -8,7 +8,7 @@ import { resolveTreeForUser } from '#lib/features/site/server.ts';
 import { getCurrentLogo, getUiFontFamily, getSiteTheme, customStylesHref, listCustomStyleRefs } from '#lib/features/site/server.ts';
 import { resolveFooterForUser } from '#lib/features/site/server.ts';
 import { getUserAvatarMeta } from '#lib/features/media/server.ts';
-import { listNamespacesForUser } from '#lib/features/namespaces/server.ts';
+import { listSpacesForUser } from '#lib/features/spaces/server.ts';
 import { connectionsOffered } from '#lib/features/pluginHost/server.ts';
 import { getFontFaceCss, getCustomFontEntries } from '#lib/features/content/server.ts';
 import { getParagraphStyles } from '#lib/features/content/server.ts';
@@ -21,9 +21,9 @@ export const load = async ({ locals }: ServerLoadEvent) => {
   // Here, not on SessionUser: that would cost every authenticated request
   // (API, GraphQL, MCP), not just the ones that render it.
   const avatar = locals.user ? await getUserAvatarMeta(locals.user.id) : null;
-  // Viewer-scoped: only the namespaces this viewer may see. +layout.ts also
-  // feeds them to the browser's [namespace] matcher (docs/architecture/routing.md).
-  const namespaces = (await listNamespacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default }));
+  // Viewer-scoped: only the spaces this viewer may see. +layout.ts also
+  // feeds them to the browser's [space] matcher (docs/architecture/routing.md).
+  const spaces = (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default }));
   const [customFonts, paragraphStyles, uiFontFamily, siteTheme, stylesHref, customStyles, footer, offered] = await Promise.all([
     getCustomFontEntries(),
     getParagraphStyles(),
@@ -53,7 +53,7 @@ export const load = async ({ locals }: ServerLoadEvent) => {
     footer,
     footerLogoRuleId,
     shellCss: shell.css(),
-    namespaces,
+    spaces,
     fontFaceCss: await getFontFaceCss(),
     customFonts,
     paragraphStyles,

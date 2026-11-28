@@ -60,11 +60,11 @@ export function pickEmbed(family: EmbedFamily, node: NodeSearchResult, target: T
 export function embedActions(ctx: {
   editor: () => Editor | null | undefined;
   target: () => Target | null;
-  namespace: () => NodePickerCreate['namespace'] | null;
+  space: () => NodePickerCreate['space'] | null;
   enabledPlugins: () => ReadonlySet<string>;
 }): Pick<BlockSettingsActions, 'createIn' | 'embedKindFor' | 'swapEmbed'> {
   return {
-    createIn: () => ctx.namespace(),
+    createIn: () => ctx.space(),
     embedKindFor: (family, source) => embedKindFor(family, source, ctx.enabledPlugins()),
     swapEmbed: (kind, nodeId) => {
       const editor = ctx.editor();

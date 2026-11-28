@@ -13,7 +13,7 @@
   import * as m from '#lib/paraglide/messages.js';
   import type { WirePropertyOperator, WireEdgeDirection, WireClassMatch, WireTagOperator, WireIntrinsicField } from '../nodeFilter';
   import { WIRE_TAG_OPERATORS } from '../nodeFilter';
-  import { typeItems as buildTypeItems, classItems as buildClassItems, namespaceItems as buildNamespaceItems, localeItems as buildLocaleItems } from '../filterOptions';
+  import { typeItems as buildTypeItems, classItems as buildClassItems, spaceItems as buildSpaceItems, localeItems as buildLocaleItems } from '../filterOptions';
   import type { NodeClassOption, RelationshipTypeOption } from '#lib/features/semantic/index.ts';
   import {
     needsValue,
@@ -36,7 +36,7 @@
     onRemove,
     sourceGroups,
     propertyOptions,
-    namespaceOptions = [],
+    spaceOptions = [],
     userOptions = [],
     classOptions = [],
     relationshipTypes = [],
@@ -49,7 +49,7 @@
     sourceGroups: SourceGroup[];
     /** Node properties, or on the edge-property line the relationship type's. */
     propertyOptions: PropertyOption[];
-    namespaceOptions?: { id: string; name: string }[];
+    spaceOptions?: { id: string; name: string }[];
     userOptions?: { id: string; name: string; email: string }[];
     classOptions?: NodeClassOption[];
     relationshipTypes?: RelationshipTypeOption[];
@@ -122,7 +122,7 @@
     }
   }
 
-  const namespaceItems = $derived(buildNamespaceItems(namespaceOptions));
+  const spaceItems = $derived(buildSpaceItems(spaceOptions));
   const userItems = $derived(userOptions.map((u) => ({ value: u.id, label: u.name || u.email })));
   const classItems = $derived(buildClassItems(classOptions));
   const typeItems = buildTypeItems();
@@ -199,8 +199,8 @@
         <Select items={typeItems} value={row.value} onValueChange={(v) => onChange({ ...row, value: v })} placeholder={m.editor_intrinsic_condition_type_placeholder()} width="full" />
       {:else if row.field === 'LOCALE'}
         <Select items={localeItems} value={row.value} onValueChange={(v) => onChange({ ...row, value: v })} placeholder={m.editor_intrinsic_condition_locale_placeholder()} width="full" />
-      {:else if row.field === 'NAMESPACE_ID'}
-        <Select items={namespaceItems} value={row.value} onValueChange={(v) => onChange({ ...row, value: v })} placeholder={m.editor_intrinsic_condition_namespace_placeholder()} width="full" />
+      {:else if row.field === 'SPACE_ID'}
+        <Select items={spaceItems} value={row.value} onValueChange={(v) => onChange({ ...row, value: v })} placeholder={m.editor_intrinsic_condition_space_placeholder()} width="full" />
       {:else if row.field === 'CREATED_BY'}
         <Select items={userItems} value={row.value} onValueChange={(v) => onChange({ ...row, value: v })} placeholder={m.editor_intrinsic_condition_creator_placeholder()} width="full" />
       {:else}

@@ -4,7 +4,7 @@
 
 // "24 pages for “graph” · class Concept (incl. subclasses) · tagged ai or ml".
 // Built from what took effect, so a parameter the server dropped, such as a
-// hidden namespace, is never mentioned.
+// hidden space, is never mentioned.
 import * as m from '#lib/paraglide/messages.js';
 import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 import type { SearchParams } from '#lib/features/search/index.ts';
@@ -14,7 +14,7 @@ export interface CountLineInput {
   applied: Pick<SearchParams, 'q' | 'type' | 'exact' | 'tags'>;
   /** Null when none applies. */
   classLabel: string | null;
-  namespaceName: string | null;
+  spaceName: string | null;
 }
 
 const NOUNS = {
@@ -24,7 +24,7 @@ const NOUNS = {
   collection: { one: m.search_page_count_collections_one, other: m.search_page_count_collections_other },
 };
 
-export function countLine({ total, applied, classLabel, namespaceName }: CountLineInput, locale: Locale = getLocale()): string {
+export function countLine({ total, applied, classLabel, spaceName }: CountLineInput, locale: Locale = getLocale()): string {
   const noun = NOUNS[applied.type ?? 'results'];
   const plural = new Intl.PluralRules(locale).select(total) === 'one' ? noun.one : noun.other;
   const head = [plural({ count: total }, { locale })];
@@ -32,6 +32,6 @@ export function countLine({ total, applied, classLabel, namespaceName }: CountLi
   const parts = [head.join(' ')];
   if (classLabel) parts.push(applied.exact ? m.search_page_count_class_exact({ name: classLabel }, { locale }) : m.search_page_count_class({ name: classLabel }, { locale }));
   if (applied.tags.length) parts.push(m.search_page_count_tags({ tags: new Intl.ListFormat(locale, { type: 'disjunction' }).format(applied.tags) }, { locale }));
-  if (namespaceName) parts.push(m.search_page_count_namespace({ name: namespaceName }, { locale }));
+  if (spaceName) parts.push(m.search_page_count_space({ name: spaceName }, { locale }));
   return parts.join(' · ');
 }

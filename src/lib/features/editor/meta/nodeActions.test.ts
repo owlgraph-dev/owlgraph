@@ -6,13 +6,13 @@ import { describe, it, expect, vi } from 'vitest';
 import { nodePath, type NodeMetaClient } from '#lib/features/nodes/index.ts';
 import { nodeActions, type NodeRow } from './nodeActions';
 
-const NAMESPACES = [
+const SPACES = [
   { id: 'ns-default', slug: null, isDefault: true },
   { id: 'ns-team', slug: 'team', isDefault: false },
 ];
 
 function fixture(client: Partial<Record<keyof NodeMetaClient, unknown>> = {}) {
-  const row: NodeRow = { id: 'p-1', title: 'Plans', slug: 'plans', namespace_id: 'ns-default', namespace_slug: null };
+  const row: NodeRow = { id: 'p-1', title: 'Plans', slug: 'plans', space_id: 'ns-default', space_slug: null };
   const fake = {
     rename: vi.fn(async (changes: { title?: string; slug?: string }) => ({ ok: true, title: changes.title ?? row.title, slug: changes.slug ?? row.slug })),
     setTags: vi.fn(async (tags: string[]) => ({ ok: true, tags })),
@@ -24,14 +24,14 @@ function fixture(client: Partial<Record<keyof NodeMetaClient, unknown>> = {}) {
     setShares: vi.fn(async (shares: string[]) => ({ ok: true, shares })),
     createShareLink: vi.fn(async () => ({ ok: true })),
     revokeShareLink: vi.fn(async () => ({ ok: true })),
-    setNamespace: vi.fn(async () => ({ ok: true })),
+    setSpace: vi.fn(async () => ({ ok: true })),
     remove: vi.fn(async () => ({ ok: true })),
     ...client,
   };
   const goto = vi.fn(async () => {});
   const refreshAll = vi.fn(async () => {});
   const beforeDelete = vi.fn();
-  const actions = nodeActions(fake as unknown as NodeMetaClient, row, { deleteFallback: 'Could not delete', beforeDelete, namespaces: () => NAMESPACES, goto, refreshAll });
+  const actions = nodeActions(fake as unknown as NodeMetaClient, row, { deleteFallback: 'Could not delete', beforeDelete, spaces: () => SPACES, goto, refreshAll });
   return { actions, row, client: fake, goto, refreshAll, beforeDelete };
 }
 
@@ -56,13 +56,13 @@ describe("a node's actions in its editor", () => {
     expect(f.goto).not.toHaveBeenCalled();
   });
 
-  it('follow a move to another namespace, the default one without its slug', async () => {
+  it('follow a move to another space, the default one without its slug', async () => {
     const f = fixture();
-    await f.actions.onSetNamespace!('ns-team');
-    expect(f.row).toMatchObject({ namespace_id: 'ns-team', namespace_slug: 'team' });
+    await f.actions.onSetSpace!('ns-team');
+    expect(f.row).toMatchObject({ space_id: 'ns-team', space_slug: 'team' });
     expect(f.goto).toHaveBeenLastCalledWith(nodePath('team', 'plans', { edit: true }), STAY);
-    await f.actions.onSetNamespace!('ns-default');
-    expect(f.row.namespace_slug).toBeNull();
+    await f.actions.onSetSpace!('ns-default');
+    expect(f.row.space_slug).toBeNull();
     expect(f.goto).toHaveBeenLastCalledWith(nodePath(null, 'plans', { edit: true }), STAY);
   });
 

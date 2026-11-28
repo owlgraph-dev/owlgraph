@@ -269,7 +269,7 @@ Every constraint and index carries the suffix Postgres gives its kind:
 A constraint left unnamed gets exactly this name from Postgres, so the rule
 costs nothing to keep. One named by hand, because its columns don't say what
 it holds, still ends in its kind's suffix: `nodes_class_type_fkey`,
-`namespaces_slug_null_iff_default_check`. Code that tells a violation apart by
+`spaces_slug_null_iff_default_check`. Code that tells a violation apart by
 its `constraint_name` names it so too. `src/lib/platform/schemaNames.int.test.ts`
 holds the rule on a fully migrated database.
 

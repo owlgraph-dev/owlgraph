@@ -64,7 +64,7 @@
     mark?: (node: NodeSearchResult) => NodeMark | null;
     /** What Enter does on a row: "Add", "Embed as its integration's block". */
     rowAction: string | ((node: NodeSearchResult) => string);
-    /** The types it may make, and the namespace they go into. */
+    /** The types it may make, and the space they go into. */
     create?: NodePickerCreate;
     /** Before a term is typed: this many of the nodes the viewer worked on last. */
     recent?: number;
@@ -200,8 +200,8 @@
     onPick(node);
   }
 
-  function made(type: NodeType, id: string, slug: string, namespaceSlug: string | null, madeTitle: string): NodeSearchResult {
-    return { type, id, title: madeTitle, slug, href: nodePath(namespaceSlug, slug), namespace: create?.namespace.name ?? null, plugin: null, pluginLabel: null };
+  function made(type: NodeType, id: string, slug: string, spaceSlug: string | null, madeTitle: string): NodeSearchResult {
+    return { type, id, title: madeTitle, slug, href: nodePath(spaceSlug, slug), space: create?.space.name ?? null, plugin: null, pluginLabel: null };
   }
 
   async function make(type: NodeType) {
@@ -213,13 +213,13 @@
       stepEl?.querySelector<HTMLElement>('[role="radio"], input, button')?.focus();
       return;
     }
-    const namespace = create.namespace;
+    const space = create.space;
     const named = term;
     creating = type;
     let node: NodeSearchResult | null = null;
     try {
-      const res = type === 'page' ? await createBlankPageViaApi(namespace.id, named) : await createCuratedCollection(namespace.id, named);
-      if (res.ok) node = made(type, res.id, res.slug, res.namespaceSlug, named);
+      const res = type === 'page' ? await createBlankPageViaApi(space.id, named) : await createCuratedCollection(space.id, named);
+      if (res.ok) node = made(type, res.id, res.slug, res.spaceSlug, named);
     } catch {
       node = null;
     }
@@ -301,7 +301,7 @@
           {/each}
           {#each results as node (node.id)}
             {@const state = mark?.(node) ?? null}
-            {@const second = meta === 'address' ? node.href : [types.length > 1 ? NODE_TYPE_LABEL[node.type]() : null, node.namespace, node.pluginLabel].filter(Boolean).join(' · ')}
+            {@const second = meta === 'address' ? node.href : [types.length > 1 ? NODE_TYPE_LABEL[node.type]() : null, node.space, node.pluginLabel].filter(Boolean).join(' · ')}
             <CommandItem value={node.id} disabled={state?.disabled ?? false} onSelect={() => pick(node)}>
               <span class="np-row">
                 {@render glyph(NODE_TYPE_GLYPH[node.type])}
@@ -323,7 +323,7 @@
                 {@render glyph('plus')}
                 <span class="np-text">
                   <span class="np-title">{newLabel[type]({ title: term })}</span>
-                  <span class="np-meta">{m.node_picker_new_in({ namespace: create?.namespace.name ?? '' })}</span>
+                  <span class="np-meta">{m.node_picker_new_in({ space: create?.space.name ?? '' })}</span>
                 </span>
                 {#if creating === type}<Spinner size={16} />{/if}
               </span>
@@ -354,11 +354,11 @@
     <div class="np-step-body">
       <NewDocumentForm
         id={docFormId}
-        namespaceId={create.namespace.id}
+        spaceId={create.space.id}
         initialTitle={term}
         bind:busy={docBusy}
         bind:source={docSource}
-        onCreated={(doc) => onPick(made('document', doc.id, doc.slug, create?.namespace.slug ?? null, doc.title))}
+        onCreated={(doc) => onPick(made('document', doc.id, doc.slug, create?.space.slug ?? null, doc.title))}
       />
     </div>
     <div class="np-step-actions">

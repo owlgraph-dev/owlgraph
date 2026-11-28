@@ -26,13 +26,13 @@ export interface SearchResultCard {
   highlighted: boolean;
   /** ISO timestamp. */
   updatedAt: string;
-  /** '' in the default namespace, the site's root. */
-  namespaceName: string;
+  /** '' in the default space, the site's root. */
+  spaceName: string;
   tags: string[];
 }
 
-/** A namespace the viewer may see, by its URL value. */
-export interface SearchNamespaceOption {
+/** A space the viewer may see, by its URL value. */
+export interface SearchSpaceOption {
   value: string;
   name: string;
 }
@@ -43,10 +43,10 @@ export interface NodeSearchResult {
   type: NodeType;
   id: string;
   title: string;
-  /** Its slug within its namespace (a page link keeps it beside the id). */
+  /** Its slug within its space (a page link keeps it beside the id). */
   slug: string;
   href: string;
-  namespace: string | null;
+  space: string | null;
   /** The integration a document or collection comes from (its plugin's id), or null for the core's own. */
   plugin: string | null;
   /** That integration's name. */

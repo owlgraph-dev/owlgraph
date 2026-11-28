@@ -2,10 +2,10 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-// Route adapter, re-exported by src/routes/[[namespace=namespace]]/[slug]/edit/+page.server.ts.
+// Route adapter, re-exported by src/routes/[[space=space]]/[slug]/edit/+page.server.ts.
 import { error, redirect } from '@sveltejs/kit';
 import { getNodeBySlug } from '#lib/features/nodes/server.ts';
-import { resolveNamespaceParam, listNamespacesForUser, getNamespaceMembers } from '#lib/features/namespaces/server.ts';
+import { resolveSpaceParam, listSpacesForUser, getSpaceMembers } from '#lib/features/spaces/server.ts';
 import { nodePath } from '#lib/features/nodes/index.ts';
 import {
   getPage,
@@ -34,26 +34,26 @@ import { can } from '#lib/features/auth/server.ts';
 import { listShareLinks } from '#lib/features/nodes/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
-type Params = { namespace?: string; slug: string };
+type Params = { space?: string; slug: string };
 
 export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
   if (!can(locals.user, 'page:write')) throw redirect(303, '/');
-  const namespace = await resolveNamespaceParam(params.namespace);
-  if (!namespace) throw error(404, 'Page not found');
-  const node = await getNodeBySlug(namespace.id, params.slug);
+  const space = await resolveSpaceParam(params.space);
+  if (!space) throw error(404, 'Page not found');
+  const node = await getNodeBySlug(space.id, params.slug);
   if (!node) throw error(404, 'Page not found');
 
   if (node.type === 'document') {
     const doc = await getDocument(node.id);
     if (!doc) throw error(404, 'Document not found');
     if (!userCanWriteDocument(locals.user, doc)) {
-      if (await userCanReadDocument(locals.user, doc)) throw redirect(303, nodePath(doc.namespace_slug, doc.slug));
+      if (await userCanReadDocument(locals.user, doc)) throw redirect(303, nodePath(doc.space_slug, doc.slug));
       throw redirect(303, '/');
     }
     const allUsers = await listUsers();
-    const namespaceMembers =
-      doc.namespace_access_level === 'restricted'
-        ? (await getNamespaceMembers(doc.namespace_id))
+    const spaceMembers =
+      doc.space_access_level === 'restricted'
+        ? (await getSpaceMembers(doc.space_id))
             .map((id) => allUsers.find((u) => u.id === id))
             .filter((u): u is NonNullable<typeof u> => !!u)
             .map((u) => ({ id: u.id, name: u.name, email: u.email }))
@@ -72,14 +72,14 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       localeSuggestion: doc.detected_locale,
       nodeClasses: await listNodeClassOptions(),
       classFields: await getNodeClassFields(doc.class_id),
-      // As stored: null inherits the namespace's access level.
+      // As stored: null inherits the space's access level.
       visibility: doc.visibility,
-      namespaceAccessLevel: doc.namespace_access_level,
-      namespaceMembers,
+      spaceAccessLevel: doc.space_access_level,
+      spaceMembers,
       shares: await getDocumentShares(doc.id),
       users: allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email })),
       shareLinks: (await listShareLinks(doc.id)).map((l) => ({ id: l.id, label: l.label, createdAt: l.created_at })),
-      namespaces: (await listNamespacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
+      spaces: (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
     };
   }
 
@@ -87,13 +87,13 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
     const collection = await getCollection(node.id);
     if (!collection) throw error(404, 'Page not found');
     if (!(await userCanWriteCollection(locals.user, collection))) {
-      if (await userCanReadCollection(locals.user, collection)) throw redirect(303, nodePath(collection.namespace_slug, collection.slug));
+      if (await userCanReadCollection(locals.user, collection)) throw redirect(303, nodePath(collection.space_slug, collection.slug));
       throw redirect(303, '/');
     }
     const allUsers = await listUsers();
-    const namespaceMembers =
-      collection.namespace_access_level === 'restricted'
-        ? (await getNamespaceMembers(collection.namespace_id))
+    const spaceMembers =
+      collection.space_access_level === 'restricted'
+        ? (await getSpaceMembers(collection.space_id))
             .map((id) => allUsers.find((u) => u.id === id))
             .filter((u): u is NonNullable<typeof u> => !!u)
             .map((u) => ({ id: u.id, name: u.name, email: u.email }))
@@ -117,16 +117,16 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       nodeClasses: await listNodeClassOptions(),
       classFields: await getNodeClassFields(collection.class_id),
       visibility: collection.visibility,
-      namespaceAccessLevel: collection.namespace_access_level,
-      namespaceMembers,
-      namespaces: (await listNamespacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
+      spaceAccessLevel: collection.space_access_level,
+      spaceMembers,
+      spaces: (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
     };
   }
 
   const page = await getPage(node.id);
   if (!page) throw error(404, 'Page not found');
   if (!(await userCanWritePage(locals.user, page))) {
-    if (await userCanReadPage(locals.user, page)) throw redirect(303, nodePath(page.namespace_slug, page.slug));
+    if (await userCanReadPage(locals.user, page)) throw redirect(303, nodePath(page.space_slug, page.slug));
     throw redirect(303, '/');
   }
   const all = await listPagesForUser(locals.user);
@@ -135,16 +135,16 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
   const documents = (await listDocumentsForUser(locals.user)).map((d) => ({
     id: d.id,
     slug: d.slug,
-    namespaceSlug: d.namespace_slug,
+    spaceSlug: d.space_slug,
     title: d.title,
     plugin: d.plugin,
   }));
   const allUsers = await listUsers();
-  // Shown read-only when the page inherits a restricted namespace. The share
-  // list only narrows; membership is managed under namespace:manage.
-  const namespaceMembers =
-    page.namespace_access_level === 'restricted'
-      ? (await getNamespaceMembers(page.namespace_id))
+  // Shown read-only when the page inherits a restricted space. The share
+  // list only narrows; membership is managed under space:manage.
+  const spaceMembers =
+    page.space_access_level === 'restricted'
+      ? (await getSpaceMembers(page.space_id))
           .map((id) => allUsers.find((u) => u.id === id))
           .filter((u): u is NonNullable<typeof u> => !!u)
           .map((u) => ({ id: u.id, name: u.name, email: u.email }))
@@ -154,9 +154,9 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
     page,
     pages: all
       .filter((p) => p.id !== page.id)
-      .map((p) => ({ ...p, namespaceSlug: p.namespace_slug })),
+      .map((p) => ({ ...p, spaceSlug: p.space_slug })),
     documents,
-    namespaces: (await listNamespacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
+    spaces: (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default })),
     tags: await getNodeTags(page.id),
     manualProperties: await getManualProperties(page.id),
     propSuggestions: await listPropertySuggestionOptions(locals.user),
@@ -167,8 +167,8 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
     nodeClasses: await listNodeClassOptions(),
     classFields: await getNodeClassFields(page.class_id),
     visibility: page.visibility,
-    namespaceAccessLevel: page.namespace_access_level,
-    namespaceMembers,
+    spaceAccessLevel: page.space_access_level,
+    spaceMembers,
     shares: await getPageShares(page.id),
     users: allUsers.map((u) => ({ id: u.id, name: u.name, email: u.email })),
     shareLinks: (await listShareLinks(page.id)).map((l) => ({ id: l.id, label: l.label, createdAt: l.created_at })),

@@ -53,7 +53,7 @@ test.beforeEach(() => {
 
 test.use({ lock: 'integration-settings', storageState: authState('admin') });
 
-/** In the public default namespace, like the pages here. */
+/** In the public default space, like the pages here. */
 async function connect(request: APIRequestContext, token = newShare()) {
   const anchor = await createPage(request, { visibility: null });
   const res = await request.post(`${API}/collections`, { data: { pageId: anchor.id, shareUrl: `${mock.origin}/s/${token}` } });

@@ -253,7 +253,7 @@ What an instance carries over:
   stored text and never a node, and what it was meant for is a relationship
   or a link (criterion 37).
 - [0002. Authorization is server-enforced and viewer-scoped](../adr/0002-authorization-is-server-enforced-and-viewer-scoped.md):
-  [spec 002](002-visibility-and-namespaces.md) holds unchanged, and its
+  [spec 002](002-visibility-and-spaces.md) holds unchanged, and its
   promise extends to statements, inferences and reports.
 - [0001. Migrations are immutable and forward-only](../adr/0001-migrations-are-immutable-and-forward-only.md):
   every change to what an instance stores is a migration of instances that

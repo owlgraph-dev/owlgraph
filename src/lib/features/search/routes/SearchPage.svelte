@@ -12,11 +12,11 @@
   import * as m from '#lib/paraglide/messages.js';
   import { Button, ChipInput, EmptyState, Pagination, SearchField, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
   import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchResultCard as Result, type SearchSort } from '#lib/features/search/index.ts';
+  import { effectiveSort, searchHref, type SearchSpaceOption, type SearchParams, type SearchResultCard as Result, type SearchSort } from '#lib/features/search/index.ts';
   import SearchResultCard from './SearchResultCard.svelte';
   import SearchCompactRow from './SearchCompactRow.svelte';
   import { countLine } from './countLine';
-  import { ALL, orNull, classPickerItems, matchItems, typePickerItems, namespacePickerItems, sortItems } from './filterItems';
+  import { ALL, orNull, classPickerItems, matchItems, typePickerItems, spacePickerItems, sortItems } from './filterItems';
   import type { NodeType } from '#lib/features/nodes/index.ts';
 
   interface SearchPageData {
@@ -25,10 +25,10 @@
     total: number;
     pageCount: number;
     classLabel: string | null;
-    namespaceName: string | null;
+    spaceName: string | null;
     classOptions: NodeClassOption[];
     tagOptions: string[];
-    namespaces: SearchNamespaceOption[];
+    spaces: SearchSpaceOption[];
   }
 
   let { data }: { data: SearchPageData } = $props();
@@ -39,11 +39,11 @@
   let draft = $derived(data.applied.q);
 
   const classes = $derived(classPickerItems(data.classOptions));
-  const namespaces = $derived(namespacePickerItems(data.namespaces));
+  const spaces = $derived(spacePickerItems(data.spaces));
   const sorts = $derived(sortItems(!!applied.q));
 
-  const count = $derived(countLine({ total: data.total, applied, classLabel: data.classLabel, namespaceName: data.namespaceName }));
-  const filtered = $derived(!!(applied.q || applied.class || applied.tags.length || applied.type || applied.namespace));
+  const count = $derived(countLine({ total: data.total, applied, classLabel: data.classLabel, spaceName: data.spaceName }));
+  const filtered = $derived(!!(applied.q || applied.class || applied.tags.length || applied.type || applied.space));
   const busy = $derived(navigating.to?.route.id === '/search');
 
   // A change of filter starts over at the first page; the view keeps it.
@@ -96,7 +96,7 @@
         />
       </div>
       <Select items={typePickerItems()} value={applied.type ?? ALL} onValueChange={(v) => go({ type: orNull<NodeType>(v) })} ariaLabel={m.search_page_filter_type()} />
-      <Select items={namespaces} value={applied.namespace ?? ALL} onValueChange={(v) => go({ namespace: orNull(v) })} ariaLabel={m.search_page_filter_namespace()} />
+      <Select items={spaces} value={applied.space ?? ALL} onValueChange={(v) => go({ space: orNull(v) })} ariaLabel={m.search_page_filter_space()} />
       <Select items={sorts} value={effectiveSort(applied)} onValueChange={(v) => go({ sort: v as SearchSort })} ariaLabel={m.search_page_sort()} />
       <SegmentedControl type="single" value={applied.view} ariaLabel={m.search_page_view()}>
         <SegmentedControlItem value="list" onclick={() => go({ view: 'list', page: applied.page })}>{m.search_page_view_list()}</SegmentedControlItem>
@@ -109,10 +109,10 @@
         {applied}
         total={data.total}
         classLabel={data.classLabel}
-        namespaceName={data.namespaceName}
+        spaceName={data.spaceName}
         classOptions={data.classOptions}
         tagOptions={data.tagOptions}
-        namespaceOptions={data.namespaces}
+        spaceOptions={data.spaces}
         {go}
       />
     </div>

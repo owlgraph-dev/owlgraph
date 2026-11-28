@@ -16,8 +16,8 @@ export interface ActiveFilter {
 }
 
 export function activeFilters(
-  applied: Pick<SearchParams, 'class' | 'exact' | 'tags' | 'type' | 'namespace'>,
-  labels: { classLabel: string | null; namespaceName: string | null }
+  applied: Pick<SearchParams, 'class' | 'exact' | 'tags' | 'type' | 'space'>,
+  labels: { classLabel: string | null; spaceName: string | null }
 ): ActiveFilter[] {
   const out: ActiveFilter[] = [];
   if (applied.class) {
@@ -31,8 +31,8 @@ export function activeFilters(
     const label = typeItems().find((t) => t.value === applied.type)?.label ?? applied.type;
     out.push({ key: 'type', label, remove: { type: null } });
   }
-  if (applied.namespace) {
-    out.push({ key: 'namespace', label: labels.namespaceName ?? applied.namespace, remove: { namespace: null } });
+  if (applied.space) {
+    out.push({ key: 'space', label: labels.spaceName ?? applied.space, remove: { space: null } });
   }
   return out;
 }

@@ -122,8 +122,8 @@
             <TableCell truncate title={p.title}>{p.title}</TableCell>
             <TableCell muted>{findings(p)}</TableCell>
             <TableCell actions>
-              <a class="link action" href={nodePath(p.namespace_slug, p.slug, { edit: true })}>{m.settings_color_scheme_report_edit()}</a>
-              <a class="link action" href={`${nodePath(p.namespace_slug, p.slug)}?scheme=dark`} target="_blank" rel="noopener">{m.settings_color_scheme_report_preview()}</a>
+              <a class="link action" href={nodePath(p.space_slug, p.slug, { edit: true })}>{m.settings_color_scheme_report_edit()}</a>
+              <a class="link action" href={`${nodePath(p.space_slug, p.slug)}?scheme=dark`} target="_blank" rel="noopener">{m.settings_color_scheme_report_preview()}</a>
             </TableCell>
           </TableRow>
         {/each}
@@ -184,7 +184,7 @@
       <Checkbox bind:checked={previewed}>{m.settings_color_scheme_check_preview()}</Checkbox>
       {#if data.readiness.sample.length}
         <p class="nested">
-          {#each data.readiness.sample as p, i (p.id)}{#if i}{', '}{/if}<a class="link" href={`${nodePath(p.namespace_slug, p.slug)}?scheme=dark`} target="_blank" rel="noopener">{p.title}</a>{/each}
+          {#each data.readiness.sample as p, i (p.id)}{#if i}{', '}{/if}<a class="link" href={`${nodePath(p.space_slug, p.slug)}?scheme=dark`} target="_blank" rel="noopener">{p.title}</a>{/each}
         </p>
       {/if}
     </li>

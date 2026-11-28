@@ -28,7 +28,7 @@
     core,
     save,
     scheme,
-    linkNamespace = null,
+    linkSpace = null,
     locale,
     onDeleteBlock = null,
     onBlockSettings = null,
@@ -37,8 +37,8 @@
     save: SaveAction;
     /** The canvas's scheme, which a typography colour must read in. */
     scheme: CanvasScheme;
-    /** The page's namespace, where the link picker makes a page it is asked for. */
-    linkNamespace?: NodePickerCreate['namespace'] | null;
+    /** The page's space, where the link picker makes a page it is asked for. */
+    linkSpace?: NodePickerCreate['space'] | null;
     /** The content language a site page's card is labelled in. */
     locale?: string;
     /** Removes the selected block; null while nothing removable is selected. */
@@ -188,7 +188,7 @@
   types={['page', 'document']}
   rowAction={m.editor_link_picker_action()}
   recent={6}
-  create={linkNamespace ? { types: ['page'], namespace: linkNamespace } : undefined}
+  create={linkSpace ? { types: ['page'], space: linkSpace } : undefined}
   leading={(term) => linkPickerRows(term, { retargeting: !!core.links.retargetId, insertUrlCard: insertUrlCardAndClose, placeSitePage: placeSitePageAndClose })}
   note={core.links.retargetId ? m.editor_link_picker_hint_retarget() : m.editor_link_picker_hint_default()}
   onPick={(node) => {

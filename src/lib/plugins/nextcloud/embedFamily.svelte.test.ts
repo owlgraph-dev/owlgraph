@@ -27,14 +27,14 @@ async function editor(enabledPlugins: string[]) {
     enabledPlugins,
     title: 'Host page',
     slug: 'host-page',
-    namespaceSlug: null,
+    spaceSlug: null,
     tags: [],
     manualProperties: [],
     locale: 'en',
     visibility: null,
-    namespaceAccessLevel: 'public',
-    namespaceId: 'ns-default',
-    namespaces: [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }],
+    spaceAccessLevel: 'public',
+    spaceId: 'ns-default',
+    spaces: [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }],
   });
 }
 

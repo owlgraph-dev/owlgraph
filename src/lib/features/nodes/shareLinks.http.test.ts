@@ -4,7 +4,7 @@
 
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { db } from '#lib/platform/db.server.ts';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { call, createSpace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 // editorA owns the seeded restricted page and document; editorB is shared on both.
 
@@ -95,11 +95,11 @@ describe.skipIf(app.skipped)('share links', () => {
   });
 
   describe('what a shared page names', () => {
-    it('its rendered link to a page in a hidden namespace keeps the link text and carries that namespace’s slug nowhere', async () => {
+    it('its rendered link to a page in a hidden space keeps the link text and carries that space’s slug nowhere', async () => {
       const ns = { name: 'Share NS', slug: 'share-ns-hidden', accessLevel: 'restricted' as const };
-      const namespaceId = await createNamespace(served, ns);
+      const spaceId = await createSpace(served, ns);
       // The link carries the slug cached when it was authored.
-      const target = await createPage(served, 'admin', { namespaceId });
+      const target = await createPage(served, 'admin', { spaceId });
       const source = await createPage(served, 'admin', {
         visibility: 'restricted',
         doc: {
@@ -133,11 +133,11 @@ describe.skipIf(app.skipped)('share links', () => {
     });
   });
 
-  describe('which namespaces exist', () => {
-    it('/api/namespaces/slugs lists a restricted namespace to an admin and omits it for an anonymous caller and a non-member editor', async () => {
+  describe('which spaces exist', () => {
+    it('/api/spaces/slugs lists a restricted space to an admin and omits it for an anonymous caller and a non-member editor', async () => {
       const ns = { name: 'Slugs NS', slug: 'slugs-ns-hidden', accessLevel: 'restricted' as const };
-      await createNamespace(served, ns);
-      const slugsFor = async (as?: 'admin' | 'editorC') => (await (await call(served, '/api/namespaces/slugs', { as })).json()) as string[];
+      await createSpace(served, ns);
+      const slugsFor = async (as?: 'admin' | 'editorC') => (await (await call(served, '/api/spaces/slugs', { as })).json()) as string[];
       expect(await slugsFor('admin')).toContain(ns.slug);
       expect(await slugsFor()).not.toContain(ns.slug);
       expect(await slugsFor('editorC')).not.toContain(ns.slug);

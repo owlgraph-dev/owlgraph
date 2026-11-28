@@ -15,20 +15,20 @@ import { isCodedError } from '#lib/platform/codedError.ts';
 export const POST: RequestHandler = async ({ request, locals }) => {
   if (!can(locals.user, 'page:write')) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'route' });
   const body = await request.json().catch(() => ({}));
-  const namespaceId = typeof body.namespaceId === 'string' && body.namespaceId ? body.namespaceId : undefined;
+  const spaceId = typeof body.spaceId === 'string' && body.spaceId ? body.spaceId : undefined;
   const title = typeof body.title === 'string' ? body.title : undefined;
   try {
-    const page = await createBlankPage(locals.user!, namespaceId, title);
+    const page = await createBlankPage(locals.user!, spaceId, title);
     logEvent(locals.log, 'node.created', {
       nodeId: page.id,
       nodeType: 'page',
-      namespaceId: page.namespace_id ?? null,
+      spaceId: page.space_id ?? null,
       actorId: locals.user?.id ?? null,
     });
-    return Response.json({ id: page.id, slug: page.slug, namespaceSlug: page.namespace_slug });
+    return Response.json({ id: page.id, slug: page.slug, spaceSlug: page.space_slug });
   } catch (e) {
-    if (isCodedError(e, 'namespace_membership_required')) {
-      return apiForbidden(locals.log, { action: 'namespace:place', resourceType: 'namespace', code: 'namespace_membership_required' });
+    if (isCodedError(e, 'space_membership_required')) {
+      return apiForbidden(locals.log, { action: 'space:place', resourceType: 'space', code: 'space_membership_required' });
     }
     return apiErrorFrom(e);
   }

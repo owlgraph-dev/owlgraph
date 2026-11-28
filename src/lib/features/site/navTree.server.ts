@@ -8,7 +8,7 @@
 // footer's groups-only top level, is its callers' to apply.
 import { db } from '#lib/platform/db.server.ts';
 import { readablePageIds } from '#lib/features/pages/server.ts';
-import { namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { nodePath } from '#lib/features/nodes/index.ts';
 import { safeTargetHref } from '#lib/features/content/index.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
@@ -46,9 +46,9 @@ function validateShape(
 export async function listTreeAdmin(consumer: TreeConsumer): Promise<TreeNodeAdminRow[]> {
   return db<TreeNodeAdminRow[]>`
     select n.id, n.consumer, n.parent_id, n.kind, n.position, n.label, n.target_type, n.target_page_id, n.url, n.created_at, n.updated_at,
-           pn.title as page_title, pn.slug as page_slug, ${db.unsafe(namespaceSlugColumn())}
+           pn.title as page_title, pn.slug as page_slug, ${db.unsafe(spaceSlugColumn())}
     from nav_tree_entries n
-    left join nodes pn on pn.id = n.target_page_id ${db.unsafe(namespaceJoin('pn'))}
+    left join nodes pn on pn.id = n.target_page_id ${db.unsafe(spaceJoin('pn'))}
     where n.consumer = ${consumer}
     order by n.parent_id nulls first, n.position`;
 }
@@ -177,11 +177,11 @@ export async function outdentTreeNode(id: string): Promise<void> {
 
 // The tree as this viewer may follow it, for the nav, the phone's menu sheet and the footer.
 export async function resolveTreeForUser(consumer: TreeConsumer, user: SessionUser | null): Promise<ResolvedTreeNode[]> {
-  const rows = await db<(TreeNodeRow & { page_slug: string | null; namespace_slug: string | null })[]>`
+  const rows = await db<(TreeNodeRow & { page_slug: string | null; space_slug: string | null })[]>`
     select n.id, n.consumer, n.parent_id, n.kind, n.position, n.label, n.target_type, n.target_page_id, n.url, n.created_at, n.updated_at,
-           pn.slug as page_slug, ${db.unsafe(namespaceSlugColumn())}
+           pn.slug as page_slug, ${db.unsafe(spaceSlugColumn())}
     from nav_tree_entries n
-    left join nodes pn on pn.id = n.target_page_id ${db.unsafe(namespaceJoin('pn'))}
+    left join nodes pn on pn.id = n.target_page_id ${db.unsafe(spaceJoin('pn'))}
     where n.consumer = ${consumer}
     order by n.parent_id nulls first, n.position`;
 
@@ -196,7 +196,7 @@ export interface NavLinkRow {
   target_page_id: string | null;
   url: string | null;
   page_slug: string | null;
-  namespace_slug: string | null;
+  space_slug: string | null;
 }
 
 /**
@@ -207,7 +207,7 @@ export interface NavLinkRow {
 export function resolveNavLinkRow(row: NavLinkRow, readable: ReadonlySet<string>): { id: string; label: string; href: string; external: boolean } | null {
   if (row.target_type === 'page') {
     if (!row.target_page_id || !row.page_slug || !readable.has(row.target_page_id)) return null;
-    return { id: row.id, label: row.label, href: nodePath(row.namespace_slug, row.page_slug), external: false };
+    return { id: row.id, label: row.label, href: nodePath(row.space_slug, row.page_slug), external: false };
   }
   const href = safeTargetHref(row.url);
   // safeTargetHref lets a site-relative path through only as `/…` (never `//host`).

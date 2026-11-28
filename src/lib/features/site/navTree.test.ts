@@ -20,7 +20,7 @@ function row(overrides: Partial<TreeNodeAdminRow>): TreeNodeAdminRow {
     updated_at: '2026-01-01T00:00:00Z',
     page_title: null,
     page_slug: null,
-    namespace_slug: null,
+    space_slug: null,
     ...overrides
   };
 }
@@ -70,8 +70,8 @@ describe('resolveTree() — the tree a viewer sees', () => {
   const urlLink = (id: string, url: string, parent: string | null = null) => row({ id, parent_id: parent, url, label: id });
   const group = (id: string) => row({ id, kind: 'group', target_type: null, url: null, label: id });
 
-  it('links a readable page at its current path, under its namespace when it has one', () => {
-    const tree = resolveTree([pageLink('home', 'page-public'), { ...pageLink('docs', 'page-public'), namespace_slug: 'handbook' }], READABLE);
+  it('links a readable page at its current path, under its space when it has one', () => {
+    const tree = resolveTree([pageLink('home', 'page-public'), { ...pageLink('docs', 'page-public'), space_slug: 'handbook' }], READABLE);
     expect(tree).toEqual([
       { id: 'home', kind: 'link', label: 'home', href: '/page-public-slug', external: false },
       { id: 'docs', kind: 'link', label: 'docs', href: '/handbook/page-public-slug', external: false },

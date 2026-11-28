@@ -25,7 +25,7 @@ describe.skipIf(app.skipped)('a curated collection', () => {
     expect(res.status, await res.clone().text()).toBe(201);
     return { ...((await res.json()) as { id: string; slug: string }), title };
   };
-  /** It inherits the public default namespace. */
+  /** It inherits the public default space. */
   const publicPage = async (title = `Page ${++n}`) => ({ ...(await createPage(served, 'admin', { title })), title });
   const members = (id: string, as: Role = 'admin') => call(served, `/api/collections/${id}/members`, { as });
   const add = (id: string, nodeId: string, as: Role = 'admin') => call(served, `/api/collections/${id}/members`, { as, json: { nodeId } });

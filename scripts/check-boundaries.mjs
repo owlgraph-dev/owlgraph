@@ -36,7 +36,7 @@ const FEATURES_DIR = join(SRC, 'lib', 'features');
 const LAYERS = [
   ['auth'],
   ['nodes'],
-  ['namespaces'],
+  ['spaces'],
   ['semantic', 'content', 'media'],
   ['pages', 'documents', 'collections', 'graph', 'search', 'query'],
   ['editor', 'site'],
@@ -51,7 +51,7 @@ const ADAPTERS = [
   { name: 'GraphQL adapter', pattern: /^lib\/features\/[^/]+\/graphql\.server$/, allowedFrom: /^lib\/features\/query\/graphql\// },
 ];
 const adapterKind = (mod) => ADAPTERS.find((a) => a.pattern.test(mod)) ?? null;
-const EXTRA_ENTRIES = { content: ['listing'], search: ['picker'], documents: ['create'], namespaces: ['matcher'] };
+const EXTRA_ENTRIES = { content: ['listing'], search: ['picker'], documents: ['create'], spaces: ['matcher'] };
 const entryNamesOf = (feature) => ['index', 'components', 'server', 'editor', ...(EXTRA_ENTRIES[feature] ?? [])];
 const entryPointsOf = (feature) => [`lib/features/${feature}`, ...entryNamesOf(feature).map((name) => `lib/features/${feature}/${name}`)];
 const isEntryPoint = (mod) => {

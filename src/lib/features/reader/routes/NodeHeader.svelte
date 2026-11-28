@@ -24,7 +24,7 @@
 
 <header class="node-head">
   <nav class="crumbs" aria-label={m.node_breadcrumb()}>
-    <span>{view.namespace}</span><span class="sep" aria-hidden="true">›</span><span class="current" aria-current="page" lang={view.locale}>{view.title}</span>
+    <span>{view.space}</span><span class="sep" aria-hidden="true">›</span><span class="current" aria-current="page" lang={view.locale}>{view.title}</span>
   </nav>
 
   <div class="title-row">

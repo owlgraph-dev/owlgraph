@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import postgres from 'postgres';
@@ -168,28 +168,28 @@ describe.skipIf(pg.skipped)('restore', () => {
   let dump = '';
   let newer = '';
   // Dumps from before the baseline: one that applied the first 41 of the
-  // migrations it replaces, and one that applied every one.
+  // migrations it replaces, and one that applied every one. Both are of a
+  // database the baseline alone built, which is what those migrations built.
   let partial = '';
   let complete = '';
-  const baselineFile = path.resolve(import.meta.dirname, '..', '..', '..', 'migrations', '0001_baseline.sql');
+  const migrationsDir = path.resolve(import.meta.dirname, '..', '..', '..', 'migrations');
+  const baselineFile = path.join(migrationsDir, '0001_baseline.sql');
   const baseline = readBaseline([{ version: '0001', filename: '0001_baseline.sql', contents: readFileSync(baselineFile, 'utf8') }])!;
   const replacedRows = (entries: ReplacedMigration[]): MigrationRow[] => entries.map((r) => ({ version: r.version, filename: r.filename, checksum: r.checksums[0] }));
+  // What an adopted database applies after the baseline: this checkout's later files.
+  const later = readdirSync(migrationsDir)
+    .filter((f) => f.endsWith('.sql') && f !== '0001_baseline.sql')
+    .sort();
   const SOME = 41;
+  const beforeBaseline = `${clone}_pre`;
 
-  /** A dump of this file's database as one that records `rows` in schema_migrations would be. */
-  async function backupRecording(rows: MigrationRow[]) {
-    const own = await db<(MigrationRow & { applied_at: Date })[]>`select version, filename, checksum, applied_at from schema_migrations`;
-    const record = (recorded: readonly object[]) =>
-      db.begin(async (sql) => {
-        await sql`delete from schema_migrations`;
-        await sql`insert into schema_migrations ${sql(recorded as Record<string, unknown>[])}`;
-      });
-    await record(rows);
-    try {
-      return await backup();
-    } finally {
-      await record(own);
-    }
+  /** A dump of a database the baseline alone built, recording `rows` in schema_migrations. */
+  async function backupBeforeBaseline(sql: postgres.Sql, rows: MigrationRow[]) {
+    await sql.begin(async (tx) => {
+      await tx`delete from schema_migrations`;
+      await tx`insert into schema_migrations ${tx(rows as unknown as Record<string, unknown>[])}`;
+    });
+    return backup(beforeBaseline);
   }
 
   /** The target's tables and marker notes. */
@@ -222,11 +222,21 @@ describe.skipIf(pg.skipped)('restore', () => {
     } finally {
       await db`delete from schema_migrations where version = '9999'`;
     }
-    partial = await backupRecording(replacedRows(baseline.replaces.slice(0, SOME)));
-    complete = await backupRecording(replacedRows(baseline.replaces));
+    const baselineOnly = mkdtempSync(path.join(tmpdir(), 'owlgraph-baseline-'));
+    const pre = postgres(await createEmptyDatabase(runUrl, beforeBaseline), { max: 1, onnotice: () => {} });
+    try {
+      copyFileSync(baselineFile, path.join(baselineOnly, '0001_baseline.sql'));
+      expect((await runMigrations(pre, baselineOnly)).applied).toEqual(['0001_baseline.sql']);
+      partial = await backupBeforeBaseline(pre, replacedRows(baseline.replaces.slice(0, SOME)));
+      complete = await backupBeforeBaseline(pre, replacedRows(baseline.replaces));
+    } finally {
+      await pre.end({ timeout: 5 });
+      rmSync(baselineOnly, { recursive: true, force: true });
+    }
   }, 180_000);
   afterAll(async () => {
     await dropDatabase(runUrl, target);
+    await dropDatabase(runUrl, beforeBaseline);
   });
 
   it('refuses without --yes, before reading the dump, leaving the target as it was', async () => {
@@ -286,6 +296,9 @@ describe.skipIf(pg.skipped)('restore', () => {
   }, 120_000);
 
   it('restores a dump from before the baseline that applied every migration it replaces, and migrate then records the baseline in their place', async () => {
+    // Into an empty target: the one before holds this checkout's schema, which
+    // the migrations after the baseline have changed.
+    await createEmptyDatabase(runUrl, target);
     const run = await restore([`--file=${complete}`, `--db=${target}`, '--yes']);
     expect(run.code, run.stdout + run.stderr).toBe(0);
     expect(run.stdout).toContain(`Restored into "${target}".`);
@@ -293,10 +306,10 @@ describe.skipIf(pg.skipped)('restore', () => {
     const sql = postgres(urlFor(fileUrl, target), { max: 1, onnotice: () => {} });
     try {
       expect(Number(await count('select count(*) from schema_migrations', sql))).toBe(baseline.replaces.length);
-      expect(await runMigrations(sql)).toEqual({ applied: [], adopted: { baseline: '0001_baseline.sql', replaced: baseline.replaces.length } });
-      expect(await sql<MigrationRow[]>`select version, filename, checksum from schema_migrations`).toEqual([
-        { version: '0001', filename: '0001_baseline.sql', checksum: baseline.checksums[0] },
-      ]);
+      expect(await runMigrations(sql)).toEqual({ applied: later, adopted: { baseline: '0001_baseline.sql', replaced: baseline.replaces.length } });
+      const rows = await sql<MigrationRow[]>`select version, filename, checksum from schema_migrations order by version`;
+      expect(rows[0]).toEqual({ version: '0001', filename: '0001_baseline.sql', checksum: baseline.checksums[0] });
+      expect(rows.map((r) => r.filename)).toEqual(['0001_baseline.sql', ...later]);
       expect(await runMigrations(sql)).toEqual({ applied: [], adopted: null });
     } finally {
       await sql.end({ timeout: 5 });

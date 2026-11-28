@@ -15,7 +15,7 @@ export interface QueryBlockResultItem {
   updatedAt: string;
   type: string;
   // Display labels, never raw ids; mirrors ResultProperties for bindTemplate().
-  namespaceLabel: string;
+  spaceLabel: string;
   creatorLabel: string;
   classLabel: string;
   // A link document's external URL, '' for every other node.

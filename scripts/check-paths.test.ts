@@ -19,7 +19,7 @@ const TREE: Record<string, string> = {
   'src/lib/platform/csp.ts': 'export const csp = 1;\n',
   'src/lib/features/content/blocks/catalog.ts': 'export const blocks = [];\n',
   'tests/e2e/fixtures.ts': 'export const test = 1;\n',
-  'src/routes/[[namespace=namespace]]/[slug]/+page.svelte': '<p>page</p>\n',
+  'src/routes/[[space=space]]/[slug]/+page.svelte': '<p>page</p>\n',
   'scripts/tool.mjs': lines('// Reads `src/lib/platform/csp.ts`.', 'export const tool = 1;'),
   'docs/guide.md': lines('# Guide', '', 'The policy lives in `src/lib/platform/csp.ts`.'),
 };
@@ -44,7 +44,7 @@ function check(changes: Record<string, string> = {}): { status: number | null; o
 describe('the path check', () => {
   it('passes paths that resolve: from the repository root, from the file itself and as a module specifier', () => {
     const { status, output } = check({
-      'src/lib/platform/policy.ts': lines('/**', ' * Beside `./csp.ts`, read by `scripts/tool.mjs` and the page', ' * (`src/routes/[[namespace=namespace]]/[slug]/+page.svelte`).', ' */', 'export const policy = 1;'),
+      'src/lib/platform/policy.ts': lines('/**', ' * Beside `./csp.ts`, read by `scripts/tool.mjs` and the page', ' * (`src/routes/[[space=space]]/[slug]/+page.svelte`).', ' */', 'export const policy = 1;'),
       'docs/guide.md': lines('# Guide', '', 'The policy lives in `src/lib/platform/csp` (`../src/lib/platform/csp.ts`).'),
     });
     expect(status, output).toBe(0);
@@ -93,7 +93,7 @@ describe('the path check', () => {
         '',
         'A feature is `src/lib/features/<feature>/`; its specs are `src/**/e2e/*.spec.ts`.',
         'The next migration is `migrations/00NN_description.sql`.',
-        'A page is `src/routes/[[namespace]]/[slug]/+page.svelte`; a guide is `docs/[slug].md`.'
+        'A page is `src/routes/[[space]]/[slug]/+page.svelte`; a guide is `docs/[slug].md`.'
       ),
     });
     expect(status, output).toBe(0);

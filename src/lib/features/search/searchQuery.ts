@@ -10,7 +10,7 @@ import { SEARCH_PAGE_SIZE, effectiveSort, type SearchParams, type SearchSort } f
 /** Null when the parameter is absent or was dropped. */
 export interface SearchIds {
   classId: string | null;
-  namespaceId: string | null;
+  spaceId: string | null;
 }
 
 export interface SearchListQuery {
@@ -36,7 +36,7 @@ export function toListQuery(applied: SearchParams, ids: SearchIds): SearchListQu
   }
   if (applied.tags.length) conditions.push({ tag: { operator: 'HAS_ANY', values: applied.tags } });
   if (applied.type) conditions.push({ intrinsic: { field: 'TYPE', operator: 'EQ', value: applied.type } });
-  if (ids.namespaceId) conditions.push({ intrinsic: { field: 'NAMESPACE_ID', operator: 'EQ', value: ids.namespaceId } });
+  if (ids.spaceId) conditions.push({ intrinsic: { field: 'SPACE_ID', operator: 'EQ', value: ids.spaceId } });
   const filter = conditions.length === 0 ? null : conditions.length === 1 ? conditions[0] : { and: conditions };
 
   const sort = effectiveSort(applied);

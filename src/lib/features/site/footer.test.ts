@@ -19,7 +19,7 @@ const legalLink = (id: string, over: Record<string, unknown> = {}) => ({
   target_page_id: null,
   url: 'https://example.com/privacy',
   page_slug: null,
-  namespace_slug: null,
+  space_slug: null,
   ...over,
 });
 

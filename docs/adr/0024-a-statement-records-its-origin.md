@@ -33,7 +33,7 @@ while the bodies it brought stay stored
 Every read is the viewer's
 ([decision 0002](0002-authorization-is-server-enforced-and-viewer-scoped.md)),
 and a reader never learns of a node they may not read
-([spec 002](../features/002-visibility-and-namespaces.md)).
+([spec 002](../features/002-visibility-and-spaces.md)).
 
 ## Decision
 

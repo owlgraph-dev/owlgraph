@@ -45,4 +45,4 @@ nothing and emitted as nothing.
   the read path untouched, but gave the level no meaning once nodes existed.
 
 See [Capability defaults](../architecture/blocks/capabilities.md#capability-defaults)
-and [authorization.md](../architecture/authorization.md#namespaces-access_level-is-a-live-default-overridable-per-node).
+and [authorization.md](../architecture/authorization.md#spaces-access_level-is-a-live-default-overridable-per-node).

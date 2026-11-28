@@ -19,6 +19,10 @@ database, and how to go back if it goes wrong. Running a new installation is
 - **Keep `APP_SECRET_KEY`.** Credentials are sealed under it, and only it opens
   them; changing it is a rotation of its own
   ([deployment.md](deployment.md#production)).
+- **Close every editor first.** An upgrade can rename what a page stores, such
+  as the fields a query block filters on. An editor left open across it saves
+  the page as it held it, with the old names, and a query block saved that way
+  shows its error until its query is set again.
 
 ## With Docker Compose
 

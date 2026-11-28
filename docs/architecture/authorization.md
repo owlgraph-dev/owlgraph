@@ -18,7 +18,7 @@ the client shows or hides.
 Before either check below runs, every request passes through `src/hooks.server.ts`'s
 `PUBLIC_ROUTES` — an explicit allowlist of route ids composed from each feature's
 own `routes/publicRoutes.ts` declaration (`src/lib/shell/publicRoutes.ts`; keyed off `event.route.id`,
-matching SvelteKit's route pattern, e.g. `/[[namespace=namespace]]/[slug]`) that may be
+matching SvelteKit's route pattern, e.g. `/[[space=space]]/[slug]`) that may be
 reached without a session at all. A route **not** on this list is private by default: an
 unauthenticated request is 303-redirected to `/login` (401 for `/api/*`) before its
 `load`/handler ever executes — and thus before any `can()` or visibility check below
@@ -27,14 +27,14 @@ gets a chance to run.
 Being on the allowlist doesn't mean "no authorization" — it means the route is fully
 responsible for its own. Two shapes show up among the current entries:
 
-- Re-deriving per-resource visibility internally: `/[[namespace]]/[slug]`
+- Re-deriving per-resource visibility internally: `/[[space]]/[slug]`
   (dispatches to a page, a document or a collection by node type — see routing.md for how the
-  namespace segment resolves), `/api/media/[id]`, and `/api/documents/[id]/content` are
+  space segment resolves), `/api/media/[id]`, and `/api/documents/[id]/content` are
   public routes whose handlers apply the node check below (a restricted
   page/document still bounces an unauthenticated caller). The content route's `PUT`
   is a write, checked in the handler against document write access. `/search`
   lists through the list query, whose visibility predicate sits outside every
-  filter, counts after it, ignores a namespace the viewer may not see, and
+  filter, counts after it, ignores a space the viewer may not see, and
   offers only filter values found on readable content; a known class's name
   may appear in it whatever the viewer reads, since classes are vocabulary
   ([search.md](search.md#what-a-viewer-sees)).
@@ -90,7 +90,7 @@ pure, plus `access.server.ts` for the share/membership lookups):
    (`page:read`, `page:write`, `property:read`, `relationship:read`,
    `search`) sit beside one **`<resource>:manage` action per settings
    section** (`property:manage`, `property-group:manage`,
-   `relationship:manage`, `class:manage`, `namespace:manage`,
+   `relationship:manage`, `class:manage`, `space:manage`,
    `navigation:manage`, `homepage:manage`, `footer:manage`,
    `branding:manage`, `font:manage`, `stylesheet:manage`,
    `page-layout:manage`, `locale:manage`, `integration:manage`,
@@ -112,13 +112,13 @@ pure, plus `access.server.ts` for the share/membership lookups):
    guard alone never protects a direct POST.
 2. **Per-node visibility** — `canReadNode` / `canWriteNode(user, node, kind)`,
    given a node's **effective** visibility —
-   `coalesce(node.visibility, node's namespace's access_level)`, since
-   `nodes.visibility` is nullable (see "Namespaces" below):
+   `coalesce(node.visibility, node's space's access_level)`, since
+   `nodes.visibility` is nullable (see "Spaces" below):
    - `public` — readable by anyone, even unauthenticated.
    - `internal` — readable by any signed-in user.
    - `restricted` — readable only by its owner (`created_by`), an admin, or
      one of two access subjects depending on *why* it's restricted: a
-     namespace member, if the node inherits a restricted namespace
+     space member, if the node inherits a restricted space
      (`visibility IS NULL`); or a user it's explicitly shared with, if the
      node was explicitly overridden to `restricted`. Never both at once.
 
@@ -128,9 +128,9 @@ pure, plus `access.server.ts` for the share/membership lookups):
    SQL call sites compose the same predicate via `readableNodes()`
    (`src/lib/features/nodes/nodes.server.ts`) rather than each hand-rolling it;
    the pure functions in `access.ts` take one `NodeAccess` shape
-   (`{visibility, created_by, namespace_access_level}`), regardless of which
+   (`{visibility, created_by, space_access_level}`), regardless of which
    table it was joined from. The only difference between the node types is
-   the write policy (`kind`): a shared or namespace-member user may write a
+   the write policy (`kind`): a shared or space-member user may write a
    page, while a document is writable only by its owner or an admin. A
    collection is written like a page — its members are curated together — but
    has no share list, so a restricted one with a visibility of its own is its
@@ -140,7 +140,7 @@ pure, plus `access.server.ts` for the share/membership lookups):
    `editor`/`admin` role — `viewer` never writes regardless of visibility.
    For a `restricted` page, the owner (or admin) always writes, and so does
    whichever access subject granted the read in the first place — a
-   namespace member (inherited restriction) or a `page_shares` entry
+   space member (inherited restriction) or a `page_shares` entry
    (explicit override): **restricted's two access subjects are full trust
    relationships, not read-only grants**, so read-eligible and
    write-eligible are the same population there (see "Group-as-access-
@@ -153,99 +153,99 @@ deliberate: it's what lets finer-grained access control (explicit grants,
 tenant membership) slot in later without changing every call site's
 signature.
 
-## Namespaces: `access_level` is a live default, overridable per node
+## Spaces: `access_level` is a live default, overridable per node
 
-Every node also belongs to a namespace (`nodes.namespace_id`, see
-[routing.md](routing.md#namespaces)), and every namespace carries an
+Every node also belongs to a space (`nodes.space_id`, see
+[routing.md](routing.md#spaces)), and every space carries an
 `access_level` (`public`/`internal`/`restricted`). `nodes.visibility` is
-**nullable**: `NULL` means "no per-node override — inherit this namespace's
+**nullable**: `NULL` means "no per-node override — inherit this space's
 `access_level`, live"; a non-null value is an explicit per-node override,
-authoritative regardless of the namespace.
+authoritative regardless of the space.
 
-**Narrowing-only is universal, not scoped to restricted namespaces.** A
-namespace's `access_level` is an **upper bound** on how accessible any of
+**Narrowing-only is universal, not scoped to restricted spaces.** A
+space's `access_level` is an **upper bound** on how accessible any of
 its nodes may be — a per-node override (explicit, at creation via
 `createPage`/`createDocument`'s `opts.visibility`, or afterward via
 `setNodeVisibility`) may only make a node *more*
-restrictive than its namespace, never less: a node in an `internal`
-namespace can never be explicitly set to `public`, exactly as a node in a
-`restricted` namespace can never be set to `internal`/`public`. The reason
+restrictive than its space, never less: a node in an `internal`
+space can never be explicitly set to `public`, exactly as a node in a
+`restricted` space can never be set to `internal`/`public`. The reason
 is the same in both cases — an anonymous or under-privileged viewer must
-never be able to read content whose namespace says it requires more —
-restricted-namespace secrecy is one instance of this general rule, not a
-special case of it. Moving a node into a stricter namespace while it
+never be able to read content whose space says it requires more —
+restricted-space secrecy is one instance of this general rule, not a
+special case of it. Moving a node into a stricter space while it
 carries a now-too-wide explicit override silently auto-narrows it to fit
-(never rejected — see `setNodeNamespace` in `nodes.server.ts`), and so does
-lowering a namespace's own `access_level`: every override in it wider than
+(never rejected — see `setNodeSpace` in `nodes.server.ts`), and so does
+lowering a space's own `access_level`: every override in it wider than
 the new level is narrowed to it in the same transaction
-(`setNamespaceAccessLevel`). Widening beyond a namespace's bound is
+(`setSpaceAccessLevel`). Widening beyond a space's bound is
 deliberately not supported via `visibility` at all — it's the share-link
-mechanism's job (a separate, namespace-bypassing grant), not this one's.
+mechanism's job (a separate, space-bypassing grant), not this one's.
 
 **`public` is never an override.** Under narrowing-only an explicit
-`public` could only ever equal a public namespace's own level — and it
-would outlive that namespace being narrowed later. So a node is public only
-by inheriting a public namespace: a request for `public` in a public
-namespace is stored as `NULL` (inherit), and refused anywhere else. The
-access panel follows the same shape: its choices are *Same as namespace*
-(`NULL`, labelled with the namespace's current level), *Internal* (offered
-unless the namespace is restricted) and *Restricted* — any override can be
+`public` could only ever equal a public space's own level — and it
+would outlive that space being narrowed later. So a node is public only
+by inheriting a public space: a request for `public` in a public
+space is stored as `NULL` (inherit), and refused anywhere else. The
+access panel follows the same shape: its choices are *Same as space*
+(`NULL`, labelled with the space's current level), *Internal* (offered
+unless the space is restricted) and *Restricted* — any override can be
 returned to inherit there, and `PATCH /api/pages/[id]` /
 `/api/documents/[id]` take `visibility: null` for it.
 
-**A new instance starts closed.** The default namespace is seeded `internal`,
+**A new instance starts closed.** The default space is seeded `internal`,
 so a fresh site publishes nothing until an admin raises its access level —
 and because every new node stores `visibility` `NULL` (a page from the
 Create wizard included), raising it publishes *every* node in that
-namespace that has no override of its own, at once. That is the price of
+space that has no override of its own, at once. That is the price of
 "inherit, live": the admin UI states how many nodes inherit before the
 change is saved, and a node that must stay closed — a draft still being
 written — carries its own explicit, narrower `visibility`.
 
-Every read path resolves `coalesce(node.visibility, namespace.access_level)`
-— `canReadNode` via a `namespace_access_level` field on
+Every read path resolves `coalesce(node.visibility, space.access_level)`
+— `canReadNode` via a `space_access_level` field on
 the row, `readableNodes()` via a scalar subquery — so this is genuinely the
 third
 authorization check the two-check model above always left room for.
 
-Raising or lowering a namespace's `access_level` therefore changes every
+Raising or lowering a space's `access_level` therefore changes every
 non-overridden node in it, immediately; moving a node into a
-different namespace does too, unless the node already carries an explicit
+different space does too, unless the node already carries an explicit
 override (in which case the override is auto-narrowed to fit the new
-namespace, never rejected — see `setNodeNamespace` in `nodes.server.ts`).
+space, never rejected — see `setNodeSpace` in `nodes.server.ts`).
 
-### Group-as-access-subject: restricted-namespace membership
+### Group-as-access-subject: restricted-space membership
 
-A **restricted** namespace has a membership (`namespace_members` — users
+A **restricted** space has a membership (`space_members` — users
 today, shaped so a first-class `groups` concept can slot into the same role
-later) managed under `namespace:manage` via `/settings/namespaces`. For a
-node that *inherits* a restricted namespace (`visibility IS NULL`), the
+later) managed under `space:manage` via `/settings/spaces`. For a
+node that *inherits* a restricted space (`visibility IS NULL`), the
 access subject is that membership: owner, admin, or a current member of the
-node's current namespace. This is distinct from the older per-node
+node's current space. This is distinct from the older per-node
 `page_shares`/`document_shares` mechanism, which now only applies to a node
 **explicitly** overridden to `restricted` — an inheriting node's membership
 and an overridden node's shares never cross-apply (being on one page's
 share list grants nothing on a different page, whether or not it's in the
-same namespace).
+same space).
 
 **Both access subjects are full trust relationships — read *and* write —
-not read-only grants.** A namespace member is trusted the same way any
+not read-only grants.** A space member is trusted the same way any
 editor is trusted with an internal/public page (that's the whole point of
 symmetry with the other two access levels: an admin curated who belongs in
-the namespace, so members write there like editors write anywhere else).
+the space, so members write there like editors write anywhere else).
 An explicit `page_shares` entry carries the *same* trust, just narrowed to
 a hand-picked subset of people — `page_shares` is a **narrowing**
 mechanism, and the selected users are always a subset of who'd already
-reach the page via its namespace. This is **not** a share link: a share
+reach the page via its space. This is **not** a share link: a share
 link (`/share/[id]`, its id the link's unguessable token) is the opposite
 shape — a **widening** grant to someone who would *not* otherwise have
-namespace-level access at all (e.g. a public link into an internal page).
+space-level access at all (e.g. a public link into an internal page).
 Whoever follows it reads exactly that one page or document, whatever its
-namespace or visibility, until a writer of the node revokes it; it works
-outside namespace-based routing entirely, and reads as an anonymous visitor
+space or visibility, until a writer of the node revokes it; it works
+outside space-based routing entirely, and reads as an anonymous visitor
 would, never by the visitor's session (what a browser keeps of it:
 [What a browser keeps](#what-a-browser-keeps)). The two must never be
-conflated: `page_shares`/`visibility` never widen past a node's namespace; a
+conflated: `page_shares`/`visibility` never widen past a node's space; a
 share link never narrows within one.
 
 Two enforcement layers, both membership-driven:
@@ -253,18 +253,18 @@ Two enforcement layers, both membership-driven:
 - **Node gating** (can the user read this node) — the `coalesce(...)`
   resolution above, live, across every read path (routing, media/document
   serving, GraphQL `nodes`/`search`, the graph, MCP).
-- **Namespace-entity gating** (can the user even see/select/route into the
-  namespace) — `listNamespacesForUser()` (`namespaces.server.ts`) omits a
-  restricted namespace the viewer isn't a member of (or admin) from every
-  viewer-facing namespace picker (the create modal, `AccessControlPanel`).
-  `/settings/namespaces`'s own listing stays unfiltered — admins manage
-  everything. `/api/namespaces/slugs` (the client-side routing
+- **Space-entity gating** (can the user even see/select/route into the
+  space) — `listSpacesForUser()` (`spaces.server.ts`) omits a
+  restricted space the viewer isn't a member of (or admin) from every
+  viewer-facing space picker (the create modal, `AccessControlPanel`).
+  `/settings/spaces`'s own listing stays unfiltered — admins manage
+  everything. `/api/spaces/slugs` (the client-side routing
   params-matcher's data source) answers per viewer with the same rule —
-  public namespaces for everyone, internal ones once signed in, restricted
-  ones to members — so a namespace's existence is not revealed to someone
-  who cannot reach it. The default namespace has no slug and routes at the
+  public spaces for everyone, internal ones once signed in, restricted
+  ones to members — so a space's existence is not revealed to someone
+  who cannot reach it. The default space has no slug and routes at the
   root without it. The server's own matcher registry holds every slug
-  ([routing.md](routing.md#namespaces)).
+  ([routing.md](routing.md#spaces)).
 
 **Known limitation, not a bug:** a removed member who is also a node's
 *owner* keeps read/write access to their own nodes after removal — the
@@ -273,25 +273,25 @@ future **ownership transfer** feature (reassign ownership to someone else,
 after which plain rules lock the removed user out); until then this is
 documented as an accepted gap, not something callers should build around.
 
-Placing content into a restricted namespace (creating a node there, or
+Placing content into a restricted space (creating a node there, or
 moving one in) requires membership or admin — `createPage`/`createDocument`/
-`setNodeNamespace` all call `assertCanPlaceInNamespace` and reject a
-non-member with `NAMESPACE_MEMBERSHIP_REQUIRED` otherwise.
+`setNodeSpace` all call `assertCanPlaceInSpace` and reject a
+non-member with `SPACE_MEMBERSHIP_REQUIRED` otherwise.
 
-`namespace:manage` (admin-only) gates the namespace entities themselves —
-creating/renaming/deleting a namespace, setting its `access_level`, and
-managing its membership — via `/settings/namespaces`. It does **not** gate
-reassigning an individual node to a different namespace, which is treated
+`space:manage` (admin-only) gates the space entities themselves —
+creating/renaming/deleting a space, setting its `access_level`, and
+managing its membership — via `/settings/spaces`. It does **not** gate
+reassigning an individual node to a different space, which is treated
 as an ordinary content edit (`page:write` / document ownership, same check
-as changing `visibility`), not a namespace-management action — though that
+as changing `visibility`), not a space-management action — though that
 edit is still membership-gated as described above.
 
-Deleting a namespace never deletes its content: its nodes move into the
-default namespace (a slug that collides there gets a suffix), and a node
-that inherited the deleted namespace's access level inherits the default's
+Deleting a space never deletes its content: its nodes move into the
+default space (a slug that collides there gets a suffix), and a node
+that inherited the deleted space's access level inherits the default's
 from then on. That can widen it — a page only members could read becomes
-readable by everyone the default namespace admits. The deletion makes no
-choice for the admin; moving the content on into a namespace of the right
+readable by everyone the default space admits. The deletion makes no
+choice for the admin; moving the content on into a space of the right
 level is theirs.
 
 The same schema-vs-content split applies to the class hierarchy
@@ -325,7 +325,7 @@ left out, the rest numbered among themselves. A collection or document the
 reader may not read renders **nothing** — not its box, not its title —
 since a placeholder would say that something is there: hidden is not
 protected. A share link's visitor reads as anyone does (the link grants its
-page, not what the page embeds), and a reader outside a restricted namespace
+page, not what the page embeds), and a reader outside a restricted space
 reads nothing of what is in it. An agent embeds only a node its owning user
 may read (`append_block` refuses the rest), and what it embedded is pruned for
 every reader like anyone's.
@@ -336,7 +336,7 @@ A link to another node — a page or document link in a run of text, a quick
 link — leads to the node's current address only for a reader who may read
 the node. For any other reader it is shown as a link to a node that does not
 exist: it carries no address, since an address names the node and its
-namespace ([routing.md](routing.md#the-id-vs-slug-invariant)). That holds at
+space ([routing.md](routing.md#the-id-vs-slug-invariant)). That holds at
 the page's address, through a share link, for an agent reading the page and
 in the editor's preview of a block. The link's text is its author's and is
 shown as written.
@@ -479,7 +479,7 @@ service can carry a credential ([logging.md](logging.md)).
 ## Reading another service as the viewer
 
 A node an integration backs is read the way its viewer may read it, and only
-once owlgraph's own rules let them read the node at all — namespace access
+once owlgraph's own rules let them read the node at all — space access
 and visibility come first, everywhere, and a connection never widens them:
 
 1. **Their own connection** ([plugins.md](plugins.md#connections)): where the

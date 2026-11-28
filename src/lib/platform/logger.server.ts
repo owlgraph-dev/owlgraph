@@ -173,8 +173,8 @@ export const CATALOG = {
   'node.visibility_changed': { level: 'info', audit: true },
   'node.shares_changed': { level: 'info', audit: true },
   'document.source_changed': { level: 'info', audit: true },
-  'namespace.access_changed': { level: 'info', audit: true },
-  'namespace.membership_changed': { level: 'info', audit: true },
+  'space.access_changed': { level: 'info', audit: true },
+  'space.membership_changed': { level: 'info', audit: true },
   'user.created': { level: 'info', audit: true },
   'user.role_changed': { level: 'info', audit: true },
   'user.activation_changed': { level: 'info', audit: true },
@@ -210,7 +210,7 @@ export interface EventFields {
 
   'authz.denied': {
     action: string;
-    resourceType: NodeType | 'namespace' | 'route' | 'tool';
+    resourceType: NodeType | 'space' | 'route' | 'tool';
     resourceId?: string;
     via: 'route' | 'api' | 'mcp';
   };
@@ -259,14 +259,14 @@ export interface EventFields {
   'node.created': {
     nodeId: string;
     nodeType: NodeType;
-    namespaceId: string | null;
+    spaceId: string | null;
     actorId: string | null;
     source?: DocumentSource;
   };
   /** Never the URL: it is content. */
   'document.source_changed': { nodeId: string; from: DocumentSource; to: DocumentSource; actorId: string | null };
   'node.deleted': { nodeId: string; nodeType: NodeType; actorId: string | null };
-  /** `null` on either side is "inherits its namespace's access level". */
+  /** `null` on either side is "inherits its space's access level". */
   'node.visibility_changed': {
     nodeId: string;
     nodeType: NodeType;
@@ -283,9 +283,9 @@ export interface EventFields {
     removedIds: string[];
     actorId: string | null;
   };
-  'namespace.access_changed': { namespaceId: string; from: Visibility | null; to: Visibility; actorId: string | null };
-  'namespace.membership_changed': {
-    namespaceId: string;
+  'space.access_changed': { spaceId: string; from: Visibility | null; to: Visibility; actorId: string | null };
+  'space.membership_changed': {
+    spaceId: string;
     addedIds: string[];
     removedIds: string[];
     actorId: string | null;

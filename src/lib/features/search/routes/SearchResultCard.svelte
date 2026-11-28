@@ -46,7 +46,7 @@
   {/if}
   <div class="sr-foot">
     <p class="sr-meta">
-      <time datetime={result.updatedAt}>{m.search_page_updated({ date: formatDate(result.updatedAt, { dateStyle: 'medium' }) })}</time>{#if result.namespaceName}<span aria-hidden="true">{' · '}</span><span>{result.namespaceName}</span>{/if}
+      <time datetime={result.updatedAt}>{m.search_page_updated({ date: formatDate(result.updatedAt, { dateStyle: 'medium' }) })}</time>{#if result.spaceName}<span aria-hidden="true">{' · '}</span><span>{result.spaceName}</span>{/if}
     </p>
     {#if result.tags.length}
       <ul class="sr-tags" aria-label={m.search_page_card_tags()}>

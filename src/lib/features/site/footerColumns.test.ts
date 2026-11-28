@@ -24,7 +24,7 @@ function row(overrides: Partial<TreeNodeAdminRow>): TreeNodeAdminRow {
     updated_at: '2026-01-01T00:00:00Z',
     page_title: null,
     page_slug: null,
-    namespace_slug: null,
+    space_slug: null,
     ...overrides,
   };
 }

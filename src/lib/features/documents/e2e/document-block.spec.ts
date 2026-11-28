@@ -16,7 +16,7 @@ test.use({ storageState: authState('admin') });
 
 const documentBlock = (blockId: string, nodeId: string, attrs: Record<string, unknown> = {}) => ({ type: 'documentBlock', attrs: { blockId, nodeId, ...attrs } });
 
-/** A text document anyone may read (the default namespace is public). */
+/** A text document anyone may read (the default space is public). */
 async function upload(request: Parameters<typeof createDocument>[0]) {
   const title = unique('Minutes').name;
   return { ...(await createDocument(request, { title })), title, filename: `${title}.txt` };

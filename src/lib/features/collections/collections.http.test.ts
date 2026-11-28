@@ -5,7 +5,7 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { db } from '#lib/platform/db.server.ts';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { call, createSpace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { connectAs, textOf } from '#tests/integration/mcp.ts';
 import type { Role } from '#tests/integration/users.ts';
 
@@ -16,9 +16,9 @@ describe.skipIf(app.skipped)('collections, served', () => {
   afterAll(() => served.close());
 
   let n = 0;
-  const curated = async (opts: { title?: string; restricted?: boolean; namespaceId?: string } = {}) => {
+  const curated = async (opts: { title?: string; restricted?: boolean; spaceId?: string } = {}) => {
     const title = opts.title ?? `Reading list ${++n}`;
-    const res = await call(served, '/api/collections', { as: 'admin', json: { title, ...(opts.namespaceId ? { namespaceId: opts.namespaceId } : {}) } });
+    const res = await call(served, '/api/collections', { as: 'admin', json: { title, ...(opts.spaceId ? { spaceId: opts.spaceId } : {}) } });
     expect(res.status).toBe(201);
     const made = (await res.json()) as { id: string; slug: string };
     if (opts.restricted) expect((await call(served, `/api/collections/${made.id}`, { as: 'admin', method: 'PATCH', json: { visibility: 'restricted' } })).ok).toBe(true);
@@ -130,10 +130,10 @@ describe.skipIf(app.skipped)('collections, served', () => {
       expect(byType).not.toContain(c.firstTitle);
     });
 
-    it('answers a malformed id as a missing collection, and a malformed namespace as an unknown one', async () => {
+    it('answers a malformed id as a missing collection, and a malformed space as an unknown one', async () => {
       expect((await call(served, '/api/collections/not-a-uuid', { as: 'admin', method: 'PATCH', json: { title: 'x' } })).status).toBe(404);
       expect((await call(served, '/api/collections/not-a-uuid', { as: 'admin', method: 'DELETE' })).status).toBe(404);
-      expect((await call(served, '/api/collections', { as: 'admin', json: { title: 'x', namespaceId: 'nope' } })).status).toBe(400);
+      expect((await call(served, '/api/collections', { as: 'admin', json: { title: 'x', spaceId: 'nope' } })).status).toBe(400);
     });
   });
 
@@ -180,9 +180,9 @@ describe.skipIf(app.skipped)('collections, served', () => {
       expect(rows(shared.document, 'open')).toEqual([shown.title]);
     });
 
-    it('shows nothing of a collection in a restricted namespace to whoever is not in it', async () => {
-      const namespaceId = await createNamespace(served, { name: 'Embedded team', slug: 'embedded-team', accessLevel: 'restricted' });
-      const team = await curated({ namespaceId });
+    it('shows nothing of a collection in a restricted space to whoever is not in it', async () => {
+      const spaceId = await createSpace(served, { name: 'Embedded team', slug: 'embedded-team', accessLevel: 'restricted' });
+      const team = await curated({ spaceId });
       await add(team.id, (await publicPage()).id);
       const embeddingPage = await publicPage('Team host', docOf(block('team', team.id)));
 

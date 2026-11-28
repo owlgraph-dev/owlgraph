@@ -17,7 +17,7 @@ const inheriting = (accessLevel: string, created_by: string | null) => ({
   id: 'pg',
   visibility: null as string | null,
   created_by,
-  namespace_access_level: accessLevel as 'public' | 'internal' | 'restricted',
+  space_access_level: accessLevel as 'public' | 'internal' | 'restricted',
 });
 
 describe('canReadNode()', () => {
@@ -65,17 +65,17 @@ describe('canReadNode()', () => {
     expect(canReadNode(admin, broken)).toBe(true);
   });
 
-  describe('inherited namespace access (visibility: null)', () => {
+  describe('inherited space access (visibility: null)', () => {
     it('inherits public/internal exactly like an explicit value', () => {
       expect(canReadNode(null, inheriting('public', 'someone'))).toBe(true);
       expect(canReadNode(null, inheriting('internal', 'someone'))).toBe(false);
       expect(canReadNode(viewer, inheriting('internal', 'someone'))).toBe(true);
     });
 
-    it('restricted + inheriting: namespace membership grants read, not the (irrelevant) share flag', () => {
+    it('restricted + inheriting: space membership grants read, not the (irrelevant) share flag', () => {
       const p = inheriting('restricted', 'someone-else');
-      expect(canReadNode(editor, p, /* isShared */ true, /* isNamespaceMember */ false)).toBe(false);
-      expect(canReadNode(editor, p, /* isShared */ false, /* isNamespaceMember */ true)).toBe(true);
+      expect(canReadNode(editor, p, /* isShared */ true, /* isSpaceMember */ false)).toBe(false);
+      expect(canReadNode(editor, p, /* isShared */ false, /* isSpaceMember */ true)).toBe(true);
     });
 
     it('restricted + inheriting: owner and admin always read regardless of membership', () => {
@@ -85,8 +85,8 @@ describe('canReadNode()', () => {
 
     it('restricted + EXPLICIT override: per-node shares apply, membership is irrelevant', () => {
       const p = page('restricted', 'someone-else');
-      expect(canReadNode(editor, p, /* isShared */ false, /* isNamespaceMember */ true)).toBe(false);
-      expect(canReadNode(editor, p, /* isShared */ true, /* isNamespaceMember */ false)).toBe(true);
+      expect(canReadNode(editor, p, /* isShared */ false, /* isSpaceMember */ true)).toBe(false);
+      expect(canReadNode(editor, p, /* isShared */ true, /* isSpaceMember */ false)).toBe(true);
     });
 
     it('anonymous never reads an inherited-restricted node, even as a "member" flag misfire', () => {
@@ -121,15 +121,15 @@ describe('canWriteNode() on a page', () => {
   });
 
   describe('restricted access subjects grant read AND write (symmetric trust)', () => {
-    it('a namespace member (non-owner) can write an inherited-restricted page', () => {
+    it('a space member (non-owner) can write an inherited-restricted page', () => {
       const p = inheriting('restricted', 'someone-else');
-      expect(canReadNode(editor, p, false, /* isNamespaceMember */ true)).toBe(true);
-      expect(canWriteNode(editor, p, 'page', false, /* isNamespaceMember */ true)).toBe(true);
+      expect(canReadNode(editor, p, false, /* isSpaceMember */ true)).toBe(true);
+      expect(canWriteNode(editor, p, 'page', false, /* isSpaceMember */ true)).toBe(true);
     });
 
     it('a non-member (non-owner) editor cannot write an inherited-restricted page', () => {
       const p = inheriting('restricted', 'someone-else');
-      expect(canWriteNode(editor, p, 'page', false, /* isNamespaceMember */ false)).toBe(false);
+      expect(canWriteNode(editor, p, 'page', false, /* isSpaceMember */ false)).toBe(false);
     });
 
     it('a user on an explicitly-overridden page\'s share list (non-owner) can write it', () => {
@@ -143,10 +143,10 @@ describe('canWriteNode() on a page', () => {
       expect(canWriteNode(editor, p, 'page', /* isShared */ false, false)).toBe(false);
     });
 
-    it('the two subjects do not cross-apply: a namespace member is not automatically on a different page\'s explicit share list, and vice versa', () => {
+    it('the two subjects do not cross-apply: a space member is not automatically on a different page\'s explicit share list, and vice versa', () => {
       const inheritedPage = inheriting('restricted', 'someone-else');
       const overriddenPage = page('restricted', 'someone-else');
-      expect(canWriteNode(editor, overriddenPage, 'page', false, /* isNamespaceMember */ true)).toBe(false);
+      expect(canWriteNode(editor, overriddenPage, 'page', false, /* isSpaceMember */ true)).toBe(false);
       expect(canWriteNode(editor, inheritedPage, 'page', /* isShared */ true, false)).toBe(false);
     });
 
@@ -174,7 +174,7 @@ describe('canWriteNode() per node type', () => {
     expect(canWriteNode(viewer, page('restricted', 'viewer'), 'page')).toBe(false);
   });
 
-  it('writes a restricted collection only as its owner, a namespace member while it inherits, or an admin', () => {
+  it('writes a restricted collection only as its owner, a space member while it inherits, or an admin', () => {
     expect(canWriteNode(editor, page('restricted', 'someone'), 'collection')).toBe(false);
     expect(canWriteNode(editor, page('restricted', 'editor'), 'collection')).toBe(true);
     expect(canWriteNode(editor, inheriting('restricted', 'someone'), 'collection', false, true)).toBe(true);

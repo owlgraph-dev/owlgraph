@@ -232,10 +232,10 @@ Both are warnings. A band with its own text colour is a fair use of a literal.
 
 `stylesheets` sits on the theme scope model
 ([theming.md](theming.md#site-theme)):
-`scope_kind` is `site` or `namespace`, with a `scope_id` only for the latter,
+`scope_kind` is `site` or `space`, with a `scope_id` only for the latter,
 held by the same biconditional constraint the `themes` table uses. Only site
-rows exist; the scope leaves room for a namespace's stylesheet over the
-site's, as for a namespace's theme.
+rows exist; the scope leaves room for a space's stylesheet over the
+site's, as for a space's theme.
 
 ## Not offered
 

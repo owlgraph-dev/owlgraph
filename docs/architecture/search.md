@@ -47,12 +47,12 @@ same path. Either opens in the same tab
 | `exact` | `1` | with `class`: nodes of that class only |
 | `tag` | text, repeatable | nodes carrying **any** of the tags (case-insensitive) |
 | `type` | `page`, `document` | one node type |
-| `namespace` | a namespace's slug, `_default` | one namespace; `_default` is the root-routed default namespace, which has no slug |
+| `space` | a space's slug, `_default` | one space; `_default` is the root-routed default space, which has no slug |
 | `sort` | `relevance`, `updated`, `created`, `title` | the order; the default is relevance with a term and most recently updated without one |
 | `view` | `list`, `grid` | how the results are laid out |
 | `page` | 1, 2, … | which page of results |
 
-Every value is an identity — a class's key, a namespace's slug, a node type —
+Every value is an identity — a class's key, a space's slug, a node type —
 never a label, so a link survives a renamed class. An unknown parameter is
 ignored and an invalid value falls back to its default, silently: a stale or
 hand-edited link still shows a sensible list. A sort that is the default
@@ -70,14 +70,14 @@ The URL becomes a query in three steps, and nothing else translates it:
    order. The page's controls, its pagination, the empty state's reset and
    the overlay's handoff all build their links with `searchHref`.
 2. **Resolution** (`searchQuery.server.ts`): a class key becomes the class, a
-   namespace slug a namespace the viewer may see (below). What took effect is
+   space slug a space the viewer may see (below). What took effect is
    the *applied* state, which the page mirrors — a parameter that was dropped
    disappears from the controls.
 3. **The query definition** (`searchQuery.ts`, `toListQuery`): the applied
    state in the query model's own shape — a filter in the wire format a query
    block stores, a sort, the term and the page's window. The class condition
    is the polymorphic one with `classMatch: EXACT` as the opt-out, the tags a
-   `HAS_ANY` condition, type and namespace intrinsic conditions, AND-ed.
+   `HAS_ANY` condition, type and space intrinsic conditions, AND-ed.
 
 The third step is the seam a stored query would use: its filter and sort
 would load into the same shape instead of being built from the parameters.
@@ -101,8 +101,8 @@ what its viewer may read:
 - **The visibility predicate is the query's own**, outside the filter, so no
   parameter can reach past it; the total counts the same rows after it, so a
   count never includes a node the viewer cannot read.
-- **A namespace applies only if the viewer may see it**
-  (`listNamespacesForUser`). An unknown namespace and one the viewer may not
+- **A space applies only if the viewer may see it**
+  (`listSpacesForUser`). An unknown space and one the viewer may not
   see are treated alike: dropped, never applied, never named in the count.
 - **A class is vocabulary, not content.** A known class applies whether or
   not the viewer can read any of its nodes — a link into content the reader
@@ -145,15 +145,15 @@ One card serves pages, documents and collections, in both views
   otherwise a description-like property — the first one whose local name is
   `description`, `abstract` or `summary`, whatever its group — and otherwise
   the start of the content as a reader sees it;
-- when it was last updated, its namespace — unless it is the default
-  namespace, the site's root, which every card would otherwise name — and its
+- when it was last updated, its space — unless it is the default
+  space, the site's root, which every card would otherwise name — and its
   tags.
 
 The title and the excerpt are content and carry the node's language (`lang`);
 the rest is chrome, in the interface language. The list view stacks the
 cards; the grid view fits as many columns as the page's width allows, one on
 a phone. In the grid the cards of a row share one height — the tallest's —
-with the date, namespace and tags at each card's bottom and the excerpt cut
+with the date, space and tags at each card's bottom and the excerpt cut
 to four lines, so a row ends evenly and still reads left to right in the
 order the results rank. (A column flow that packs cards under each other
 would read top to bottom instead, and native masonry is not yet in every
@@ -162,7 +162,7 @@ it (`--ds-width-browse`).
 
 Above the results, the count line says how many there are and restates the
 applied filters in prose ("24 pages for “graph” · class Concept (incl.
-subclasses) · tagged ai or ml · in namespace Wiki"); it is the page's one
+subclasses) · tagged ai or ml · in space Wiki"); it is the page's one
 live region. Below them, `Pagination` ([design-system/overview.md](design-system/overview.md))
 links every page; a page past the end — a list that shrank since a link was
 made — redirects to the last page, so the address never names a page other
@@ -184,7 +184,7 @@ instead:
 - **Filter · N**, where N is the number of active filters, which opens the
   filter sheet;
 - the **active filters as chips** — the class (“Concept + subclasses”, or
-  “Concept” alone when it is exact), each tag, the type, the namespace — each
+  “Concept” alone when it is exact), each tag, the type, the space — each
   removable, in a strip that scrolls sideways inside the row, its edge faded
   where more wait;
 - **sort** and **view** as icon buttons; sort opens a short sheet of the
@@ -199,7 +199,7 @@ and nothing to keep in step.
 
 **The filter sheet** lists every filter in one column of touch-sized rows:
 the class, with “Include subclasses” beneath it (the inverse of `exact`),
-the tags, the type, the namespace (the viewer's own only), the sort and the
+the tags, the type, the space (the viewer's own only), the sort and the
 view. It works on a pending copy of the state, taken as it opens: nothing
 applies until its footer button, and closing the sheet any other way drops
 the changes — the list does not change while the sheet is open. The button
@@ -231,13 +231,13 @@ search: a title holds the term or it does not, and the picker says so.
   nodes the editor worked on last: a page they saved, a node they made, the
   latest first, under "Recent". Typing searches (after a short pause). Every node of the types offered that the editor may read
   matches when its title holds the term — case aside, the term as written
-  (`%` and `_` are characters, not wildcards), across every namespace. A title
+  (`%` and `_` are characters, not wildcards), across every space. A title
   that *is* the term comes first, then the most recently changed.
 - **A page at a time.** The footer states the rule and the count ("Title
   contains “…” · 12+ matches"); **Show more** adds the next page. No total is
   counted: "12+" says only that more follow.
 - **The rows** show each node's glyph, its title, and below it its type (when
-  the picker offers several) · its namespace · the integration that keeps it.
+  the picker offers several) · its space · the integration that keeps it.
   A caller may add rows of its own before the matches, drawn alike: the link
   picker's "Link to …" for a typed address and the site's own pages.
   What a row says beyond that — "In this collection", why it cannot be
@@ -246,13 +246,13 @@ search: a title holds the term or it does not, and the picker says so.
   what Enter does ("Add"). Chips narrow the types (All · Pages · Documents ·
   Collections).
 - **Making what nobody's title is.** For a typed term, a "New page “…”" row
-  per type the caller lets it make follows the matches, naming the namespace
+  per type the caller lets it make follows the matches, naming the space
   the node goes into (the collection's own) — but none for a type that has a
   node titled exactly so, which is listed first instead, and none for a viewer
   who may not edit. A page or a collection is made at once and picked; a
   document opens its form (an upload or a link) in the picker itself, the
   term as its title, and is picked once made. The server decides
-  (`page:write` and the namespace's membership): a refusal is said in the
+  (`page:write` and the space's membership): a refusal is said in the
   picker, which stays open.
 - **The surface.** A large dialog whose search field stays in place while only
   the list scrolls; on the phone shell a tall sheet of its own — or, inside a
@@ -274,7 +274,7 @@ endpoint (`search/nodeSearchParams.ts` reads the request once):
 | `recent` | `1` | with no term: the nodes the viewer worked on last instead of the most recently changed |
 
 The answer is the page (`results`: each node's type, id, title, slug,
-address, namespace and integration), whether `more` follow, and `exact`: the
+address, space and integration), whether `more` follow, and `exact`: the
 types searched that have a node titled exactly as the term. A request
 without `types` is refused (400).
 
@@ -283,5 +283,5 @@ without `types` is refused (400).
 - [dynamic-rendering.md](dynamic-rendering.md) — the query model, query blocks and the list query.
 - [languages.md](languages.md#search) — full-text matching in every content language.
 - [semantic-layer.md](semantic-layer.md) — classes and their hierarchy, tags.
-- [authorization.md](authorization.md) — the visibility predicate and namespace access.
+- [authorization.md](authorization.md) — the visibility predicate and space access.
 - [routing.md](routing.md) — `search` as a reserved word.

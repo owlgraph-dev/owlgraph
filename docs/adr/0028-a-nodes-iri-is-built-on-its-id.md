@@ -19,7 +19,7 @@ id, a UUID, never changes, and is what one node stores of another. Its
 address — its namespace's prefix and its slug — changes when the node is
 renamed or moved and is never redirected. An address also says where a node
 sits, which a reader who may not read the node must not learn
-([spec 002](../features/002-visibility-and-namespaces.md)).
+([spec 002](../features/002-visibility-and-spaces.md)).
 
 The public API ([spec 004](../features/004-headless-graph-backend.md)) will
 be held to whichever identifiers it ships with. A client that stored them

@@ -5,7 +5,7 @@
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { timed } from '#lib/platform/logger.server.ts';
 import { db } from '#lib/platform/db.server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn, type NodeType } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn, type NodeType } from '#lib/features/nodes/server.ts';
 import { DOCUMENT_COLUMNS, DOCUMENT_FROM, type DocumentRow } from '#lib/features/documents/server.ts';
 import { COLLECTION_COLUMNS, COLLECTION_FROM, type CollectionRow } from '#lib/features/collections/server.ts';
 import { collectionHeadline, documentHeadline, ftsMatches, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from './ftsSql.server';
@@ -49,18 +49,18 @@ export async function searchContent(user: SessionUser | null, args: SearchArgs):
 
   if (want('page')) {
     for (const p of await searchPagesFts(user, text, fetchN)) {
-      scored.push({ hit: { id: p.id, type: 'page', title: p.title, url: nodePath(p.namespace_slug, p.slug), snippet: p.snippet }, rank: p.rank });
+      scored.push({ hit: { id: p.id, type: 'page', title: p.title, url: nodePath(p.space_slug, p.slug), snippet: p.snippet }, rank: p.rank });
     }
   }
   if (want('document')) {
     for (const d of await searchDocumentsFts(user, text, fetchN)) {
-      scored.push({ hit: { id: d.id, type: 'document', title: d.title, url: nodePath(d.namespace_slug, d.slug), snippet: d.snippet }, rank: d.rank });
+      scored.push({ hit: { id: d.id, type: 'document', title: d.title, url: nodePath(d.space_slug, d.slug), snippet: d.snippet }, rank: d.rank });
     }
   }
   if (want('collection')) {
     for (const c of await searchCollectionsFts(user, text, fetchN)) {
       const snippet = c.snippet || containsSnippet(c.member_snippet);
-      scored.push({ hit: { id: c.id, type: 'collection', title: c.title, url: nodePath(c.namespace_slug, c.slug), snippet }, rank: c.rank });
+      scored.push({ hit: { id: c.id, type: 'collection', title: c.title, url: nodePath(c.space_slug, c.slug), snippet }, rank: c.rank });
     }
   }
 
@@ -79,14 +79,14 @@ async function searchPagesFtsImpl(
   user: SessionUser | null,
   q: string,
   limit = 12
-): Promise<{ id: string; slug: string; namespace_slug: string | null; title: string; rank: number; snippet: string }[]> {
+): Promise<{ id: string; slug: string; space_slug: string | null; title: string; rank: number; snippet: string }[]> {
   const term = q.trim();
   if (!term) return [];
   return db`
-    select p.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title,
+    select p.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title,
            ${ftsRank('p', term)} as rank,
            ${pageHeadline('p', term)} as snippet
-    from pages p join nodes n on n.id = p.id ${db.unsafe(namespaceJoin('n'))}
+    from pages p join nodes n on n.id = p.id ${db.unsafe(spaceJoin('n'))}
     where ${ftsMatches('p', term)} and ${readableNodes(user, 'n')}
     order by rank desc, n.updated_at desc limit ${limit}`;
 }

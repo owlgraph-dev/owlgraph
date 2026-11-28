@@ -6,7 +6,7 @@
 // (docs/architecture/search.md, "The node picker"). None without a session.
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { db } from '#lib/platform/db.server.ts';
-import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeSearchHit, type NodeType } from '#lib/features/nodes/server.ts';
+import { spaceJoin, spaceSlugColumn, readableNodes, type NodeSearchHit, type NodeType } from '#lib/features/nodes/server.ts';
 
 export async function recentNodesForUser(
   user: SessionUser | null,
@@ -22,8 +22,8 @@ export async function recentNodesForUser(
       union all
       select id, updated_at as at from nodes where created_by = ${user.id}
     )
-    select n.id, n.type, n.title, n.slug, ${db.unsafe(namespaceSlugColumn())}, ns.name as namespace_name
-    from mine join nodes n on n.id = mine.id ${db.unsafe(namespaceJoin('n'))}
+    select n.id, n.type, n.title, n.slug, ${db.unsafe(spaceSlugColumn())}, ns.name as space_name
+    from mine join nodes n on n.id = mine.id ${db.unsafe(spaceJoin('n'))}
     where n.type in ${db(opts.types as NodeType[])} and ${kept} and ${readableNodes(user, 'n')}
     group by n.id, n.type, n.title, n.slug, ns.slug, ns.name
     order by max(mine.at) desc, n.id

@@ -43,23 +43,23 @@ export async function replaceDocumentFile(documentId: string, file: File): Promi
 
 export type UploadDocumentResult = { ok: true; id: string; slug: string } | { ok: false; error: string | null };
 
-export async function uploadDocument(file: File, title: string, namespaceId: string | null): Promise<UploadDocumentResult> {
+export async function uploadDocument(file: File, title: string, spaceId: string | null): Promise<UploadDocumentResult> {
   const fd = new FormData();
   fd.set('file', file);
   fd.set('title', title);
-  if (namespaceId) fd.set('namespaceId', namespaceId);
+  if (spaceId) fd.set('spaceId', spaceId);
   const res = await fetch('/api/documents', { method: 'POST', body: fd });
   if (!res.ok) return { ok: false, error: await messageOf(res) };
   const body = await res.json();
   return { ok: true, id: body.id, slug: body.slug };
 }
 
-export async function createLinkDocument(url: string, title: string, namespaceId: string | null): Promise<UploadDocumentResult> {
+export async function createLinkDocument(url: string, title: string, spaceId: string | null): Promise<UploadDocumentResult> {
   const fd = new FormData();
   fd.set('source', 'link');
   fd.set('externalUrl', url);
   fd.set('title', title);
-  if (namespaceId) fd.set('namespaceId', namespaceId);
+  if (spaceId) fd.set('spaceId', spaceId);
   const res = await fetch('/api/documents', { method: 'POST', body: fd });
   if (!res.ok) return { ok: false, error: await messageOf(res) };
   const body = await res.json();

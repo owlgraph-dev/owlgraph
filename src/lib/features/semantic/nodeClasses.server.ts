@@ -71,7 +71,7 @@ export function toNodeClassOption(row: NodeClassRow, depth: number): NodeClassOp
 // `depth`: siblings are ordered in TS by their resolved label, which SQL can't
 // do over a LocalizedText.
 export async function listNodeClasses(): Promise<NodeClassListRow[]> {
-  const rows = await db<(NodeClassRow & { depth: number; node_count: number; overview_title: string | null; overview_slug: string | null; overview_namespace_slug: string | null; parent_slug: string | null })[]>`
+  const rows = await db<(NodeClassRow & { depth: number; node_count: number; overview_title: string | null; overview_slug: string | null; overview_space_slug: string | null; parent_slug: string | null })[]>`
     with recursive tree as (
       select c.id, 0 as depth
       from node_classes c where c.parent_id is null
@@ -81,17 +81,17 @@ export async function listNodeClasses(): Promise<NodeClassListRow[]> {
     )
     select ${db.unsafe(CLASS_COLUMNS)}, tree.depth,
            (select count(*)::int from nodes n where n.class_id = c.id) as node_count,
-           o.title as overview_title, o.slug as overview_slug, ons.slug as overview_namespace_slug,
+           o.title as overview_title, o.slug as overview_slug, ons.slug as overview_space_slug,
            p.slug as parent_slug
     from node_classes c
     join tree on tree.id = c.id
     left join node_classes p on p.id = c.parent_id
     left join nodes o on o.id = c.overview_node_id
-    left join namespaces ons on ons.id = o.namespace_id`;
+    left join spaces ons on ons.id = o.space_id`;
   const ordered = orderClassTree(rows, (a, b) => compareLabels(localize(a.label, a.slug), localize(b.label, b.slug)) || a.slug.localeCompare(b.slug));
-  return ordered.map(({ overview_slug, overview_namespace_slug, ...r }) => ({
+  return ordered.map(({ overview_slug, overview_space_slug, ...r }) => ({
     ...r,
-    overview_path: overview_slug ? nodePath(overview_namespace_slug, overview_slug) : null,
+    overview_path: overview_slug ? nodePath(overview_space_slug, overview_slug) : null,
   }));
 }
 
@@ -317,18 +317,18 @@ export async function setNodeClass(id: string, classId: string | null): Promise<
 // resolved here, for the request's locale.
 export async function getNodeClassFields(classId: string | null | undefined): Promise<ClassFields | null> {
   if (!classId) return null;
-  const chain = await db<(NodeClassRow & { distance: number; group_label: LocalizedText | null; overview_slug: string | null; overview_namespace_slug: string | null })[]>`
+  const chain = await db<(NodeClassRow & { distance: number; group_label: LocalizedText | null; overview_slug: string | null; overview_space_slug: string | null })[]>`
     with recursive up as (
       select c.id, c.parent_id, 0 as distance from node_classes c where c.id = ${classId}
       union all
       select c.id, c.parent_id, up.distance + 1 from node_classes c join up on c.id = up.parent_id
     )
-    select ${db.unsafe(CLASS_COLUMNS)}, up.distance, g.label as group_label, o.slug as overview_slug, ons.slug as overview_namespace_slug
+    select ${db.unsafe(CLASS_COLUMNS)}, up.distance, g.label as group_label, o.slug as overview_slug, ons.slug as overview_space_slug
     from up
     join node_classes c on c.id = up.id
     left join property_groups g on g.slug = c.property_group
     left join nodes o on o.id = c.overview_node_id
-    left join namespaces ons on ons.id = o.namespace_id
+    left join spaces ons on ons.id = o.space_id
     order by up.distance`;
   const own = chain[0];
   if (!own) return null;
@@ -350,7 +350,7 @@ export async function getNodeClassFields(classId: string | null | undefined): Pr
     nodeClass: {
       // The chain runs own class -> root, so its length - 1 is the depth.
       ...toNodeClassOption(own, chain.length - 1),
-      overviewPath: own.overview_slug ? nodePath(own.overview_namespace_slug, own.overview_slug) : null,
+      overviewPath: own.overview_slug ? nodePath(own.overview_space_slug, own.overview_slug) : null,
     },
     groups,
     definitions,

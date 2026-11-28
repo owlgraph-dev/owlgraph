@@ -8,9 +8,9 @@ import { toListQuery } from './searchQuery';
 import { EMPTY_SEARCH, SEARCH_PAGE_SIZE, type SearchParams } from './searchUrl';
 
 const CLASS = '11111111-1111-4111-8111-111111111111';
-const NAMESPACE = '22222222-2222-4222-8222-222222222222';
+const SPACE = '22222222-2222-4222-8222-222222222222';
 const state = (p: Partial<SearchParams>): SearchParams => ({ ...EMPTY_SEARCH, ...p });
-const noIds = { classId: null, namespaceId: null };
+const noIds = { classId: null, spaceId: null };
 
 describe('toListQuery', () => {
   it('lists everything, newest first, without parameters', () => {
@@ -28,26 +28,26 @@ describe('toListQuery', () => {
   });
 
   it('selects a class polymorphically, exactly only when asked', () => {
-    expect(toListQuery(state({ class: 'concept' }), { classId: CLASS, namespaceId: null }).filter).toEqual({
+    expect(toListQuery(state({ class: 'concept' }), { classId: CLASS, spaceId: null }).filter).toEqual({
       intrinsic: { field: 'CLASS_ID', operator: 'EQ', value: CLASS },
     });
-    expect(toListQuery(state({ class: 'concept', exact: true }), { classId: CLASS, namespaceId: null }).filter).toEqual({
+    expect(toListQuery(state({ class: 'concept', exact: true }), { classId: CLASS, spaceId: null }).filter).toEqual({
       intrinsic: { field: 'CLASS_ID', operator: 'EQ', value: CLASS, classMatch: 'EXACT' },
     });
   });
 
-  it('leaves out a class or namespace the server dropped', () => {
-    expect(toListQuery(state({ class: 'gone', namespace: 'hidden' }), noIds).filter).toBeNull();
+  it('leaves out a class or space the server dropped', () => {
+    expect(toListQuery(state({ class: 'gone', space: 'hidden' }), noIds).filter).toBeNull();
   });
 
   it('AND-s every condition', () => {
-    const q = toListQuery(state({ class: 'concept', tags: ['ai'], type: 'page', namespace: 'wiki' }), { classId: CLASS, namespaceId: NAMESPACE });
+    const q = toListQuery(state({ class: 'concept', tags: ['ai'], type: 'page', space: 'wiki' }), { classId: CLASS, spaceId: SPACE });
     expect(q.filter).toEqual({
       and: [
         { intrinsic: { field: 'CLASS_ID', operator: 'EQ', value: CLASS } },
         { tag: { operator: 'HAS_ANY', values: ['ai'] } },
         { intrinsic: { field: 'TYPE', operator: 'EQ', value: 'page' } },
-        { intrinsic: { field: 'NAMESPACE_ID', operator: 'EQ', value: NAMESPACE } },
+        { intrinsic: { field: 'SPACE_ID', operator: 'EQ', value: SPACE } },
       ],
     });
   });
@@ -67,11 +67,11 @@ describe('toListQuery', () => {
     const shapes: SearchParams[] = [
       state({ tags: ['a'] }),
       state({ class: 'c', exact: true }),
-      state({ class: 'c', tags: ['a', 'b'], type: 'document', namespace: 'n', sort: 'title' }),
+      state({ class: 'c', tags: ['a', 'b'], type: 'document', space: 'n', sort: 'title' }),
       state({ type: 'page', sort: 'created' }),
     ];
     for (const s of shapes) {
-      const q = toListQuery(s, { classId: CLASS, namespaceId: NAMESPACE });
+      const q = toListQuery(s, { classId: CLASS, spaceId: SPACE });
       if (q.filter) {
         const filter = fromWireFilter(q.filter);
         expect(() => validateFilterShape(filter)).not.toThrow();

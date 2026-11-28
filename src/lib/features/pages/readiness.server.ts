@@ -8,13 +8,13 @@
 import { db } from '#lib/platform/db.server.ts';
 import { checkAdaptiveReadiness, type ContentScheme, type JsonDoc } from '#lib/features/content/index.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { getPage, setPageContentScheme, userCanWritePage } from './pages.server';
 
 export interface PageReadiness {
   id: string;
   slug: string;
-  namespace_slug: string | null;
+  space_slug: string | null;
   title: string;
   /** One per block, colour and scheme; an image with an unknown ground counts as text. */
   text: number;
@@ -29,13 +29,13 @@ export interface SiteReadiness {
   /** The inheriting pages with findings, most first. */
   pages: PageReadiness[];
   /** Up to three inheriting pages to preview dark: most findings first, else the first. */
-  sample: Pick<PageReadiness, 'id' | 'slug' | 'namespace_slug' | 'title'>[];
+  sample: Pick<PageReadiness, 'id' | 'slug' | 'space_slug' | 'title'>[];
 }
 
 export async function siteReadiness(user: SessionUser): Promise<SiteReadiness> {
-  const rows = await db<{ id: string; slug: string; namespace_slug: string | null; title: string; doc: JsonDoc; content_scheme: ContentScheme | null }[]>`
-    select p.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, p.doc, p.content_scheme
-    from pages p join nodes n on n.id = p.id ${db.unsafe(namespaceJoin('n'))}
+  const rows = await db<{ id: string; slug: string; space_slug: string | null; title: string; doc: JsonDoc; content_scheme: ContentScheme | null }[]>`
+    select p.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, p.doc, p.content_scheme
+    from pages p join nodes n on n.id = p.id ${db.unsafe(spaceJoin('n'))}
     where ${readableNodes(user, 'n')}
     order by n.title`;
   const pages: PageReadiness[] = [];
@@ -46,15 +46,15 @@ export async function siteReadiness(user: SessionUser): Promise<SiteReadiness> {
     inheriting++;
     const findings = checkAdaptiveReadiness(row.doc);
     if (!findings.length) {
-      if (clean.length < 3) clean.push({ id: row.id, slug: row.slug, namespace_slug: row.namespace_slug, title: row.title });
+      if (clean.length < 3) clean.push({ id: row.id, slug: row.slug, space_slug: row.space_slug, title: row.title });
       continue;
     }
     const count = (kind: string) => findings.filter((f) => f.kind === kind).length;
-    pages.push({ id: row.id, slug: row.slug, namespace_slug: row.namespace_slug, title: row.title, text: count('text') + count('image-ground'), border: count('border'), html: count('html') });
+    pages.push({ id: row.id, slug: row.slug, space_slug: row.space_slug, title: row.title, text: count('text') + count('image-ground'), border: count('border'), html: count('html') });
   }
   const total = (p: PageReadiness) => p.text + p.border + p.html;
   pages.sort((a, b) => total(b) - total(a));
-  const sample = [...pages, ...clean].slice(0, 3).map(({ id, slug, namespace_slug, title }) => ({ id, slug, namespace_slug, title }));
+  const sample = [...pages, ...clean].slice(0, 3).map(({ id, slug, space_slug, title }) => ({ id, slug, space_slug, title }));
   return { inheriting, pinned: rows.length - inheriting, pages, sample };
 }
 

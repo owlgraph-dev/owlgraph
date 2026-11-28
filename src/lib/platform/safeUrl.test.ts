@@ -96,7 +96,7 @@ describe('ROUTE_SEGMENTS covers the route tree', () => {
     const walk = (dir: string) => {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
         if (!entry.isDirectory()) continue;
-        // '[' dynamic (incl. '[[namespace=namespace]]'), '(' layout group, '+' never a directory here.
+        // '[' dynamic (incl. '[[space=space]]'), '(' layout group, '+' never a directory here.
         if (!entry.name.startsWith('[') && !entry.name.startsWith('(') && !entry.name.startsWith('+')) {
           found.add(entry.name);
         }

@@ -22,7 +22,7 @@ import { createDocument, setDocumentShares } from '../../src/lib/features/docume
 import { setNodeVisibility } from '../../src/lib/features/nodes/server';
 import { ensureCoreClasses, getTypeClass, upsertNodeClass } from '../../src/lib/features/semantic/server';
 import { CORE_GROUP_SEED, DOCUMENTS_GROUP_SEED, DOCUMENT_PROPERTY_SEEDS, TYPE_CLASS_SEEDS } from '../../src/lib/features/semantic/server';
-import { getDefaultNamespace, setNamespaceAccessLevel } from '../../src/lib/features/namespaces/server';
+import { getDefaultSpace, setSpaceAccessLevel } from '../../src/lib/features/spaces/server';
 import { createImageAsset } from '../../src/lib/features/media/server';
 import { seedParagraphStylesIfEmpty } from '../../src/lib/features/content/server';
 import { seedPageLayoutPresetsIfEmpty } from '../../src/lib/features/pages/server';
@@ -86,9 +86,9 @@ async function reset() {
       font_families, font_variants
       restart identity cascade`);
     // Trimmed back to their migrations' rows rather than truncated, so a
-    // spec's namespaces and groups don't leak into the next run.
-    await sql`delete from namespaces where not is_default`;
-    await sql`update namespaces set slug = null, name = 'Default' where is_default`;
+    // spec's spaces and groups don't leak into the next run.
+    await sql`delete from spaces where not is_default`;
+    await sql`update spaces set slug = null, name = 'Default' where is_default`;
     await sql`delete from property_groups where slug not in ('core', 'documents')`;
   });
   await upsertPropertyGroup(CORE_GROUP_SEED);
@@ -136,11 +136,11 @@ export async function prepareTestDatabase(): Promise<PreparedSeed> {
     propertyGroup: 'documents',
   });
 
-  // A node is never more accessible than its namespace (docs/architecture/authorization.md),
-  // so a public fixture needs a public namespace: the suite opens the default
+  // A node is never more accessible than its space (docs/architecture/authorization.md),
+  // so a public fixture needs a public space: the suite opens the default
   // one (the app's stays internal), and the internal fixtures pin themselves.
-  const defaultNs = await getDefaultNamespace();
-  await setNamespaceAccessLevel(defaultNs.id, 'public');
+  const defaultNs = await getDefaultSpace();
+  await setSpaceAccessLevel(defaultNs.id, 'public');
 
   const admin = await makeUser('admin@test', 'admin');
   const editorA = await makeUser('editora@test', 'editor');

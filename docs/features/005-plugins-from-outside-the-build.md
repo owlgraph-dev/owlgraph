@@ -98,7 +98,7 @@ Failure and trust:
 9. A plugin reads and writes nodes only as the host's rules allow
    ([The host](../architecture/plugins.md#the-host)): every read checked for
    the viewer, every write for the writer, a secret opened only for its node
-   or person. [Spec 002](002-visibility-and-namespaces.md) holds for every
+   or person. [Spec 002](002-visibility-and-spaces.md) holds for every
    plugin, however it is loaded.
 10. The instance contacts a plugin, and a plugin's requests reach other
     services, only at addresses the operator configured. Nothing a plugin or

@@ -33,8 +33,8 @@ export type MountOptions = {
   onUploadImage?: (file: File) => Promise<{ id: string } | null>;
   // The id -> path snapshot the in-doc links' hrefs are built from: a link
   // stores only its target's id.
-  pages?: Array<{ id: string; slug: string; namespaceSlug?: string | null }>;
-  documents?: Array<{ id: string; slug: string; namespaceSlug?: string | null }>;
+  pages?: Array<{ id: string; slug: string; spaceSlug?: string | null }>;
+  documents?: Array<{ id: string; slug: string; spaceSlug?: string | null }>;
   /** Never a feature gate in core; only configures extensions that differ by input modality (no pointer-drag chrome). */
   isPhone?: boolean;
   /** Called after every refresh(), for a shell's UI-only reactions. */
@@ -95,8 +95,8 @@ export class EditorCore {
     );
 
     // A load-time snapshot, stale until the next editor load.
-    const pageHrefById = new Map((opts.pages ?? []).map((p) => [p.id, nodePath(p.namespaceSlug ?? null, p.slug, { edit: true })]));
-    const docHrefById = new Map((opts.documents ?? []).map((d) => [d.id, nodePath(d.namespaceSlug ?? null, d.slug)]));
+    const pageHrefById = new Map((opts.pages ?? []).map((p) => [p.id, nodePath(p.spaceSlug ?? null, p.slug, { edit: true })]));
+    const docHrefById = new Map((opts.documents ?? []).map((d) => [d.id, nodePath(d.spaceSlug ?? null, d.slug)]));
 
     const docToLoad = preparedForEditor((opts.doc as JsonDoc | null | undefined) ?? { type: 'doc', content: [] });
 

@@ -148,7 +148,7 @@ A page's content renders in its **content scheme**, independent of the shell:
 
 A page stores its choice in `pages.content_scheme`, or null to inherit.
 `resolveContentScheme` (`features/content/color/contentScheme.ts`) walks page →
-namespace → site: the namespace slot is part of the chain but not settable,
+space → site: the space slot is part of the chain but not settable,
 and the site default is the `content_scheme_default` setting
 (`getContentSchemeDefault`, set under Settings → *Colour scheme*), which
 reads as `light` while unset. So every page renders on a light canvas until
@@ -683,9 +683,9 @@ schemes from the unsaved draft: each preview panel pins its scheme and
 redefines that scheme's resolved set on itself (a scoped scheme block, one
 class more specific than the site's).
 
-**Namespaces later.** `scope_kind = 'namespace'` rows with a `scope_id` are
-reserved by the table's constraints; a namespace theme will resolve over the
-site's, emit under a namespace wrapper selector, and be handed to colour
+**Spaces later.** `scope_kind = 'space'` rows with a `scope_id` are
+reserved by the table's constraints; a space theme will resolve over the
+site's, emit under a space wrapper selector, and be handed to colour
 reasoning explicitly rather than through the active sets. The site's other
 registries sit on the same scope model — its custom styles
 ([custom-styles.md](custom-styles.md)) and its page layouts

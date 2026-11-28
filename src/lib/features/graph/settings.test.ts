@@ -18,7 +18,7 @@ describe('parseSettings', () => {
       mode: 'standard',
       labels: 'never',
       edgeLabels: false,
-      colorBy: 'namespace',
+      colorBy: 'space',
       nodeSize: 'uniform',
       forces: { center: 0.001, repel: 0.05, link: 0.02, linkDistance: 200 },
       filters: { classIds: ['stale'] },
@@ -28,7 +28,7 @@ describe('parseSettings', () => {
       mode: 'standard',
       labels: 'never',
       edgeLabels: false,
-      colorBy: 'namespace',
+      colorBy: 'space',
       nodeSize: 'uniform',
       forces: { center: 0.001, repel: 0.05, link: 0.02, linkDistance: 200 },
     });

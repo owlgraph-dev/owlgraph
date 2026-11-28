@@ -21,7 +21,7 @@
       id: string;
       title: string;
       slug: string;
-      namespace_slug: string | null;
+      space_slug: string | null;
       source: DocumentSource;
       external_url: string | null;
       filename: string;

@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import type { ClientInit } from '@sveltejs/kit/hooks';
-import { setKnownNamespaceSlugs } from '#lib/features/namespaces/index.ts';
+import { setKnownSpaceSlugs } from '#lib/features/spaces/index.ts';
 import { baseLocale, isLocale, overwriteGetLocale } from '#lib/paraglide/runtime.js';
 
 // The interface language is the server's decision, read from <html lang>:
@@ -15,12 +15,12 @@ overwriteGetLocale(() => {
 });
 
 // SvelteKit awaits init() before hydration re-resolves the URL, which the
-// [namespace] param matcher needs its registry for (docs/architecture/routing.md, "The
+// [space] param matcher needs its registry for (docs/architecture/routing.md, "The
 // routing ambiguity, and the params matcher that resolves it").
 export const init: ClientInit = async () => {
   try {
-    const res = await fetch('/api/namespaces/slugs');
-    if (res.ok) setKnownNamespaceSlugs(await res.json());
+    const res = await fetch('/api/spaces/slugs');
+    if (res.ok) setKnownSpaceSlugs(await res.json());
   } catch {
     // Best effort: +layout.ts's load() fills the registry a moment later.
   }

@@ -12,7 +12,7 @@ import type { StyleRouteKind } from './csp';
 // page. A page route, not a +server.ts, so the frame's script gets bundled.
 export const MERMAID_FRAME_ROUTE = '/api/embed/mermaid';
 
-const LOOSE_ROUTE_IDS: ReadonlySet<string> = new Set(['/[[namespace=namespace]]/[slug]/edit', '/settings']);
+const LOOSE_ROUTE_IDS: ReadonlySet<string> = new Set(['/[[space=space]]/[slug]/edit', '/settings']);
 const LOOSE_ROUTE_PREFIXES = ['/settings/', '/dev/'] as const;
 
 export function styleRouteKind(routeId: string | null | undefined): StyleRouteKind {

@@ -489,7 +489,7 @@ export interface PluginNodes {
    */
   mayCreateBeside(pageId: string): Promise<'ok' | 'forbidden' | 'not-found'>;
   /**
-   * A collection backed by the source, in the namespace of `besidePageId` (which the viewer writes) and owned
+   * A collection backed by the source, in the space of `besidePageId` (which the viewer writes) and owned
    * by them, with `secret` sealed beside it. One each viewer reads with their own connection has no secret.
    */
   createCollection(input: { title: string; besidePageId: string; ref: Record<string, unknown>; secret?: string }): Promise<PluginWriteResult>;
@@ -497,7 +497,7 @@ export interface PluginNodes {
    * A document backed by one of the source's files, made once however often it is asked for: `match`, never
    * empty, is the part of `ref` that identifies the file, and an existing node holding it is returned.
    * With `collectionId`, a member of a collection the viewer writes, holding the collection's credential;
-   * with `besidePageId`, a document in the namespace of a page the viewer writes, with no credential (each
+   * with `besidePageId`, a document in the space of a page the viewer writes, with no credential (each
    * viewer reads it with their own connection).
    */
   createDocument(

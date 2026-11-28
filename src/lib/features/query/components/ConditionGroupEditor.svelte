@@ -27,7 +27,7 @@
     label,
     kinds = ALL_SOURCE_KINDS,
     propertyOptions = [],
-    namespaceOptions = [],
+    spaceOptions = [],
     userOptions = [],
     classOptions = [],
     relationshipTypes = [],
@@ -42,7 +42,7 @@
     label?: string;
     kinds?: readonly SourceKind[];
     propertyOptions?: PropertyOption[];
-    namespaceOptions?: { id: string; name: string }[];
+    spaceOptions?: { id: string; name: string }[];
     userOptions?: { id: string; name: string; email: string }[];
     classOptions?: NodeClassOption[];
     relationshipTypes?: RelationshipTypeOption[];
@@ -98,7 +98,7 @@
         depth={depth + 1}
         {kinds}
         {propertyOptions}
-        {namespaceOptions}
+        {spaceOptions}
         {userOptions}
         {classOptions}
         {relationshipTypes}
@@ -111,7 +111,7 @@
         onRemove={() => remove(item.id)}
         {sourceGroups}
         {propertyOptions}
-        {namespaceOptions}
+        {spaceOptions}
         {userOptions}
         {classOptions}
         {relationshipTypes}

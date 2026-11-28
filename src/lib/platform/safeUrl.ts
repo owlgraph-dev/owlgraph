@@ -42,7 +42,7 @@ export const ROUTE_SEGMENTS: ReadonlySet<string> = new Set([
   'search',
   'settings',
   'share',
-  // /[[namespace]]/[slug]/…
+  // /[[space]]/[slug]/…
   'edit',
   // /-/… (the app's own pages)
   'about',
@@ -58,7 +58,7 @@ export const ROUTE_SEGMENTS: ReadonlySet<string> = new Set([
   'integrations',
   'locale',
   'media',
-  'namespaces',
+  'spaces',
   'node-search',
   'pages',
   'plugins',
@@ -80,7 +80,7 @@ export const ROUTE_SEGMENTS: ReadonlySet<string> = new Set([
   'check',
   'flow',
   'poll',
-  // /api/embed/…, /api/media/…, /api/namespaces/…, /api/styles/…
+  // /api/embed/…, /api/media/…, /api/spaces/…, /api/styles/…
   'avatar',
   'branding',
   'fonts',

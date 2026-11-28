@@ -2,10 +2,10 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
-// Route adapter, re-exported by src/routes/[[namespace=namespace]]/[slug]/+page.server.ts.
+// Route adapter, re-exported by src/routes/[[space=space]]/[slug]/+page.server.ts.
 import { error, redirect } from '@sveltejs/kit';
 import { getNodeBySlug } from '#lib/features/nodes/server.ts';
-import { resolveNamespaceParam } from '#lib/features/namespaces/server.ts';
+import { resolveSpaceParam } from '#lib/features/spaces/server.ts';
 import { effectiveVisibility, nodePath } from '#lib/features/nodes/index.ts';
 import { getPage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { getIncomingEdges, getLocalGraph, relationshipGroups } from '#lib/features/graph/server.ts';
@@ -23,7 +23,7 @@ import type { NodeHeaderView } from '#lib/features/nodes/index.ts';
 import * as m from '#lib/paraglide/messages.js';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
-type Params = { namespace?: string; slug: string };
+type Params = { space?: string; slug: string };
 
 /** The set class fields, in definition order: short ones as rows, long ones as sections. */
 function classProperties(classFields: ClassFields | null, values: readonly { name: string; value: string }[]): NodeHeaderView['properties'] {
@@ -41,11 +41,11 @@ const linked = (count: number) => (count === 1 ? m.node_contains_linked_one({ co
 // Policy"): block styles travel in the nonce'd per-page stylesheet. The html
 // block's sanitizer is the first line against authored script or style.
 export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => {
-  const namespace = await resolveNamespaceParam(params.namespace);
-  if (!namespace) throw error(404, 'Not found');
-  const node = await getNodeBySlug(namespace.id, params.slug);
+  const space = await resolveSpaceParam(params.space);
+  if (!space) throw error(404, 'Not found');
+  const node = await getNodeBySlug(space.id, params.slug);
   if (!node) throw error(404, 'Not found');
-  const path = nodePath(namespace.slug, params.slug);
+  const path = nodePath(space.slug, params.slug);
 
   if (node.type === 'page') {
     const page = await getPage(node.id);
@@ -54,8 +54,8 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
       // An anonymous visitor to a non-restricted page is sent to sign in. A
       // restricted page 404s for everyone without access, so a login redirect
       // can't reveal it exists. Effective visibility: an inherited page is as
-      // sensitive as its namespace.
-      const effectiveVisibility = page.visibility ?? page.namespace_access_level;
+      // sensitive as its space.
+      const effectiveVisibility = page.visibility ?? page.space_access_level;
       if (!locals.user && effectiveVisibility !== 'restricted') {
         throw redirect(303, `/login?redirect=${encodeURIComponent(path)}`);
       }
@@ -93,7 +93,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
     const collection = await getCollection(node.id);
     if (!collection) throw error(404, 'Not found');
     if (!(await userCanReadCollection(locals.user, collection))) {
-      const effectiveVisibility = collection.visibility ?? collection.namespace_access_level;
+      const effectiveVisibility = collection.visibility ?? collection.space_access_level;
       if (!locals.user && effectiveVisibility !== 'restricted') throw redirect(303, `/login?redirect=${encodeURIComponent(path)}`);
       throw error(404, 'Not found');
     }
@@ -109,7 +109,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
       resolveNodeView(collection, { user: locals.user, locale: locals.locale, log: locals.log, returnTo: url.pathname, canWrite: canEdit }),
     ]);
     const header: NodeHeaderView = {
-      namespace: namespace.name,
+      space: space.name,
       title: collection.title,
       locale: collection.locale,
       nodeClass: classFields ? { label: classFields.nodeClass.label, href: classFields.nodeClass.overviewPath ?? null } : null,
@@ -145,7 +145,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
   return {
     kind: 'document' as const,
     // The badge shows the effective value, never null.
-    doc: { ...doc, visibility: doc.visibility ?? doc.namespace_access_level },
+    doc: { ...doc, visibility: doc.visibility ?? doc.space_access_level },
     referencedBy: await getIncomingEdges(doc.id, locals.user),
     canEdit: userCanWriteDocument(locals.user, doc),
     tags: await getNodeTags(doc.id),

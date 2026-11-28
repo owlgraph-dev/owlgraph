@@ -78,7 +78,7 @@
   <Specimen label="with description" state="description" overlay>
     <Button onclick={() => (descriptionOpen = true)}>Regenerate index</Button>
     <Dialog bind:open={descriptionOpen} title="Regenerate search index" description="Rebuilds every derived search document. Existing content is not changed.">
-      <p class="body">This can take a few minutes on a large namespace.</p>
+      <p class="body">This can take a few minutes on a large space.</p>
       {#snippet footer()}
         <Button onclick={() => (descriptionOpen = false)}>Cancel</Button>
         <Button variant="primary" onclick={() => (descriptionOpen = false)}>Start</Button>

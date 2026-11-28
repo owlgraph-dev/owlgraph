@@ -20,7 +20,7 @@ const ROLE_ACTIONS: Record<Role, Action[]> = {
     'relationship:read',
     'relationship:manage',
     'class:manage',
-    'namespace:manage',
+    'space:manage',
     'navigation:manage',
     'homepage:manage',
     'footer:manage',

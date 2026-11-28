@@ -8,11 +8,11 @@ export interface GraphNode {
   id: string;
   type?: NodeType;
   slug?: string;
-  namespaceSlug?: string | null;
+  spaceSlug?: string | null;
   title: string;
   // Optional, so a consumer can hand the view bare {id, title} nodes.
   classId?: string;
-  namespaceId?: string | null;
+  spaceId?: string | null;
 }
 
 export interface GraphEdge {

@@ -8,7 +8,7 @@ import { page as screen } from 'vitest/browser';
 import type { SearchResultCard as Result } from '#lib/features/search/index.ts';
 import SearchResultCard from './SearchResultCard.svelte';
 
-const BASE: Result = { id: 'd-1', type: 'document', title: 'Uploaded note', url: '/d/uploaded-note', locale: 'en', className: null, documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', namespaceName: '', tags: [] };
+const BASE: Result = { id: 'd-1', type: 'document', title: 'Uploaded note', url: '/d/uploaded-note', locale: 'en', className: null, documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', spaceName: '', tags: [] };
 
 describe('a document’s result card', () => {
   it('names an uploaded document’s kind, and a link document’s with its host', async () => {

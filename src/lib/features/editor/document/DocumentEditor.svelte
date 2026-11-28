@@ -29,7 +29,7 @@
     documentId,
     title,
     slug,
-    namespaceSlug,
+    spaceSlug,
     source,
     plugin,
     externalUrl,
@@ -55,8 +55,8 @@
     onReplaceFile,
     onSetLink,
     visibility,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     shares = [],
     users = [],
     onSetVisibility,
@@ -64,9 +64,9 @@
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
     onDelete,
   }: DocumentEditorProps = $props();
 
@@ -102,7 +102,7 @@
     <EditorHeader
       {title}
       {slug}
-      {namespaceSlug}
+      {spaceSlug}
       {onRename}
       tags={meta.tags}
       onSetTags={meta.commitTags}
@@ -148,8 +148,8 @@
 <AccessControlPanel
   open={accessControlOpen}
   {visibility}
-  {namespaceAccessLevel}
-  {namespaceMembers}
+  {spaceAccessLevel}
+  {spaceMembers}
   {shares}
   {users}
   {onSetVisibility}
@@ -157,9 +157,9 @@
   {shareLinks}
   {onCreateShareLink}
   {onRevokeShareLink}
-  {namespaceId}
-  {namespaces}
-  {onSetNamespace}
+  {spaceId}
+  {spaces}
+  {onSetSpace}
   onClose={() => (accessControlOpen = false)}
 />
 

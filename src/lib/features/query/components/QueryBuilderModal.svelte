@@ -38,7 +38,7 @@
     initialValue,
     params = [],
     propertyOptions = [],
-    namespaceOptions = [],
+    spaceOptions = [],
     userOptions = [],
     classOptions = [],
     tagSuggestions = [],
@@ -49,7 +49,7 @@
     initialValue: QueryDefinition | null;
     params?: TemplateParam[];
     propertyOptions?: PropertyOption[];
-    namespaceOptions?: { id: string; name: string }[];
+    spaceOptions?: { id: string; name: string }[];
     userOptions?: { id: string; name: string; email: string }[];
     classOptions?: NodeClassOption[];
     tagSuggestions?: string[];
@@ -197,7 +197,7 @@
             group={rootGroup}
             onChange={(g) => (rootGroup = g)}
             {propertyOptions}
-            {namespaceOptions}
+            {spaceOptions}
             {userOptions}
             {classOptions}
             {relationshipTypes}
@@ -208,7 +208,7 @@
           {steps}
           onChange={setSteps}
           {propertyOptions}
-          {namespaceOptions}
+          {spaceOptions}
           {userOptions}
           {classOptions}
           {relationshipTypes}

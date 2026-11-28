@@ -11,8 +11,8 @@
   import { getLocale } from '#lib/paraglide/runtime.js';
   import { BottomSheet, Button, Checkbox, ChipInput, FormField, SegmentedControl, SegmentedControlItem, Select } from '#lib/design-system/index.ts';
   import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-  import { effectiveSort, searchHref, type SearchNamespaceOption, type SearchParams, type SearchSort } from '#lib/features/search/index.ts';
-  import { ALL, orNull, classPickerItems, typePickerItems, namespacePickerItems, sortItems } from './filterItems';
+  import { effectiveSort, searchHref, type SearchSpaceOption, type SearchParams, type SearchSort } from '#lib/features/search/index.ts';
+  import { ALL, orNull, classPickerItems, typePickerItems, spacePickerItems, sortItems } from './filterItems';
   import type { NodeType } from '#lib/features/nodes/index.ts';
 
   let {
@@ -22,7 +22,7 @@
     total,
     classOptions,
     tagOptions,
-    namespaceOptions,
+    spaceOptions,
     onApply,
   }: {
     open?: boolean;
@@ -34,16 +34,16 @@
     total: number;
     classOptions: NodeClassOption[];
     tagOptions: string[];
-    namespaceOptions: SearchNamespaceOption[];
+    spaceOptions: SearchSpaceOption[];
     onApply: (next: SearchParams) => void;
   } = $props();
 
   const classes = $derived(classPickerItems(classOptions));
-  const namespaces = $derived(namespacePickerItems(namespaceOptions));
+  const spaces = $derived(spacePickerItems(spaceOptions));
   const sorts = $derived(sortItems(!!pending.q));
 
   // Not the sort or the view: a change of order alone fetches nothing.
-  const countKey = (p: SearchParams) => searchHref({ q: p.q, class: p.class, exact: p.exact, tags: p.tags, type: p.type, namespace: p.namespace });
+  const countKey = (p: SearchParams) => searchHref({ q: p.q, class: p.class, exact: p.exact, tags: p.tags, type: p.type, space: p.space });
 
   // The last count stays while a newer one is on its way, so the button never
   // blanks or blocks.
@@ -80,7 +80,7 @@
 
   // Reset clears the filters; the term, the order and the view stay.
   function reset() {
-    pending = { ...pending, class: null, exact: false, tags: [], type: null, namespace: null };
+    pending = { ...pending, class: null, exact: false, tags: [], type: null, space: null };
   }
 </script>
 
@@ -113,8 +113,8 @@
         {/each}
       </SegmentedControl>
     </FormField>
-    <FormField label={m.search_page_filter_namespace()}>
-      <Select items={namespaces} value={pending.namespace ?? ALL} onValueChange={(v) => (pending = { ...pending, namespace: orNull(v) })} width="full" />
+    <FormField label={m.search_page_filter_space()}>
+      <Select items={spaces} value={pending.space ?? ALL} onValueChange={(v) => (pending = { ...pending, space: orNull(v) })} width="full" />
     </FormField>
     <FormField label={m.search_page_sort()}>
       <Select items={sorts} value={effectiveSort(pending)} onValueChange={(v) => (pending = { ...pending, sort: v as SearchSort })} width="full" />

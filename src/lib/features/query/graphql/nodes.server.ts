@@ -31,7 +31,7 @@ export interface ContentNodeHit {
   slug: string;
   createdAt: string;
   updatedAt: string;
-  namespaceId: string;
+  spaceId: string;
   createdBy: string | null;
   // Never absent: a node with no domain class carries its node type's ("Page").
   classId: string;
@@ -76,11 +76,11 @@ function toContentNodeHit(n: NodeFilterRow): ContentNodeHit {
     id: n.id,
     type: n.type,
     title: n.title,
-    url: nodePath(n.namespace_slug, n.slug),
+    url: nodePath(n.space_slug, n.slug),
     slug: n.slug,
     createdAt: n.created_at.toISOString(),
     updatedAt: n.updated_at.toISOString(),
-    namespaceId: n.namespace_id,
+    spaceId: n.space_id,
     createdBy: n.created_by,
     classId: n.class_id,
     className: n.class_name,

@@ -9,23 +9,23 @@ const none = { q: '', type: null, exact: false, tags: [] as string[] };
 
 describe('countLine', () => {
   it('counts results, singular and plural', () => {
-    expect(countLine({ total: 1, applied: none, classLabel: null, namespaceName: null }, 'en')).toBe('1 result');
-    expect(countLine({ total: 0, applied: none, classLabel: null, namespaceName: null }, 'en')).toBe('0 results');
-    expect(countLine({ total: 24, applied: none, classLabel: null, namespaceName: null }, 'de')).toBe('24 Ergebnisse');
-    expect(countLine({ total: 1, applied: none, classLabel: null, namespaceName: null }, 'de')).toBe('1 Ergebnis');
+    expect(countLine({ total: 1, applied: none, classLabel: null, spaceName: null }, 'en')).toBe('1 result');
+    expect(countLine({ total: 0, applied: none, classLabel: null, spaceName: null }, 'en')).toBe('0 results');
+    expect(countLine({ total: 24, applied: none, classLabel: null, spaceName: null }, 'de')).toBe('24 Ergebnisse');
+    expect(countLine({ total: 1, applied: none, classLabel: null, spaceName: null }, 'de')).toBe('1 Ergebnis');
   });
 
   it('names pages or documents when the type filter does', () => {
-    expect(countLine({ total: 18, applied: { ...none, type: 'page' }, classLabel: null, namespaceName: null }, 'de')).toBe('18 Seiten');
-    expect(countLine({ total: 1, applied: { ...none, type: 'document' }, classLabel: null, namespaceName: null }, 'en')).toBe('1 document');
+    expect(countLine({ total: 18, applied: { ...none, type: 'page' }, classLabel: null, spaceName: null }, 'de')).toBe('18 Seiten');
+    expect(countLine({ total: 1, applied: { ...none, type: 'document' }, classLabel: null, spaceName: null }, 'en')).toBe('1 document');
   });
 
   it('restates every applied filter in prose', () => {
     const applied = { q: 'graph', type: 'page' as const, exact: false, tags: ['ai', 'ml'] };
-    expect(countLine({ total: 24, applied, classLabel: 'Konzept', namespaceName: 'Wiki' }, 'de')).toBe(
-      '24 Seiten für „graph“ · Klasse Konzept (inkl. Unterklassen) · mit Tag ai oder ml · im Namensraum Wiki'
+    expect(countLine({ total: 24, applied, classLabel: 'Konzept', spaceName: 'Wiki' }, 'de')).toBe(
+      '24 Seiten für „graph“ · Klasse Konzept (inkl. Unterklassen) · mit Tag ai oder ml · im Bereich Wiki'
     );
-    expect(countLine({ total: 2, applied: { ...applied, exact: true, tags: ['ai', 'ml', 'kg'] }, classLabel: 'Concept', namespaceName: null }, 'en')).toBe(
+    expect(countLine({ total: 2, applied: { ...applied, exact: true, tags: ['ai', 'ml', 'kg'] }, classLabel: 'Concept', spaceName: null }, 'en')).toBe(
       '2 pages for “graph” · exactly class Concept · tagged ai, ml, or kg'
     );
   });

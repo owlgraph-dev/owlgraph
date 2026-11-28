@@ -8,7 +8,7 @@ import { db, type TxSql } from '#lib/platform/db.server.ts';
 import { labelCache, localize, hasText, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import * as m from '#lib/paraglide/messages.js';
 import { nodePath, type RelationshipGroupView } from '#lib/features/nodes/index.ts';
-import { namespaceJoin, namespaceSlugColumn, readableNodes, type NodeType } from '#lib/features/nodes/server.ts';
+import { spaceJoin, spaceSlugColumn, readableNodes, type NodeType } from '#lib/features/nodes/server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { clampFirst } from '#lib/platform/pagination.ts';
 import { getExistingRelationshipTypeSlugs } from '#lib/features/semantic/server.ts';
@@ -151,21 +151,21 @@ export async function relationshipGroups(
     id: string;
     type: NodeType;
     slug: string;
-    namespace_slug: string | null;
+    space_slug: string | null;
     title: string;
     total: number;
   }[]>`
-    select relationship_type, direction, id, type, slug, namespace_slug, title, total from (
+    select relationship_type, direction, id, type, slug, space_slug, title, total from (
       select e.*,
         count(*) over (partition by e.relationship_type, e.direction)::int as total,
         row_number() over (partition by e.relationship_type, e.direction order by lower(e.title), e.id) as rank
       from (
         select l.relationship_type,
           case when l.source_id = ${nodeId} then 'outgoing' else 'incoming' end as direction,
-          c.id, c.type, c.slug, ${db.unsafe(namespaceSlugColumn())}, c.title
+          c.id, c.type, c.slug, ${db.unsafe(spaceSlugColumn())}, c.title
         from edges l
         join nodes c on c.id = (case when l.source_id = ${nodeId} then l.target_id else l.source_id end)
-        ${db.unsafe(namespaceJoin('c'))}
+        ${db.unsafe(spaceJoin('c'))}
         where (l.source_id = ${nodeId} or l.target_id = ${nodeId})
           and ${readableNodes(user, 'c')}
           and (l.relationship_type is not null or l.target_id = ${nodeId})
@@ -200,7 +200,7 @@ export async function relationshipGroups(
       group = { key, relationshipType: r.relationship_type, direction: r.direction, label: groupLabel(r.relationship_type, r.direction), total: r.total, nodes: [] };
       groups.set(key, group);
     }
-    group.nodes.push({ id: r.id, type: r.type, title: r.title, href: nodePath(r.namespace_slug, r.slug) });
+    group.nodes.push({ id: r.id, type: r.type, title: r.title, href: nodePath(r.space_slug, r.slug) });
   }
   // Typed groups by their words, the untyped edges last.
   return [...groups.values()].sort((a, b) => (a.relationshipType === null ? 1 : 0) - (b.relationshipType === null ? 1 : 0) || a.label.localeCompare(b.label));

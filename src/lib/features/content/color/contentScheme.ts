@@ -4,7 +4,7 @@
 
 // The colour scheme page content renders in (docs/architecture/theming.md, "Content
 // scheme"): light, dark, or adaptive (the viewer's). Null inherits, through a
-// namespace level nothing sets, to the site default.
+// space level nothing sets, to the site default.
 
 export const CONTENT_SCHEMES = ['light', 'dark', 'adaptive'] as const;
 export type ContentScheme = (typeof CONTENT_SCHEMES)[number];
@@ -26,10 +26,10 @@ export function isContentScheme(value: unknown): value is ContentScheme {
 
 export function resolveContentScheme(chain: {
   page?: ContentScheme | null;
-  namespace?: ContentScheme | null;
+  space?: ContentScheme | null;
   site?: ContentScheme | null;
 }): ContentScheme {
-  return chain.page ?? chain.namespace ?? chain.site ?? CONTENT_SCHEME_FALLBACK;
+  return chain.page ?? chain.space ?? chain.site ?? CONTENT_SCHEME_FALLBACK;
 }
 
 /** None for adaptive: the canvas then inherits the viewer's scheme. */

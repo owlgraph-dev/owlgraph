@@ -22,14 +22,14 @@
   let {
     core,
     overlays,
-    namespace = null,
+    space = null,
     locale,
     toolbarProps,
   }: {
     core: EditorCore;
     overlays: EditorOverlays;
-    /** The page's namespace, where the picker makes a page it is asked for. */
-    namespace?: NodePickerCreate['namespace'] | null;
+    /** The page's space, where the picker makes a page it is asked for. */
+    space?: NodePickerCreate['space'] | null;
     /** The content language a site page's card is labelled in. */
     locale?: string;
     /** The toolbar button's props: the trigger is one of the toolbar's stops. */
@@ -82,7 +82,7 @@
     types={['page', 'document']}
     rowAction={m.editor_link_picker_action()}
     recent={6}
-    create={namespace ? { types: ['page'], namespace } : undefined}
+    create={space ? { types: ['page'], space } : undefined}
     leading={(term) => linkPickerRows(term, { retargeting: !!core.links.retargetId, insertUrlCard: insertUrlCardAndClose, placeSitePage: placeSitePageAndClose })}
     note={core.links.retargetId ? m.editor_link_picker_hint_retarget() : m.editor_link_picker_hint_default()}
     size="md"

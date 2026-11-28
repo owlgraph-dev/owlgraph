@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Share links: capability tokens granting anonymous read access to exactly one
-// node, past its visibility and namespace. Stored hashed; free of SvelteKit-only imports.
+// node, past its visibility and space. Stored hashed; free of SvelteKit-only imports.
 import { randomBytes } from 'node:crypto';
 import { db } from '#lib/platform/db.server.ts';
 import { logEvent, logger, type Logger } from '#lib/platform/logger.server.ts';
@@ -54,7 +54,7 @@ export async function revokeShareLink(id: string, nodeId: string): Promise<void>
 }
 
 // The row's existence is the authorization, whatever the node's visibility or
-// namespace, so only nodeId is returned: nothing invites a visibility check.
+// space, so only nodeId is returned: nothing invites a visibility check.
 export async function resolveShareLink(token: string, log: Logger = logger): Promise<{ nodeId: string } | null> {
   const [row] = await db<{ node_id: string }[]>`select node_id from share_links where token_hash = ${hashToken(token)}`;
   const tokenHash = tokenHashPrefix(token);

@@ -29,7 +29,7 @@ that leads out of the settings, is gated by a view action
 | Appearance | Fonts | `/settings/fonts` | `font:manage` |
 | Appearance | Custom styles (named styles, free CSS) | `/settings/styles` | `stylesheet:manage` |
 | Appearance | Page layouts (the page layouts authors choose) | `/settings/page-layouts` | `page-layout:manage` |
-| Structure | Namespaces | `/settings/namespaces` | `namespace:manage` |
+| Structure | Spaces | `/settings/spaces` | `space:manage` |
 | Semantic schema | Properties | `/settings/schema/properties` | `property:manage` |
 | Semantic schema | Property groups | `/settings/schema/groups` | `property-group:manage` |
 | Semantic schema | Relationship types | `/settings/schema/relationships` | `relationship:manage` |
@@ -239,7 +239,7 @@ matrix (`BlockDefaults.svelte`): one row per capability, one column per
 block-type group, the block settings panel's own segmented steps and theme-colour
 pickers, edited as one draft and saved with one action like the colours
 ([blocks/capabilities.md](blocks/capabilities.md#capability-defaults)). List sections (users,
-namespaces, the four schema catalogues, API tokens) stay on the list
+spaces, the four schema catalogues, API tokens) stay on the list
 pattern — head, `Table`, add/edit in a modal — described in
 [design-system/overview.md](design-system/overview.md), "Settings pages".
 

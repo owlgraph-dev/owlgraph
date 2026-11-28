@@ -23,7 +23,7 @@ async function header(overrides: Partial<Props> = {}) {
   const props: Props = $state({
     title: 'Plans',
     slug: 'plans',
-    namespaceSlug: null,
+    spaceSlug: null,
     tags: ['plans'],
     tagSuggestions: [],
     accessControlOpen: false,

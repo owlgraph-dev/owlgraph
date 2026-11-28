@@ -17,7 +17,7 @@ import { stubFetch } from '#tests/component/fetch.ts';
 // answered by a stand-in for the page API. The heartbeat and the blocked poll
 // run on intervals, which the tests that wait on them fake.
 
-const NAMESPACES = [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }];
+const SPACES = [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }];
 
 const DOC_ID = 'd0000000-0000-4000-8000-0000000000a1';
 
@@ -29,8 +29,8 @@ function docRow(extra: Partial<Doc> = {}): Doc {
     id: DOC_ID,
     title: 'Minutes',
     slug: 'minutes',
-    namespace_id: 'ns-default',
-    namespace_slug: null,
+    space_id: 'ns-default',
+    space_slug: null,
     source: 'upload',
     plugin: null,
     external_url: null,
@@ -38,7 +38,7 @@ function docRow(extra: Partial<Doc> = {}): Doc {
     mime: 'text/plain',
     size: 1200,
     visibility: null,
-    namespace_access_level: 'public',
+    space_access_level: 'public',
     created_by: 'u-editor',
     created_at: '2026-10-01T09:00:00.000Z',
     class_id: 'class-document',
@@ -64,12 +64,12 @@ function documentData(extra: Partial<DocumentData> = {}, doc: Partial<Doc> = {})
     nodeClasses: [],
     classFields: null,
     visibility: null,
-    namespaceAccessLevel: 'public',
-    namespaceMembers: [],
+    spaceAccessLevel: 'public',
+    spaceMembers: [],
     shares: [],
     users: [],
     shareLinks: [],
-    namespaces: NAMESPACES,
+    spaces: SPACES,
     ...extra,
   } as EditPageData;
 }
@@ -170,11 +170,11 @@ function pageData(role: Role = 'editor'): EditPageData {
     id: PAGE_ID,
     title: 'Plans',
     slug: 'plans',
-    namespace_id: 'ns-default',
-    namespace_slug: null,
+    space_id: 'ns-default',
+    space_slug: null,
     doc: DOC,
     visibility: null,
-    namespace_access_level: 'public',
+    space_access_level: 'public',
     created_by: 'u-editor',
     created_at: '2026-10-01T09:00:00.000Z',
     updated_at: '2026-10-01T09:00:00.000Z',
@@ -187,7 +187,7 @@ function pageData(role: Role = 'editor'): EditPageData {
     page: row,
     pages: [],
     documents: [],
-    namespaces: NAMESPACES,
+    spaces: SPACES,
     tags: [],
     manualProperties: [],
     propSuggestions: [],
@@ -198,8 +198,8 @@ function pageData(role: Role = 'editor'): EditPageData {
     nodeClasses: [],
     classFields: null,
     visibility: null,
-    namespaceAccessLevel: 'public',
-    namespaceMembers: [],
+    spaceAccessLevel: 'public',
+    spaceMembers: [],
     shares: [],
     users: [],
     shareLinks: [],

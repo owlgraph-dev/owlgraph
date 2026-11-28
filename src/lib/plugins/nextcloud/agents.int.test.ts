@@ -60,7 +60,7 @@ async function plugin(as: Role, method: 'GET' | 'POST' | 'PATCH', path: string, 
   );
 }
 
-/** A fresh share's collection and a document of its file, both in the public default namespace. */
+/** A fresh share's collection and a document of its file, both in the public default space. */
 async function connectShare() {
   const token = `AgentShare${++shares}`;
   mock.shares.set(token, {

@@ -27,10 +27,10 @@
   let view = $state<View>('grid');
 
   // The root layout loads these for every request.
-  const namespaces = $derived(page.data.namespaces as { id: string; name: string; slug: string | null; isDefault: boolean }[] ?? []);
-  let namespaceId = $state<string | null>(null);
+  const spaces = $derived(page.data.spaces as { id: string; name: string; slug: string | null; isDefault: boolean }[] ?? []);
+  let spaceId = $state<string | null>(null);
   $effect(() => {
-    if (open) namespaceId = namespaces.find((n) => n.isDefault)?.id ?? null;
+    if (open) spaceId = spaces.find((n) => n.isDefault)?.id ?? null;
   });
 
   let pageBusy = $state(false);
@@ -82,8 +82,8 @@
     else view = 'document';
   }
 
-  function selectedNamespaceSlug(): string | null {
-    const ns = namespaces.find((n) => n.id === namespaceId);
+  function selectedSpaceSlug(): string | null {
+    const ns = spaces.find((n) => n.id === spaceId);
     return ns && !ns.isDefault ? ns.slug : null;
   }
 
@@ -91,13 +91,13 @@
     pageBusy = true;
     pageError = null;
     try {
-      const res = await createBlankPageViaApi(namespaceId);
+      const res = await createBlankPageViaApi(spaceId);
       if (!res.ok) {
         pageError = res.error ?? m.create_modal_error_generic_create();
         return;
       }
       close();
-      openEditor(nodePath(selectedNamespaceSlug(), res.slug, { edit: true }));
+      openEditor(nodePath(selectedSpaceSlug(), res.slug, { edit: true }));
     } catch {
       pageError = m.create_modal_error_generic_create();
     } finally {
@@ -109,13 +109,13 @@
     pageBusy = true;
     pageError = null;
     try {
-      const res = await createCuratedCollection(namespaceId);
+      const res = await createCuratedCollection(spaceId);
       if (!res.ok) {
         pageError = res.error ?? m.create_modal_error_generic_create();
         return;
       }
       close();
-      openEditor(nodePath(selectedNamespaceSlug(), res.slug, { edit: true }));
+      openEditor(nodePath(selectedSpaceSlug(), res.slug, { edit: true }));
     } catch {
       pageError = m.create_modal_error_generic_create();
     } finally {
@@ -125,7 +125,7 @@
 
   function documentCreated(doc: { slug: string }) {
     close();
-    openEditor(nodePath(selectedNamespaceSlug(), doc.slug, { edit: true }));
+    openEditor(nodePath(selectedSpaceSlug(), doc.slug, { edit: true }));
   }
 </script>
 
@@ -138,13 +138,13 @@
   title={m.create_modal_title()}
 >
   {#if view === 'grid'}
-    {#if namespaces.length > 1}
+    {#if spaces.length > 1}
       <div class="ns-picker">
-        <FormField label={m.create_modal_namespace_label()}>
+        <FormField label={m.create_modal_space_label()}>
           <Select
-            items={namespaces.map((ns) => ({ value: ns.id, label: ns.isDefault ? m.create_modal_namespace_default_option() : ns.name }))}
-            value={namespaceId ?? ''}
-            onValueChange={(v) => (namespaceId = v)}
+            items={spaces.map((ns) => ({ value: ns.id, label: ns.isDefault ? m.create_modal_space_default_option() : ns.name }))}
+            value={spaceId ?? ''}
+            onValueChange={(v) => (spaceId = v)}
           />
         </FormField>
       </div>
@@ -172,7 +172,7 @@
     {#if pageBusy}<p class="create-hint">{m.create_modal_creating()}</p>{/if}
   {:else if view === 'document'}
     <h3 class="upload-heading">{m.create_modal_upload_title()}</h3>
-    <NewDocumentForm id={docFormId} {namespaceId} bind:busy={docBusy} bind:source={docSource} onCreated={documentCreated} />
+    <NewDocumentForm id={docFormId} {spaceId} bind:busy={docBusy} bind:source={docSource} onCreated={documentCreated} />
   {/if}
 
   {#snippet footer()}

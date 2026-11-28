@@ -34,8 +34,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
         id: h.id,
         title: h.title,
         slug: h.slug,
-        href: nodePath(h.namespace_slug, h.slug),
-        namespace: h.namespace_name,
+        href: nodePath(h.space_slug, h.slug),
+        space: h.space_name,
         plugin,
         pluginLabel: plugin ? pluginLabel(plugin) : null,
       };

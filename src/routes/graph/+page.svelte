@@ -9,7 +9,7 @@
 </script>
 
 <div class="graph-page">
-  <GraphView nodes={data.nodes} edges={data.edges} classOptions={data.classOptions} namespaces={data.namespaces} fill />
+  <GraphView nodes={data.nodes} edges={data.edges} classOptions={data.classOptions} spaces={data.spaces} fill />
 </div>
 
 <style>

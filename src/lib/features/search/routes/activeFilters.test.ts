@@ -5,8 +5,8 @@
 import { describe, expect, it } from 'vitest';
 import { activeFilters } from './activeFilters';
 
-const none = { class: null, exact: false, tags: [] as string[], type: null, namespace: null };
-const labels = { classLabel: 'Concept', namespaceName: 'Wiki' };
+const none = { class: null, exact: false, tags: [] as string[], type: null, space: null };
+const labels = { classLabel: 'Concept', spaceName: 'Wiki' };
 
 describe('activeFilters', () => {
   it('has nothing for an unfiltered search', () => {
@@ -25,11 +25,11 @@ describe('activeFilters', () => {
     expect(chips[1].remove).toEqual({ tags: ['ai'] });
   });
 
-  it('names the type and the namespace, and counts every filter', () => {
-    const chips = activeFilters({ class: 'concept', exact: false, tags: ['ai'], type: 'page', namespace: 'wiki' }, labels);
-    expect(chips.map((c) => c.key)).toEqual(['class', 'tag:ai', 'type', 'namespace']);
+  it('names the type and the space, and counts every filter', () => {
+    const chips = activeFilters({ class: 'concept', exact: false, tags: ['ai'], type: 'page', space: 'wiki' }, labels);
+    expect(chips.map((c) => c.key)).toEqual(['class', 'tag:ai', 'type', 'space']);
     expect(chips.find((c) => c.key === 'type')?.label).toBe('Page');
-    expect(chips.find((c) => c.key === 'namespace')).toEqual({ key: 'namespace', label: 'Wiki', remove: { namespace: null } });
+    expect(chips.find((c) => c.key === 'space')).toEqual({ key: 'space', label: 'Wiki', remove: { space: null } });
     expect(chips).toHaveLength(4);
   });
 });

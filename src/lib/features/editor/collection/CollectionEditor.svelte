@@ -20,14 +20,14 @@
   import DeleteCollectionModal from './DeleteCollectionModal.svelte';
   import CollectionConnectModal from './CollectionConnectModal.svelte';
   import MembersEditor from './MembersEditor.svelte';
-  import { pickerNamespace } from '#lib/features/search/picker.ts';
+  import { pickerSpace } from '#lib/features/search/picker.ts';
   import { formatDateTime } from '#lib/platform/i18n/format.ts';
   import * as m from '#lib/paraglide/messages.js';
 
   let {
     title,
     slug,
-    namespaceSlug,
+    spaceSlug,
     collectionId,
     source = null,
     onSourceConnected,
@@ -48,16 +48,16 @@
     classFields = null,
     onRename,
     visibility,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     onSetVisibility,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
     onDelete,
   }: CollectionEditorProps = $props();
 
-  const membersNamespace = $derived(pickerNamespace(namespaces, namespaceId));
+  const membersSpace = $derived(pickerSpace(spaces, spaceId));
 
   let moreOpen = $state(false);
   let accessControlOpen = $state(false);
@@ -87,7 +87,7 @@
     <EditorHeader
       {title}
       {slug}
-      {namespaceSlug}
+      {spaceSlug}
       {onRename}
       tags={meta.tags}
       onSetTags={meta.commitTags}
@@ -147,7 +147,7 @@
           {/if}
         </section>
       {:else}
-        <div class="members"><MembersEditor {collectionId} {members} basis={membersBasis} namespace={membersNamespace} /></div>
+        <div class="members"><MembersEditor {collectionId} {members} basis={membersBasis} space={membersSpace} /></div>
       {/if}
     </div>
   </div>
@@ -156,12 +156,12 @@
 <AccessControlPanel
   open={accessControlOpen}
   {visibility}
-  {namespaceAccessLevel}
-  {namespaceMembers}
+  {spaceAccessLevel}
+  {spaceMembers}
   {onSetVisibility}
-  {namespaceId}
-  {namespaces}
-  {onSetNamespace}
+  {spaceId}
+  {spaces}
+  {onSetSpace}
   shareList={false}
   shareLinkSection={false}
   onClose={() => (accessControlOpen = false)}

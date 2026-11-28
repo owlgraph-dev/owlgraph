@@ -36,11 +36,11 @@ export interface ColorLabels {
   classLabel(classId: string): string | null;
   // The class's slug: the stable key its colour slot is assigned by.
   classKey(classId: string): string | null;
-  namespaceLabel(namespaceId: string): string | null;
+  spaceLabel(spaceId: string): string | null;
 }
 
 const keyOf = (colorBy: ColorBy, n: GraphNode): string | null =>
-  colorBy === 'class' ? (n.classId ?? null) : colorBy === 'namespace' ? (n.namespaceId ?? null) : (n.type ?? 'page');
+  colorBy === 'class' ? (n.classId ?? null) : colorBy === 'space' ? (n.spaceId ?? null) : (n.type ?? 'page');
 
 export function buildColorScheme(colorBy: ColorBy, allNodes: readonly GraphNode[], labels: ColorLabels): ColorScheme {
   if (colorBy === 'type') {
@@ -55,9 +55,9 @@ export function buildColorScheme(colorBy: ColorBy, allNodes: readonly GraphNode[
     };
   }
 
-  const labelOf = (key: string): string => (colorBy === 'class' ? labels.classLabel(key) : labels.namespaceLabel(key)) ?? key;
-  // Sorted by a key that isn't localized: a class's slug, a namespace's name.
-  const slotKeyOf = (key: string): string => (colorBy === 'class' ? labels.classKey(key) : labels.namespaceLabel(key)) ?? key;
+  const labelOf = (key: string): string => (colorBy === 'class' ? labels.classLabel(key) : labels.spaceLabel(key)) ?? key;
+  // Sorted by a key that isn't localized: a class's slug, a space's name.
+  const slotKeyOf = (key: string): string => (colorBy === 'class' ? labels.classKey(key) : labels.spaceLabel(key)) ?? key;
   const keys = [...new Set(allNodes.map((n) => keyOf(colorBy, n)).filter((k): k is string => k != null))];
   keys.sort((a, b) => slotKeyOf(a).localeCompare(slotKeyOf(b)));
   const slotOf = new Map(keys.map((k, i) => [k, i]));

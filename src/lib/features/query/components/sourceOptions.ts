@@ -61,14 +61,14 @@ const FIELD_LABELS: Record<WireIntrinsicField, () => string> = {
   UPDATED_AT: m.editor_intrinsic_condition_field_updated_at,
   TYPE: m.editor_intrinsic_condition_field_type,
   CLASS_ID: m.editor_intrinsic_condition_field_class_id,
-  NAMESPACE_ID: m.editor_intrinsic_condition_field_namespace_id,
+  SPACE_ID: m.editor_intrinsic_condition_field_space_id,
   CREATED_BY: m.editor_intrinsic_condition_field_created_by,
   EXTERNAL_URL: m.editor_intrinsic_condition_field_external_url,
   LOCALE: m.editor_intrinsic_condition_field_locale
 };
 
 // CLASS_ID is a group of its own.
-const CONDITION_FIELDS: readonly WireIntrinsicField[] = ['TITLE', 'SLUG', 'CREATED_AT', 'UPDATED_AT', 'TYPE', 'NAMESPACE_ID', 'CREATED_BY', 'EXTERNAL_URL', 'LOCALE'];
+const CONDITION_FIELDS: readonly WireIntrinsicField[] = ['TITLE', 'SLUG', 'CREATED_AT', 'UPDATED_AT', 'TYPE', 'SPACE_ID', 'CREATED_BY', 'EXTERNAL_URL', 'LOCALE'];
 
 // By camelCase name (WireOrderByInput.name), not the condition tokens.
 const SORT_FIELDS: readonly { name: string; label: () => string }[] = [
@@ -77,12 +77,12 @@ const SORT_FIELDS: readonly { name: string; label: () => string }[] = [
   { name: 'createdAt', label: m.editor_intrinsic_condition_field_created_at },
   { name: 'updatedAt', label: m.editor_intrinsic_condition_field_updated_at },
   { name: 'type', label: m.editor_intrinsic_condition_field_type },
-  { name: 'namespaceId', label: m.editor_intrinsic_condition_field_namespace_id },
+  { name: 'spaceId', label: m.editor_intrinsic_condition_field_space_id },
   { name: 'createdBy', label: m.editor_intrinsic_condition_field_created_by },
   { name: 'locale', label: m.editor_intrinsic_condition_field_locale }
 ];
 
-// templateBinding.ts's bindingMap() keys: `namespace`, `creator` and `class`
+// templateBinding.ts's bindingMap() keys: `space`, `creator` and `class`
 // resolve to labels there, unlike the id-valued condition fields.
 const MAPPING_FIELDS: readonly { name: string; label: () => string }[] = [
   { name: 'title', label: m.editor_intrinsic_condition_field_title },
@@ -92,7 +92,7 @@ const MAPPING_FIELDS: readonly { name: string; label: () => string }[] = [
   { name: 'updatedAt', label: m.editor_intrinsic_condition_field_updated_at },
   { name: 'type', label: m.editor_intrinsic_condition_field_type },
   { name: 'class', label: m.editor_intrinsic_condition_field_class_id },
-  { name: 'namespace', label: m.editor_intrinsic_condition_field_namespace_id },
+  { name: 'space', label: m.editor_intrinsic_condition_field_space_id },
   { name: 'creator', label: m.editor_intrinsic_condition_field_created_by },
   { name: 'externalUrl', label: m.editor_intrinsic_condition_field_external_url },
   { name: 'locale', label: m.editor_intrinsic_condition_field_locale }

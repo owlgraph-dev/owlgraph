@@ -78,7 +78,7 @@ export const SETTINGS_TREE: SettingsGroup[] = [
     id: 'structure',
     label: m.settings_group_structure,
     items: [
-      { id: 'namespaces', href: '/settings/namespaces', action: 'namespace:manage', label: m.settings_item_namespaces_label, description: m.settings_item_namespaces_desc, keywords: m.settings_item_namespaces_kw },
+      { id: 'spaces', href: '/settings/spaces', action: 'space:manage', label: m.settings_item_spaces_label, description: m.settings_item_spaces_desc, keywords: m.settings_item_spaces_kw },
     ],
   },
   {
