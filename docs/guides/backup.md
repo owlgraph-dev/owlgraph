@@ -30,7 +30,8 @@ out, and a person simply connects again.
   data (all but the image copies' rows) + the `schema_migrations` tracking table. `pg_dump` is a single
   MVCC-consistent snapshot, so **no app downtime is needed** — a running app
   cannot corrupt the dump.
-- **Restore** reproduces the dumped point-in-time exactly, then the normal
+- **Restore** reproduces the dumped point-in-time exactly, whatever the
+  target held before, then the normal
   migration runner (`src/lib/platform/migrate.server.ts`) carries it **forward** to
   the current app version. Restoring an **older** dump is fine — the
   restored `schema_migrations` table is just behind, and pending migrations
@@ -154,9 +155,9 @@ npm run db:backup -- --out=./backups/owlgraph-2026-07-30.dump
 npm run db:restore -- --file=<path> --yes
 ```
 
-**Destructive** — overwrites the target database's current contents
-(`pg_restore --clean --if-exists`). Requires `--yes`; without it, the script
-prints what it *would* do and refuses. The script:
+**Destructive** — replaces the target database's current contents. Requires
+`--yes`; without it, the script prints what it *would* do and refuses. The
+script:
 
 1. Reads the dump's `schema_migrations` rows directly from the archive
    (no live DB connection needed) and refuses if any version isn't present
@@ -167,7 +168,20 @@ prints what it *would* do and refuses. The script:
    records the baseline in their place.
 2. Restores into the target database (`POSTGRES_DB` by default; override
    with `--db=<name>`, used by the restore test below to target a scratch
-   database instead of the real one).
+   database instead of the real one), in one transaction:
+   - it empties the target's `public` schema: every table, view, sequence,
+     function and type in it, so that nothing a later migration made is left
+     behind — a table it added, a column, a renamed table's new name;
+   - it keeps the schema itself, its grant to the app role and the default
+     privileges the baseline set on it, which give every restored table the
+     app role's access, and what an extension owns;
+   - it restores the dump into the emptied schema
+     (`pg_restore --clean --if-exists --no-owner --no-privileges`, run through
+     `psql`).
+
+   A restore that fails — a dump that cannot be read to its end, a statement
+   that fails — is rolled back and changes nothing: the script says so, and
+   the target is as it was.
 3. When the target is the real database, automatically runs the `migrate`
    compose service (`docker compose run --rm --no-deps migrate`) to carry
    the restored state forward to the current app version — this is what
@@ -313,8 +327,8 @@ npx tsx scripts/backup.ts --out=./backups/owlgraph-local-<date>-before-restore.d
 npx tsx scripts/restore.ts --file=./backups/<server-dump>.dump --container=<container> --yes
 ```
 
-It restores over the local database (`--clean --if-exists --no-owner
---no-privileges`), then migrates forward: it prints `Applied: <versions>` for
+It replaces the local database's contents in one transaction
+([Restore](#restore)), then migrates forward: it prints `Applied: <versions>` for
 the migrations the checkout has and the dump didn't, or `Already up to date.`
 
 **4. Start `npm run dev` and look at the site**, signed in and as a reader in
