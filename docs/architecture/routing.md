@@ -52,8 +52,10 @@ limitation.
 
 **Space deletion reassigns, never blocks**: deleting a non-empty
 space (`deleteSpace`) moves all its nodes into the default
-space inside the same transaction (suffixing a slug if it collides with
-an existing default-space slug) and always succeeds. The default
+space inside the same transaction and always succeeds. A slug gets a
+suffix where it collides with a default-space slug or equals another
+space's name, so no node arrives at the root under a space's prefix; a
+node named like the deleted space keeps its name. The default
 space itself cannot be deleted.
 
 ### The routing ambiguity, and the params matcher that resolves it

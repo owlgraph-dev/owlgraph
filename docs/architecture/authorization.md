@@ -305,7 +305,9 @@ that inherited the deleted space's access level inherits the default's
 from then on. That can widen it — a page only members could read becomes
 readable by everyone the default space admits. The deletion makes no
 choice for the admin; moving the content on into a space of the right
-level is theirs.
+level is theirs. It never widens past the default space, though: a node's
+own setting more open than the default space is narrowed to it, as a move
+narrows one.
 
 The same schema-vs-content split applies to the class hierarchy
 ([semantic-layer.md](semantic-layer.md)): `class:manage` (admin-only) gates

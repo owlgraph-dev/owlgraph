@@ -221,19 +221,24 @@ export async function setSpaceAccessLevel(id: string, accessLevel: Visibility): 
   });
 }
 
-// Moves the content to the default space first; a slug already taken there
-// gets a short id suffix.
+// Moves the content to the default space first, as a move would: a setting
+// wider than the default space is narrowed to it, and a slug already taken
+// there — by a node, or as another space's name, the first segment of its
+// addresses — gets a short id suffix. A node named like the space deleted
+// keeps its name: that space is gone.
 export async function deleteSpace(id: string): Promise<void> {
   await db.begin(async (sql) => {
     const [ns] = await sql<SpaceRow[]>`select * from spaces where id = ${id} for update`;
     if (!ns) return;
     if (ns.is_default) throw new CodedError('default_space_undeletable', 'The default space cannot be deleted');
     const defaultNs = await getDefaultSpace(sql);
+    await narrowOverridesToSpace(sql, id, defaultNs.access_level);
     await sql`
       update nodes n
       set space_id = ${defaultNs.id},
           slug = case
             when exists (select 1 from nodes d where d.space_id = ${defaultNs.id} and d.slug = n.slug)
+              or exists (select 1 from spaces s where s.slug = n.slug and s.id <> ${id})
             then n.slug || '-' || substr(n.id::text, 1, 6)
             else n.slug
           end
