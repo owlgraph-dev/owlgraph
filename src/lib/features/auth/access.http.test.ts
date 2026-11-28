@@ -6,6 +6,9 @@ import { afterAll, describe, expect, inject, it } from 'vitest';
 import { call, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { userOf } from '#tests/integration/users.ts';
 
+// What a visitor, a sharee and an editor on no list are answered at a
+// restricted page's address is spec 002's (tests/acceptance/002-visibility-and-spaces/).
+
 const app = await startApp();
 const seed = inject('seed');
 
@@ -14,12 +17,6 @@ describe.skipIf(app.skipped)('a page’s address', () => {
   afterAll(() => served.close());
 
   describe('read by its visibility', () => {
-    it('answers an anonymous visitor the public page, with its body', async () => {
-      const res = await call(served, `/${seed.publicSlug}`);
-      expect(res.status).toBe(200);
-      expect(await res.text()).toContain(seed.publicBody);
-    });
-
     it('sends an anonymous visitor asking for an internal page to sign in, and back to it afterwards', async () => {
       const res = await call(served, `/${seed.internalSlug}`);
       expect(res.status).toBe(303);
@@ -28,32 +25,11 @@ describe.skipIf(app.skipped)('a page’s address', () => {
       expect(to.searchParams.get('redirect')).toBe(`/${seed.internalSlug}`);
     });
 
-    it('answers an anonymous visitor the restricted page as one that does not exist: 404, no sign-in, nothing of it', async () => {
-      const res = await call(served, `/${seed.restrictedSlug}`);
-      expect(res.status).toBe(404);
-      const html = await res.text();
-      expect(html).toContain('Page not found');
-      expect(html).not.toContain(seed.restrictedBody);
-      expect(html).not.toContain(seed.restrictedTitle);
-    });
-
     it('says a page does not exist in the request’s language', async () => {
       const res = await call(served, `/${seed.restrictedSlug}`, { headers: { 'accept-language': 'de' } });
       expect(res.status).toBe(404);
       const html = await res.text();
       expect(html).toContain('Seite nicht gefunden');
-    });
-
-    it('answers the editor the restricted page is shared with its body', async () => {
-      const res = await call(served, `/${seed.restrictedSlug}`, { as: 'editorB' });
-      expect(res.status).toBe(200);
-      expect(await res.text()).toContain(seed.restrictedBody);
-    });
-
-    it('answers an editor the restricted page is not shared with 404', async () => {
-      const res = await call(served, `/${seed.restrictedSlug}`, { as: 'editorC' });
-      expect(res.status).toBe(404);
-      expect(await res.text()).not.toContain(seed.restrictedBody);
     });
 
     it('answers an admin the restricted page, with its body', async () => {
@@ -69,12 +45,6 @@ describe.skipIf(app.skipped)('a page’s address', () => {
       const editorB = await userOf('editorB');
       const { slug } = await createPage(served, 'editorA', { visibility: 'restricted', shares: [editorB.id] });
       expect((await call(served, `/${slug}/edit`, { as: 'editorB' })).status).toBe(200);
-    });
-
-    it('answers an editor the restricted page is not shared with as an edit address no page has: 404, no redirect', async () => {
-      const res = await call(served, `/${seed.restrictedSlug}/edit`, { as: 'editorC' });
-      expect(res.status).toBe(404);
-      expect(res.headers.get('location')).toBeNull();
     });
 
     it('opens for the owner of a restricted page', async () => {

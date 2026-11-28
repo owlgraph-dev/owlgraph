@@ -91,14 +91,7 @@ describe.skipIf(app.skipped)('serving media', () => {
       expect(res.headers.get('cache-control')).toContain('public');
     });
 
-    it('an anonymous visitor gets 404 for a restricted page’s image', async () => {
-      expect((await call(served, `/api/media/${seed.restrictedAssetId}`)).status).toBe(404);
-    });
-
-    it('an editor the restricted page is not shared with gets 404 for its image', async () => {
-      expect((await call(served, `/api/media/${seed.restrictedAssetId}`, { as: 'editorC' })).status).toBe(404);
-    });
-
+    // Who gets a restricted page's image at all is spec 002's (criteria 5 and 6).
     it('the editor the restricted page is shared with gets its image, never stored (no-store)', async () => {
       const res = await call(served, `/api/media/${seed.restrictedAssetId}`, { as: 'editorB' });
       expect(res.status).toBe(200);
@@ -157,13 +150,9 @@ describe.skipIf(app.skipped)('serving media', () => {
     });
   });
 
+  // A visitor sent to sign in at an internal document, and kept from a
+  // restricted one's bytes, are spec 002's (criteria 5 and 6).
   describe('a document’s bytes and its read view', () => {
-    it('an anonymous visitor opening an internal document’s read view is sent to sign in', async () => {
-      const res = await call(served, `/${seed.docSlug}`);
-      expect(res.status).toBe(303);
-      expect(new URL(res.headers.get('location')!, served.origin).pathname).toBe('/login');
-    });
-
     it('an anonymous visitor gets 404 for an internal document’s bytes', async () => {
       expect((await call(served, `/api/documents/${seed.docId}/content`)).status).toBe(404);
     });
@@ -180,19 +169,14 @@ describe.skipIf(app.skipped)('serving media', () => {
       expect(res.headers.get('cache-control')).toContain('public');
     });
 
-    it('an anonymous visitor gets 404 for the restricted document’s bytes', async () => {
-      expect((await call(served, `/api/documents/${seed.restrictedDocId}/content`)).status).toBe(404);
-    });
-
     it('a signed-in viewer gets an internal document’s bytes, no-store', async () => {
       const res = await call(served, `/api/documents/${seed.docId}/content`, { as: 'viewer' });
       expect(res.status).toBe(200);
       expect(res.headers.get('cache-control')).toContain('no-store');
     });
 
-    it('a viewer, and an editor the restricted document is not shared with, get 404 for its bytes', async () => {
+    it('a viewer gets 404 for the restricted document’s bytes', async () => {
       expect((await call(served, `/api/documents/${seed.restrictedDocId}/content`, { as: 'viewer' })).status).toBe(404);
-      expect((await call(served, `/api/documents/${seed.restrictedDocId}/content`, { as: 'editorC' })).status).toBe(404);
     });
 
     it('the editor the restricted document is shared with gets its bytes, no-store', async () => {
