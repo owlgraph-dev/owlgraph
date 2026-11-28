@@ -97,10 +97,10 @@ describe.skipIf(app.skipped)('pages, served', () => {
       }
     });
 
-    it('sends an editor neither owning nor shared on a restricted page from its editor to /, and answers their DELETE with 403 forbidden', async () => {
+    it('answers an editor neither owning nor shared on a restricted page 404 for its editor, and their DELETE with 403 forbidden', async () => {
       const res = await editor(seed.restrictedSlug, 'editorC');
-      expect(res.status).toBe(303);
-      expect(res.headers.get('location')).toBe('/');
+      expect(res.status).toBe(404);
+      expect(res.headers.get('location')).toBeNull();
 
       const refused = await remove(seed.restrictedId, 'editorC');
       expect(refused.status).toBe(403);

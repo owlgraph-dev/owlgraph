@@ -30,8 +30,12 @@ responsible for its own. Two shapes show up among the current entries:
 - Re-deriving per-resource visibility internally: `/[[space]]/[slug]`
   (dispatches to a page, a document or a collection by node type — see routing.md for how the
   space segment resolves), `/api/media/[id]`, and `/api/documents/[id]/content` are
-  public routes whose handlers apply the node check below (a restricted
-  page/document still bounces an unauthenticated caller). The content route's `PUT`
+  public routes whose handlers apply the node check below. A node the caller
+  may not read is answered as one that does not exist, in the same words:
+  only a signed-out caller to a node open to every signed-in user is sent to
+  sign in, so neither a sign-in nor the words tell a restricted node from a
+  missing one. The edit address answers a node its editor may not read the
+  same way. The content route's `PUT`
   is a write, checked in the handler against document write access. `/search`
   lists through the list query, whose visibility predicate sits outside every
   filter, counts after it, ignores a space the viewer may not see, and

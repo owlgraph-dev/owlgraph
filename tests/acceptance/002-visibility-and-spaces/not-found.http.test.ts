@@ -46,21 +46,24 @@ describe.skipIf(app.skipped)('a node the asker may not read, asked for over HTTP
   const NOWHERE = '/an-address-no-node-has';
   const NOT_READERS: CallOptions[] = [{}, { as: 'editorC' }];
 
-  it('002.5 a restricted page’s or collection’s address answers a visitor, and a signed-in user who may not read it, as an address that does not exist', async () => {
+  it('002.5 a restricted page’s, document’s or collection’s address answers a visitor, and a signed-in user who may not read it, as an address that does not exist, in its words', async () => {
     for (const asker of NOT_READERS) {
       const missing = await answer(NOWHERE, asker);
       expect(missing.status).toBe(404);
       expect(carriedError(missing.body)).toBeDefined();
-      for (const [slug, title] of [
+      for (const slug of [seed.restrictedSlug, seed.restrictedDocSlug, collection.slug]) {
+        const unreadable = await answer(`/${slug}`, asker);
+        expect(unreadable.status, slug).toBe(missing.status);
+        expect(unreadable.location, slug).toBeNull();
+        expect(carriedError(unreadable.body), slug).toBe(carriedError(missing.body));
+      }
+      for (const [slug, said] of [
         [seed.restrictedSlug, seed.restrictedTitle],
+        [seed.restrictedSlug, seed.restrictedBody],
         [collection.slug, collection.title],
       ]) {
-        const unreadable = await answer(`/${slug}`, asker);
-        expect(unreadable.status).toBe(missing.status);
-        expect(unreadable.location).toBeNull();
-        expect(unreadable.body).not.toContain(title);
+        expect((await answer(`/${slug}`, asker)).body).not.toContain(said);
       }
-      expect((await answer(`/${seed.restrictedSlug}`, asker)).body).not.toContain(seed.restrictedBody);
     }
   });
 
@@ -74,31 +77,16 @@ describe.skipIf(app.skipped)('a node the asker may not read, asked for over HTTP
     }
   });
 
-  // Today the page carries 'Page not found' for a page the asker may not read
-  // and 'Not found' for an address no node has: the page looks the same, its
-  // source and its data do not (reader/routes/read.server.ts).
-  it.fails('002.5 a restricted page’s address answers in the words of an address that does not exist', async () => {
-    const missing = await answer(NOWHERE, { as: 'editorC' });
-    const unreadable = await answer(`/${seed.restrictedSlug}`, { as: 'editorC' });
-    expect(carriedError(unreadable.body)).toBe(carriedError(missing.body));
-  });
-
-  // Today a signed-out visitor to a document they may not read is sent to sign
-  // in, a restricted one included, which says that it exists
-  // (reader/routes/read.server.ts).
-  it.fails('002.5 a restricted document’s address answers a visitor as an address that does not exist', async () => {
-    const missing = await answer(NOWHERE);
-    const unreadable = await answer(`/${seed.restrictedDocSlug}`);
-    expect(unreadable.status).toBe(missing.status);
-    expect(unreadable.location).toBeNull();
-  });
-
-  // Today an editor who may not read the page is sent to / from its editor,
-  // where an address no node has answers 404 (editor/routes/edit.server.ts).
-  it.fails('002.5 the edit address of a page an editor may not read answers as the edit address of one that does not exist', async () => {
+  it('002.5 the edit address of a page, document or collection an editor may not read answers as the edit address of one that does not exist', async () => {
     const missing = await answer(`${NOWHERE}/edit`, { as: 'editorC' });
-    const unreadable = await answer(`/${seed.restrictedSlug}/edit`, { as: 'editorC' });
-    expect(unreadable.status).toBe(missing.status);
+    expect(missing.status).toBe(404);
+    expect(carriedError(missing.body)).toBeDefined();
+    for (const slug of [seed.restrictedSlug, seed.restrictedDocSlug, collection.slug]) {
+      const unreadable = await answer(`/${slug}/edit`, { as: 'editorC' });
+      expect(unreadable.status, slug).toBe(missing.status);
+      expect(unreadable.location, slug).toBeNull();
+      expect(carriedError(unreadable.body), slug).toBe(carriedError(missing.body));
+    }
   });
 
   it('002.5 a collection’s API, a file’s address and an image’s address answer for one the caller may not read exactly as for one that does not exist', async () => {

@@ -191,7 +191,7 @@ describe.skipIf(app.skipped)('serving media', () => {
       expect(res.headers.get('cache-control')).toContain('no-store');
     });
 
-    it('the owner of a restricted document is offered its editor; an editor it is not shared with gets 404 for the read view and is sent home from the editor', async () => {
+    it('the owner of a restricted document is offered its editor; an editor it is not shared with gets 404 for the read view and for the editor', async () => {
       // The test's own document: opening the editor takes its edit lock.
       const file = new File(['integration: owner doc'], 'Owner doc.txt', { type: 'text/plain' });
       const created = await call(served, '/api/documents', { as: 'editorA', body: await multipart({ title: 'Owner doc' }, file) });
@@ -206,8 +206,8 @@ describe.skipIf(app.skipped)('serving media', () => {
 
       expect((await call(served, `/${slug}`, { as: 'editorC' })).status).toBe(404);
       const edit = await call(served, `/${slug}/edit`, { as: 'editorC' });
-      expect(edit.status).toBe(303);
-      expect(new URL(edit.headers.get('location')!, served.origin).pathname).toBe('/');
+      expect(edit.status).toBe(404);
+      expect(edit.headers.get('location')).toBeNull();
     });
   });
 });
