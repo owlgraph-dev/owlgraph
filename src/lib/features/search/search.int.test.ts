@@ -26,7 +26,7 @@ type Loaded = {
   total: number;
   classOptions: { id: string; slug: string }[];
   tagOptions: string[];
-  spaces: { slug: string | null; name: string }[];
+  spaces: { value: string; name: string }[];
 };
 
 async function searchAs(role: Role | 'anonymous', query: string): Promise<Loaded> {
@@ -100,7 +100,9 @@ describe('the search page', () => {
     const loaded = await searchAs('viewer', 'space=hidden-for-search&tag=nsdrop');
     expect(loaded.applied.space).toBeNull();
     expect(titlesOf(loaded)).toEqual(['Visible elsewhere']);
-    expect(loaded.spaces.map((n) => n.slug)).not.toContain('hidden-for-search');
+    expect(loaded.spaces.map((n) => n.value)).not.toContain('hidden-for-search');
+    // An admin is offered it: the option is read by the field it has.
+    expect((await searchAs('admin', '')).spaces.map((n) => n.value)).toContain('hidden-for-search');
   });
 
   it('offers in its pickers only the tags and classes of nodes the viewer can read', async () => {

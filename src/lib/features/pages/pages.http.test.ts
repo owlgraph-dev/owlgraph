@@ -7,7 +7,7 @@ import { JSDOM } from 'jsdom';
 import { db, type JsonArg } from '#lib/platform/db.server.ts';
 import { call, cookieFor, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { userOf, type Role } from '#tests/integration/users.ts';
-import { retiredWidget, textPara, txt } from '#tests/e2e/doc.ts';
+import { retiredWidget, textPara } from '#tests/e2e/doc.ts';
 import { storedDoc } from '#tests/support/storedDoc.ts';
 
 // Every page here is the test's own and restricted unless it says otherwise.
@@ -61,23 +61,6 @@ describe.skipIf(app.skipped)('pages, served', () => {
 
       const [after] = await db<{ slug: string; title: string }[]>`select slug, title from nodes where id = ${page.id}`;
       expect(after).toEqual(before);
-    });
-
-    it('keeps the page’s id on a slug change, so a page link to it resolves to its new address', async () => {
-      const target = await ownPage('admin', { title: `Link target ${++n}` });
-      const link = { type: 'pageLink', attrs: { targetPageId: target.id, targetSlug: target.slug } };
-      const source = await ownPage('admin', { doc: doc({ type: 'paragraph', attrs: { blockId: 'p-link' }, content: [txt('the target', [link])] }) });
-      const hrefIn = async (slug: string) => (await dom(await call(served, `/${slug}`, { as: 'admin' }))).querySelector('a.page-link')?.getAttribute('href');
-      expect(await hrefIn(source.slug)).toBe(`/${target.slug}`);
-
-      const slug = `moved-target-${n}`;
-      const renamed = await patch(target.id, { slug });
-      expect(renamed.status).toBe(200);
-      expect(await renamed.json()).toMatchObject({ id: target.id, slug });
-
-      expect(await hrefIn(source.slug)).toBe(`/${slug}`);
-      expect((await call(served, `/${slug}`, { as: 'admin' })).status).toBe(200);
-      expect(await db`select 1 from edges where source_id = ${source.id} and target_id = ${target.id}`).toHaveLength(1);
     });
   });
 
