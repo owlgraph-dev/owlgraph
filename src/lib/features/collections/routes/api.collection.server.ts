@@ -5,15 +5,8 @@
 // Route adapter, re-exported by src/routes/api/collections/[id]/+server.ts.
 import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import {
-  collectionEmbed,
-  getCollection,
-  renameCollection,
-  refreshCollectionSearchMeta,
-  userCanReadCollection,
-  userCanWriteCollection,
-  type CollectionRow,
-} from '#lib/features/collections/server.ts';
+import { writableCollection } from '#lib/features/nodes/routes/writable.server.ts';
+import { collectionEmbed, renameCollection, refreshCollectionSearchMeta } from '#lib/features/collections/server.ts';
 import { setNodeTags, setManualProperties, setNodeClass } from '#lib/features/semantic/server.ts';
 import { deleteNode, setNodeLocale, setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
 import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
@@ -24,19 +17,6 @@ import { isCodedError } from '#lib/platform/codedError.ts';
 type Params = { id: string };
 
 const VISIBILITIES = ['public', 'internal', 'restricted'];
-
-/**
- * The same 404 for a collection that is missing, malformed or unreadable (its
- * existence is not theirs to learn); 403 for one they read but may not write.
- */
-async function writableCollection(id: string, locals: App.Locals): Promise<CollectionRow | Response> {
-  const collection = isUuid(id) ? await getCollection(id) : null;
-  if (!collection || !(await userCanReadCollection(locals.user, collection))) return apiError('not_found', { kind: 'collection' });
-  if (!(await userCanWriteCollection(locals.user, collection))) {
-    return apiForbidden(locals.log, { action: 'page:write', resourceType: 'collection', resourceId: id });
-  }
-  return collection;
-}
 
 // The editor's view of a collection block, resolved as a reader's page resolves
 // it (docs/architecture/blocks/node-embeds.md, "Collection and document blocks"). The same 404 for a
@@ -49,7 +29,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
 
 // PATCH /api/documents/[id] field for field.
 export const PATCH: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const collection = await writableCollection(params.id, locals);
+  const collection = await writableCollection(locals, params.id);
   if (collection instanceof Response) return collection;
 
   const body = await request.json().catch(() => ({}));
@@ -118,7 +98,7 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
 };
 
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
-  const collection = await writableCollection(params.id, locals);
+  const collection = await writableCollection(locals, params.id);
   if (collection instanceof Response) return collection;
   await deleteNode(collection.id);
   logEvent(locals.log, 'node.deleted', { nodeId: collection.id, nodeType: 'collection', actorId: locals.user?.id ?? null });

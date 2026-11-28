@@ -16,7 +16,7 @@ import type { SessionUser } from '#lib/features/auth/server.ts';
 import { nodePath, type Visibility } from '#lib/features/nodes/index.ts';
 import { documentContentPath } from '#lib/features/documents/index.ts';
 import { getNodeType, resolveShareLink } from '#lib/features/nodes/server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { getPage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import {
   addMember,
   createCollection,
@@ -159,11 +159,12 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
     if (value !== null && origin) await storeSealedSecret(sql, toId, pluginId, sealSecret(value, { node: toId, origin }));
   }
 
+  /** A page the viewer may not read is not found, as one that does not exist. */
   async function besidePage(pageId: unknown): Promise<{ page: NonNullable<Awaited<ReturnType<typeof getPage>>> } | { refused: 'forbidden' | 'not-found' }> {
     if (!user) return { refused: 'forbidden' };
     if (typeof pageId !== 'string' || !UUID.test(pageId)) return { refused: 'not-found' };
     const page = await getPage(pageId);
-    if (!page) return { refused: 'not-found' };
+    if (!page || !(await userCanReadPage(user, page))) return { refused: 'not-found' };
     return (await userCanWritePage(user, page)) ? { page } : { refused: 'forbidden' };
   }
 
@@ -298,10 +299,9 @@ export function createPluginHost(pluginId: string, ctx: HostContext): PluginHost
           });
         } else {
           // One per file in the page's space, with no credential.
-          if (typeof input.besidePageId !== 'string' || !UUID.test(input.besidePageId)) return { ok: false, reason: 'not-found' };
-          const page = await getPage(input.besidePageId);
-          if (!page) return { ok: false, reason: 'not-found' };
-          if (!(await userCanWritePage(user, page))) return { ok: false, reason: 'forbidden' };
+          const beside = await besidePage(input.besidePageId);
+          if (!('page' in beside)) return { ok: false, reason: beside.refused };
+          const { page } = beside;
           spaceId = page.space_id;
           const where = { spaceId: page.space_id, plugin: pluginId, match: input.match };
           made = await db.begin(async (sql) => {

@@ -7,8 +7,9 @@ import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import { createBlankPage } from '#lib/features/pages/server.ts';
 import { can } from '#lib/features/auth/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiErrorFrom } from '#lib/platform/apiErrors.ts';
+import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
 import { isCodedError } from '#lib/platform/codedError.ts';
 
 // The real boundary: the app bar's own check is UX only.
@@ -16,6 +17,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (!can(locals.user, 'page:write')) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'route' });
   const body = await request.json().catch(() => ({}));
   const spaceId = typeof body.spaceId === 'string' && body.spaceId ? body.spaceId : undefined;
+  if (spaceId !== undefined && !isUuid(spaceId)) return apiError('unknown_space');
   const title = typeof body.title === 'string' ? body.title : undefined;
   try {
     const page = await createBlankPage(locals.user!, spaceId, title);

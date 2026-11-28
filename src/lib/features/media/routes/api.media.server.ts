@@ -3,8 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/media/+server.ts.
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { writablePage } from '#lib/features/nodes/routes/writable.server.ts';
 import { createImageAsset, matchesImageType, ALLOWED_IMAGE_MIME, MAX_IMAGE_BYTES } from '#lib/features/media/server.ts';
 import { mediaUrl } from '#lib/features/media/index.ts';
 import { readFormData } from '#lib/platform/formData.ts';
@@ -37,9 +36,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
   if (!pageId) return apiError('invalid_request', { field: 'pageId' });
 
-  const page = await getPage(pageId);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: pageId });
+  const page = await writablePage(locals, pageId);
+  if (page instanceof Response) return page;
 
   if (!ALLOWED_IMAGE_MIME.has(file.type)) {
     rejected(locals, 'type', file.size);

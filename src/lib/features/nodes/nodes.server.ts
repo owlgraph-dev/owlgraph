@@ -10,6 +10,7 @@ import type postgres from 'postgres';
 import { db, type TxSql } from '#lib/platform/db.server.ts';
 import { isEnabledLocale, siteDefaultLocale } from '#lib/platform/i18n/siteLocales.ts';
 import type { Visibility } from './access';
+import { isUuid } from './ids';
 import type { NodeType } from './types';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { CodedError } from '#lib/platform/codedError.ts';
@@ -191,10 +192,12 @@ export async function setNodeSpace(id: string, spaceId: string, user: SessionUse
     const [node] = await sql<{ slug: string; visibility: Visibility | null }[]>`
       select slug, visibility from nodes where id = ${id} for update`;
     if (!node) throw new CodedError('not_found', 'Not found');
-    await assertSlugAvailable(sql, node.slug, id, spaceId);
-    const [target] = await sql<{ access_level: Visibility }[]>`select access_level from spaces where id = ${spaceId}`;
+    const [target] = isUuid(spaceId) ? await sql<{ access_level: Visibility }[]>`select access_level from spaces where id = ${spaceId}` : [];
     if (!target) throw new CodedError('not_found', 'Unknown space');
+    // Who may place a node there before what is there: a slug taken in a space
+    // the mover may not reach is not theirs to learn.
     await assertCanPlaceInSpace(sql, user, spaceId, target.access_level);
+    await assertSlugAvailable(sql, node.slug, id, spaceId);
     const visibility =
       node.visibility !== null && VISIBILITY_RANK[node.visibility] < VISIBILITY_RANK[target.access_level]
         ? target.access_level

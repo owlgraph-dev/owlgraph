@@ -5,6 +5,7 @@
 // Route adapter for /api/media/branding/logo/[id], re-exported by src/routes/api/media/branding/logo/[id]/+server.ts.
 import { getAssetMeta, getAssetBytes, servePublicAssetBytes } from '#lib/features/media/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
@@ -14,7 +15,7 @@ type Params = { id: string };
 // /api/media/[id]'s visibility gate for any asset id. A replace deletes the old
 // row, so an id's bytes never change and cache immutably.
 export const GET: RequestHandler<Params> = async ({ params }) => {
-  const meta = await getAssetMeta(params.id);
+  const meta = isUuid(params.id) ? await getAssetMeta(params.id) : null;
   if (!meta || meta.kind !== 'logo' || meta.scope !== 'global') return textError('not_found');
 
   const data = await getAssetBytes(params.id);

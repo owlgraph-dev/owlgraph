@@ -2,6 +2,7 @@
 // Copyright (C) 2026 Alexander Rensch
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
+import { randomUUID } from 'node:crypto';
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import sharp from 'sharp';
 import { db } from '#lib/platform/db.server.ts';
@@ -74,10 +75,10 @@ describe.skipIf(app.skipped)('serving media', () => {
       }
     });
 
-    it('is refused with 403 to an uploader who may not write the page, and no asset is stored', async () => {
+    it('is refused to an uploader who may not write the page — 404 for one they may not read, 403 for one they read — and no asset is stored', async () => {
       const assetsOf = async (pageId: string) => Number((await db<{ n: string }[]>`select count(*) as n from assets where owner_page_id = ${pageId}`)[0].n);
       const before = { restricted: await assetsOf(seed.restrictedId), public: await assetsOf(seed.publicId) };
-      expect((await upload('editorC', seed.restrictedId)).status).toBe(403);
+      expect((await upload('editorC', seed.restrictedId)).status).toBe(404);
       expect((await upload('viewer', seed.publicId)).status).toBe(403);
       expect({ restricted: await assetsOf(seed.restrictedId), public: await assetsOf(seed.publicId) }).toEqual(before);
     });
@@ -132,6 +133,15 @@ describe.skipIf(app.skipped)('serving media', () => {
       };
       expect(await cacheFor('public')).toContain('public');
       expect(await cacheFor('internal', 'viewer')).toContain('no-store');
+    });
+
+    it('an image’s, an avatar’s, a font’s and the logo’s address answer an id that is none as a missing one: 404', async () => {
+      for (const path of ['/api/media', '/api/media/avatar', '/api/media/fonts', '/api/media/branding/logo']) {
+        const missing = await call(served, `${path}/${randomUUID()}`);
+        expect(missing.status, path).toBe(404);
+        const none = await call(served, `${path}/not-an-id`);
+        expect([none.status, await none.text()], path).toEqual([404, await missing.text()]);
+      }
     });
 
     it('a user’s avatar is served at /api/media/avatar/<userId> to anyone, never by its asset id, even to its owner', async () => {

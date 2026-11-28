@@ -199,7 +199,8 @@ for its own routes is kept there, once, whatever the plugin does.
   the space and the file. Whether the viewer may make one beside a page
   (`mayCreateBeside`) is asked before anything goes to the service on their
   behalf, so a caller who may not learns nothing from it — not whether a
-  password was right. A
+  password was right, and not whether a page they may not read exists: that
+  one is not found, as a page that does not. A
   node's record of its source (`source_ref`) is the plugin's to shape: it
   replaces it as a writer (a new file chosen) or, with what it observed while
   serving a reader, as a reader. A node comes with its address in the app and,

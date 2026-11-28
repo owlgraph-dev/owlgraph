@@ -8,6 +8,7 @@ import { getAssetMeta, getAssetBytes, getImageVariant, servePublicAssetBytes, se
 import { MEDIA_WIDTHS } from '#lib/features/media/index.ts';
 import { logEvent } from '#lib/platform/logger.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
@@ -19,7 +20,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals, url, request
   const width = w === null ? null : Number(w);
   if (width !== null && !MEDIA_WIDTHS.includes(width)) return textError('unsupported_width');
 
-  const meta = await getAssetMeta(params.id);
+  const meta = isUuid(params.id) ? await getAssetMeta(params.id) : null;
   if (!meta) return textError('not_found');
 
   let isPublic = false;

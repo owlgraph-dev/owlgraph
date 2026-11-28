@@ -169,7 +169,8 @@ describe.skipIf(app.skipped)('the Nextcloud integration, served', () => {
       const target = await createPage(served, 'admin', { visibility: 'restricted' });
       const before = mock.requests.length;
       const res = await req(`${API}/collections`, { as: 'viewer', json: { pageId: target.id, shareUrl: `${mock.origin}/s/${LOCKED}`, password: 'geraten' } });
-      expect(res.status).toBe(403);
+      // A page they may not read: to them, one that does not exist.
+      expect(res.status).toBe(404);
       // Nothing went to Nextcloud, so the answer says nothing of the password.
       expect(mock.requests.slice(before)).toEqual([]);
     });

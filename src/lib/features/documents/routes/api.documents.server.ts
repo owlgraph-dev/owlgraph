@@ -7,6 +7,7 @@ import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts'
 import { createDocument, createLinkDocument } from '#lib/features/documents/server.ts';
 import { parseExternalUrl } from '#lib/features/documents/index.ts';
 import { can } from '#lib/features/auth/server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { readFormData } from '#lib/platform/formData.ts';
 import { logEvent } from '#lib/platform/logger.server.ts';
 import { readDocumentUpload, uploadTooLarge } from './documentUpload.server';
@@ -22,6 +23,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (form === 'too-large') return uploadTooLarge(locals);
   const spaceId = form?.get('spaceId');
   const placement = typeof spaceId === 'string' && spaceId ? spaceId : undefined;
+  if (placement !== undefined && !isUuid(placement)) return apiError('unknown_space');
   if (form?.get('source') === 'link') return createLink(locals, form, placement);
   if (form?.get('source') === 'plugin') return apiError('plugin_document');
 

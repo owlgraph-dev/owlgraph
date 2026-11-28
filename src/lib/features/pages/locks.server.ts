@@ -8,7 +8,11 @@
 // over. MCP writes ignore it: withPageDoc keeps storage safe regardless.
 import { randomUUID } from 'node:crypto';
 import { db } from '#lib/platform/db.server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import type { LockStatus } from './types';
+
+/** A page id and a token of the shape a lock has: anything else holds none. */
+const lockShaped = (pageId: string, token: string) => isUuid(pageId) && isUuid(token);
 
 // About three missed 20 s heartbeats. Server time only, never a client clock.
 export const LOCK_TTL_SECONDS = 60;
@@ -77,6 +81,7 @@ export async function acquireLock(pageId: string, userId: string, force = false)
 
 // Token-scoped: `false` means the lock was taken over.
 export async function heartbeatLock(pageId: string, token: string): Promise<boolean> {
+  if (!lockShaped(pageId, token)) return false;
   const rows = await db`
     update page_locks set heartbeat_at = now()
     where page_id = ${pageId} and token = ${token}
@@ -86,6 +91,7 @@ export async function heartbeatLock(pageId: string, token: string): Promise<bool
 
 // Token-scoped: a client can't release a lock already taken from it.
 export async function releaseLock(pageId: string, token: string): Promise<boolean> {
+  if (!lockShaped(pageId, token)) return false;
   const rows = await db`
     delete from page_locks where page_id = ${pageId} and token = ${token}
     returning page_id`;

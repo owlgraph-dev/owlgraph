@@ -34,6 +34,7 @@ vi.mock('#lib/features/nodes/server.ts', () => ({
 }));
 vi.mock('#lib/features/pages/server.ts', () => ({
   getPage: async (id: string) => fake.pages.get(id) ?? null,
+  userCanReadPage: async (user: { id: string } | null, page: { id: string }) => may(fake.readers, user, page.id),
   userCanWritePage: async (user: { id: string } | null, page: { id: string }) => may(fake.writers, user, page.id),
 }));
 vi.mock('#lib/features/collections/server.ts', () => ({
@@ -119,7 +120,7 @@ beforeEach(() => {
   fake.collections.set(COL, row(COL, 'acme')).set(OTHER, row(OTHER, 'other'));
   fake.documents.set(DOC, { ...row(DOC, 'acme'), source: 'plugin', filename: 'a.pdf', mime: 'application/pdf', size: 1 });
   fake.pages.set(PAGE, { id: PAGE, space_id: 'ns', locale: 'en', visibility: 'restricted' });
-  for (const id of [COL, OTHER, DOC]) fake.readers.add(`alice:${id}`);
+  for (const id of [COL, OTHER, DOC, PAGE]) fake.readers.add(`alice:${id}`);
   for (const id of [COL, OTHER, DOC, PAGE]) fake.writers.add(`alice:${id}`);
   fake.readers.add(`bob:${COL}`);
 });
@@ -187,6 +188,10 @@ describe('the plugin host', () => {
   it('makes a node only beside a page its viewer writes, and no wider than that page', async () => {
     expect(await host(alice).nodes.mayCreateBeside('not-an-id')).toBe('not-found');
     expect(await host(null).nodes.mayCreateBeside(PAGE)).toBe('forbidden');
+    // A page the viewer may not read is one that does not exist; one they read, not theirs to change.
+    expect(await host(bob).nodes.mayCreateBeside(PAGE)).toBe('not-found');
+    expect(await host(bob).nodes.createCollection({ title: 'T', besidePageId: PAGE, ref: {}, secret: 's' })).toEqual({ ok: false, reason: 'not-found' });
+    fake.readers.add(`bob:${PAGE}`);
     expect(await host(bob).nodes.mayCreateBeside(PAGE)).toBe('forbidden');
     expect(await host(alice).nodes.mayCreateBeside(PAGE)).toBe('ok');
     expect(await host(bob).nodes.createCollection({ title: 'T', besidePageId: PAGE, ref: {}, secret: 's' })).toEqual({ ok: false, reason: 'forbidden' });

@@ -4,8 +4,8 @@
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/apply-picks/+server.ts.
 import { logEvent } from '#lib/platform/logger.server.ts';
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getPage, userCanWritePage, applyPicksToPage } from '#lib/features/pages/server.ts';
+import { writablePage } from '#lib/features/nodes/routes/writable.server.ts';
+import { applyPicksToPage } from '#lib/features/pages/server.ts';
 import { droppedSummary, type BlockPick } from '#lib/features/pages/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 import { apiError } from '#lib/platform/apiErrors.ts';
@@ -15,9 +15,8 @@ type Params = { id: string };
 // The caller must hold the edit lock token: 423 otherwise (the draft version is
 // saved regardless).
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   const body = await request.json().catch(() => ({}));
   const picks = Array.isArray(body?.picks) ? (body.picks as BlockPick[]) : [];
   const lockToken = typeof body?.lockToken === 'string' ? body.lockToken : null;

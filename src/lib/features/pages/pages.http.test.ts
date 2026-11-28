@@ -81,6 +81,20 @@ describe.skipIf(app.skipped)('pages, served', () => {
     });
   });
 
+  describe('moving a page', () => {
+    it('answers a move to a space whose id is none, as to one no space has, with 404 not_found, the page staying where it was', async () => {
+      const page = await ownPage('admin');
+      const spaceOf = async () => (await db<{ space_id: string }[]>`select space_id from nodes where id = ${page.id}`)[0].space_id;
+      const before = await spaceOf();
+      for (const spaceId of ['not-an-id', crypto.randomUUID()]) {
+        const res = await patch(page.id, { spaceId });
+        expect(res.status, spaceId).toBe(404);
+        expect(await codeOf(res)).toBe('not_found');
+      }
+      expect(await spaceOf()).toBe(before);
+    });
+  });
+
   describe('deleting a page', () => {
     it('answers a DELETE of the current home page with 409, its reason, and keeps the page', async () => {
       const { id, slug } = await ownPage('editorA');
@@ -97,14 +111,14 @@ describe.skipIf(app.skipped)('pages, served', () => {
       }
     });
 
-    it('answers an editor neither owning nor shared on a restricted page 404 for its editor, and their DELETE with 403 forbidden', async () => {
+    it('answers an editor neither owning nor shared on a restricted page 404 for its editor and for their DELETE, as a page that does not exist', async () => {
       const res = await editor(seed.restrictedSlug, 'editorC');
       expect(res.status).toBe(404);
       expect(res.headers.get('location')).toBeNull();
 
       const refused = await remove(seed.restrictedId, 'editorC');
-      expect(refused.status).toBe(403);
-      expect(await codeOf(refused)).toBe('forbidden');
+      expect(refused.status).toBe(404);
+      expect(await codeOf(refused)).toBe('not_found');
       expect(await exists(seed.restrictedId)).toBe(true);
     });
 

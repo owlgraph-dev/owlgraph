@@ -485,7 +485,8 @@ export interface PluginNodes {
   search(type: 'collection' | 'document', q: string, opts?: { writable?: boolean; limit?: number }): Promise<PluginNode[]>;
   /**
    * Whether the viewer may make a node beside the page `pageId`. Ask before sending anything to the service on
-   * their behalf, so a caller who may not learns nothing from it (whether a password was right).
+   * their behalf, so a caller who may not learns nothing from it (whether a password was right). A page the
+   * viewer may not read is `not-found`, as one that does not exist; one they read and may not change, `forbidden`.
    */
   mayCreateBeside(pageId: string): Promise<'ok' | 'forbidden' | 'not-found'>;
   /**

@@ -36,7 +36,7 @@ responsible for its own. Two shapes show up among the current entries:
   sign in, so neither a sign-in nor the words tell a restricted node from a
   missing one. The edit address answers a node its editor may not read the
   same way. The content route's `PUT`
-  is a write, checked in the handler against document write access. `/search`
+  is a write, and meets the write gate below even without a session. `/search`
   lists through the list query, whose visibility predicate sits outside every
   filter, counts after it, ignores a space the viewer may not see, and
   offers only filter values found on readable content; a known class's name
@@ -149,6 +149,17 @@ pure, plus `access.server.ts` for the share/membership lookups):
    relationships, not read-only grants**, so read-eligible and
    write-eligible are the same population there (see "Group-as-access-
    subject" below for why).
+
+   A write over the API meets the read check first, in one gate for every
+   node (`src/lib/features/nodes/routes/writable.server.ts`): a node the
+   caller may not read is answered as one that does not exist, `404
+   not_found`, whatever they ask of it — and so is an id that is none —
+   while one they read and may not change is `403 forbidden`. What the API
+   shows only a node's writers (its lock, its versions, its share links)
+   passes the same gate. The refusal of an unreadable node is still logged
+   as a denial. A move into a space checks who may place a node there before
+   whether its slug is free there, so a space the mover may not reach tells
+   them nothing of what it holds.
 
 This two-check shape (a coarse role check, then a node check) is
 deliberate: it's what lets finer-grained access control (explicit grants,
@@ -363,7 +374,9 @@ advisory coordination between people, not a permission — what a user may
 write is decided by the rules above, and storage integrity by the save's own
 row lock. The lock belongs to a user and is proven by a token, reissued on
 every acquire; the editor renews it with a heartbeat (20 s, TTL 60 s) and
-releases it when it leaves. Another user meets a *Page is being edited* card
+releases it when it leaves. Renewing and releasing take the token alone: the
+page is not looked up, so leaving answers alike whether the page exists or
+not, and a page id or a token that is not one holds no lock. Another user meets a *Page is being edited* card
 (an admin may take over); the same user always gets the lock, and the tab that
 held it loses its token. In the browser the lock's lifecycle is the editor
 feature's `session/editLock.svelte.ts`, and a lost lock's draft its

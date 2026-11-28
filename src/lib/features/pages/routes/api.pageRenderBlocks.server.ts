@@ -4,24 +4,21 @@
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/render-blocks/+server.ts.
 import type { JsonNode } from '#lib/features/content/index.ts';
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { writablePage } from '#lib/features/nodes/routes/writable.server.ts';
 import { linkSlugMap } from '#lib/features/graph/server.ts';
 import { renderDoc, getCustomFontEntries, getParagraphStyles } from '#lib/features/content/server.ts';
 import { customFontStacksRecord, customStyleClassMap, compileContentTheme, StyleCollector, pageCanvasOverrides, pageRhythmPx } from '#lib/features/content/index.ts';
 import { listCustomStyleRefs, getSiteTheme } from '#lib/features/site/server.ts';
 import { withContentLocale } from '#lib/platform/i18n/contentLocale.server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 
 // The reconcile panel's previews, each block as a one-block doc through the
 // public renderer. The previews are one document, so they share one collector.
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   const body = await request.json().catch(() => ({}));
   const blocks = Array.isArray(body?.blocks) ? body.blocks : [];
   // As the editor asking, like the page they are previewing a part of.

@@ -72,4 +72,15 @@ describe('a page’s edit lock', () => {
     expect(await storedLock(pageId)).toBeNull();
     expect((await getLock(pageId)).locked).toBe(false);
   });
+
+  it('is held by no page id and no token that is not one: its heartbeat and release say so, and the lock held stays', async () => {
+    const a = await userOf('editorA');
+    const pageId = await lockedPage();
+    const held = await acquireLock(pageId, a.id);
+    for (const [page, token] of [['not-an-id', held.token!], [pageId, 'not-a-token']]) {
+      expect(await heartbeatLock(page, token), `${page} ${token}`).toBe(false);
+      expect(await releaseLock(page, token), `${page} ${token}`).toBe(false);
+    }
+    expect(await storedLock(pageId)).toEqual({ locked_by: a.id, token: held.token });
+  });
 });

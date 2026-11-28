@@ -157,10 +157,6 @@ None blocks the work.
   `tests/acceptance/002-visibility-and-spaces/`. Where the code does not
   do what a criterion says, the case is pinned there as a known bug and not
   fixed, as the notes below say.
-- 002.5 does not hold for a write: a write to a page or document the caller
-  may not read is answered as forbidden, where a write to a missing one is
-  not found, and so is a signed-out caller's write to a document's file.
-  Pinned.
 - 002.9 does not hold when a space is deleted while the default
   space is closer than it: its nodes move with their settings as they
   were. Pinned.

@@ -125,7 +125,9 @@ destination never learns which document or page linked it. The server still
 never fetches the address; the browser follows the redirect.
 
 **Writing.** `PUT` sets the content and switches the source when it differs
-(below). It needs write access to the document; any other body type is a
+(below). It needs write access to the document, and a caller who may not
+read it — signed in or not — gets the 404 of a document that does not exist
+([authorization.md](authorization.md#two-checks)); any other body type is a
 415. A file goes through the same checks as a new upload (type, size, the
 magic bytes), and an address through `parseExternalUrl`.
 
