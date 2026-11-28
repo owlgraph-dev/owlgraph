@@ -100,7 +100,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
       membersOf(collection.id, locals.user),
       getNodeTags(collection.id),
       getManualProperties(collection.id),
-      getNodeClassFields(collection.class_id),
+      getNodeClassFields(collection.id),
       // Its members are its body, so outgoing `contains` is left out here.
       relationshipGroups(locals.user, collection.id, { membership: CONTAINS }),
       // For this viewer, from what the integration already holds.
@@ -110,7 +110,7 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
       space: space.name,
       title: collection.title,
       locale: collection.locale,
-      nodeClass: classFields ? { label: classFields.nodeClass.label, href: classFields.nodeClass.overviewPath ?? null } : null,
+      classes: (classFields?.classes ?? []).map((c) => ({ label: c.label, href: c.overviewPath })),
       source: collection.plugin ? { label: source?.label ?? pluginLabel(collection.plugin), readsVia: source?.readsVia ?? null } : null,
       visibility: effectiveVisibility(collection),
       properties: classProperties(classFields, manualProperties),
@@ -143,6 +143,6 @@ export const load = async ({ params, locals, url }: ServerLoadEvent<Params>) => 
     canEdit: await userCanWriteDocument(locals.user, doc),
     tags: await getNodeTags(doc.id),
     manualProperties: await getManualProperties(doc.id),
-    classFields: await getNodeClassFields(doc.class_id),
+    classFields: await getNodeClassFields(doc.id),
   };
 };

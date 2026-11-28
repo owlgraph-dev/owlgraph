@@ -2,8 +2,8 @@
 
 A **document** is a node ([architecture/overview.md](overview.md#the-node-model))
 whose content is not a block tree: it is an uploaded file, or an external
-address. Either way it is a full node: it has a title, a class (at least the
-`document` type class, which carries the `documents:` metadata fields), tags,
+address. Either way it is a full node: it has a title, classes (with none of
+its own, the `document` type class, which carries the `documents:` metadata fields), tags,
 properties, relationships, visibility and share links. It appears in search,
 in the graph and over MCP, and pages cite it with a `quickLink` block or an
 inline `[[doc:…]]` link, or embed it with a document block — its file, or a

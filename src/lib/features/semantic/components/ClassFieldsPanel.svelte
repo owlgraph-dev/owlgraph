@@ -17,7 +17,7 @@
     groupLabel = '',
     slots,
     groups = [],
-    ownClassId = null,
+    ownClassIds = [],
     onSetField,
     heading = true,
     layout = 'grid',
@@ -26,7 +26,8 @@
     slots: ClassPropertySlot[];
     // Nearest first.
     groups?: ClassFieldGroup[];
-    ownClassId?: string | null;
+    // The classes the node has: a group from any other is captioned with where it comes from.
+    ownClassIds?: string[];
     onSetField: (name: string, value: string) => void;
     heading?: boolean;
     layout?: 'grid' | 'stack';
@@ -63,7 +64,7 @@
     if (contributing.length <= 1) return [{ caption: null, inheritedFrom: null, ...split(slots) }];
     return contributing.map((g) => ({
       caption: g.label,
-      inheritedFrom: ownClassId && g.fromClass.id !== ownClassId ? g.fromClass.label : null,
+      inheritedFrom: ownClassIds.length > 0 && !ownClassIds.includes(g.fromClass.id) ? g.fromClass.label : null,
       ...split(slots.filter((s) => groupOf(s.name) === g.slug)),
     }));
   });

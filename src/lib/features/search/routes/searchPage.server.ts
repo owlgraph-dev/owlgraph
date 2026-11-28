@@ -37,7 +37,6 @@ export const load = async ({ url, locals }: ServerLoadEvent) => {
     resolveSpaceLabels([...new Set(items.map((i) => i.spaceId))]),
     getDefaultSpace(),
   ]);
-  const classKind = new Map(classOptions.map((c) => [c.id, c.kind]));
 
   const results: SearchResultCard[] = items.map((item) => {
     const extra = extras.get(item.id);
@@ -52,7 +51,7 @@ export const load = async ({ url, locals }: ServerLoadEvent) => {
       url: item.url,
       locale: item.locale,
       // Its kind says more than "Document"; a subclass ("Invoice") still shows.
-      className: item.type === 'document' && classKind.get(item.classId) === 'type' ? null : item.className,
+      classNames: item.classes.filter((c) => !(item.type === 'document' && c.kind === 'type')).map((c) => c.name),
       documentKind: extra?.documentKind ?? null,
       linkHost: linkHost(item.externalUrl),
       excerpt,

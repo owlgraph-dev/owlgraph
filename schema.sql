@@ -336,6 +336,17 @@ CREATE TABLE public.nav_tree_entries (
 
 
 --
+-- Name: node_class_statements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.node_class_statements (
+    node_id uuid NOT NULL,
+    class_id uuid NOT NULL,
+    node_type text NOT NULL
+);
+
+
+--
 -- Name: node_classes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -436,7 +447,6 @@ CREATE TABLE public.nodes (
     slug text NOT NULL,
     space_id uuid NOT NULL,
     title text DEFAULT ''::text NOT NULL,
-    class_id uuid NOT NULL,
     locale text NOT NULL,
     CONSTRAINT nodes_locale_format_check CHECK ((locale ~ '^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$'::text))
 );
@@ -895,6 +905,14 @@ ALTER TABLE ONLY public.nav_tree_entries
 
 
 --
+-- Name: node_class_statements node_class_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_class_statements
+    ADD CONSTRAINT node_class_statements_pkey PRIMARY KEY (node_id, class_id);
+
+
+--
 -- Name: node_classes node_classes_id_kind_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -964,6 +982,14 @@ ALTER TABLE ONLY public.node_versions
 
 ALTER TABLE ONLY public.node_versions
     ADD CONSTRAINT node_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nodes nodes_id_type_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nodes
+    ADD CONSTRAINT nodes_id_type_key UNIQUE (id, type);
 
 
 --
@@ -1314,6 +1340,13 @@ CREATE INDEX nav_tree_entries_target_page_idx ON public.nav_tree_entries USING b
 
 
 --
+-- Name: node_class_statements_class_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX node_class_statements_class_idx ON public.node_class_statements USING btree (class_id);
+
+
+--
 -- Name: node_classes_one_root_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1353,13 +1386,6 @@ CREATE INDEX node_shares_user_idx ON public.node_shares USING btree (user_id);
 --
 
 CREATE INDEX node_tags_tag_idx ON public.node_tags USING btree (tag);
-
-
---
--- Name: nodes_class_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX nodes_class_idx ON public.nodes USING btree (class_id);
 
 
 --
@@ -1635,6 +1661,30 @@ ALTER TABLE ONLY public.nav_tree_entries
 
 
 --
+-- Name: node_class_statements node_class_statements_class_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_class_statements
+    ADD CONSTRAINT node_class_statements_class_fkey FOREIGN KEY (class_id) REFERENCES public.node_classes(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: node_class_statements node_class_statements_class_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_class_statements
+    ADD CONSTRAINT node_class_statements_class_type_fkey FOREIGN KEY (class_id, node_type) REFERENCES public.node_classes(id, node_type);
+
+
+--
+-- Name: node_class_statements node_class_statements_node_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_class_statements
+    ADD CONSTRAINT node_class_statements_node_fkey FOREIGN KEY (node_id, node_type) REFERENCES public.nodes(id, type) ON DELETE CASCADE;
+
+
+--
 -- Name: node_classes node_classes_overview_node_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1736,22 +1786,6 @@ ALTER TABLE ONLY public.node_versions
 
 ALTER TABLE ONLY public.node_versions
     ADD CONSTRAINT node_versions_node_id_fkey FOREIGN KEY (node_id) REFERENCES public.nodes(id) ON DELETE CASCADE;
-
-
---
--- Name: nodes nodes_class_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nodes
-    ADD CONSTRAINT nodes_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.node_classes(id) ON DELETE RESTRICT;
-
-
---
--- Name: nodes nodes_class_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nodes
-    ADD CONSTRAINT nodes_class_type_fkey FOREIGN KEY (class_id, type) REFERENCES public.node_classes(id, node_type);
 
 
 --

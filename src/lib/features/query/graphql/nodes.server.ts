@@ -21,6 +21,7 @@ import {
 } from '../nodeFilter';
 import { clampFirst, clampOffset } from '#lib/platform/pagination.ts';
 import { nodePath, type NodeType } from '#lib/features/nodes/index.ts';
+import type { NodeClassRef } from '#lib/features/semantic/index.ts';
 
 export interface ContentNodeHit {
   id: string;
@@ -33,9 +34,9 @@ export interface ContentNodeHit {
   updatedAt: string;
   spaceId: string;
   createdBy: string | null;
-  // Never absent: a node with no domain class carries its node type's ("Page").
-  classId: string;
-  className: string;
+  // Every class it has, in the order of their names; one with no class of its
+  // own has its node type's ("Page").
+  classes: NodeClassRef[];
   // A link document's address; null for any other node.
   externalUrl: string | null;
   // The content language (docs/architecture/languages.md).
@@ -82,8 +83,7 @@ function toContentNodeHit(n: NodeFilterRow): ContentNodeHit {
     updatedAt: n.updated_at.toISOString(),
     spaceId: n.space_id,
     createdBy: n.created_by,
-    classId: n.class_id,
-    className: n.class_name,
+    classes: n.classes,
     externalUrl: n.external_url,
     locale: n.locale,
   };

@@ -82,7 +82,7 @@ const NodeClassKindType = builder.enumType('NodeClassKind', {
 });
 
 const NodeClassType = builder.objectRef<NodeClassListRow>('NodeClass').implement({
-  description: 'A class in the single-parent class hierarchy (managed under Settings, see /settings/schema/classes): node (root) → node types (page, document) → domain classes. Every node carries exactly one class, at least its node type. Filter by it with an IntrinsicCondition on CLASS_ID using the class\'s `id`.',
+  description: 'A class in the single-parent class hierarchy (managed under Settings, see /settings/schema/classes): node (root) → node types (page, document) → domain classes. A node has any number of classes (see ContentNode.classes); one with no class of its own has its node type\'s. Filter by a class with an IntrinsicCondition on CLASS_ID using the class\'s `id`: it matches a node when one of its classes does.',
   fields: (t) => ({
     id: t.exposeID('id'),
     slug: t.exposeString('slug'),

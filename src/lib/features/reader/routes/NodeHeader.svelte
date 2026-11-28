@@ -40,15 +40,15 @@
   </div>
 
   <ul class="chips">
-    {#if view.nodeClass}
+    {#each view.classes as cls}
       <li title={m.node_class()}>
-        {#if view.nodeClass.href}
-          <a class="chip-link" href={view.nodeClass.href}><Badge tone="accent">{view.nodeClass.label}</Badge></a>
+        {#if cls.href}
+          <a class="chip-link" href={cls.href}><Badge tone="accent">{cls.label}</Badge></a>
         {:else}
-          <Badge tone="accent">{view.nodeClass.label}</Badge>
+          <Badge tone="accent">{cls.label}</Badge>
         {/if}
       </li>
-    {/if}
+    {/each}
     {#if sourceLabel}
       <li title={m.node_source()}><Badge tone="info">{sourceLabel}</Badge></li>
     {/if}

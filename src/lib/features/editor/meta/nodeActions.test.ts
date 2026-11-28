@@ -17,7 +17,7 @@ function fixture(client: Partial<Record<keyof NodeMetaClient, unknown>> = {}) {
     rename: vi.fn(async (changes: { title?: string; slug?: string }) => ({ ok: true, title: changes.title ?? row.title, slug: changes.slug ?? row.slug })),
     setTags: vi.fn(async (tags: string[]) => ({ ok: true, tags })),
     setManualProperties: vi.fn(async () => ({ ok: true, properties: [] })),
-    setNodeClass: vi.fn(async () => ({ ok: true })),
+    setNodeClasses: vi.fn(async () => ({ ok: true })),
     setLocale: vi.fn(async () => ({ ok: true })),
     dismissLocaleSuggestion: vi.fn(async () => ({ ok: true })),
     setVisibility: vi.fn(async (visibility: string | null) => ({ ok: true, visibility })),
@@ -66,9 +66,9 @@ describe("a node's actions in its editor", () => {
     expect(f.goto).toHaveBeenLastCalledWith(nodePath(null, 'plans', { edit: true }), STAY);
   });
 
-  it('reload the route data after a new class, language or visibility, and only when it took', async () => {
+  it('reload the route data after new classes, a language or a visibility, and only when it took', async () => {
     const f = fixture();
-    await f.actions.onSetNodeClass!('class-x');
+    await f.actions.onSetNodeClasses!(['class-x', 'class-y']);
     await f.actions.onSetLocale!('de');
     await f.actions.onDismissLocaleSuggestion!();
     await f.actions.onSetVisibility!('restricted');

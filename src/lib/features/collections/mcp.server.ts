@@ -8,6 +8,7 @@ import { z } from 'zod';
 import type { ToolRegistry } from '../../../mcp/registry';
 import { text, errText } from '../../../mcp/registry';
 import { getCollection, membersOf, userCanReadCollection } from '#lib/features/collections/server.ts';
+import { getNodeClassRefs } from '#lib/features/semantic/server.ts';
 import { pluginLabel } from '#lib/plugins/index.ts';
 
 export function registerCollectionTools({ user, tool }: ToolRegistry): void {
@@ -16,7 +17,7 @@ export function registerCollectionTools({ user, tool }: ToolRegistry): void {
     {
       title: 'Get collection',
       description:
-        "Get a collection — an ordered set of nodes — with its members in their order: id, title, locale, visibility, plugin (the integration a mirrored collection's source belongs to, null for a curated one) and members ({id, type, title, url, position, label, plugin}), only the members you can access, numbered from 1 among them. A member's label is what the collection calls it, in your language (null for none); its plugin is the integration its own source belongs to (null for one of the core's own). A mirrored collection's live contents (the folder it mirrors) are not listed: only the nodes made from it are members.",
+        "Get a collection — an ordered set of nodes — with its members in their order: id, title, classes (every class it has: id, slug, name), locale, visibility, plugin (the integration a mirrored collection's source belongs to, null for a curated one) and members ({id, type, title, url, position, label, plugin}), only the members you can access, numbered from 1 among them. A member's label is what the collection calls it, in your language (null for none); its plugin is the integration its own source belongs to (null for one of the core's own). A mirrored collection's live contents (the folder it mirrors) are not listed: only the nodes made from it are members.",
       inputSchema: { collectionId: z.string() },
     },
     'page:read',
@@ -25,11 +26,13 @@ export function registerCollectionTools({ user, tool }: ToolRegistry): void {
       // Not found and not readable answer alike, as everywhere.
       if (!collection || !(await userCanReadCollection(user, collection))) return errText('Collection not found');
       const members = (await membersOf(collection.id, user)).map(({ id, type, title, url, position, label, plugin }) => ({ id, type, title, url, position, label, plugin }));
+      const classes = (await getNodeClassRefs(collection.id)).map(({ id, slug, name }) => ({ id, slug, name }));
       return text(
         JSON.stringify(
           {
             id: collection.id,
             title: collection.title,
+            classes,
             locale: collection.locale,
             visibility: collection.visibility ?? collection.space_access_level,
             plugin: collection.plugin,

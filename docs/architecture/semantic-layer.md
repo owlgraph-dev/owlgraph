@@ -13,7 +13,7 @@ The semantic layer is built from three primitives:
 |---|---|---|
 | **Property** | An attribute of a node, always `group:name` (e.g. `core:status`) | `property_groups`, `property_definitions`, values in `node_properties` |
 | **Relationship** | A typed edge between two nodes | `relationship_types`, `edges.relationship_type`, `edge_properties` |
-| **Class** | What kind of thing the node is — its position in the class hierarchy, implying a property group | `node_classes` (a single-parent tree), `nodes.class_id` |
+| **Class** | What kinds of thing the node is — positions in the class hierarchy, each implying a property group | `node_classes` (a single-parent tree), `node_class_statements` |
 
 Properties and relationships are documented where they are used
 ([dynamic-rendering.md](dynamic-rendering.md) for how queries read them);
@@ -54,17 +54,25 @@ Three level bands, with invariants the database enforces (not conventions):
   depth. Nothing semantic ever sits at L1 and no machinery ever sits at
   L2+: a domain class's parent must be a type or a domain class.
 
-**Every node has a class, at least its L1 type.** A plain page is a node of
-class `page`; there is no "unclassified" state — "unclassified" just means
-"exactly its node type, no domain class below it". `nodes.class_id` is
-therefore `NOT NULL`.
+### A node's classes
+
+**A node has any number of classes** — each one a statement of its own in
+`node_class_statements` — and **one with no class of its own has its L1
+type's**: a plain page is a node of class `page`. Giving it classes
+replaces that one, and taking its last one away
+brings it back, so "unclassified" just means "exactly its node type, no
+domain class below it". Neither ever deletes a property value or a
+relationship: a class only decides which fields are offered. Everything
+that reads a node's classes reads a set — the node header, a query's
+conditions and results, the API, the agents' tools — and copes with an
+empty one.
 
 ### Collections
 
 A **collection** is an ordered set of nodes: pages, documents and
 collections someone put in a sequence, or a folder another service holds,
 mirrored through an integration ([plugins.md](plugins.md)). It is a node like
-any other — a class (its L1 type or a domain class below it), properties,
+any other — classes (its L1 type, or domain classes below it), properties,
 tags, an access level and a share list, a place in search, the graph and
 queries — and is changed like every node: by any editor who may read it
 ([authorization.md](authorization.md#two-checks)).
@@ -145,12 +153,12 @@ viewer by the read route:
 
 - where it sits — its space, then its title — and its title, in the
   node's language;
-- what it is, where its source is and who may read it: its class (a link to
-  the class's overview page when it has one), the integration that mirrors
+- what it is, where its source is and who may read it: its classes (each a
+  link to the class's overview page when it has one), the integration that mirrors
   its source with how it can be read ("Nextcloud · Share") — the integration
   says so ([plugins.md](plugins.md#node-views)) — and its effective
   visibility;
-- its class's fields that are set — the short ones as rows, the long ones as
+- its classes' fields that are set — the short ones as rows, the long ones as
   sections — its tags, and what it holds ("5 entries · 2 linked documents"), counted
   over what the viewer may read;
 - its **relationships**: every edge the viewer may follow — the node at its
@@ -180,44 +188,51 @@ aggregation, and it pays to keep them apart:
   and storage are those of `document`, because that is the node type it
   descends from. Not inherited per level; resolved at L1.
 - **Properties → full-chain accumulation.** A class carries a property
-  group; a node's fields are its class's group plus every ancestor's group,
-  walked nearest-first (own class, parent, …, root). An invoice under
-  `document` shows the invoice fields and the `documents:` fields. Property
-  identity is the full `group:name`, so two different groups never collide;
-  the one genuine collision — the same group attached at two levels — is
-  resolved nearest-wins, so a field is never shown twice (single inheritance
-  keeps the chain linear, which is what makes "nearest" unambiguous).
+  group; a node's fields are, for each of its classes, the class's group
+  plus every ancestor's group, walked nearest-first (own class, parent, …,
+  root). An invoice under `document` shows the invoice fields and the
+  `documents:` fields. Property identity is the full `group:name`, so two
+  different groups never collide; the one genuine collision — the same
+  group reached twice, at two levels or through two classes that share an
+  ancestor — is resolved by taking it once, nearest-first along the classes
+  in the order of their names, so a field is never shown twice (single
+  inheritance keeps each chain linear, which is what makes "nearest"
+  unambiguous).
 
-### Node type is derived — and cached
+### A node's type and its classes agree
 
-A node stores its **class**. Its **type** (`page`/`document`/`collection`) is *derived*:
-the nearest L1 ancestor of that class. So that routing and dispatch stay a
-single indexed lookup, the type is kept **denormalized** on the node row
-(`nodes.type`) and on every class (`node_classes.node_type`, the nearest-L1
-slug; null only for the root), and two things guarantee the copies can never
-disagree:
+A node's **type** (`page`/`document`/`collection`) is its own, set when it is
+made and kept on its row (`nodes.type`), so routing and dispatch stay a
+single indexed lookup. Every class carries the type it can be given to
+(`node_classes.node_type`, its nearest-L1 slug; null only for the root), and
+the database keeps the two in step:
 
-- a composite foreign key `nodes (class_id, type) → node_classes (id,
-  node_type)`: a node's cached type is always its class's L1;
+- every statement of a class carries its node's type, held by two composite
+  foreign keys — `node_class_statements (node_id, node_type) → nodes (id,
+  type)` and `(class_id, node_type) → node_classes (id, node_type)`: a node
+  only ever has classes of its own type;
 - `node_classes.parent_node_type = node_type` for every domain class,
   itself a foreign key onto the parent's `(id, node_type)`: a class's L1 is
   always its parent's L1, all the way down.
 
 A consequence worth spelling out: because a node's storage row lives in
-`pages` *or* `documents`, **a node's L1 never changes**. Assigning a class
-whose L1 differs from the node's type is refused (a page cannot become an
-invoice-under-document), and moving a class under a different node type is
-refused while any node carries it or one of its subclasses — both by the
-database, before any application rule.
+`pages`, `documents` *or* `collections`, **a node's type never changes**.
+Giving it a class whose L1 differs from the node's type is refused (a page
+cannot become an invoice-under-document), and moving a class under a
+different node type is refused while any node has it or one of its
+subclasses — both by the database, before any application rule. A class a
+node has cannot be deleted.
 
 ### Assignment is bounded by the hierarchy
 
 Where a class sits decides what it applies to: a class under `document` can
-only be assigned to documents. This is why the editor's class picker offers
-the node's own type (the baseline, e.g. "Page") plus the domain classes under
-that type, and nothing else. Assignment is an ordinary content write
-(`page:write` and the node check), transported as `nodeClassId` in the
-node's `PATCH` body; `null` means "back to just the node type". Admins define
+only be assigned to documents. This is why the editor's class picker — a
+multi-select — offers the domain classes under the node's own type and
+nothing else, any number of them, and names the type ("Page") when none is
+chosen. Assignment is an ordinary content write (`page:write` and the node
+check), transported as `classIds` in the node's `PATCH` body, every class
+the node is to have; an empty list means "back to just the node type".
+Admins define
 domain classes (key, label, description, **parent**, property group,
 optional overview page) under `/settings/schema/classes`, gated by
 `class:manage` — the same schema-vs-content split as property groups and
@@ -238,11 +253,11 @@ type while nodes carry it or a subclass of it.
 
 A class may carry one property group (`node_classes.property_group`,
 nullable); a node's **class fields** are the accumulated definitions of every
-group on its class chain (`getNodeClassFields` in
+group on the chains of its classes, each group once (`getNodeClassFields` in
 `src/lib/features/semantic/nodeClasses.server.ts`, merged by `mergeChainDefinitions` in
 `src/lib/features/semantic/propertyGroups.ts`). When more than one group contributes, the
 fields are captioned per group, naming the ancestor a group is inherited
-from. The definitions are *presets over the existing property
+from when that is not one of the node's own classes. The definitions are *presets over the existing property
 mechanisms*, not a third store: the class turns each definition into a slot
 — a field prefilled from the node's page-wide value when one is set, blank
 otherwise (`classPropertySlots` in `src/lib/features/semantic/propertyGroups.ts`) — shown in a
@@ -255,8 +270,9 @@ state a property) is content-derived and gets no slot: content has priority.
 If a stale page-wide value exists for such a definition, the content entry
 shows a warning with the page-wide value and a button to remove it; nothing
 is dropped automatically. Values are ordinary rows in `node_properties`; the
-class only decides which names are offered as slots. Changing a node's class
-never deletes values: former slots become ordinary page-wide entries again.
+classes only decide which names are offered as slots. Changing a node's
+classes never deletes values: former slots become ordinary page-wide entries
+again.
 The document editor additionally shows the same slots as a form in its
 canvas (metadata is a document's main content), and its dialog hides them so
 they never appear twice. A definition's description, when it has one, is the
@@ -270,17 +286,19 @@ The class is an **intrinsic query condition** (`classId`, next to
 `type`/`spaceId`/`createdBy` — see
 [dynamic-rendering.md](dynamic-rendering.md)), available wherever a node
 filter is: the query builder's field conditions, the GraphQL `nodes` and
-`traverse` queries, and the MCP tools. It filters on the **explicit
-assignment** (`nodes.class_id`) only — never on whether a node happens to
-carry the class's properties; that is the whole point of explicit typing.
+`traverse` queries, and the MCP tools. It filters on the classes a node
+**states** (`node_class_statements`) only — never on whether a node happens
+to carry a class's properties; that is the whole point of explicit typing —
+and matches a node when **one of its classes** does.
 The builder shows class names (the picker lists every node type and domain
 class as an indented tree, since classes are global vocabulary); the stored
 value is the class id, so a filter in a query block survives a class being
 renamed. The `nodeClasses` GraphQL query (and the MCP `schema` catalogue)
 resolve names to ids for API clients and expose each class's `kind`,
 `parentId` and `nodeType`. In the other direction, every query result carries
-its node's `classId` and `className`, and a query template can bind the class
-name through the `class` mapping source (see
+its node's `classes` — each with its id, slug and name, in the order of their
+names — and a query template can bind them through the `class` mapping
+source, their names joined by a comma (see
 [dynamic-rendering.md](dynamic-rendering.md#authoring-the-query-builder)).
 
 The class condition is **polymorphic by default** (RDFS subclass
@@ -290,21 +308,22 @@ condition's `classMatch` (`IS_A`, the default and therefore never stored, or
 
 | Operator | Reads as | `IS_A` (default) | `EXACT` |
 |---|---|---|---|
-| `EQ` | is a X | class is X or any subclass of X | class is precisely X |
-| `NEQ` | is not a X | class is outside X's subtree | class is anything but X |
-| `IN` | is any of X, Y | class is in the union of their subtrees | class is one of them |
+| `EQ` | is a X | one of its classes is X or a subclass of X | one of its classes is precisely X |
+| `NEQ` | is not a X | none of its classes is in X's subtree | none of its classes is X |
+| `IN` | is any of X, Y | one of its classes is in the union of their subtrees | one of its classes is one of them |
 
 Because the node types are classes too, "is a page" with the `page` type's
 id selects every page whatever its subclass, and "is exactly page" the plain
 ones. There is no `EXISTS`/`NOT_EXISTS` on the class condition: every node
-has a class, so "unclassified" is not a state to test for — "is exactly
-page" is that question. Subtree expansion is a
+has a class, at least its type's, so "unclassified" is not a state to test
+for — "is exactly page" is that question. Subtree expansion is a
 recursive query over `node_classes` (a tiny, indexed table), exact in every
 process. A class condition composes with property, link and other intrinsic
 conditions like any other leaf, and has no effect on visibility: the
 viewer's permissions are applied outside the filter tree, so a class filter
 only narrows what the viewer could read anyway. Sorting or grouping by class
-is not offered (filter-only).
+is not offered (filter-only): a node's classes are a set, so an ordering by
+`classId` is refused.
 
 ### Documents are a consumer, not a special case
 
@@ -313,8 +332,8 @@ Document metadata (author, source, description, abstract) is the
 It reaches the document editor and read view through exactly the class
 mechanism above: a new document, uploaded or linked
 ([documents.md](documents.md)), is classified as `document`,
-and an editor may pick a document subclass (say, an invoice or a report)
-that carries a different metadata group. Nothing in the field-rendering path
+and an editor may give it document subclasses (say, an invoice and a
+report), each carrying its own metadata group. Nothing in the field-rendering path
 knows about documents. The `page` type carries no group by default; giving
 it one would put those fields on every page.
 
@@ -375,7 +394,7 @@ mappings and marks never depend on a label ([languages.md](languages.md)).
 ## Naming
 
 "Class" is the user-facing term. In code the identifiers are `nodeClass` /
-`nodeClassId` / `node_classes` (never a bare `class`), to stay clear of the
+`nodeClassIds` / `node_classes` (never a bare `class`), to stay clear of the
 CSS/JS keyword. The three core classes are `node`, `page` and `document`
 (`CORE_CLASS_SLUGS` in `src/lib/features/semantic/nodeClasses.server.ts`); those keys are
 reserved.

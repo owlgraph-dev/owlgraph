@@ -57,7 +57,7 @@ export function applyGraphFilter(
   const admittedClasses = filter.classIds.size ? expandClassIds(filter.classIds, classOptions) : null;
   const passes = (n: GraphNode): boolean => {
     if (filter.types.size && !filter.types.has(n.type ?? 'page')) return false;
-    if (admittedClasses && !(n.classId && admittedClasses.has(n.classId))) return false;
+    if (admittedClasses && !(n.classIds ?? []).some((id) => admittedClasses.has(id))) return false;
     if (filter.spaceIds.size && !(n.spaceId && filter.spaceIds.has(n.spaceId))) return false;
     return true;
   };

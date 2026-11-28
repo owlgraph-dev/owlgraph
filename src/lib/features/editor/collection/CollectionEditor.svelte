@@ -41,9 +41,9 @@
     onSetManualProperties,
     propSuggestions = [],
     propertyGroups = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     classFields = null,
@@ -126,10 +126,10 @@
       {/if}
       {#if classFields && classFields.definitions.length > 0}
         <ClassFieldsPanel
-          groupLabel={classFields.groups.length === 1 ? classFields.groups[0].label : classFields.nodeClass.label}
+          groupLabel={classFields.groups.length === 1 ? classFields.groups[0].label : classFields.classes.map((c) => c.label).join(', ')}
           slots={classSlots}
           groups={classFields.groups}
-          ownClassId={classFields.nodeClass.id}
+          ownClassIds={classFields.classes.map((c) => c.id)}
           onSetField={setClassField}
         />
       {/if}
@@ -192,9 +192,9 @@
   onSetManualProperties={meta.commitManualProperties}
   {propSuggestions}
   {propertyGroups}
-  {nodeClassId}
+  {nodeClassIds}
   {nodeClasses}
-  {onSetNodeClass}
+  {onSetNodeClasses}
   {locale}
   {onSetLocale}
   {classDefinitions}

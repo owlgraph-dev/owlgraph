@@ -10,8 +10,9 @@ export interface GraphNode {
   slug?: string;
   spaceSlug?: string | null;
   title: string;
-  // Optional, so a consumer can hand the view bare {id, title} nodes.
-  classId?: string;
+  // Optional, so a consumer can hand the view bare {id, title} nodes. Every
+  // class the node has.
+  classIds?: string[];
   spaceId?: string | null;
 }
 

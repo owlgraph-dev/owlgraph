@@ -7,7 +7,7 @@ import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import { writableCollection } from '#lib/features/nodes/routes/writable.server.ts';
 import { collectionEmbed, renameCollection, refreshCollectionSearchMeta } from '#lib/features/collections/server.ts';
-import { setNodeTags, setManualProperties, setNodeClass } from '#lib/features/semantic/server.ts';
+import { setNodeTags, setManualProperties, setNodeClasses } from '#lib/features/semantic/server.ts';
 import { deleteNode, setNodeLocale, setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
 import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
@@ -75,9 +75,10 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       await setNodeSpace(params.id, body.spaceId, locals.user);
       out.spaceId = body.spaceId;
     }
-    // null resets to the collection type class.
-    if (body.nodeClassId === null || typeof body.nodeClassId === 'string') {
-      out.nodeClassId = (await setNodeClass(params.id, body.nodeClassId)).id;
+    // As PATCH /api/pages/[id] takes them.
+    if (Array.isArray(body.classIds)) {
+      if (!body.classIds.every((id: unknown) => typeof id === 'string')) return apiError('invalid_request', { field: 'classIds' });
+      out.classIds = (await setNodeClasses(params.id, body.classIds)).map((c) => c.id);
     }
     if (typeof body.locale === 'string') {
       await setNodeLocale(params.id, body.locale);

@@ -55,9 +55,9 @@ export function nodeMetaClient(kind: NodeApiKind, id: string) {
       return { ok: true, properties: body.properties ?? [] };
     },
 
-    // A string assigns a class, null resets to the node's own type.
-    async setNodeClass(nodeClassId: string | null): Promise<OkOrError> {
-      const res = await patchJson(kind, id, { nodeClassId });
+    // Every class the node is to have; none leaves it its own type alone.
+    async setNodeClasses(classIds: string[]): Promise<OkOrError> {
+      const res = await patchJson(kind, id, { classIds });
       if (!res.ok) return { ok: false, error: await apiErrorText(res) };
       return { ok: true };
     },

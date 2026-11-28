@@ -8,7 +8,7 @@ import { page as screen } from 'vitest/browser';
 import type { SearchResultCard as Result } from '#lib/features/search/index.ts';
 import SearchResultCard from './SearchResultCard.svelte';
 
-const BASE: Result = { id: 'd-1', type: 'document', title: 'Uploaded note', url: '/d/uploaded-note', locale: 'en', className: null, documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', spaceName: '', tags: [] };
+const BASE: Result = { id: 'd-1', type: 'document', title: 'Uploaded note', url: '/d/uploaded-note', locale: 'en', classNames: [], documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', spaceName: '', tags: [] };
 
 describe('a document’s result card', () => {
   it('names an uploaded document’s kind, and a link document’s with its host', async () => {
@@ -22,5 +22,12 @@ describe('a document’s result card', () => {
     await expect.element(uploaded).not.toMatchTextContent('Link');
     await expect.element(linked).toMatchTextContent(/Link\s·\sexample\.org/);
     await expect.element(uploaded.getByRole('link', { name: 'Uploaded note' })).toHaveAttribute('href', '/d/uploaded-note');
+  });
+
+  it('shows every class a result has, each a badge of its own', async () => {
+    await render(SearchResultCard, { result: { ...BASE, classNames: ['Invoice', 'Report'] } });
+    const card = screen.getByTestId('search-result');
+    await expect.element(card.getByText('Invoice', { exact: true })).toBeVisible();
+    await expect.element(card.getByText('Report', { exact: true })).toBeVisible();
   });
 });

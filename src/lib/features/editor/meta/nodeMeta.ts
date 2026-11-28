@@ -26,7 +26,7 @@ export interface NodeMetaState {
   propSuggestions?: { name: string; label: string; datatype: string }[];
   propertyGroups?: { slug: string; label: string; description: string }[];
   // The class's accumulated definitions render as first-class fields.
-  nodeClassId?: string | null;
+  nodeClassIds?: string[];
   nodeClasses?: NodeClassOption[];
   classFields?: ClassFields | null;
   // The content language (docs/architecture/languages.md).
@@ -50,7 +50,7 @@ export interface NodeMetaActions {
   onRename?: (changes: { title?: string; slug?: string }) => Promise<{ ok: boolean; title?: string; slug?: string; error?: string }>;
   onSetTags?: (tags: string[]) => Promise<{ ok: boolean; tags?: string[] }>;
   onSetManualProperties?: (props: NodeProperty[]) => Promise<{ ok: boolean; properties?: NodeProperty[] }>;
-  onSetNodeClass?: (id: string | null) => Promise<{ ok: boolean; error?: string } | undefined>;
+  onSetNodeClasses?: (ids: string[]) => Promise<{ ok: boolean; error?: string } | undefined>;
   onSetLocale?: (locale: string) => Promise<{ ok: boolean; error?: string }>;
   onDismissLocaleSuggestion?: () => Promise<{ ok: boolean }>;
   onSetVisibility?: (visibility: string | null) => Promise<{ ok: boolean; visibility?: string | null }>;

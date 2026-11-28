@@ -113,8 +113,9 @@ kind it names.
 
 ## Reading a page
 
-- `get_page` gives the page's title, content language, colour scheme, its own
-  settings, and its blocks: each top-level block's id, its stored `type` and
+- `get_page` gives the page's title, its classes — every class it has, by id,
+  slug and name, as `get_document` and `get_collection` give theirs — its
+  content language, colour scheme, its own settings, and its blocks: each top-level block's id, its stored `type` and
   its `kind` — the name `append_block` takes, or null for a block an agent
   cannot write — a one-line preview, and a container's cells under
   `cellContents`. An embedded collection

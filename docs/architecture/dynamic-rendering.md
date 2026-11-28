@@ -155,17 +155,18 @@ every other node, so a literature list can link straight to the cited work
 while the node stays the citation point. The
 reference-valued ones bind a **display name, never an id**: `space` the
 space name, `creator` the creator's name (empty for system-created
-content), `class` the class label (a class label is localized text, resolved
-by its fallback chain — [languages.md](languages.md)). `locale` binds the result's
+content), `class` the labels of every class the node has, joined by a comma
+in the order of their names (a class label is localized text, resolved by
+its fallback chain — [languages.md](languages.md)). `locale` binds the result's
 content language as its code (`de`, `en`) — for a `lang` attribute or a
-language badge. Every node carries a class, at least its node type, so
+language badge. A node with no class of its own has its node type's, so
 `class` is never empty: a page with no domain class binds its type class's
 label ("Page" / "Seite" as seeded, or whatever an admin renamed it to). Each
 key has a fixed transform category — dates for `createdAt`/`updatedAt`, url
 for `url`/`externalUrl`, text for `title`/`slug`/`class` (so a class chip can
 take case and truncate transforms), and reference (universal transforms only)
 for `type`/`space`/`creator`/`locale`. The label is resolved in the
-result query itself (a join on `node_classes`), so it covers exactly the
+result query itself (from `node_class_statements` and `node_classes`), so it covers exactly the
 nodes the viewer may already read.
 
 A query block's output is part of the page's content, so it renders in the
@@ -231,9 +232,10 @@ unknown name is refused as bad input. `externalUrl` is the one intrinsic field t
 on a page and on an uploaded document), so it alone takes `EXISTS` /
 `NOT_EXISTS` — "is a link document" — besides `EQ`, `NEQ`, `CONTAINS` and
 `STARTS_WITH`; `NEQ` counts a node without an address as different. The class condition selects
-nodes by their explicit class (every node has one, at least its node type —
-`type` is that class's node-type ancestor), polymorphically by default — a
-class and its subclasses — with `classMatch: EXACT` as the opt-out; the
+nodes by the classes they state (any number; one with no class of its own
+has its node type's), matching when one of them matches, polymorphically by
+default — a class and its subclasses — with `classMatch: EXACT` as the
+opt-out; a node's classes are a set, so no list is sorted by `classId`. The
 operators are described in
 [semantic-layer.md](semantic-layer.md#querying-by-class). The tag condition
 is a set predicate over a node's tags (many per node, uncontrolled
@@ -245,14 +247,15 @@ The `propertyDefinitions`, `relationshipTypes`, `nodeClasses` and `tags`
 queries expose the catalogues a client needs to build these conditions.
 
 A result `ContentNode` carries the same intrinsic fields as ids
-(`spaceId`, `createdBy`, `classId`) plus `locale`, its content language,
-`className`, the class's display name in the request's interface language
-([languages.md](languages.md#api-channels)), and — for a page — `contentScheme`, the colour scheme its content
+(`spaceId`, `createdBy`) plus `locale`, its content language, `classes`,
+every class it has — each `NodeClassOfNode` with its id, slug and name, the
+name in the request's interface language
+([languages.md](languages.md#api-channels)) — and, for a page, `contentScheme`, the colour scheme its content
 renders in ([theming.md](theming.md#content-scheme)), and `externalUrl`, a
 link document's external address (null otherwise; `url` stays the node's own
 page). The name sits beside the id because the `nodeClasses` catalogue that
-would resolve it is restricted to schema readers, while a node's own class
-name is visible to anyone who can read the node.
+would resolve it is restricted to schema readers, while the names of a
+node's own classes are visible to anyone who can read the node.
 
 The `nodes` query's `id` is a node id (see
 [architecture/overview.md](overview.md#the-node-model)). Properties and tags are

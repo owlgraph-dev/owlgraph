@@ -116,7 +116,7 @@ always labelled. The panel exposes this as *On zoom* (default) / *Always* /
 
 Hovering a node highlights it and its neighbours and dims the rest (both
 chromes). In the `full` chrome a **click** makes that focus sticky and opens
-a node card (title, type, class, space, degree, an *Open* link); a
+a node card (title, type, classes, space, degree, an *Open* link); a
 double-click or Enter opens the node; Escape or a click on empty canvas
 clears the focus. The card is a plain positioned element that follows the
 node while the layout settles — deliberately not a floating-UI overlay,
@@ -133,7 +133,8 @@ and edge conditions use, and the pickers render the same items — the item
 builders live in the query feature (`filterOptions.ts`) and both UIs call
 them. A class filter is *is-a*: the class and every subclass, resolved over
 the same parent links the server's recursive CTE follows (`subtreeOf` in the
-semantic feature). An edge stays visible only when both endpoints do (the
+semantic feature), and admits a node when any one of its classes passes. An
+edge stays visible only when both endpoints do (the
 same rule the server applies to viewer access); a relationship-type filter
 never matches an untyped link. *Hide unconnected* then drops every
 node without a visible edge — the one switch that clears orphan clutter
@@ -154,9 +155,11 @@ come from a fixed, validated eight-colour order (adjacent pairs clear the
 colour-vision-deficiency gates on the app's light surface); they are
 assigned over the whole loaded graph, so a filter never repaints the
 survivors, and categories beyond the palette fold into one neutral *Other*.
-A class takes its slot by its slug, not its label: labels follow the
-viewer's language ([languages.md](languages.md)), and a class keeps its colour in
-every one. The legend (`GraphLegend.svelte`) follows the active dimension
+A node's classes are one category: a node with several takes the colour,
+and the legend entry ("Invoice + Report"), of that combination, its classes
+in any order. A class takes its slot by its slug, not its label — a
+combination by its classes' slugs: labels follow the viewer's language
+([languages.md](languages.md)), and a class keeps its colour in every one. The legend (`GraphLegend.svelte`) follows the active dimension
 and lists only what is on screen, by label. Node size is by degree (the layout's own footprint)
 or uniform; typed-edge labels can be switched off (the hover card stays).
 

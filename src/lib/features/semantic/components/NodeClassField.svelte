@@ -4,47 +4,43 @@
   This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 -->
 <script lang="ts">
-  // A short closed list, so a native select. Only the node's type and the
-  // classes under it are offered: the hierarchy bounds what a node can be
-  // (docs/architecture/semantic-layer.md).
+  // A node's classes, any number of them. Only the classes under the node's
+  // type are offered: the hierarchy bounds what a node can be, and with none
+  // chosen it is its type alone (docs/architecture/semantic-layer.md).
   import { untrack } from 'svelte';
   import * as m from '#lib/paraglide/messages.js';
-  import { FormField } from '#lib/design-system/index.ts';
+  import { FormField, MultiSelect } from '#lib/design-system/index.ts';
   import type { NodeClassOption } from '../nodeClass';
 
   let {
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
   }: {
-    nodeClassId?: string | null;
+    // Every class the node has: its own, or its type class alone.
+    nodeClassIds?: string[];
     // Every assignable class (types + domain classes); narrowed below.
     nodeClasses?: NodeClassOption[];
-    onSetNodeClass?: (id: string | null) => Promise<{ ok: boolean; error?: string } | undefined>;
+    onSetNodeClasses?: (ids: string[]) => Promise<{ ok: boolean; error?: string } | undefined>;
   } = $props();
 
-  let current = $state<string | null>(untrack(() => nodeClassId));
+  let current = $state<string[]>(untrack(() => nodeClassIds));
   // The reconcile half of the optimistic update: resync to a fresh value.
   $effect(() => {
-    current = nodeClassId;
+    current = nodeClassIds;
   });
-  const currentClass = $derived(nodeClasses.find((c) => c.id === current) ?? null);
-  // A node is at least its type, so the current class always names it.
-  const nodeType = $derived(currentClass?.nodeType ?? null);
-  const options = $derived(
-    nodeClasses
-      .filter((c) => nodeType === null || c.nodeType === nodeType)
-      .sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'type' ? -1 : 1))
-  );
+  // A node always has a class until the type classes go, so its classes name its type.
+  const nodeType = $derived(nodeClasses.find((c) => current.includes(c.id))?.nodeType ?? null);
+  const typeClass = $derived(nodeClasses.find((c) => c.kind === 'type' && c.nodeType === nodeType) ?? null);
+  const options = $derived(nodeClasses.filter((c) => c.kind === 'domain' && (nodeType === null || c.nodeType === nodeType)));
+  const chosen = $derived(options.filter((c) => current.includes(c.id)));
   let error = $state<string | null>(null);
 
-  async function choose(value: string) {
-    const id = value || null;
-    if (id === current) return;
+  async function choose(ids: string[]) {
     const prev = current;
-    current = id; // optimistic
+    current = ids; // optimistic
     error = null;
-    const res = await onSetNodeClass?.(id);
+    const res = await onSetNodeClasses?.(ids);
     if (res && !res.ok) {
       current = prev;
       error = res.error ?? null;
@@ -55,33 +51,24 @@
 <div class="class-field">
   <FormField
     label={m.editor_class_field_label()}
-    hint={options.length > 0 ? (currentClass?.description ?? undefined) : m.editor_class_empty()}
+    hint={options.length === 0 ? m.editor_class_empty() : chosen.length === 1 ? chosen[0].description || undefined : undefined}
     {error}
     group={options.length === 0}
   >
-    {#snippet children(field)}
-      {#if options.length > 0}
-        <!-- ui-check-allow: raw-element — a short closed list the node-classes spec drives with selectOption -->
-        <select
-          id={field.controlId}
-          aria-describedby={field.describedBy}
-          aria-invalid={field.invalid ? 'true' : undefined}
-          class="class-select"
-          value={current ?? ''}
-          disabled={!onSetNodeClass}
-          onchange={(e) => choose(e.currentTarget.value)}
-        >
-          {#each options as c (c.id)}
-            <option value={c.id}>{c.label}</option>
-          {/each}
-        </select>
-      {/if}
-    {/snippet}
+    {#if options.length > 0}
+      <MultiSelect
+        items={options.map((c) => ({ value: c.id, label: c.label }))}
+        value={chosen.map((c) => c.id)}
+        onValueChange={choose}
+        placeholder={typeClass?.label ?? ''}
+        disabled={!onSetNodeClasses}
+        invalid={!!error}
+        width="full"
+      />
+    {/if}
   </FormField>
 </div>
 
 <style>
   .class-field { margin: 0 0 0.9rem; }
-  .class-select { height: var(--ds-control-h-md); border: 1px solid var(--ds-color-border); border-radius: var(--ds-radius-sm); background: none; color: var(--ds-color-fg); font: inherit; font-size: var(--ds-text-field-md); padding: 0 0.5rem; }
-  .class-select[aria-invalid='true'] { border-color: var(--ds-color-danger); }
 </style>

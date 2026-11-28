@@ -39,8 +39,15 @@ export interface ColorLabels {
   spaceLabel(spaceId: string): string | null;
 }
 
+// A node's classes are one key, so each combination of them is a colour and
+// a legend entry of its own (docs/architecture/graph-view.md).
+const CLASS_SEP = '+';
+const classesKey = (n: GraphNode): string | null => (n.classIds?.length ? [...n.classIds].sort().join(CLASS_SEP) : null);
 const keyOf = (colorBy: ColorBy, n: GraphNode): string | null =>
-  colorBy === 'class' ? (n.classId ?? null) : colorBy === 'space' ? (n.spaceId ?? null) : (n.type ?? 'page');
+  colorBy === 'class' ? classesKey(n) : colorBy === 'space' ? (n.spaceId ?? null) : (n.type ?? 'page');
+/** Each class of a combination, by `name`, sorted. */
+const namesOf = (key: string, name: (id: string) => string | null): string[] =>
+  key.split(CLASS_SEP).map((id) => name(id) ?? id).sort((a, b) => a.localeCompare(b));
 
 export function buildColorScheme(colorBy: ColorBy, allNodes: readonly GraphNode[], labels: ColorLabels): ColorScheme {
   if (colorBy === 'type') {
@@ -55,9 +62,9 @@ export function buildColorScheme(colorBy: ColorBy, allNodes: readonly GraphNode[
     };
   }
 
-  const labelOf = (key: string): string => (colorBy === 'class' ? labels.classLabel(key) : labels.spaceLabel(key)) ?? key;
-  // Sorted by a key that isn't localized: a class's slug, a space's name.
-  const slotKeyOf = (key: string): string => (colorBy === 'class' ? labels.classKey(key) : labels.spaceLabel(key)) ?? key;
+  const labelOf = (key: string): string => (colorBy === 'class' ? namesOf(key, labels.classLabel).join(' + ') : (labels.spaceLabel(key) ?? key));
+  // Sorted by a key that isn't localized: the classes' slugs, a space's name.
+  const slotKeyOf = (key: string): string => (colorBy === 'class' ? namesOf(key, labels.classKey).join(CLASS_SEP) : (labels.spaceLabel(key) ?? key));
   const keys = [...new Set(allNodes.map((n) => keyOf(colorBy, n)).filter((k): k is string => k != null))];
   keys.sort((a, b) => slotKeyOf(a).localeCompare(slotKeyOf(b)));
   const slotOf = new Map(keys.map((k, i) => [k, i]));

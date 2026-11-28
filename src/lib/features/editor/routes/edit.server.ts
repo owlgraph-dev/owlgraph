@@ -25,6 +25,7 @@ import { getManualProperties, listPropertySuggestionOptions, listPropertyGroupOp
 // nodeClasses is every assignable class: the class picker narrows it to the
 // node's type, the query builder offers all of them.
 import { listNodeClassOptions, getNodeClassFields } from '#lib/features/semantic/server.ts';
+import type { ClassFields } from '#lib/features/semantic/index.ts';
 import { listUsers } from '#lib/features/auth/server.ts';
 import { latestVersionId } from '#lib/features/pages/server.ts';
 import { getContentSchemeDefault } from '#lib/features/content/server.ts';
@@ -33,6 +34,12 @@ import { getNodeShares, listShareLinks } from '#lib/features/nodes/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { space?: string; slug: string };
+
+/** The node's classes for its editor: their fields, and the ids its class picker reads. */
+async function classesOf(nodeId: string): Promise<{ classFields: ClassFields | null; nodeClassIds: string[] }> {
+  const classFields = await getNodeClassFields(nodeId);
+  return { classFields, nodeClassIds: classFields?.classes.map((c) => c.id) ?? [] };
+}
 
 // A viewer, who changes no node, is sent home before any lookup, whatever the
 // address. Past that the asker is an editor or an admin, who changes every node
@@ -67,11 +74,10 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       propSuggestions: await listPropertySuggestionOptions(locals.user),
       propertyGroups: await listPropertyGroupOptions(),
       tagSuggestions: (await listTags(locals.user)).map((t) => t.tag),
-      nodeClassId: doc.class_id,
+      ...(await classesOf(doc.id)),
       locale: doc.locale,
       localeSuggestion: doc.detected_locale,
       nodeClasses: await listNodeClassOptions(),
-      classFields: await getNodeClassFields(doc.class_id),
       // As stored: null inherits the space's access level.
       visibility: doc.visibility,
       spaceAccessLevel: doc.space_access_level,
@@ -109,10 +115,9 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
       propSuggestions: await listPropertySuggestionOptions(locals.user),
       propertyGroups: await listPropertyGroupOptions(),
       tagSuggestions: (await listTags(locals.user)).map((t) => t.tag),
-      nodeClassId: collection.class_id,
+      ...(await classesOf(collection.id)),
       locale: collection.locale,
       nodeClasses: await listNodeClassOptions(),
-      classFields: await getNodeClassFields(collection.class_id),
       visibility: collection.visibility,
       spaceAccessLevel: collection.space_access_level,
       spaceMembers,
@@ -158,10 +163,9 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
     propSuggestions: await listPropertySuggestionOptions(locals.user),
     propertyGroups: await listPropertyGroupOptions(),
     tagSuggestions: (await listTags(locals.user)).map((t) => t.tag),
-    nodeClassId: page.class_id,
+    ...(await classesOf(page.id)),
     locale: page.locale,
     nodeClasses: await listNodeClassOptions(),
-    classFields: await getNodeClassFields(page.class_id),
     visibility: page.visibility,
     spaceAccessLevel: page.space_access_level,
     spaceMembers,

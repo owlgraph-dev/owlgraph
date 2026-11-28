@@ -13,7 +13,7 @@ const cls = (id: string, parentId: string | null, depth: number): NodeClassOptio
 // page → article → news; document
 const classes = [cls('page', null, 1), cls('article', 'page', 2), cls('news', 'article', 3), cls('document', null, 1)];
 
-const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'page', spaceId: 'ns1', ...over });
+const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classIds: ['page'], spaceId: 'ns1', ...over });
 const edge = (source: string, target: string, relationshipType?: string): GraphEdge => ({
   source, target, edgeId: `${source}-${target}`,
   ...(relationshipType ? { relationshipType, relationshipLabel: relationshipType.toUpperCase() } : {}),
@@ -21,9 +21,9 @@ const edge = (source: string, target: string, relationshipType?: string): GraphE
 
 const nodes = [
   node('a'),
-  node('b', { classId: 'article' }),
-  node('c', { classId: 'news', spaceId: 'ns2' }),
-  node('d', { type: 'document', classId: 'document' }),
+  node('b', { classIds: ['article'] }),
+  node('c', { classIds: ['news'], spaceId: 'ns2' }),
+  node('d', { type: 'document', classIds: ['document'] }),
   node('lonely'),
 ];
 const edges = [edge('a', 'b'), edge('b', 'c', 'mentions'), edge('a', 'd', 'attaches')];
@@ -50,6 +50,11 @@ describe('applyGraphFilter', () => {
     expect(ids(out)).toEqual(['b', 'c']);
     expect(out.edges.map((e) => e.edgeId)).toEqual(['b-c']);
     expect(expandClassIds(new Set(['page']), classes)).toEqual(new Set(['page', 'article', 'news']));
+  });
+
+  it('admits a node with several classes when any one of them passes', () => {
+    const several = [node('both', { classIds: ['document', 'news'] }), node('neither', { classIds: ['document'] })];
+    expect(ids(applyGraphFilter(several, [], filter({ classIds: new Set(['article']) }), classes))).toEqual(['both']);
   });
 
   it('filters by space', () => {

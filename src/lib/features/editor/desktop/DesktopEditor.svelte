@@ -53,9 +53,9 @@
     propSuggestions = [],
     propertyGroups = [],
     tagSuggestions = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     classFields = null,
@@ -310,9 +310,9 @@
   {isHomePage}
   {propSuggestions}
   {propertyGroups}
-  {nodeClassId}
+  {nodeClassIds}
   {nodeClasses}
-  {onSetNodeClass}
+  {onSetNodeClasses}
   {locale}
   {onSetLocale}
   {classFields}

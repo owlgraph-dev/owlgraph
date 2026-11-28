@@ -41,7 +41,7 @@ test.describe('finding something', () => {
       await Promise.all([
         ...reports.map(async (title) => {
           const { id } = await createDocument(page.request, { title });
-          expect((await page.request.patch(`/api/documents/${id}`, { data: { visibility: 'restricted', nodeClassId: reportClass } })).ok()).toBe(true);
+          expect((await page.request.patch(`/api/documents/${id}`, { data: { visibility: 'restricted', classIds: [reportClass] } })).ok()).toBe(true);
         }),
         ...memos.map(async (title) => {
           const { id } = await createDocument(page.request, { title });
@@ -111,7 +111,7 @@ test.describe('finding something', () => {
       });
     } finally {
       // The class goes again once nothing carries it: the reports return to plain documents.
-      await db`update nodes set class_id = (select id from node_classes where slug = 'document') where class_id = (select id from node_classes where slug = ${cls.slug})`;
+      await db`update node_class_statements set class_id = (select id from node_classes where slug = 'document') where class_id = (select id from node_classes where slug = ${cls.slug})`;
       await deleteClass(admin.request, cls.slug);
       await admin.close();
     }

@@ -31,7 +31,7 @@ async function listedPage(
     title: setup.title,
     tags: setup.tags ?? [],
     visibility: setup.visibility ?? 'internal',
-    ...(setup.nodeClassId ? { nodeClassId: setup.nodeClassId } : {}),
+    ...(setup.nodeClassId ? { classIds: [setup.nodeClassId] } : {}),
   });
   return id;
 }

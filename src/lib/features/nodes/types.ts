@@ -38,8 +38,8 @@ export interface NodeHeaderView {
   title: string;
   /** The language of its title and its field values (docs/architecture/languages.md). */
   locale: string;
-  /** Its class, and the class's overview page when it has one. */
-  nodeClass: { label: string; href: string | null } | null;
+  /** Every class it has, each with its overview page when it has one. */
+  classes: { label: string; href: string | null }[];
   /** The integration its source belongs to, and how the node can be read; null for a node of the core's own. */
   source: { label: string; readsVia: string | null } | null;
   /** Who may read it, as it holds now (an inherited visibility resolved). */

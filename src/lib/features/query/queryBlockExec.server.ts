@@ -105,7 +105,7 @@ async function runOne(user: SessionUser | null, attrs: QueryBlockAttrs, pageId: 
           type: n.type,
           spaceLabel: spaceLabels.get(n.spaceId) ?? '',
           creatorLabel: n.createdBy ? (creatorLabels.get(n.createdBy) ?? '') : '',
-          classLabel: n.className,
+          classLabel: n.classes.map((c) => c.name).join(', '),
           externalUrl: n.externalUrl ?? '',
           locale: n.locale,
           properties

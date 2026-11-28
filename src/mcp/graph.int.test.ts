@@ -49,7 +49,7 @@ describe('get_relationships', () => {
 });
 
 describe('traverse', () => {
-  it('walks one step along a typed edge to the page at its other end, with its class', async () => {
+  it('walks one step along a typed edge to the page at its other end, with its classes', async () => {
     const admin = await connectAs('admin');
     const res = await admin.callTool({
       name: 'traverse',
@@ -58,8 +58,8 @@ describe('traverse', () => {
     expect(res.isError).toBeFalsy();
     const nodes = jsonOf<{ title: string }[]>(res);
     expect(nodes.map((n) => n.title)).toEqual([seed.publicTitle]);
-    // The hydrated hit carries its class: a plain page's is the page type.
-    expect(nodes[0]).toMatchObject({ classId: expect.any(String), className: 'Page' });
+    // The hydrated hit carries its classes: a plain page's is the page type.
+    expect(nodes[0]).toMatchObject({ classes: [expect.objectContaining({ id: expect.any(String), name: 'Page' })] });
   });
 
   it('answers a filter that sets more than one of property, edge, and, or with a tool error', async () => {

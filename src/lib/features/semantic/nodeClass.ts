@@ -29,10 +29,19 @@ export interface ClassFieldGroup {
   fromClass: { id: string; slug: string; label: string };
 }
 
-// The class, its chain's groups nearest first, and their definitions, the
-// nearest winning a collision (mergeChainDefinitions).
+// A class a node has, as every surface names it: in the request's language.
+export interface NodeClassRef {
+  id: string;
+  slug: string;
+  name: string;
+  kind: NodeClassKind;
+}
+
+// The node's classes in the order of their names, their chains' groups, each
+// class's own first and a group once, and their definitions, the nearest
+// winning a collision (mergeChainDefinitions).
 export interface ClassFields {
-  nodeClass: NodeClassOption & { overviewPath: string | null };
+  classes: (NodeClassOption & { overviewPath: string | null })[];
   groups: ClassFieldGroup[];
   definitions: { name: string; label: string; datatype: string; description: string; group: string }[];
 }

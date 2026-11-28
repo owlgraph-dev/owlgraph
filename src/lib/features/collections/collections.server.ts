@@ -39,14 +39,13 @@ export interface CollectionRow {
   created_by: string | null;
   created_at: string;
   updated_at: string;
-  class_id: string;
   locale: string;
 }
 
 // Explicit columns: a missed join fails loudly instead of leaving visibility
 // undefined. No `source_ref`: it is its integration's business.
 export const COLLECTION_COLUMNS = `c.id, n.title, n.slug, n.space_id, ${spaceSlugColumn()}, c.plugin,
-    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, n.locale`;
+    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, n.locale`;
 export const COLLECTION_FROM = `from collections c join nodes n on n.id = c.id ${spaceJoin('n')}`;
 
 export async function getCollection(id: string): Promise<CollectionRow | null> {

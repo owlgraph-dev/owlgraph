@@ -56,13 +56,15 @@
   <h1 lang={doc.locale}>{doc.title}</h1>
   <dl class="meta">
     {#if classFields}
-      <dt>{m.document_class_label()}</dt>
-      <dd>
-        {#if classFields.nodeClass.overviewPath}
-          <a class="class-badge" href={classFields.nodeClass.overviewPath}>{classFields.nodeClass.label}</a>
-        {:else}
-          <span class="class-badge">{classFields.nodeClass.label}</span>
-        {/if}
+      <dt>{classFields.classes.length > 1 ? m.document_classes_label() : m.document_class_label()}</dt>
+      <dd class="class-badges">
+        {#each classFields.classes as cls (cls.id)}
+          {#if cls.overviewPath}
+            <a class="class-badge" href={cls.overviewPath}>{cls.label}</a>
+          {:else}
+            <span class="class-badge">{cls.label}</span>
+          {/if}
+        {/each}
       </dd>
     {/if}
     {#each shortProperties as p (p.name)}
@@ -104,6 +106,7 @@
   .meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
   .class-badge { display: inline-block; font-size: 0.78rem; background: var(--ds-color-accent-soft); color: var(--ds-color-accent); border-radius: var(--ds-radius-pill); padding: 0.15rem 0.6rem; text-decoration: none; }
   a.class-badge:hover { text-decoration: underline; }
+  .class-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; }
   .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.8rem; padding: 0; }
   .tags li { font-size: 0.78rem; background: var(--ds-color-accent-soft); color: var(--ds-color-accent); border-radius: var(--ds-radius-pill); padding: 0.15rem 0.6rem; }
   /* Edged in its own tone: the soft grounds sit near 1:1 on the page. */
