@@ -5,11 +5,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { createCollection, getCollection, userCanReadCollection } from '#lib/features/collections/server.ts';
-import { createLinkDocument, getDocument, setDocumentShares, userCanReadDocument } from '#lib/features/documents/server.ts';
+import { createLinkDocument, getDocument, userCanReadDocument } from '#lib/features/documents/server.ts';
 import { getGraph } from '#lib/features/graph/server.ts';
 import { createSpace, setSpaceMembers } from '#lib/features/spaces/server.ts';
-import { setNodeVisibility } from '#lib/features/nodes/server.ts';
-import { createPage, getPage, setPageShares, userCanReadPage } from '#lib/features/pages/server.ts';
+import { setNodeShares, setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { createPage, getPage, userCanReadPage } from '#lib/features/pages/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 
 // Who may read a node of each type (docs/features/002-visibility-and-spaces.md,
@@ -37,12 +37,6 @@ async function make(kind: Kind, title: string, by: SessionUser, spaceId?: string
   return (await createCollection({ title, createdBy: by.id, user: by, spaceId })).id;
 }
 
-/** Shares a node with a user; a collection has no share list, so there it shares with no one. */
-async function share(kind: Kind, id: string, userId: string): Promise<void> {
-  if (kind === 'page') await setPageShares(id, [userId]);
-  if (kind === 'document') await setDocumentShares(id, [userId]);
-}
-
 beforeAll(async () => {
   Object.assign(readers, {
     anonymous: null,
@@ -64,7 +58,7 @@ beforeAll(async () => {
     nodes.inheriting[kind] = await make(kind, `Inheriting ${kind}`, owner, space.id);
     nodes.own[kind] = await make(kind, `Own ${kind}`, owner, space.id);
     await setNodeVisibility(nodes.own[kind], 'restricted');
-    await share(kind, nodes.own[kind], readers.shared!.id);
+    await setNodeShares(nodes.own[kind], [readers.shared!.id]);
     nodes.other[kind] = await make(kind, `Other ${kind}`, owner, space.id);
     await setNodeVisibility(nodes.other[kind], 'restricted');
   }
@@ -115,11 +109,8 @@ describe('who may read a node', () => {
   });
 
   it('002.4 a node set to restricted by itself is read by the users it is shared with, its owner and admins; a member of its space is not among them, and a share opens no other node', async () => {
-    expect(await readersOf('page', nodes.own.page)).toEqual(['owner', 'shared', 'admin']);
-    expect(await readersOf('document', nodes.own.document)).toEqual(['owner', 'shared', 'admin']);
-    // A collection has no share list: one set to restricted by itself is shared with no one.
-    expect(await readersOf('collection', nodes.own.collection)).toEqual(['owner', 'admin']);
     for (const kind of KINDS) {
+      expect(await readersOf(kind, nodes.own[kind]), `a ${kind} restricted by itself and shared`).toEqual(['owner', 'shared', 'admin']);
       expect(await readersOf(kind, nodes.other[kind]), `another restricted ${kind} of the space`).toEqual(['owner', 'admin']);
     }
   });

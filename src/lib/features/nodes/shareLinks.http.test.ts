@@ -87,10 +87,10 @@ describe.skipIf(app.skipped)('share links', () => {
       expect((await call(served, `/api/pages/${seed.restrictedId}/share-links/${link.id}`, { as: 'editorC', method: 'DELETE' })).status).toBe(403);
       expect(await linkCount(seed.restrictedId)).toBe(before);
       expect((await call(served, `/share/${link.token}`)).status).toBe(200);
-      // A document is written by its owner only, so its sharee makes no link.
-      const docBefore = await linkCount(seed.restrictedDocId);
-      expect((await call(served, `/api/documents/${seed.restrictedDocId}/share-links`, { as: 'editorB', json: {} })).status).toBe(403);
-      expect(await linkCount(seed.restrictedDocId)).toBe(docBefore);
+      // A document the viewer reads, and may not change.
+      const docBefore = await linkCount(seed.publicDocId);
+      expect((await call(served, `/api/documents/${seed.publicDocId}/share-links`, { as: 'viewer', json: {} })).status).toBe(403);
+      expect(await linkCount(seed.publicDocId)).toBe(docBefore);
     });
   });
 

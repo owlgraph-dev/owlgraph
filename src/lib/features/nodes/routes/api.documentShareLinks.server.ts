@@ -14,7 +14,7 @@ type Params = { id: string };
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   return Response.json(await listShareLinks(params.id));
 };
 
@@ -22,7 +22,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   const body = await request.json().catch(() => ({}));
   const link = await createShareLink(params.id, locals.user?.id ?? null, String(body.label ?? ''), locals.log);
   return Response.json(link);

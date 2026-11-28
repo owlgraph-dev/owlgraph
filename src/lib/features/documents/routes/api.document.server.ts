@@ -8,9 +8,7 @@ import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts'
 import {
   documentEmbed,
   getDocument,
-  getDocumentShares,
   renameDocument,
-  setDocumentShares,
   userCanWriteDocument,
   refreshDocumentSearchMeta,
   clearDocumentLocaleSuggestion,
@@ -18,7 +16,7 @@ import {
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
 import { setNodeClass } from '#lib/features/semantic/server.ts';
-import { deleteNode, setNodeLocale, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { deleteNode, setNodeLocale, setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
 import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
@@ -41,7 +39,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
 export const PATCH: RequestHandler<Params> = async ({ params, request, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
 
   const body = await request.json().catch(() => ({}));
   try {
@@ -76,18 +74,16 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       out.visibility = stored;
     }
     if (Array.isArray(body.shares)) {
-      // setDocumentShares doesn't report what was added or removed; the event diffs.
-      const before = await getDocumentShares(params.id);
-      const granteeIds = await setDocumentShares(params.id, body.shares);
+      const change = await setNodeShares(params.id, body.shares);
       logEvent(locals.log, 'node.shares_changed', {
         nodeId: params.id,
         nodeType: 'document',
-        granteeIds,
-        addedIds: granteeIds.filter((id) => !before.includes(id)),
-        removedIds: before.filter((id) => !granteeIds.includes(id)),
+        granteeIds: change.shares,
+        addedIds: change.added,
+        removedIds: change.removed,
         actorId: locals.user?.id ?? null,
       });
-      out.shares = granteeIds;
+      out.shares = change.shares;
     }
     if (typeof body.spaceId === 'string') {
       await setNodeSpace(params.id, body.spaceId, locals.user);
@@ -124,7 +120,7 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
   const doc = await getDocument(params.id);
   if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!userCanWriteDocument(locals.user, doc)) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
   await deleteNode(doc.id);
   logEvent(locals.log, 'node.deleted', { nodeId: doc.id, nodeType: 'document', actorId: locals.user?.id ?? null });
   return Response.json({ ok: true });

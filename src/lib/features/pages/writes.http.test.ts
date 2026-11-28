@@ -24,7 +24,7 @@ const docOf = (text: string) => ({ type: 'doc', content: [para(text)] });
 async function stored(id: string) {
   const [row] = await db<Record<string, unknown>[]>`
     select n.title, n.slug, n.visibility, n.space_id, n.class_id, n.locale, n.updated_at, p.doc, p.content_scheme,
-      (select coalesce(array_agg(user_id order by user_id), '{}') from page_shares where page_id = n.id) as shares,
+      (select coalesce(array_agg(user_id order by user_id), '{}') from node_shares where node_id = n.id) as shares,
       (select coalesce(array_agg(tag order by tag), '{}') from node_tags where node_id = n.id) as tags,
       (select count(*)::int from node_versions where node_id = n.id) as versions
     from nodes n join pages p on p.id = n.id where n.id = ${id}`;

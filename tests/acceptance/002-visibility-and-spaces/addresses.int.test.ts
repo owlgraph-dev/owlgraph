@@ -121,7 +121,7 @@ describe('a space deleted', () => {
     const collides = await createPage('Collides', admin, { spaceId: ns.id });
     await db`update nodes set slug = ${seed.publicSlug} where id = ${collides.id}`;
     const inheriting = await createPage('Inheriting', admin, { spaceId: ns.id });
-    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id), 'page')).toBe(false);
+    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id))).toBe(false);
 
     await deleteSpace(ns.id);
     const defaultNs = await getDefaultSpace();
@@ -129,7 +129,7 @@ describe('a space deleted', () => {
     expect(moved.every((n) => n.space_id === defaultNs.id)).toBe(true);
     expect(moved.find((n) => n.id === collides.id)!.slug).toBe(`${seed.publicSlug}-${collides.id.slice(0, 6)}`);
     expect(await storedVisibility(inheriting.id)).toBeNull();
-    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id), 'page')).toBe(true);
+    expect(await userCanReadNode(await userOf('viewer'), await accessRow(inheriting.id))).toBe(true);
 
     await expect(deleteSpace(defaultNs.id)).rejects.toThrow(/default space cannot be deleted/);
   });

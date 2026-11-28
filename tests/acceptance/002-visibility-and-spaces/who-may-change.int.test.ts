@@ -5,10 +5,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { createCollection, getCollection, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
-import { createLinkDocument, getDocument, setDocumentShares, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { createLinkDocument, getDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
 import { createSpace, getDefaultSpace, setSpaceMembers } from '#lib/features/spaces/server.ts';
-import { setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
-import { createPage, getPage, setPageShares, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { createPage, getPage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 
 // Who may change a node, and who may place one in a restricted space
@@ -59,7 +59,7 @@ async function may(what: 'read' | 'write', kind: Kind, id: string, user: Session
 const spaceOf = async (kind: Kind, id: string) => (kind === 'page' ? await getPage(id) : kind === 'document' ? await getDocument(id) : await getCollection(id))!.space_id;
 
 describe('who may change a node', () => {
-  it('002.12 a viewer changes no node; an editor changes any page or collection they may read; a document is changed only by its owner or an admin', async () => {
+  it('002.12 a viewer changes no node; an editor changes any node they may read, a document they did not make included', async () => {
     // Of each type: a public node, an internal one, one restricted by itself
     // and shared, and one that inherits the restricted space. All the owner's.
     await setSpaceMembers(restricted, [askers.owner.id, askers.member.id]);
@@ -69,8 +69,7 @@ describe('who may change a node', () => {
       await setNodeVisibility(internal, 'internal');
       const own = await make(kind, askers.owner);
       await setNodeVisibility(own, 'restricted');
-      if (kind === 'page') await setPageShares(own, [askers.shared.id]);
-      if (kind === 'document') await setDocumentShares(own, [askers.shared.id]);
+      await setNodeShares(own, [askers.shared.id]);
       nodes[kind] = { open: await make(kind, askers.owner), internal, own, inheriting: await make(kind, askers.owner, restricted) };
     }
     await setSpaceMembers(restricted, [askers.member.id]);
@@ -85,21 +84,17 @@ describe('who may change a node', () => {
         const writers = await writersOf(kind, id);
         expect(writers, `a viewer and the ${name} ${kind}`).not.toContain('viewer');
         expect(writers, `an admin and the ${name} ${kind}`).toContain('admin');
-        if (kind === 'document') {
-          expect(writers, `who changes the ${name} document`).toEqual(['owner', 'admin']);
-          continue;
-        }
         for (const editor of ['owner', 'shared', 'member'] as const) {
           expect(writers.includes(editor), `the ${editor}, an editor, changes the ${name} ${kind} exactly when they read it`).toBe(await may('read', kind, id, askers[editor]));
         }
       }
     }
     // Not every editor reads every one of them: the rule was not met by all reading all.
-    expect(await writersOf('page', nodes.page.open)).toEqual(['owner', 'shared', 'member', 'admin']);
-    expect(await writersOf('page', nodes.page.own)).toEqual(['owner', 'shared', 'admin']);
-    expect(await writersOf('collection', nodes.collection.inheriting)).toEqual(['owner', 'member', 'admin']);
-    // The shared editor reads the restricted document and still may not change it.
-    expect(await may('read', 'document', nodes.document.own, askers.shared)).toBe(true);
+    for (const kind of KINDS) {
+      expect(await writersOf(kind, nodes[kind].open), `the open ${kind}`).toEqual(['owner', 'shared', 'member', 'admin']);
+      expect(await writersOf(kind, nodes[kind].own), `the ${kind} restricted by itself`).toEqual(['owner', 'shared', 'admin']);
+      expect(await writersOf(kind, nodes[kind].inheriting), `the inheriting ${kind}`).toEqual(['owner', 'member', 'admin']);
+    }
   });
 
   it('002.13 making a node in a restricted space, or moving one into it, is refused to an editor who is no member, and open to a member and to an admin', async () => {

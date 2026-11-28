@@ -408,7 +408,7 @@ belongs to.
 | `document.source_changed` | `info` | `nodeId`, `from`, `to`, `actorId` — never the address, which is content | `api.documentContent.server.ts`, when a `PUT` of the content switches a document between an upload and a link ([documents.md](documents.md#choosing-and-switching-the-source)) |
 | `node.deleted` | `info` | `nodeId`, `nodeType`, `actorId` | `deletePage`, `deleteNode` (via their adapters) |
 | `node.visibility_changed` | `info` | `nodeId`, `nodeType`, `from`, `to` (`null`: inherits the space), `actorId` | `api.page.server.ts`, `api.document.server.ts` |
-| `node.shares_changed` | `info` | `nodeId`, `nodeType`, `granteeIds`, `addedIds`, `removedIds`, `actorId` | `setPageShares`, `setDocumentShares` (via their adapters) |
+| `node.shares_changed` | `info` | `nodeId`, `nodeType`, `granteeIds`, `addedIds`, `removedIds`, `actorId` | `setNodeShares` (via the page, document and collection adapters) |
 | `space.access_changed` | `info` | `spaceId`, `from`, `to`, `actorId` | `setSpaceAccessLevel` |
 | `space.membership_changed` | `info` | `spaceId`, `addedIds`, `removedIds`, `actorId` | `setSpaceMembers` |
 | `user.created` | `info` | `userId`, `role`, `actorId` | `settings.users.server.ts`'s `create` |
@@ -424,7 +424,7 @@ must not be read as one:
 
 |  | `node.shares_changed` | `share.created` / `share.revoked` |
 |---|---|---|
-| what | **narrowing** grants to named users (`page_shares` / `document_shares`) | a **widening** capability link (`share_links`) |
+| what | **narrowing** grants to named users (`node_shares`) | a **widening** capability link (`share_links`) |
 | who it lets in | those specific signed-in users | anyone holding the URL, signed in or not |
 | key field | `granteeIds` (user ids) | `shareLinkId`, `tokenHash` |
 

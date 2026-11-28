@@ -1100,7 +1100,6 @@
 	"editor_access_control_visibility_restricted_option": "Eingeschränkt — nur ausgewählte Benutzer",
 	"editor_access_control_public_needs_space": "Öffentlich wird es, wenn ein Admin den Bereich unter Einstellungen → Bereiche öffentlich stellt.",
 	"editor_access_control_restricted_hint": "Du (der Besitzer) und Admins haben immer Zugriff. Wähle, wer sonst noch lesen darf:",
-	"editor_access_control_restricted_owner_only": "Nur du (der Besitzer) und Admins haben Zugriff.",
 	"editor_access_control_no_other_users": "Keine weiteren Benutzer zum Freigeben.",
 	"editor_access_control_cancel": "Abbrechen",
 	"editor_access_control_apply": "Übernehmen",

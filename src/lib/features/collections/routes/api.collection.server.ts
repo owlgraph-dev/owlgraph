@@ -15,7 +15,7 @@ import {
   type CollectionRow,
 } from '#lib/features/collections/server.ts';
 import { setNodeTags, setManualProperties, setNodeClass } from '#lib/features/semantic/server.ts';
-import { deleteNode, setNodeLocale, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
+import { deleteNode, setNodeLocale, setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
 import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 import { apiError, apiErrorFrom } from '#lib/platform/apiErrors.ts';
@@ -47,7 +47,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
   return Response.json({ embed });
 };
 
-// PATCH /api/documents/[id] field for field, without shares: a collection has none.
+// PATCH /api/documents/[id] field for field.
 export const PATCH: RequestHandler<Params> = async ({ params, request, locals }) => {
   const collection = await writableCollection(params.id, locals);
   if (collection instanceof Response) return collection;
@@ -78,6 +78,18 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
         actorId: locals.user?.id ?? null,
       });
       out.visibility = stored;
+    }
+    if (Array.isArray(body.shares)) {
+      const change = await setNodeShares(params.id, body.shares);
+      logEvent(locals.log, 'node.shares_changed', {
+        nodeId: params.id,
+        nodeType: 'collection',
+        granteeIds: change.shares,
+        addedIds: change.added,
+        removedIds: change.removed,
+        actorId: locals.user?.id ?? null,
+      });
+      out.shares = change.shares;
     }
     if (typeof body.spaceId === 'string') {
       await setNodeSpace(params.id, body.spaceId, locals.user);

@@ -4,7 +4,8 @@
 
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { createPage, saveDoc, setPageShares, setPageVisibility } from '#lib/features/pages/server.ts';
+import { createPage, saveDoc, setPageVisibility } from '#lib/features/pages/server.ts';
+import { setNodeShares } from '#lib/features/nodes/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 import { getIncomingEdges, getGraph, getLocalGraph } from './server';
 
@@ -56,7 +57,7 @@ describe('the local graph', () => {
       const [editorA, editorB] = [await userOf('editorA'), await userOf('editorB')];
       const linker = await createPage('Restricted linker', editorA);
       await setPageVisibility(linker.id, 'restricted');
-      await setPageShares(linker.id, [editorB.id]);
+      await setNodeShares(linker.id, [editorB.id]);
       await saveDoc(linker.id, {
         type: 'doc',
         content: [

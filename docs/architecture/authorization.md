@@ -110,7 +110,7 @@ pure, plus `access.server.ts` for the share/membership lookups):
    `load` **and in every form action**, because actions resolve from the
    nearest `+page.server.ts` and run before any layout load — a layout-level
    guard alone never protects a direct POST.
-2. **Per-node visibility** — `canReadNode` / `canWriteNode(user, node, kind)`,
+2. **Per-node visibility** — `canReadNode` / `canWriteNode(user, node)`,
    given a node's **effective** visibility —
    `coalesce(node.visibility, node's space's access_level)`, since
    `nodes.visibility` is nullable (see "Spaces" below):
@@ -129,24 +129,22 @@ pure, plus `access.server.ts` for the share/membership lookups):
    (`src/lib/features/nodes/nodes.server.ts`) rather than each hand-rolling it;
    the pure functions in `access.ts` take one `NodeAccess` shape
    (`{visibility, created_by, space_access_level}`), regardless of which
-   table it was joined from. The only difference between the node types is
-   the write policy (`kind`): a shared or space-member user may write a
-   page, while a document is writable only by its owner or an admin. A
-   collection is written like a page — its members are curated together — but
-   has no share list, so a restricted one with a visibility of its own is its
-   owner's and an admin's.
+   table it was joined from. Nothing in either check asks what a node holds
+   ([decision 0027](../adr/0027-one-rule-says-who-may-change-a-node.md)):
+   a page, a document and a collection are read, changed and shared alike,
+   and every node has a share list (`node_shares`).
 
    Admins bypass visibility for reads. Writes additionally require the
-   `editor`/`admin` role — `viewer` never writes regardless of visibility.
-   For a `restricted` page, the owner (or admin) always writes, and so does
+   `editor`/`admin` role — `viewer` never writes regardless of visibility —
+   and then follow the read: an editor writes every node they may read,
+   changing it, replacing a document's file, sharing it, deleting it. For a
+   `restricted` node, the owner (or admin) always writes, and so does
    whichever access subject granted the read in the first place — a
-   space member (inherited restriction) or a `page_shares` entry
+   space member (inherited restriction) or a `node_shares` entry
    (explicit override): **restricted's two access subjects are full trust
    relationships, not read-only grants**, so read-eligible and
    write-eligible are the same population there (see "Group-as-access-
-   subject" below for why). Document writes are stricter still: owner or
-   admin only, no editor bypass, regardless of visibility — unrelated to
-   the page rule above, and not something this changes.
+   subject" below for why).
 
 This two-check shape (a coarse role check, then a node check) is
 deliberate: it's what lets finer-grained access control (explicit grants,
@@ -221,9 +219,9 @@ today, shaped so a first-class `groups` concept can slot into the same role
 later) managed under `space:manage` via `/settings/spaces`. For a
 node that *inherits* a restricted space (`visibility IS NULL`), the
 access subject is that membership: owner, admin, or a current member of the
-node's current space. This is distinct from the older per-node
-`page_shares`/`document_shares` mechanism, which now only applies to a node
-**explicitly** overridden to `restricted` — an inheriting node's membership
+node's current space. This is distinct from the per-node share list
+(`node_shares`), which applies only to a node **explicitly** overridden to
+`restricted` — an inheriting node's membership
 and an overridden node's shares never cross-apply (being on one page's
 share list grants nothing on a different page, whether or not it's in the
 same space).
@@ -233,10 +231,10 @@ not read-only grants.** A space member is trusted the same way any
 editor is trusted with an internal/public page (that's the whole point of
 symmetry with the other two access levels: an admin curated who belongs in
 the space, so members write there like editors write anywhere else).
-An explicit `page_shares` entry carries the *same* trust, just narrowed to
-a hand-picked subset of people — `page_shares` is a **narrowing**
+An explicit `node_shares` entry carries the *same* trust, just narrowed to
+a hand-picked subset of people — the share list is a **narrowing**
 mechanism, and the selected users are always a subset of who'd already
-reach the page via its space. This is **not** a share link: a share
+reach the node via its space. This is **not** a share link: a share
 link (`/share/[id]`, its id the link's unguessable token) is the opposite
 shape — a **widening** grant to someone who would *not* otherwise have
 space-level access at all (e.g. a public link into an internal page).
@@ -245,7 +243,7 @@ space or visibility, until a writer of the node revokes it; it works
 outside space-based routing entirely, and reads as an anonymous visitor
 would, never by the visitor's session (what a browser keeps of it:
 [What a browser keeps](#what-a-browser-keeps)). The two must never be
-conflated: `page_shares`/`visibility` never widen past a node's space; a
+conflated: `node_shares`/`visibility` never widen past a node's space; a
 share link never narrows within one.
 
 Two enforcement layers, both membership-driven:
@@ -282,8 +280,8 @@ non-member with `SPACE_MEMBERSHIP_REQUIRED` otherwise.
 creating/renaming/deleting a space, setting its `access_level`, and
 managing its membership — via `/settings/spaces`. It does **not** gate
 reassigning an individual node to a different space, which is treated
-as an ordinary content edit (`page:write` / document ownership, same check
-as changing `visibility`), not a space-management action — though that
+as an ordinary content edit (`page:write` and the node check, the same
+as for changing `visibility`), not a space-management action — though that
 edit is still membership-gated as described above.
 
 Deleting a space never deletes its content: its nodes move into the

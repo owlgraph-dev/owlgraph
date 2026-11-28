@@ -1,7 +1,7 @@
 ---
 status: implemented
 issue:
-adrs: ['0002', '0004']
+adrs: ['0002', '0004', '0027']
 updated: 2026-11-28
 ---
 
@@ -83,8 +83,7 @@ Inheriting and narrowing:
 Who may change:
 
 12. A user with the viewer role can change no node. An editor can change any
-    page or collection they may read. A document can be changed only by its
-    owner or an admin.
+    node they may read.
 13. Creating a node in a restricted space, or moving one into it, needs
     membership of it or the admin role.
 14. Only a user who may manage spaces can create, rename or delete one,
@@ -132,8 +131,9 @@ What a link shows:
 - **No setting means inherit**
   ([decision 0004](../adr/0004-null-means-inherit.md)). A node is public only
   by inheriting a public space, so closing the space closes it.
-- **One rule for every node type.** Pages, documents and collections differ
-  only in who may change them.
+- **One rule for every node type**
+  ([decision 0027](../adr/0027-one-rule-says-who-may-change-a-node.md)).
+  Pages, documents and collections are read, changed and shared alike.
 - **Deleting a space can open its content**, when the default space
   is more open than the one deleted. The deletion does not choose for the
   admin.
@@ -157,9 +157,6 @@ None blocks the work.
   `tests/acceptance/002-visibility-and-spaces/`. Where the code does not
   do what a criterion says, the case is pinned there as a known bug and not
   fixed, as the notes below say.
-- 002.4 holds for a collection with no one to share it with: a collection has
-  no share list, so one set to restricted by itself is its owner's and
-  admins' alone.
 - 002.5 does not hold in four cases, each pinned:
   - a signed-out visitor to a restricted document is sent to sign in;
   - the not-found answer for a page or document the asker may not read

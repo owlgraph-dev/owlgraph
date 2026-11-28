@@ -6,7 +6,6 @@
 // (docs/architecture/authorization.md, "Two checks"). Pure: the caller looks up shares and
 // membership (./access.server.ts). canReadNode's SQL twin is readableNodes().
 import type { SessionUser } from '#lib/features/auth/index.ts';
-import type { NodeType } from './types';
 
 export type Visibility = 'public' | 'internal' | 'restricted';
 
@@ -43,12 +42,12 @@ export function canReadNode(
   return node.visibility === null ? isSpaceMember : isShared;
 }
 
+// One rule for every node, whatever it holds
+// (docs/adr/0027-one-rule-says-who-may-change-a-node.md): an editor changes
+// every node they may read, a viewer none.
 export function canWriteNode(
   user: SessionUser | null | undefined,
   node: NodeAccess,
-  // Selects the write policy: a document is owner/admin only; a collection is
-  // written like a page, since its members are curated together.
-  kind: NodeType,
   isShared = false,
   isSpaceMember = false
 ): boolean {
@@ -56,12 +55,8 @@ export function canWriteNode(
   if (user.role === 'admin') return true;
   // Before ownership: an owner lowered to viewer keeps no write access.
   if (user.role === 'viewer') return false;
-  if (kind === 'document') {
-    // Only the owner, even for a public or internal document.
-    return node.created_by === user.id;
-  }
-  // A page or collection: restricted ones take the same effective visibility and
-  // readers as canReadNode, who may write as well as read.
+  // A restricted node takes the same effective visibility and readers as
+  // canReadNode, who may write as well as read.
   if (effectiveVisibility(node) === 'restricted') {
     if (node.created_by === user.id) return true;
     return node.visibility === null ? isSpaceMember : isShared;

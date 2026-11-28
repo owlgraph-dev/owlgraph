@@ -249,10 +249,9 @@ export function readableNodes(user: { id: string; role: string } | null, alias: 
   return db`(
     ${effective} in ('public', 'internal')
     or ${col('created_by')} = ${user.id}
-    or (${col('visibility')} is not null and (
-      ${col('id')} in (select page_id from page_shares where user_id = ${user.id})
-      or ${col('id')} in (select document_id from document_shares where user_id = ${user.id})
-    ))
+    or (${col('visibility')} is not null and
+      ${col('id')} in (select node_id from node_shares where user_id = ${user.id})
+    )
     or (${col('visibility')} is null and exists (
       select 1 from space_members nm where nm.space_id = ${col('space_id')} and nm.user_id = ${user.id}
     ))

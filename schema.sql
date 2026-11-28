@@ -195,16 +195,6 @@ CREATE TABLE public.custom_styles (
 
 
 --
--- Name: document_shares; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.document_shares (
-    document_id uuid NOT NULL,
-    user_id uuid NOT NULL
-);
-
-
---
 -- Name: documents; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -384,6 +374,16 @@ CREATE TABLE public.node_properties (
 
 
 --
+-- Name: node_shares; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.node_shares (
+    node_id uuid NOT NULL,
+    user_id uuid NOT NULL
+);
+
+
+--
 -- Name: node_source_secrets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -482,16 +482,6 @@ CREATE TABLE public.page_locks (
     token uuid NOT NULL,
     acquired_at timestamp with time zone DEFAULT now() NOT NULL,
     heartbeat_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: page_shares; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.page_shares (
-    page_id uuid NOT NULL,
-    user_id uuid NOT NULL
 );
 
 
@@ -841,14 +831,6 @@ ALTER TABLE ONLY public.custom_styles
 
 
 --
--- Name: document_shares document_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.document_shares
-    ADD CONSTRAINT document_shares_pkey PRIMARY KEY (document_id, user_id);
-
-
---
 -- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -945,6 +927,14 @@ ALTER TABLE ONLY public.node_classes
 
 
 --
+-- Name: node_shares node_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_shares
+    ADD CONSTRAINT node_shares_pkey PRIMARY KEY (node_id, user_id);
+
+
+--
 -- Name: node_source_secrets node_source_secrets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1006,14 +996,6 @@ ALTER TABLE ONLY public.page_layout_presets
 
 ALTER TABLE ONLY public.page_locks
     ADD CONSTRAINT page_locks_pkey PRIMARY KEY (page_id);
-
-
---
--- Name: page_shares page_shares_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_shares
-    ADD CONSTRAINT page_shares_pkey PRIMARY KEY (page_id, user_id);
 
 
 --
@@ -1360,6 +1342,13 @@ CREATE INDEX node_properties_node_idx ON public.node_properties USING btree (nod
 
 
 --
+-- Name: node_shares_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX node_shares_user_idx ON public.node_shares USING btree (user_id);
+
+
+--
 -- Name: node_tags_tag_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1406,13 +1395,6 @@ CREATE INDEX nodes_visibility_idx ON public.nodes USING btree (visibility);
 --
 
 CREATE INDEX page_layout_presets_scope_idx ON public.page_layout_presets USING btree (scope_kind, COALESCE(scope_id, '00000000-0000-0000-0000-000000000000'::uuid), "position");
-
-
---
--- Name: page_shares_user_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX page_shares_user_idx ON public.page_shares USING btree (user_id);
 
 
 --
@@ -1565,22 +1547,6 @@ ALTER TABLE ONLY public.custom_styles
 
 
 --
--- Name: document_shares document_shares_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.document_shares
-    ADD CONSTRAINT document_shares_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.documents(id) ON DELETE CASCADE;
-
-
---
--- Name: document_shares document_shares_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.document_shares
-    ADD CONSTRAINT document_shares_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
-
-
---
 -- Name: documents documents_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1717,6 +1683,22 @@ ALTER TABLE ONLY public.node_properties
 
 
 --
+-- Name: node_shares node_shares_node_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_shares
+    ADD CONSTRAINT node_shares_node_id_fkey FOREIGN KEY (node_id) REFERENCES public.nodes(id) ON DELETE CASCADE;
+
+
+--
+-- Name: node_shares node_shares_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.node_shares
+    ADD CONSTRAINT node_shares_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: node_source_secrets node_source_secrets_node_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1810,22 +1792,6 @@ ALTER TABLE ONLY public.page_locks
 
 ALTER TABLE ONLY public.page_locks
     ADD CONSTRAINT page_locks_page_id_fkey FOREIGN KEY (page_id) REFERENCES public.pages(id) ON DELETE CASCADE;
-
-
---
--- Name: page_shares page_shares_page_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_shares
-    ADD CONSTRAINT page_shares_page_id_fkey FOREIGN KEY (page_id) REFERENCES public.pages(id) ON DELETE CASCADE;
-
-
---
--- Name: page_shares page_shares_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_shares
-    ADD CONSTRAINT page_shares_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
