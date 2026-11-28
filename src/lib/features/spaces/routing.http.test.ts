@@ -56,6 +56,18 @@ describe.skipIf(app.skipped)('space addresses', () => {
       expect((await call(served, '/edit-slug-ns/edit/edit', { as: 'admin' })).status).toBe(200);
     });
 
+    it('a space made restricted stops routing at once for whoever it does not admit, and routes for them again when opened', async () => {
+      const spaceId = await createSpace(served, { name: 'Closing', slug: 'closing-ns', accessLevel: 'internal' });
+      const page = await createPage(served, 'admin', { spaceId });
+      const path = `/closing-ns/${page.slug}`;
+      expect((await call(served, path, { as: 'editorC' })).status).toBe(200);
+      await setAccess(spaceId, 'Closing', 'restricted');
+      expect((await call(served, path, { as: 'editorC' })).status).toBe(404);
+      expect((await call(served, path, { as: 'admin' })).status).toBe(200);
+      await setAccess(spaceId, 'Closing', 'internal');
+      expect((await call(served, path, { as: 'editorC' })).status).toBe(200);
+    });
+
     it('renaming a space’s prefix moves its pages to /<new>/<slug> at once, and the old prefix no longer resolves', async () => {
       const spaceId = await createSpace(served, { name: 'Before', slug: 'before-ns' });
       const page = await createPage(served, 'admin', { spaceId });

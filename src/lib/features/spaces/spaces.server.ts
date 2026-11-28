@@ -8,8 +8,8 @@
 // MCP server imports it too.
 import { db, type TxSql } from '#lib/platform/db.server.ts';
 import type { Visibility } from '#lib/features/nodes/index.ts';
-import { isReservedSlug, cleanSlug, narrowOverridesToSpace } from '#lib/features/nodes/server.ts';
-import { setKnownSpaceSlugs } from './spaceRegistry';
+import { isReservedSlug, cleanSlug, narrowOverridesToSpace, readableNodes } from '#lib/features/nodes/server.ts';
+import { setServerSpaceSlugs } from './spaceRegistry';
 import { CodedError } from '#lib/platform/codedError.ts';
 
 export interface SpaceRow {
@@ -83,24 +83,27 @@ export async function setSpaceMembers(spaceId: string, userIds: unknown): Promis
   return ids;
 }
 
-// Unfiltered: for the server-side matcher registry and the admin path only,
-// never for anything that reaches a client.
+// Unfiltered: the admin's routing slugs; for no one else.
 async function listSpaceSlugs(): Promise<string[]> {
   const rows = await db<{ slug: string }[]>`select slug from spaces where not is_default`;
   return rows.map((r) => r.slug);
 }
 
-// Viewer-scoped by listSpacesForUser's rule. Every visitor fetches it before
-// hydration (hooks.client.ts), so it stays one cheap query.
+// The spaces the user's addresses route under: those whose level or membership
+// admits them, and a restricted one holding a node they may read — its owner's
+// after they left it, a share's (docs/features/002-visibility-and-spaces.md,
+// criterion 21). The browser routes by it (hooks.client.ts) and the reroute hook
+// asks it on the server (src/hooks.ts), so signed out it stays one cheap query.
 export async function listSpaceSlugsForUser(user: { id: string; role: string } | null): Promise<string[]> {
   if (user?.role === 'admin') return listSpaceSlugs();
   const rows = await db<{ slug: string }[]>`
-    select slug from spaces
-    where not is_default
+    select ns.slug from spaces ns
+    where not ns.is_default
       and (
-        access_level = 'public'
-        ${user ? db`or access_level = 'internal'` : db``}
-        ${user ? db`or id in (select space_id from space_members where user_id = ${user.id})` : db``}
+        ns.access_level = 'public'
+        ${user ? db`or ns.access_level = 'internal'` : db``}
+        ${user ? db`or ns.id in (select space_id from space_members where user_id = ${user.id})` : db``}
+        ${user ? db`or exists (select 1 from nodes n where n.space_id = ns.id and ${readableNodes(user, 'n')})` : db``}
       )`;
   return rows.map((r) => r.slug);
 }
@@ -113,10 +116,13 @@ let refreshesStarted = 0;
 let lastApplied = 0;
 export async function refreshSpaceCache(): Promise<void> {
   const ticket = ++refreshesStarted;
-  const slugs = await listSpaceSlugs();
+  const rows = await db<{ slug: string; access_level: Visibility }[]>`select slug, access_level from spaces where not is_default`;
   if (ticket < lastApplied) return;
   lastApplied = ticket;
-  setKnownSpaceSlugs(slugs);
+  setServerSpaceSlugs(
+    rows.map((r) => r.slug),
+    rows.filter((r) => r.access_level === 'restricted').map((r) => r.slug)
+  );
 }
 
 // A label lookup, not an access check: pass only the space ids of rows the
@@ -219,6 +225,8 @@ export async function setSpaceAccessLevel(id: string, accessLevel: Visibility): 
     await sql`update spaces set access_level = ${accessLevel}, updated_at = now() where id = ${id}`;
     await narrowOverridesToSpace(sql, id, accessLevel);
   });
+  // Whether its addresses route only under the stamp follows the level.
+  await refreshSpaceCache();
 }
 
 // Moves the content to the default space first, as a move would: a setting
