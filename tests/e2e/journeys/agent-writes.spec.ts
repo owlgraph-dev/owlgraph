@@ -45,7 +45,7 @@ test.describe('an agent writes, a reader reads', () => {
     await test.step('an agent makes a page with a flex row and a button quick link through the MCP server', async () => {
       const client = await agent(seed.tokens.editorA);
       try {
-        // The page follows its namespace: the test database's default one is public.
+        // The page follows its space: the test database's default one is public.
         const created = textOf(await client.callTool({ name: 'create_page', arguments: { title } }));
         const [, pageId, pageSlug] = /Created page (\S+) \(slug: ([^,]+),/.exec(created) ?? [];
         expect(pageId, created).toBeTruthy();

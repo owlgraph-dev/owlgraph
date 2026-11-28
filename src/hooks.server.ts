@@ -22,20 +22,20 @@ import { secretKeySummary } from '#lib/platform/secretBox.server.ts';
 import { allowSelfFraming, applyStylePolicy, generateNonce, CSP_REPORT_PATH, STYLE_SRC_PHASE } from '#lib/platform/csp.ts';
 import { PUBLIC_ROUTES } from '#lib/shell/publicRoutes.ts';
 import { styleRouteKind } from '#lib/platform/cspRoutes.ts';
-import { refreshNamespaceCache } from '#lib/features/namespaces/server.ts';
+import { refreshSpaceCache } from '#lib/features/spaces/server.ts';
 import { paraglideMiddleware } from '#lib/paraglide/server.js';
 import { getTextDirection } from '#lib/paraglide/runtime.js';
 import { currentSiteLocaleConfig, loadSiteLocaleConfig } from '#lib/platform/i18n/siteLocales.server.ts';
 import { resolveUiLocale, UI_LOCALE_COOKIE } from '#lib/platform/i18n/negotiate.ts';
 import { COLOR_PREF_COOKIE, resolveColorPref } from '#lib/design-system/theme/preference.ts';
 
-// Warms the [namespace] param matcher's registry at startup, unawaited so a
-// slow database doesn't block boot: a namespaced URL in the first instant may
+// Warms the [space] param matcher's registry at startup, unawaited so a
+// slow database doesn't block boot: an address in a space in the first instant may
 // get a self-healing 404, the risk the browser's copy runs too (hooks.client.ts).
-refreshNamespaceCache().catch((err) =>
+refreshSpaceCache().catch((err) =>
   logEvent(logger, 'error.unhandled', {
     errorClass: errorClass(err),
-    message: 'Failed to warm the namespace cache',
+    message: 'Failed to warm the space cache',
     stack: err instanceof Error ? err.stack : undefined,
   })
 );

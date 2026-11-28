@@ -72,7 +72,7 @@ re-checked at render (`safeExternalHref`), so a row written past the API
 
 ### Reading a document
 
-The reader view (`/[[namespace]]/[slug]`, and a share link's `/share/[token]`)
+The reader view (`/[[space]]/[slug]`, and a share link's `/share/[token]`)
 shows the metadata in both cases. Then:
 
 - an **upload** shows its file (name, type, size) with *View*, which opens

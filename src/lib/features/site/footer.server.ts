@@ -8,7 +8,7 @@
 import { db } from '#lib/platform/db.server.ts';
 import { readablePageIds } from '#lib/features/pages/server.ts';
 import { getSetting, setSetting } from '#lib/platform/settings.server.ts';
-import { namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { getCurrentLogo } from './branding.server';
 import { listTreeAdmin, buildAdminTree, resolveTreeForUser, resolveNavLinkRow, type NavLinkRow } from './navTree.server';
 import type { TreeNodeAdminWithChildren, ResolvedTreeGroup, ResolvedTreeNode } from './types';
@@ -45,9 +45,9 @@ function validateLinkShape(input: FooterLinkInput): { label: string; targetPageI
 
 const linkAdminSelect = db`
   select n.id, n.position, n.label, n.target_type, n.target_page_id, n.url, n.created_at, n.updated_at,
-         pn.title as page_title, pn.slug as page_slug, ${db.unsafe(namespaceSlugColumn())}
+         pn.title as page_title, pn.slug as page_slug, ${db.unsafe(spaceSlugColumn())}
   from footer_links n
-  left join nodes pn on pn.id = n.target_page_id ${db.unsafe(namespaceJoin('pn'))}`;
+  left join nodes pn on pn.id = n.target_page_id ${db.unsafe(spaceJoin('pn'))}`;
 
 export async function listFooterLegalLinksAdmin(): Promise<FooterLinkAdminRow[]> {
   return db<FooterLinkAdminRow[]>`${linkAdminSelect} order by n.position`;
@@ -145,11 +145,11 @@ export async function getFooterAdmin(): Promise<{
 export async function resolveFooterForUser(user: SessionUser | null): Promise<ResolvedFooter> {
   const [tree, legalLinkRows, legalText, branding, logo, readable] = await Promise.all([
     resolveTreeForUser('footer', user),
-    db<(FooterLinkRow & { page_slug: string | null; namespace_slug: string | null })[]>`
+    db<(FooterLinkRow & { page_slug: string | null; space_slug: string | null })[]>`
       select n.id, n.position, n.label, n.target_type, n.target_page_id, n.url, n.created_at, n.updated_at,
-             pn.slug as page_slug, ${db.unsafe(namespaceSlugColumn())}
+             pn.slug as page_slug, ${db.unsafe(spaceSlugColumn())}
       from footer_links n
-      left join nodes pn on pn.id = n.target_page_id ${db.unsafe(namespaceJoin('pn'))}
+      left join nodes pn on pn.id = n.target_page_id ${db.unsafe(spaceJoin('pn'))}
       order by n.position`,
     getFooterLegalText(),
     getFooterBranding(),

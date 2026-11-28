@@ -141,20 +141,20 @@ parameter's mapping source (the binding keys and properties, plus
 "automatic" for the direct name match). A condition is one uniform row —
 source, operator, value, remove — whose operator list and value control
 follow the chosen source: a text or date input, a closed picker for
-type/namespace/creator, the class picker with its subclass toggle, a chip
+type/space/creator, the class picker with its subclass toggle, a chip
 input with autocomplete for tags, and, for a relationship, the direction as
 the operator with an optional edge-property condition on a second line.
 
 A mapping source's Fields are the node's intrinsic **binding keys**
-(`title`, `url`, `slug`, `createdAt`, `updatedAt`, `type`, `namespace`,
+(`title`, `url`, `slug`, `createdAt`, `updatedAt`, `type`, `space`,
 `creator`, `class`, `externalUrl`, `locale`), available on every result whatever
 properties it carries, with a real property of the same name taking
 precedence. `url` is always the node's own page; `externalUrl` is a link
 document's external address ([documents.md](documents.md)) and empty for
 every other node, so a literature list can link straight to the cited work
 while the node stays the citation point. The
-reference-valued ones bind a **display name, never an id**: `namespace` the
-namespace name, `creator` the creator's name (empty for system-created
+reference-valued ones bind a **display name, never an id**: `space` the
+space name, `creator` the creator's name (empty for system-created
 content), `class` the class label (a class label is localized text, resolved
 by its fallback chain — [languages.md](languages.md)). `locale` binds the result's
 content language as its code (`de`, `en`) — for a `lang` attribute or a
@@ -164,7 +164,7 @@ label ("Page" / "Seite" as seeded, or whatever an admin renamed it to). Each
 key has a fixed transform category — dates for `createdAt`/`updatedAt`, url
 for `url`/`externalUrl`, text for `title`/`slug`/`class` (so a class chip can
 take case and truncate transforms), and reference (universal transforms only)
-for `type`/`namespace`/`creator`/`locale`. The label is resolved in the
+for `type`/`space`/`creator`/`locale`. The label is resolved in the
 result query itself (a join on `node_classes`), so it covers exactly the
 nodes the viewer may already read.
 
@@ -223,7 +223,7 @@ locally when `ENABLE_GRAPHIQL` is set (see `.env.example`).
 
 A `NodeFilter` leaf is a semantic-property condition, a typed-edge (`edge`)
 condition, an **intrinsic** condition on a column of the node itself
-(`slug`, `title`, `createdAt`, `updatedAt`, `type`, `namespaceId`,
+(`slug`, `title`, `createdAt`, `updatedAt`, `type`, `spaceId`,
 `createdBy`, `classId`, `locale` — the language the node's content is in,
 `EQ`/`NEQ`/`IN` over language codes — and a link document's `externalUrl`),
 or a **tag** condition. An intrinsic sort names one of these fields; an
@@ -245,7 +245,7 @@ The `propertyDefinitions`, `relationshipTypes`, `nodeClasses` and `tags`
 queries expose the catalogues a client needs to build these conditions.
 
 A result `ContentNode` carries the same intrinsic fields as ids
-(`namespaceId`, `createdBy`, `classId`) plus `locale`, its content language,
+(`spaceId`, `createdBy`, `classId`) plus `locale`, its content language,
 `className`, the class's display name in the request's interface language
 ([languages.md](languages.md#api-channels)), and — for a page — `contentScheme`, the colour scheme its content
 renders in ([theming.md](theming.md#content-scheme)), and `externalUrl`, a

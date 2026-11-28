@@ -10,7 +10,7 @@ import { timed } from '#lib/platform/logger.server.ts';
 import { db } from '#lib/platform/db.server.ts';
 import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { collectionHeadline, containsSnippet, documentHeadline, ftsMatches, ftsMatchingIds, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from '#lib/features/search/server.ts';
 import {
   INTRINSIC_FIELD_CATEGORY,
@@ -154,7 +154,7 @@ const INTRINSIC_EXPR: Record<IntrinsicField, string> = {
   createdAt: 'n.created_at',
   updatedAt: 'n.updated_at',
   type: 'n.type',
-  namespaceId: 'n.namespace_id',
+  spaceId: 'n.space_id',
   createdBy: 'n.created_by',
   classId: 'n.class_id',
   externalUrl: '(select d.external_url from documents d where d.id = n.id)',
@@ -285,14 +285,14 @@ export type NodeScope = 'page' | 'node';
 export interface NodeFilterRow {
   id: string;
   slug: string;
-  namespace_slug: string | null;
+  space_slug: string | null;
   title: string;
   // A Date, as postgres.js returns it: convert to an ISO string before it
   // reaches a hit type, never pass one to esc() or templateBinding.ts.
   created_at: Date;
   updated_at: Date;
   type: NodeType;
-  namespace_id: string;
+  space_id: string;
   created_by: string | null;
   class_id: string;
   // The class label in the request's locale, or its slug when untranslated.
@@ -332,7 +332,7 @@ function listFromWhere(
       : db`n.id in ${ftsMatchingIds(opts.text)}`;
   const documents = opts.scope === 'node' ? db`left join documents d on d.id = n.id left join collections cl on cl.id = n.id` : db``;
   return db`
-    from nodes n left join pages p on p.id = n.id ${documents} ${db.unsafe(namespaceJoin('n'))}
+    from nodes n left join pages p on p.id = n.id ${documents} ${db.unsafe(spaceJoin('n'))}
     join node_classes nc on nc.id = n.class_id
     where ${scope} and (${tree}) and ${text} and ${readableNodes(user, 'n')}`;
 }
@@ -366,7 +366,7 @@ async function findNodesByFilterImpl(
   const sortDatatype = orderBy && orderBy !== 'relevance' && orderBy.kind !== 'intrinsic' ? (datatypes.get(orderBy.name) ?? 'text') : 'text';
   const externalUrl = opts.scope === 'node' ? db`d.external_url` : db`null::text as external_url`;
   const rows = await db<(Omit<NodeFilterRow, 'class_name'> & { class_slug: string; class_label: LocalizedText; member_snippet: string })[]>`
-    select n.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.type, n.namespace_id, n.created_by,
+    select n.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.type, n.space_id, n.created_by,
            n.class_id, nc.slug as class_slug, nc.label as class_label, n.locale, ${externalUrl}, ${textColumns(user, opts.scope, opts.text)}
     ${listFromWhere(user, filter, datatypes, opts)}
     order by ${orderByFragment(orderBy, sortDatatype)} limit ${opts.first} offset ${opts.offset}`;

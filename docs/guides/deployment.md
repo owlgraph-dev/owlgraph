@@ -316,7 +316,7 @@ an admin, since it's run once per environment.
 Migrations seed everything the app needs to run, so a new instance is
 complete the moment `migrate` exits `0`:
 
-- one **default namespace** (no URL prefix), access level `internal`;
+- one **default space** (no URL prefix), access level `internal`;
 - the **`core` and `documents` property groups** and the document properties;
 - the **node classes** `node`, `page`, `document`, `collection`;
 - **nine paragraph styles** — one default per element (p, h1–h6) plus the
@@ -338,16 +338,16 @@ outside world. The steps, all in the app:
 
 1. **Sign in** at `/login`. Without a home page, `/` shows the pages you can
    read; an anonymous visitor sees a neutral welcome.
-2. **Decide the default namespace's access level** — Settings →
-   Namespaces. It ships `internal`, so *nothing is public until you raise
-   it*: a page cannot be more accessible than its namespace, and trying
-   returns "A node cannot be made more accessible than its namespace". Raising
+2. **Decide the default space's access level** — Settings →
+   Spaces. It ships `internal`, so *nothing is public until you raise
+   it*: a page cannot be more accessible than its space, and trying
+   returns "A node cannot be made more accessible than its space". Raising
    the level also publishes every page and document that inherits it (anything
    without its own visibility), which is what the dialog's warning counts —
-   see [authorization.md](../architecture/authorization.md#namespaces-access_level-is-a-live-default-overridable-per-node).
+   see [authorization.md](../architecture/authorization.md#spaces-access_level-is-a-live-default-overridable-per-node).
 3. **Create a page** (the app bar's Create, or the home page's action) and
    set its visibility in the access panel if it should differ from the
-   namespace.
+   space.
 4. **Set the home page** — Settings → Home page. `/` then redirects to
    it for everyone who may read it.
 5. **Branding, navigation, footer** as needed.

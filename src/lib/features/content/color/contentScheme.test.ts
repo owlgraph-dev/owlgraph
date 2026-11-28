@@ -6,10 +6,10 @@ import { describe, expect, it } from 'vitest';
 import { canvasScheme, isContentScheme, resolveContentScheme } from './contentScheme';
 
 describe('resolveContentScheme', () => {
-  it('takes the nearest choice along page → namespace → site', () => {
-    expect(resolveContentScheme({ page: 'dark', namespace: 'adaptive', site: 'light' })).toBe('dark');
-    expect(resolveContentScheme({ page: null, namespace: 'adaptive', site: 'light' })).toBe('adaptive');
-    expect(resolveContentScheme({ page: null, namespace: null, site: 'dark' })).toBe('dark');
+  it('takes the nearest choice along page → space → site', () => {
+    expect(resolveContentScheme({ page: 'dark', space: 'adaptive', site: 'light' })).toBe('dark');
+    expect(resolveContentScheme({ page: null, space: 'adaptive', site: 'light' })).toBe('adaptive');
+    expect(resolveContentScheme({ page: null, space: null, site: 'dark' })).toBe('dark');
   });
 
   it('falls back to light when nothing chose', () => {

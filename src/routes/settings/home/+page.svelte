@@ -37,7 +37,7 @@
       <SettingsWell>
         <span class="current"><strong>{home.title}</strong> <span class="slug">/{home.slug}</span></span>
         {#snippet actions()}
-          <a class="view" href={nodePath(home.namespace_slug, home.slug)} target="_blank" rel="noopener">{m.settings_home_view()}</a>
+          <a class="view" href={nodePath(home.space_slug, home.slug)} target="_blank" rel="noopener">{m.settings_home_view()}</a>
           <Button type="button" variant="ghost" size="sm" onclick={() => (picking = true)}>{m.settings_home_change()}</Button>
           <form method="POST" action="?/clearHome" use:enhance class="inline">
             <Button type="submit" variant="ghost-danger" size="sm">{m.settings_home_clear()}</Button>

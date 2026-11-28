@@ -96,15 +96,15 @@ export async function call(app: ServedApp, path: string, options: CallOptions = 
 
 /**
  * A page of the test's own, made through the page API as `role`: in
- * `namespaceId`'s namespace, holding `doc`, then patched with the other
+ * `spaceId`'s space, holding `doc`, then patched with the other
  * fields (visibility, shares, title, …). A new title renames the slug.
  */
 export async function createPage(
   app: ServedApp,
   as: Role,
-  { namespaceId, doc, ...fields }: { namespaceId?: string; doc?: unknown } & Record<string, unknown> = {}
+  { spaceId, doc, ...fields }: { spaceId?: string; doc?: unknown } & Record<string, unknown> = {}
 ): Promise<{ id: string; slug: string }> {
-  const created = await call(app, '/api/pages', { as, method: 'POST', json: namespaceId ? { namespaceId } : {} });
+  const created = await call(app, '/api/pages', { as, method: 'POST', json: spaceId ? { spaceId } : {} });
   if (!created.ok) throw new Error(`creating a page as ${as} answered ${created.status}: ${await created.text()}`);
   const { id, slug } = (await created.json()) as { id: string; slug: string };
   if (doc) {
@@ -118,16 +118,16 @@ export async function createPage(
 }
 
 /**
- * A namespace of the test's own, made through the settings so the served
+ * A space of the test's own, made through the settings so the served
  * build's route matcher learns of it. Returns its id.
  */
-export async function createNamespace(
+export async function createSpace(
   app: ServedApp,
   ns: { name: string; slug: string; accessLevel?: 'public' | 'internal' | 'restricted' }
 ): Promise<string> {
-  const result = await formAction(app, '/settings/namespaces?/create', { name: ns.name, slug: ns.slug, accessLevel: ns.accessLevel ?? 'internal' }, { as: 'admin' });
-  if (result.type !== 'success') throw new Error(`creating namespace ${ns.slug} answered ${result.type} ${result.status}: ${JSON.stringify(result.data)}`);
-  const [row] = await db<{ id: string }[]>`select id from namespaces where slug = ${ns.slug}`;
+  const result = await formAction(app, '/settings/spaces?/create', { name: ns.name, slug: ns.slug, accessLevel: ns.accessLevel ?? 'internal' }, { as: 'admin' });
+  if (result.type !== 'success') throw new Error(`creating space ${ns.slug} answered ${result.type} ${result.status}: ${JSON.stringify(result.data)}`);
+  const [row] = await db<{ id: string }[]>`select id from spaces where slug = ${ns.slug}`;
   return row.id;
 }
 

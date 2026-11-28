@@ -8,7 +8,7 @@ import { DEFAULT_FORCES, FORCE_RANGES, type ForceParams } from './layout/forcePa
 import { isViewModeId, type ViewModeId } from './layout/viewModes';
 
 export type LabelMode = 'zoom' | 'always' | 'never';
-export type ColorBy = 'type' | 'class' | 'namespace';
+export type ColorBy = 'type' | 'class' | 'space';
 export type NodeSize = 'degree' | 'uniform';
 
 export interface GraphSettings {
@@ -21,7 +21,7 @@ export interface GraphSettings {
 }
 
 export const LABEL_MODES: LabelMode[] = ['zoom', 'always', 'never'];
-const COLOR_BY_OPTIONS: ColorBy[] = ['type', 'class', 'namespace'];
+const COLOR_BY_OPTIONS: ColorBy[] = ['type', 'class', 'space'];
 export const NODE_SIZES: NodeSize[] = ['degree', 'uniform'];
 
 export const DEFAULT_SETTINGS: GraphSettings = {

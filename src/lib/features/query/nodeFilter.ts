@@ -44,7 +44,7 @@ export interface EdgeConditionInput {
 // node_properties (filterSql.server.ts). type is the class's nearest node-type
 // slug; externalUrl, a link document's address, is no nodes column and the one
 // field that can be absent; locale is the content's language (docs/architecture/languages.md).
-export type IntrinsicField = 'slug' | 'title' | 'createdAt' | 'updatedAt' | 'type' | 'namespaceId' | 'createdBy' | 'classId' | 'externalUrl' | 'locale';
+export type IntrinsicField = 'slug' | 'title' | 'createdAt' | 'updatedAt' | 'type' | 'spaceId' | 'createdBy' | 'classId' | 'externalUrl' | 'locale';
 
 // On classId only: 'isA' (the default) is the class or any subclass, 'exact'
 // that class alone (docs/architecture/semantic-layer.md, "Querying by class").
@@ -80,7 +80,7 @@ export interface NodeFilterInput {
 // No exists/notExists on a column field: every column is NOT NULL. externalUrl,
 // nullable, is the exception. An intrinsic startsWith is a VALUE prefix; a
 // property's startsWith is a NAME prefix selecting a whole property group.
-export type IntrinsicFieldCategory = 'text' | 'date' | 'type' | 'namespace' | 'creator' | 'class' | 'externalUrl' | 'locale';
+export type IntrinsicFieldCategory = 'text' | 'date' | 'type' | 'space' | 'creator' | 'class' | 'externalUrl' | 'locale';
 
 export const INTRINSIC_FIELD_CATEGORY: Record<IntrinsicField, IntrinsicFieldCategory> = {
   slug: 'text',
@@ -88,7 +88,7 @@ export const INTRINSIC_FIELD_CATEGORY: Record<IntrinsicField, IntrinsicFieldCate
   createdAt: 'date',
   updatedAt: 'date',
   type: 'type',
-  namespaceId: 'namespace',
+  spaceId: 'space',
   createdBy: 'creator',
   classId: 'class',
   externalUrl: 'externalUrl',
@@ -99,7 +99,7 @@ const INTRINSIC_OPERATORS_BY_CATEGORY: Record<IntrinsicFieldCategory, ReadonlySe
   text: new Set(['eq', 'neq', 'contains', 'in', 'startsWith']),
   date: new Set(['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'in']),
   type: new Set(['eq', 'neq', 'in']),
-  namespace: new Set(['eq', 'neq', 'in']),
+  space: new Set(['eq', 'neq', 'in']),
   creator: new Set(['eq', 'neq', 'in']),
   // The explicit class (nodes.class_id), never class-implied properties; read
   // as "is a X" (X or a subclass) unless classMatch is 'exact'.
@@ -149,7 +149,7 @@ export function validateIntrinsicCondition(cond: IntrinsicConditionInput): void 
     for (const lit of literals) {
       if (!isValidLiteral(lit, 'date')) badInput(`"${lit}" is not a valid date literal for "${cond.field}" (expected YYYY-MM-DD)`);
     }
-  } else if (category === 'namespace' || category === 'creator' || category === 'class') {
+  } else if (category === 'space' || category === 'creator' || category === 'class') {
     for (const lit of literals) {
       if (!UUID_RE.test(lit)) badInput(`"${lit}" is not a valid id for "${cond.field}"`);
     }
@@ -337,7 +337,7 @@ export interface WireEdgeCondition {
   property?: WirePropertyCondition | null;
 }
 
-export type WireIntrinsicField = 'SLUG' | 'TITLE' | 'CREATED_AT' | 'UPDATED_AT' | 'TYPE' | 'NAMESPACE_ID' | 'CREATED_BY' | 'CLASS_ID' | 'EXTERNAL_URL' | 'LOCALE';
+export type WireIntrinsicField = 'SLUG' | 'TITLE' | 'CREATED_AT' | 'UPDATED_AT' | 'TYPE' | 'SPACE_ID' | 'CREATED_BY' | 'CLASS_ID' | 'EXTERNAL_URL' | 'LOCALE';
 export type WireClassMatch = 'IS_A' | 'EXACT';
 
 export interface WireIntrinsicCondition {
@@ -381,7 +381,7 @@ export const INTRINSIC_FIELD_FROM_WIRE: Record<WireIntrinsicField, IntrinsicFiel
   CREATED_AT: 'createdAt',
   UPDATED_AT: 'updatedAt',
   TYPE: 'type',
-  NAMESPACE_ID: 'namespaceId',
+  SPACE_ID: 'spaceId',
   CREATED_BY: 'createdBy',
   CLASS_ID: 'classId',
   EXTERNAL_URL: 'externalUrl',

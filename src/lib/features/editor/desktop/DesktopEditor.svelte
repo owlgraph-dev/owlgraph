@@ -12,7 +12,7 @@
   import { CanvasScheme } from '../shared/canvasScheme.svelte';
   import { SelectedBox } from '../shared/selectedBox.svelte';
   import { currentBlock, deleteBlockById, moveBlockById } from '#lib/features/content/editor.ts';
-  import { pickerNamespace } from '#lib/features/search/picker.ts';
+  import { pickerSpace } from '#lib/features/search/picker.ts';
   import { insertCommands, appendBlock } from '../commands/insert';
   import { editTier } from '#lib/features/content/index.ts';
   import BlockSettings from '../blockSettings/BlockSettings.svelte';
@@ -44,7 +44,7 @@
     enabledPlugins = [],
     title = '',
     slug = '',
-    namespaceSlug = null,
+    spaceSlug = null,
     onRename,
     tags = [],
     onSetTags,
@@ -60,8 +60,8 @@
     onSetLocale,
     classFields = null,
     visibility = null,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     shares = [],
     users = [],
     onSetVisibility,
@@ -69,9 +69,9 @@
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
     onUploadImage,
     lockLost = false,
     onLockLost,
@@ -208,7 +208,7 @@
 <EditorHeader
   {title}
   {slug}
-  {namespaceSlug}
+  {spaceSlug}
   {onRename}
   tags={meta.tags}
   onSetTags={meta.commitTags}
@@ -227,7 +227,7 @@
     {overlays}
     {insert}
     enabledPlugins={enabledPluginSet}
-    linkNamespace={pickerNamespace(namespaces, namespaceId)}
+    linkSpace={pickerSpace(spaces, spaceId)}
     {locale}
     {propertyGroups}
     {propSuggestions}
@@ -284,26 +284,26 @@
 {#if blockSettingsOpen}
 <!-- ui-check-allow: raw-element — the full-area backdrop behind the small-screen block settings panel; tapping it closes the panel -->
 <button class="block-settings-backdrop" aria-label={m.editor_block_settings_backdrop_close()} onclick={() => (blockSettingsOpen = false)}></button>
-<BlockSettings {core} pageId={pageId ?? null} namespace={pickerNamespace(namespaces, namespaceId)} enabledPlugins={enabledPluginSet} {quickLinkEmbed} onEmbedQuickLink={embedQuickLinkBlock} contentScheme={scheme.resolved} {images} onRetarget={openRetarget} {overlays} />
+<BlockSettings {core} pageId={pageId ?? null} space={pickerSpace(spaces, spaceId)} enabledPlugins={enabledPluginSet} {quickLinkEmbed} onEmbedQuickLink={embedQuickLinkBlock} contentScheme={scheme.resolved} {images} onRetarget={openRetarget} {overlays} />
 {/if}
 </div>
 
-<BlockEditDialogs edit={blockEdit} {propSuggestions} {namespaces} {users} {nodeClasses} {tagSuggestions} />
+<BlockEditDialogs edit={blockEdit} {propSuggestions} {spaces} {users} {nodeClasses} {tagSuggestions} />
 
 <PageDialogs
   {core}
   {meta}
   {overlays}
   {deletion}
-  {namespaceAccessLevel}
-  {namespaceMembers}
+  {spaceAccessLevel}
+  {spaceMembers}
   {users}
   {shareLinks}
   {onCreateShareLink}
   {onRevokeShareLink}
-  {namespaceId}
-  {namespaces}
-  {onSetNamespace}
+  {spaceId}
+  {spaces}
+  {onSetSpace}
   {contentScheme}
   {contentSchemeDefault}
   {onSetContentScheme}

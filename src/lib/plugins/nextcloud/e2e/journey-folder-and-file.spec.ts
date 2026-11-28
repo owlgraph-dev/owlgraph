@@ -77,7 +77,7 @@ test.describe('a Nextcloud folder and file on a page', () => {
 
     const editorContext = await browser.newContext({ storageState: authState('editorA'), viewport: { width: 1280, height: 900 } });
     try {
-      // In the public default namespace, as are the collection and document made beside it.
+      // In the public default space, as are the collection and document made beside it.
       const { id: pageId, slug } = await createPage(editorContext.request, {
         visibility: null,
         doc: doc(

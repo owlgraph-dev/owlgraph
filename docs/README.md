@@ -55,12 +55,12 @@ The pages live in four folders:
 - [Media](architecture/media.md) — uploaded images: what is stored, who is
   served what, and the copies smaller screens get.
 - [Routing](architecture/routing.md) — how an address finds its node:
-  namespaces, slugs, reserved words; the API's one error body.
+  spaces, slugs, reserved words; the API's one error body.
 
 ## Control access
 
 - [Authorization and visibility](architecture/authorization.md) — roles,
-  visibility per node and namespace, viewer-scoping, sealed credentials,
+  visibility per node and space, viewer-scoping, sealed credentials,
   requests to other services.
 - [Settings](architecture/settings.md) — Settings: which sections exist and
   who sees them.

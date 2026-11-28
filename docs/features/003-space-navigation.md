@@ -1,8 +1,8 @@
 ---
 status: draft
 issue:
-adrs: ['0002', '0004', '0022']
-updated: 2026-11-25
+adrs: ['0002', '0004']
+updated: 2026-11-28
 ---
 
 # 003. Space navigation
@@ -138,9 +138,6 @@ Room:
 
 ## Decisions and constraints
 
-- **A space is what the app calls a namespace today**
-  ([decision 0022](../adr/0022-namespaces-are-called-spaces.md)). This spec
-  is written in the word the rename brings, and is built after it.
 - **Filtered on the server, for the viewer**
   ([decision 0002](../adr/0002-authorization-is-server-enforced-and-viewer-scoped.md)).
   A label can give away what a part of the site holds, so the whole

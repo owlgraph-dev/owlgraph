@@ -320,7 +320,7 @@ sliders use it ([graph-view.md](../graph-view.md)).
 `Checkbox` and `RadioGroup` are the two choice controls a form was missing
 (both Bits UI, both rendered through the `child` snippet). A **Checkbox** is
 one on/off choice that is submitted or saved together with others — a member
-of a namespace, a user to share with, a block to keep — where a `Switch` is a
+of a space, a user to share with, a block to keep — where a `Switch` is a
 setting that takes effect at once. Its label is its children, rendered inside
 the control like Switch's, so the whole row is the target and the label
 (with secondary text such as an email) is the accessible name; without a
@@ -353,7 +353,7 @@ its neighbours. The cells' names are a `labels` prop — the layer has no i18n.
 form in a settings page's `Dialog` is its home: the label above the control
 (`--ds-text-sm`, muted), an optional `hint` below it (`--ds-text-xs`), and the
 field's own `error` (danger, with a glyph) — or a `warning` for a value that
-is allowed but has a consequence worth knowing (raising a namespace's access
+is allowed but has a consequence worth knowing (raising a space's access
 level makes the pages that inherit it visible too), which describes the
 control without making it invalid, as `FieldRow`'s `warning` does in a panel. It is the form grammar's
 counterpart of `SettingsRow` and `FieldRow`, which name a *setting*; this

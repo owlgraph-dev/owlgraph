@@ -25,9 +25,9 @@
     </Tooltip>
   </Specimen>
   <Specimen label="icon trigger, aria-label via triggerProps" state="trigger-icon" overlay="hover">
-    <Tooltip triggerProps={{ 'aria-label': 'What is a namespace?' }}>
+    <Tooltip triggerProps={{ 'aria-label': 'What is a space?' }}>
       {#snippet trigger()}<span class="glyph"><Icon name="info" size={14} /></span>{/snippet}
-      A namespace groups pages under one visibility rule.
+      A space groups pages under one visibility rule.
     </Tooltip>
   </Specimen>
   <Specimen label="toggle: a click or tap pins it open (a toggletip, InfoTip's shape)" state="toggle" overlay>

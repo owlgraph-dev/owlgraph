@@ -38,7 +38,7 @@ rule for changing a node and its share list need a home that is no type's.
 
 - An editor can change a document they may read: its metadata and its file.
   Until now only its owner or an admin could.
-  [Spec 002](../features/002-visibility-and-namespaces.md) changes its
+  [Spec 002](../features/002-visibility-and-spaces.md) changes its
   criterion 12 on purpose, under its number, and holds "one rule for every
   node type" without an exception.
 - A document's owner can no longer keep it open to read and closed to

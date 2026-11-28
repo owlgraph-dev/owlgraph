@@ -14,7 +14,7 @@ const item = (overrides: Partial<ResultProperties> = {}): ResultProperties => ({
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   type: 'page',
-  namespaceLabel: 'Default',
+  spaceLabel: 'Default',
   creatorLabel: 'Alex',
   classLabel: 'Page',
   externalUrl: '',
@@ -77,7 +77,7 @@ describe('bindTemplate()', () => {
     expect(bound.content![1].text).toBe('/p/real');
   });
 
-  it('exposes slug/createdAt/updatedAt/type/namespace/creator/class as reserved synthetic parameter keys', () => {
+  it('exposes slug/createdAt/updatedAt/type/space/creator/class as reserved synthetic parameter keys', () => {
     const subtree = {
       type: 'paragraph',
       content: [
@@ -85,14 +85,14 @@ describe('bindTemplate()', () => {
         textWithMark('', 'createdAt'),
         textWithMark('', 'updatedAt'),
         textWithMark('', 'type'),
-        textWithMark('', 'namespace'),
+        textWithMark('', 'space'),
         textWithMark('', 'creator'),
         textWithMark('', 'class')
       ]
     };
     const bound = bindTemplate(
       subtree,
-      item({ slug: 'my-page', createdAt: '2026-02-01', updatedAt: '2026-02-02', type: 'document', namespaceLabel: 'Marketing', creatorLabel: 'Jamie', classLabel: 'Invoice' })
+      item({ slug: 'my-page', createdAt: '2026-02-01', updatedAt: '2026-02-02', type: 'document', spaceLabel: 'Marketing', creatorLabel: 'Jamie', classLabel: 'Invoice' })
     );
     expect(bound.content!.map((n) => n.text)).toEqual(['my-page', '2026-02-01', '2026-02-02', 'document', 'Marketing', 'Jamie', 'Invoice']);
   });

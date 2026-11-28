@@ -7,7 +7,7 @@
 import * as m from '#lib/paraglide/messages.js';
 import { classItems, typeItems, type PickerItem } from '#lib/features/query/index.ts';
 import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-import type { SearchNamespaceOption, SearchSort } from '#lib/features/search/index.ts';
+import type { SearchSpaceOption, SearchSort } from '#lib/features/search/index.ts';
 
 /** A Select has no empty item: "no filter" is a value of its own. */
 export const ALL = '__all__';
@@ -32,8 +32,8 @@ export function typePickerItems(): PickerItem[] {
   return [{ value: ALL, label: m.search_page_filter_type_all() }, ...typeItems()];
 }
 
-export function namespacePickerItems(namespaces: readonly SearchNamespaceOption[]): PickerItem[] {
-  return [{ value: ALL, label: m.search_page_filter_namespace_all() }, ...namespaces.map((n) => ({ value: n.value, label: n.name }))];
+export function spacePickerItems(spaces: readonly SearchSpaceOption[]): PickerItem[] {
+  return [{ value: ALL, label: m.search_page_filter_space_all() }, ...spaces.map((n) => ({ value: n.value, label: n.name }))];
 }
 
 /** Relevance only with a term to be relevant to. */

@@ -35,7 +35,7 @@
 
   const scrollColumns: TableColumn[] = [
     { label: 'Name', width: '12rem' },
-    { label: 'Namespace', width: '10rem' },
+    { label: 'Space', width: '10rem' },
     { label: 'Owner', width: '12rem' },
     { label: 'Created', width: '10rem' },
     { label: 'Updated', width: '10rem' },

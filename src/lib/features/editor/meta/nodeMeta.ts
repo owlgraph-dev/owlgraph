@@ -19,7 +19,7 @@ export interface NodeProperty {
 export interface NodeMetaState {
   title?: string;
   slug?: string;
-  namespaceSlug?: string | null;
+  spaceSlug?: string | null;
   tags?: string[];
   tagSuggestions?: string[];
   manualProperties?: NodeProperty[];
@@ -34,16 +34,16 @@ export interface NodeMetaState {
   // A document only: the language detected in its text, offered until the
   // author takes or dismisses it, never applied silently.
   localeSuggestion?: string | null;
-  // As stored: null inherits the namespace. namespaceAccessLevel is required,
+  // As stored: null inherits the space. spaceAccessLevel is required,
   // since without it the access panel can't tell what "inherit" means.
   visibility?: string | null;
-  namespaceAccessLevel: string;
-  namespaceMembers?: { id: string; name: string; email: string }[];
+  spaceAccessLevel: string;
+  spaceMembers?: { id: string; name: string; email: string }[];
   shares?: string[];
   users?: { id: string; name: string; email: string }[];
   shareLinks?: { id: string; label: string; createdAt: string }[];
-  namespaceId?: string;
-  namespaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
+  spaceId?: string;
+  spaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
 }
 
 export interface NodeMetaActions {
@@ -57,7 +57,7 @@ export interface NodeMetaActions {
   onSetShares?: (shares: string[]) => Promise<{ ok: boolean; shares?: string[] }>;
   onCreateShareLink?: (label: string) => Promise<{ ok: boolean; id?: string; token?: string; label?: string; createdAt?: string; error?: string }>;
   onRevokeShareLink?: (id: string) => Promise<{ ok: boolean }>;
-  onSetNamespace?: (namespaceId: string) => Promise<{ ok: boolean; error?: string }>;
+  onSetSpace?: (spaceId: string) => Promise<{ ok: boolean; error?: string }>;
   onDelete?: () => Promise<{ ok: true } | { ok: false; error: string }>;
 }
 
@@ -74,9 +74,9 @@ export interface PageEditorProps extends NodeMetaProps {
    */
   onSave: (json: unknown, opts: { acknowledgeDropped: readonly string[] }) => Promise<{ ok: boolean; lockLost?: boolean; unknownDropped?: boolean } | void>;
   // Load-time id -> path snapshots for the pageLink/docLink/quickLink hrefs.
-  pages?: Array<{ id: string; slug: string; namespaceSlug?: string | null; title: string }>;
+  pages?: Array<{ id: string; slug: string; spaceSlug?: string | null; title: string }>;
   /** The documents the editor may read; a document's plugin is the integration that keeps it (null for an upload or a link). */
-  documents?: Array<{ id: string; slug: string; namespaceSlug?: string | null; title: string; plugin?: string | null }>;
+  documents?: Array<{ id: string; slug: string; spaceSlug?: string | null; title: string; plugin?: string | null }>;
   /** The plugins turned on (their ids): the Insert menu offers their blocks, and a block's picker shows their nodes by their kinds. */
   enabledPlugins?: readonly string[];
   onUploadImage?: (file: File) => Promise<{ id: string } | null>;
@@ -97,7 +97,7 @@ export interface DocumentEditorProps extends NodeMetaProps {
   documentId: string;
   title: string;
   slug: string;
-  namespaceSlug: string | null;
+  spaceSlug: string | null;
   source: DocumentSource;
   /** The integration a 'plugin' document comes from (its plugin id); null otherwise. */
   plugin: string | null;
@@ -116,7 +116,7 @@ export interface CollectionEditorProps extends NodeMetaProps {
   collectionId: string;
   title: string;
   slug: string;
-  namespaceSlug: string | null;
+  spaceSlug: string | null;
   /** A mirrored collection's source, as its integration describes it; null for a curated one. */
   source?: CollectionSourceView | null;
   /** After its source was connected anew; the page reloads what it shows. */
@@ -124,6 +124,6 @@ export interface CollectionEditorProps extends NodeMetaProps {
   members?: CollectionMember[];
   /** The basis of the members' order as read, which a rearrangement of a curated collection names. */
   membersBasis?: string;
-  // As stored: null inherits the namespace's access level.
+  // As stored: null inherits the space's access level.
   visibility: string | null;
 }

@@ -3,19 +3,19 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_NAMESPACE_PARAM, EMPTY_SEARCH, SEARCH_MAX_TAGS, effectiveSort, parseSearchParams, searchHref } from './searchUrl';
+import { DEFAULT_SPACE_PARAM, EMPTY_SEARCH, SEARCH_MAX_TAGS, effectiveSort, parseSearchParams, searchHref } from './searchUrl';
 
 const parse = (query: string) => parseSearchParams(new URLSearchParams(query));
 
 describe('parseSearchParams', () => {
   it('reads every parameter of the contract', () => {
-    expect(parse('q=graph&class=concept&exact=1&tag=ai&tag=ml&type=document&namespace=wiki&sort=title&view=grid&page=3')).toEqual({
+    expect(parse('q=graph&class=concept&exact=1&tag=ai&tag=ml&type=document&space=wiki&sort=title&view=grid&page=3')).toEqual({
       q: 'graph',
       class: 'concept',
       exact: true,
       tags: ['ai', 'ml'],
       type: 'document',
-      namespace: 'wiki',
+      space: 'wiki',
       sort: 'title',
       view: 'grid',
       page: 3,
@@ -28,7 +28,7 @@ describe('parseSearchParams', () => {
   });
 
   it('falls back silently on invalid values', () => {
-    expect(parse('type=folder&sort=random&view=table&page=-3&namespace=Not%20A%20Slug&class=a%20b')).toEqual(EMPTY_SEARCH);
+    expect(parse('type=folder&sort=random&view=table&page=-3&space=Not%20A%20Slug&class=a%20b')).toEqual(EMPTY_SEARCH);
     expect(parse('page=0').page).toBe(1);
     expect(parse('page=2.5').page).toBe(1);
     expect(parse('page=501').page).toBe(1);
@@ -47,8 +47,8 @@ describe('parseSearchParams', () => {
     expect(parse(many).tags).toHaveLength(SEARCH_MAX_TAGS);
   });
 
-  it('accepts the default namespace token', () => {
-    expect(parse(`namespace=${DEFAULT_NAMESPACE_PARAM}`).namespace).toBe(DEFAULT_NAMESPACE_PARAM);
+  it('accepts the default space token', () => {
+    expect(parse(`space=${DEFAULT_SPACE_PARAM}`).space).toBe(DEFAULT_SPACE_PARAM);
   });
 
   it('drops a sort that is the default anyway, and relevance without a term', () => {
@@ -89,7 +89,7 @@ describe('searchHref', () => {
   });
 
   it('round-trips through parseSearchParams', () => {
-    const state = { ...EMPTY_SEARCH, q: 'knowledge graph', class: 'concept', tags: ['ai'], type: 'page' as const, namespace: DEFAULT_NAMESPACE_PARAM, sort: 'created' as const, view: 'grid' as const, page: 4 };
+    const state = { ...EMPTY_SEARCH, q: 'knowledge graph', class: 'concept', tags: ['ai'], type: 'page' as const, space: DEFAULT_SPACE_PARAM, sort: 'created' as const, view: 'grid' as const, page: 4 };
     const href = searchHref(state);
     expect(parseSearchParams(new URL(href, 'http://x').searchParams)).toEqual(state);
   });

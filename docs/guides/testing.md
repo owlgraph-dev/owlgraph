@@ -69,7 +69,7 @@ Examples from the suite:
 | Behaviour | Layer | Test |
 |---|---|---|
 | A sign-in's redirect stays on this site, however another host is spelled | unit | `features/auth/safeRedirect.test.ts` |
-| A document new in an internal namespace inherits its level, so an anonymous reader may not read it | database | `features/namespaces/access.int.test.ts` |
+| A document new in an internal space inherits its level, so an anonymous reader may not read it | database | `features/spaces/access.int.test.ts` |
 | The session cookie is HttpOnly, SameSite=Lax and Secure, and a signed-in viewer's pages are never stored | HTTP | `features/auth/signIn.http.test.ts` |
 | The access panel makes a share link, shows its address once, and revokes it after a confirmation | component | `features/nodes/components/AccessControlPanel.svelte.test.ts` |
 | An admin takes over a page another editor holds, that editor's unsaved work is kept as a draft, and its picks land on the page | E2E | `tests/e2e/journeys/two-editors.spec.ts` |
@@ -109,8 +109,8 @@ what the gate grows by, so they are kept as a set that can be seen and
 counted, apart from the tests beside each module:
 
 - **Where.** `tests/acceptance/<NNN>-<name>/`, the folder named as the spec's
-  file: `tests/acceptance/002-visibility-and-namespaces/` holds the tests of
-  `docs/features/002-visibility-and-namespaces.md`. A capability crosses
+  file: `tests/acceptance/002-visibility-and-spaces/` holds the tests of
+  `docs/features/002-visibility-and-spaces.md`. A capability crosses
   features, so its proof belongs to none of them. A plugin's spec has its
   folder in the plugin, `src/lib/plugins/<id>/acceptance/<NNN>-<name>/`: the
   core never names a plugin ([plugins.md](../architecture/plugins.md)), and
@@ -441,7 +441,7 @@ spec's helpers in an `e2e/` folder included (`check-boundaries`):
 | `runDatabases.ts` | every database of the run, for a setup every worker must see (the branded accent) |
 | `seed-data.ts` | the seeded ids, slugs and tokens; `authState(role)` |
 | `fixtures.ts` | the `test` and `expect` every spec imports |
-| `api.ts` | setup through the HTTP API: pages, documents, namespaces, classes, form actions, unique names |
+| `api.ts` | setup through the HTTP API: pages, documents, spaces, classes, form actions, unique names |
 | `doc.ts` | document builders for seeding a page's content |
 | `editor.ts` | the editor's own selection |
 | `probe-doc.ts` | a page with every block kind |
@@ -585,7 +585,7 @@ host a test does not answer refuses.
 A test that connects an account does it as a person of its own
 (`throwawayUserState`, and `sessionStateFor` for a second session of theirs),
 never as a seeded account, which every other test reads as it was. Every such
-person's pages land in the public default namespace, where a document made
+person's pages land in the public default space, where a document made
 of a file is one per file, so a test that makes one names a file no other
 spec uses. `realCheck.ts` beside the specs runs the same calls against a real
 Nextcloud with a test account, by hand and never in a suite.
@@ -657,7 +657,7 @@ nothing in the build modes, where nothing contends for its lock:
   the same resource run one at a time, and beside everything else. A new
   resource is a new name in the `Resource` type.
 
-A test whose changes are rows of its own needs neither. A page, namespace,
+A test whose changes are rows of its own needs neither. A page, space,
 class, font family or nav entry under a name no other test uses is invisible
 to the rest of the suite. That holds only for tests that read just what they
 assert on, so a test that lists nodes narrows the list to them (the seeded
@@ -730,8 +730,8 @@ fixtures, never `beforeAll`/`afterAll`. So a test that changes shared state:
   across the site (`core:status = active`, the seeded tags), so give it a
   value of its own. Pages stay until the run ends, so one that matches turns
   up in every later query. That is why `createPage()` starts a page
-  `restricted`: a new page inherits its namespace, and the test database's
-  default namespace is public. A spec that needs the app's own default passes
+  `restricted`: a new page inherits its space, and the test database's
+  default space is public. A spec that needs the app's own default passes
   `visibility: null`.
 - **Never open a seeded page in the editor, nor save its document.** Create a
   page of the test's own (`createPage()` in `tests/e2e/api.ts`), for two

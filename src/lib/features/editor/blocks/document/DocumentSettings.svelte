@@ -51,7 +51,7 @@
     { value: 'filename', label: m.editor_embed_title_filename() },
   ]);
 
-  const namespace = $derived(actions.createIn?.() ?? null);
+  const space = $derived(actions.createIn?.() ?? null);
 
   const MODIFIED_KEYS = ['variant', 'titleMode', 'preview', 'showMeta', 'showDownload', 'showNodeLink'];
 </script>
@@ -96,7 +96,7 @@
   types={['document']}
   mark={(node: NodeSearchResult) => embedMark('document', node, actions, config.nodeId)}
   rowAction={(node: NodeSearchResult) => embedRowAction('document', node, actions)}
-  create={namespace ? { types: ['document'], namespace } : undefined}
+  create={space ? { types: ['document'], space } : undefined}
   onPick={(node: NodeSearchResult) => pickEmbed('document', node, target, actions)}
 />
 

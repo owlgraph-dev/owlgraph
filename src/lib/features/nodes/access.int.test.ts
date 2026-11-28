@@ -5,7 +5,7 @@
 import { beforeAll, describe, expect, inject, it } from 'vitest';
 import { db } from '#lib/platform/db.server.ts';
 import { getUserByToken, type SessionUser } from '#lib/features/auth/server.ts';
-import { createNamespace, setNamespaceMembers } from '#lib/features/namespaces/server.ts';
+import { createSpace, setSpaceMembers } from '#lib/features/spaces/server.ts';
 import { createPage } from '#lib/features/pages/server.ts';
 import { userCanReadNode, type NodeAccessRow } from './access.server';
 import { readableNodes } from './nodes.server';
@@ -15,15 +15,15 @@ import { readableNodes } from './nodes.server';
 
 const seed = inject('seed');
 type Reader = 'anonymous' | 'viewer' | 'owner' | 'shared' | 'member' | 'admin';
-type Node = 'public' | 'internal' | 'restricted' | 'namespace-restricted';
+type Node = 'public' | 'internal' | 'restricted' | 'space-restricted';
 
 // The seeded pages are editorA's; the restricted one is shared with editorB.
-// The namespace page is an admin's, in a restricted namespace editorC belongs to.
+// The space page is an admin's, in a restricted space editorC belongs to.
 const EXPECTED: Record<Node, Reader[]> = {
   public: ['anonymous', 'viewer', 'owner', 'shared', 'member', 'admin'],
   internal: ['viewer', 'owner', 'shared', 'member', 'admin'],
   restricted: ['owner', 'shared', 'admin'],
-  'namespace-restricted': ['member', 'admin'],
+  'space-restricted': ['member', 'admin'],
 };
 
 const readers = {} as Record<Reader, SessionUser | null>;
@@ -39,16 +39,16 @@ beforeAll(async () => {
     member: await user(seed.tokens.editorC),
     admin: await user(seed.tokens.admin),
   });
-  const namespace = await createNamespace({ name: 'Members only', slug: 'members-only', accessLevel: 'restricted' });
-  await setNamespaceMembers(namespace.id, [readers.member!.id]);
-  const inNamespace = await createPage('Members page', readers.admin, { namespaceId: namespace.id });
-  Object.assign(nodes, { public: seed.publicId, internal: seed.internalId, restricted: seed.restrictedId, 'namespace-restricted': inNamespace.id });
+  const space = await createSpace({ name: 'Members only', slug: 'members-only', accessLevel: 'restricted' });
+  await setSpaceMembers(space.id, [readers.member!.id]);
+  const inSpace = await createPage('Members page', readers.admin, { spaceId: space.id });
+  Object.assign(nodes, { public: seed.publicId, internal: seed.internalId, restricted: seed.restrictedId, 'space-restricted': inSpace.id });
 });
 
 async function accessRow(id: string): Promise<NodeAccessRow> {
   const [row] = await db<NodeAccessRow[]>`
-    select n.id, n.visibility, n.created_by, n.namespace_id, ns.access_level as namespace_access_level
-    from nodes n join namespaces ns on ns.id = n.namespace_id where n.id = ${id}`;
+    select n.id, n.visibility, n.created_by, n.space_id, ns.access_level as space_access_level
+    from nodes n join spaces ns on ns.id = n.space_id where n.id = ${id}`;
   return row;
 }
 

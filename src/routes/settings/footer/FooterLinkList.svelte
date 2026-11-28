@@ -12,7 +12,7 @@
   import type { FooterLinkAdminRow } from '#lib/features/site/index.ts';
   import * as m from '#lib/paraglide/messages.js';
 
-  type FooterLinkItem = Pick<FooterLinkAdminRow, 'id' | 'label' | 'target_type' | 'target_page_id' | 'url' | 'page_title' | 'page_slug' | 'namespace_slug'>;
+  type FooterLinkItem = Pick<FooterLinkAdminRow, 'id' | 'label' | 'target_type' | 'target_page_id' | 'url' | 'page_title' | 'page_slug' | 'space_slug'>;
   type PageResult = { id: string; slug: string; title: string };
 
   let {
@@ -110,7 +110,7 @@
           <span class="label">{e.label}</span>
           <span class="target">
             {#if e.target_type === 'page'}
-              {#if e.page_slug}<a href={nodePath(e.namespace_slug, e.page_slug)} target="_blank" rel="noopener">{e.page_title} · /{e.page_slug}</a>{:else}<em>{m.settings_footer_link_page_not_found()}</em>{/if}
+              {#if e.page_slug}<a href={nodePath(e.space_slug, e.page_slug)} target="_blank" rel="noopener">{e.page_title} · /{e.page_slug}</a>{:else}<em>{m.settings_footer_link_page_not_found()}</em>{/if}
             {:else}
               <a href={e.url} target="_blank" rel="noopener">{e.url}</a>
             {/if}

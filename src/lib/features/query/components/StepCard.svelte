@@ -24,7 +24,7 @@
     onChange,
     onRemove,
     propertyOptions = [],
-    namespaceOptions = [],
+    spaceOptions = [],
     userOptions = [],
     classOptions = [],
     relationshipTypes = [],
@@ -35,7 +35,7 @@
     onChange: (step: TraversalStepDraft) => void;
     onRemove: () => void;
     propertyOptions?: PropertyOption[];
-    namespaceOptions?: { id: string; name: string }[];
+    spaceOptions?: { id: string; name: string }[];
     userOptions?: { id: string; name: string; email: string }[];
     classOptions?: NodeClassOption[];
     relationshipTypes?: RelationshipTypeOption[];
@@ -120,7 +120,7 @@
         depth={1}
         label={m.editor_traversal_modal_add_target_filter()}
         {propertyOptions}
-        {namespaceOptions}
+        {spaceOptions}
         {userOptions}
         {classOptions}
         {relationshipTypes}

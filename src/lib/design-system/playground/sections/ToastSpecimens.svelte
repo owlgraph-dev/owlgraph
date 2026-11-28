@@ -21,7 +21,7 @@
     <Button size="sm" onclick={() => toast.warning('Some blocks were skipped because their type is unknown.')}>Show warning</Button>
   </Specimen>
   <Specimen label="info: leaves after 5s" state="info">
-    <Button size="sm" onclick={() => toast.info('The page was moved to the Handbook namespace.')}>Show info</Button>
+    <Button size="sm" onclick={() => toast.info('The page was moved to the Handbook space.')}>Show info</Button>
   </Specimen>
   <Specimen label="success: only when nothing visible changes" state="success">
     <Button size="sm" onclick={() => toast.success('Link copied.')}>Show success</Button>

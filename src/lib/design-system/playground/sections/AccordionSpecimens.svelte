@@ -20,7 +20,7 @@
   <Specimen label="size=md, first open by default, one disabled — open: {open.join(', ') || 'none'}" state="md" wide>
     <Accordion bind:value={open}>
       <AccordionItem value="source" title="Source">
-        <p class="body">Which nodes the query starts from: a class, a namespace or a tag.</p>
+        <p class="body">Which nodes the query starts from: a class, a space or a tag.</p>
         <p class="body">Every later step filters or traverses from this set.</p>
       </AccordionItem>
       <AccordionItem value="filter" title="Filter">

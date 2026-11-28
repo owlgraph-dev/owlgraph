@@ -5,7 +5,7 @@
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import sharp from 'sharp';
 import { db } from '#lib/platform/db.server.ts';
-import { call, createNamespace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { call, createSpace, createPage, formAction, startApp, type ServedApp } from '#tests/integration/http.ts';
 import { userOf } from '#tests/integration/users.ts';
 import type { Role } from '#tests/integration/users.ts';
 
@@ -121,10 +121,10 @@ describe.skipIf(app.skipped)('serving media', () => {
       }
     });
 
-    it('a page inheriting public from its namespace has its image served cacheable; one inheriting internal, no-store', async () => {
+    it('a page inheriting public from its space has its image served cacheable; one inheriting internal, no-store', async () => {
       const cacheFor = async (accessLevel: 'public' | 'internal', reader?: Role) => {
-        const namespaceId = await createNamespace(served, { name: `Media ${accessLevel}`, slug: `media-${accessLevel}`, accessLevel });
-        const { id: pageId } = await createPage(served, 'editorA', { namespaceId });
+        const spaceId = await createSpace(served, { name: `Media ${accessLevel}`, slug: `media-${accessLevel}`, accessLevel });
+        const { id: pageId } = await createPage(served, 'editorA', { spaceId });
         const image = await uploaded('editorA', pageId);
         const res = await call(served, `/api/media/${image.id}`, { as: reader });
         expect(res.status, accessLevel).toBe(200);

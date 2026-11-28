@@ -20,7 +20,7 @@ async function openCreateModal(page: Page) {
 test.describe('page creation flow', () => {
   test.use({ storageState: authState('editorA') });
 
-  test('Create → Page creates a blank page that inherits its namespace and opens the editor', async ({ page }) => {
+  test('Create → Page creates a blank page that inherits its space and opens the editor', async ({ page }) => {
     await page.goto('/');
     const dialog = await openCreateModal(page);
     await dialog.getByRole('button', { name: 'Page' }).click();
@@ -30,8 +30,8 @@ test.describe('page creation flow', () => {
     await page.getByRole('button', { name: 'Untitled', exact: true }).click();
     await expect(page.getByLabel('Page title')).toHaveValue('Untitled');
     await page.getByRole('button', { name: 'Access control' }).click();
-    // A new page follows its namespace; the test database's default one is public.
-    await expect(page.getByRole('combobox', { name: 'Who can view this page' })).toHaveText(/^Same as namespace \(public/);
+    // A new page follows its space; the test database's default one is public.
+    await expect(page.getByRole('combobox', { name: 'Who can view this page' })).toHaveText(/^Same as space \(public/);
   });
 });
 

@@ -21,15 +21,15 @@
     meta,
     overlays,
     deletion,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     users = [],
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
     contentScheme = null,
     contentSchemeDefault = 'light',
     onSetContentScheme,
@@ -49,15 +49,15 @@
     deletion: DeleteRequest;
   } & Pick<
     PageEditorProps,
-    | 'namespaceAccessLevel'
-    | 'namespaceMembers'
+    | 'spaceAccessLevel'
+    | 'spaceMembers'
     | 'users'
     | 'shareLinks'
     | 'onCreateShareLink'
     | 'onRevokeShareLink'
-    | 'namespaceId'
-    | 'namespaces'
-    | 'onSetNamespace'
+    | 'spaceId'
+    | 'spaces'
+    | 'onSetSpace'
     | 'contentScheme'
     | 'contentSchemeDefault'
     | 'onSetContentScheme'
@@ -76,8 +76,8 @@
 <AccessControlPanel
   open={overlays.accessControl}
   visibility={meta.visibility}
-  {namespaceAccessLevel}
-  {namespaceMembers}
+  {spaceAccessLevel}
+  {spaceMembers}
   shares={meta.shares}
   {users}
   onSetVisibility={meta.commitVisibility}
@@ -85,9 +85,9 @@
   {shareLinks}
   {onCreateShareLink}
   {onRevokeShareLink}
-  {namespaceId}
-  {namespaces}
-  {onSetNamespace}
+  {spaceId}
+  {spaces}
+  {onSetSpace}
   onClose={() => (overlays.accessControl = false)}
 />
 

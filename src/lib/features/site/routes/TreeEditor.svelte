@@ -56,7 +56,7 @@
           {#if node.kind === 'link'}
             <span class="target">
               {#if node.target_type === 'page'}
-                {#if node.page_slug}<a href={nodePath(node.namespace_slug, node.page_slug)} target="_blank" rel="noopener">{node.page_title} · /{node.page_slug}</a>{:else}<em>{m.settings_navigation_tree_page_not_found()}</em>{/if}
+                {#if node.page_slug}<a href={nodePath(node.space_slug, node.page_slug)} target="_blank" rel="noopener">{node.page_title} · /{node.page_slug}</a>{:else}<em>{m.settings_navigation_tree_page_not_found()}</em>{/if}
               {:else}
                 <a href={node.url} target="_blank" rel="noopener">{node.url}</a>
               {/if}
@@ -98,7 +98,7 @@
                     <span class="label">{child.label}</span>
                     <span class="target">
                       {#if child.target_type === 'page'}
-                        {#if child.page_slug}<a href={nodePath(child.namespace_slug, child.page_slug)} target="_blank" rel="noopener">{child.page_title} · /{child.page_slug}</a>{:else}<em>{m.settings_navigation_tree_page_not_found()}</em>{/if}
+                        {#if child.page_slug}<a href={nodePath(child.space_slug, child.page_slug)} target="_blank" rel="noopener">{child.page_title} · /{child.page_slug}</a>{:else}<em>{m.settings_navigation_tree_page_not_found()}</em>{/if}
                       {:else}
                         <a href={child.url} target="_blank" rel="noopener">{child.url}</a>
                       {/if}

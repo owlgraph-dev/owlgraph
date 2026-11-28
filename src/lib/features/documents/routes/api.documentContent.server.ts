@@ -49,8 +49,8 @@ export const GET: RequestHandler<Params> = async ({ params, url, locals }) => {
   if (!data) return textError('not_found', { kind: 'document' });
   return documentBytesResponse(data, {
     download: url.searchParams.has('download'),
-    // Effective, not raw: inheriting 'public' from the namespace is just as cacheable.
-    cacheControl: (doc.visibility ?? doc.namespace_access_level) === 'public' ? 'public, max-age=3600' : 'private, no-store',
+    // Effective, not raw: inheriting 'public' from the space is just as cacheable.
+    cacheControl: (doc.visibility ?? doc.space_access_level) === 'public' ? 'public, max-age=3600' : 'private, no-store',
   });
 };
 

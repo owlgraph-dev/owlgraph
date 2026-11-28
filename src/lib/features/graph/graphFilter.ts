@@ -11,7 +11,7 @@ import type { NodeType } from '#lib/features/nodes/index.ts';
 export interface GraphFilter {
   types: Set<NodeType>;
   classIds: Set<string>;
-  namespaceIds: Set<string>;
+  spaceIds: Set<string>;
   relationshipTypes: Set<string>; // slugs
   hideUnconnected: boolean;
 }
@@ -19,18 +19,18 @@ export interface GraphFilter {
 export const EMPTY_FILTER: GraphFilter = {
   types: new Set(),
   classIds: new Set(),
-  namespaceIds: new Set(),
+  spaceIds: new Set(),
   relationshipTypes: new Set(),
   hideUnconnected: false,
 };
 
 export function isFilterEmpty(f: GraphFilter): boolean {
-  return f.types.size === 0 && f.classIds.size === 0 && f.namespaceIds.size === 0 && f.relationshipTypes.size === 0 && !f.hideUnconnected;
+  return f.types.size === 0 && f.classIds.size === 0 && f.spaceIds.size === 0 && f.relationshipTypes.size === 0 && !f.hideUnconnected;
 }
 
 /** Every chosen value counts, and the hide-unconnected switch: the phone sheet's "Filter · N". */
 export function activeFilterCount(f: GraphFilter): number {
-  return f.types.size + f.classIds.size + f.namespaceIds.size + f.relationshipTypes.size + (f.hideUnconnected ? 1 : 0);
+  return f.types.size + f.classIds.size + f.spaceIds.size + f.relationshipTypes.size + (f.hideUnconnected ? 1 : 0);
 }
 
 // Every picked class plus its subtree, over the parent links the server's recursive CTE follows.
@@ -58,7 +58,7 @@ export function applyGraphFilter(
   const passes = (n: GraphNode): boolean => {
     if (filter.types.size && !filter.types.has(n.type ?? 'page')) return false;
     if (admittedClasses && !(n.classId && admittedClasses.has(n.classId))) return false;
-    if (filter.namespaceIds.size && !(n.namespaceId && filter.namespaceIds.has(n.namespaceId))) return false;
+    if (filter.spaceIds.size && !(n.spaceId && filter.spaceIds.has(n.spaceId))) return false;
     return true;
   };
 

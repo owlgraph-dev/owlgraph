@@ -27,7 +27,7 @@ const CONCEPT: NodeClassOption = { id: 'c-concept', slug: 'concept', label: 'Con
 const PAGE_TYPE: NodeClassOption = { id: 'c-page', slug: 'page', label: 'Page', description: '', kind: 'type', parentId: 'c-root', nodeType: 'page', depth: 1 };
 
 function card(i: number): SearchResultCard {
-  return { id: `n-${i}`, type: 'page', title: `Sheet ${i}`, url: `/sheet-${i}`, locale: 'en', className: null, documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', namespaceName: '', tags: ['sheet'] };
+  return { id: `n-${i}`, type: 'page', title: `Sheet ${i}`, url: `/sheet-${i}`, locale: 'en', className: null, documentKind: null, linkHost: '', excerpt: '', highlighted: false, updatedAt: '2026-10-01T10:00:00.000Z', spaceName: '', tags: ['sheet'] };
 }
 
 function data(applied: Partial<SearchParams>, total: number, extra: Partial<Data> = {}): Data {
@@ -37,10 +37,10 @@ function data(applied: Partial<SearchParams>, total: number, extra: Partial<Data
     total,
     pageCount: 1,
     classLabel: null,
-    namespaceName: null,
+    spaceName: null,
     classOptions: [PAGE_TYPE, CONCEPT],
     tagOptions: ['sheet', 'other'],
-    namespaces: [],
+    spaces: [],
     ...extra,
   };
 }

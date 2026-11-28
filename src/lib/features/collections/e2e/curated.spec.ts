@@ -13,7 +13,7 @@ import { db } from '../../../platform/db.server';
 type Member = { id: string; title: string; position: number; label: string | null };
 type Members = { members: Member[]; basis: string };
 
-/** In the default namespace, which is public. */
+/** In the default space, which is public. */
 async function curated(request: APIRequestContext, title = unique('curated').name): Promise<{ id: string; slug: string; title: string }> {
   const res = await request.post('/api/collections', { data: { title } });
   expect(res.status(), await res.text()).toBe(201);
@@ -47,7 +47,7 @@ test.describe('a curated collection in its editor', () => {
     await createDocument(page.request, { title: docTitle });
     const pg = await publicPage(page.request, unique('picked page').name);
     const nested = await curated(page.request, unique('picked collection').name);
-    const [{ name: namespace }] = await db<{ name: string }[]>`select name from namespaces where is_default`;
+    const [{ name: space }] = await db<{ name: string }[]>`select name from spaces where is_default`;
 
     await page.goto('/');
     await page.getByRole('navigation', { name: 'Primary' }).getByRole('button', { name: 'Create' }).click();
@@ -67,7 +67,7 @@ test.describe('a curated collection in its editor', () => {
       await picker.getByPlaceholder('Search pages, documents and collections').fill(title);
       const option = picker.getByRole('option', { name: new RegExp(`^${title}`) });
       await expect(option).toContainText(type);
-      await expect(option).toContainText(namespace);
+      await expect(option).toContainText(space);
       await option.click();
       await expect(picker).toBeHidden();
       await expect(section.getByText(title, { exact: true })).toBeVisible();

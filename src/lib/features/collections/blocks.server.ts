@@ -9,7 +9,7 @@ import { db } from '#lib/platform/db.server.ts';
 import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { nodePath } from '#lib/features/nodes/index.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { collectBlocks, collectionConfig, COLLECTION_BLOCK, MAX_COLLECTION_LIMIT, type CollectionBlockData, type EmbedMember } from '#lib/features/content/index.ts';
 import { membersOfMany } from './members.server';
 import type { CollectionMember } from './types';
@@ -35,16 +35,16 @@ function cut(data: CollectionBlockData, limit: number): CollectionBlockData {
 async function collectionEmbeds(ids: readonly string[], user: SessionUser | null): Promise<Map<string, CollectionBlockData>> {
   const out = new Map<string, CollectionBlockData>(ids.map((id) => [id, HIDDEN]));
   if (ids.length === 0) return out;
-  const rows = await db<{ id: string; title: string; slug: string; namespace_slug: string | null; plugin: string | null }[]>`
-    select n.id, n.title, n.slug, ${db.unsafe(namespaceSlugColumn())}, c.plugin
-    from collections c join nodes n on n.id = c.id ${db.unsafe(namespaceJoin('n'))}
+  const rows = await db<{ id: string; title: string; slug: string; space_slug: string | null; plugin: string | null }[]>`
+    select n.id, n.title, n.slug, ${db.unsafe(spaceSlugColumn())}, c.plugin
+    from collections c join nodes n on n.id = c.id ${db.unsafe(spaceJoin('n'))}
     where c.id = any(${[...ids]}::uuid[]) and ${readableNodes(user, 'n')}`;
   const members = await membersOfMany(
     rows.filter((r) => !r.plugin).map((r) => r.id),
     user
   );
   for (const r of rows) {
-    const node = { id: r.id, title: r.title, href: nodePath(r.namespace_slug, r.slug) };
+    const node = { id: r.id, title: r.title, href: nodePath(r.space_slug, r.slug) };
     if (r.plugin) {
       out.set(r.id, { state: 'unavailable', node });
       continue;

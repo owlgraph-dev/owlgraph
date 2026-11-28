@@ -51,10 +51,10 @@
   // Edit follows /[slug]'s `canEdit` in page.data, this node's write
   // permission; userCanEdit is role-only and looser. onPageView stays
   // page-only: it also gates the page-only local-graph toggle.
-  const onPageView = $derived(page.route.id === '/[[namespace=namespace]]/[slug]' && page.data.kind === 'page');
-  const onDocumentView = $derived(page.route.id === '/[[namespace=namespace]]/[slug]' && (page.data.kind === 'document' || page.data.kind === 'collection'));
+  const onPageView = $derived(page.route.id === '/[[space=space]]/[slug]' && page.data.kind === 'page');
+  const onDocumentView = $derived(page.route.id === '/[[space=space]]/[slug]' && (page.data.kind === 'document' || page.data.kind === 'collection'));
   const pageCanEdit = $derived((onPageView || onDocumentView) && !!page.data.canEdit);
-  const pageEditHref = $derived((onPageView || onDocumentView) ? nodePath(page.params.namespace, page.params.slug ?? '', { edit: true }) : null);
+  const pageEditHref = $derived((onPageView || onDocumentView) ? nodePath(page.params.space, page.params.slug ?? '', { edit: true }) : null);
 </script>
 
 <!-- On a route under the looser style-src every link out of the bar is a full

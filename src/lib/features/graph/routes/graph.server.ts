@@ -8,7 +8,7 @@ import { listNodeClassOptions } from '#lib/features/semantic/server.ts';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 
 export const load = async ({ locals }: ServerLoadEvent) => {
-  // The viewer's namespaces come from the root layout's data.
+  // The viewer's spaces come from the root layout's data.
   const [graph, classOptions] = await Promise.all([getGraph(locals.user), listNodeClassOptions()]);
   return { ...graph, classOptions };
 };

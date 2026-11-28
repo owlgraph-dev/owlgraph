@@ -123,7 +123,7 @@ describe.skipIf(app.skipped)('Nextcloud read as the viewer, served', () => {
     return appPassword!;
   }
 
-  /** In the public default namespace unless restricted. */
+  /** In the public default space unless restricted. */
   async function pageOf(owner: Person, { doc, visibility }: { doc?: unknown; visibility?: 'restricted' } = {}): Promise<{ id: string; slug: string }> {
     const created = await call(served, '/api/pages', { cookie: owner.cookie, json: {} });
     expect(created.status, await created.clone().text()).toBe(200);
@@ -302,7 +302,7 @@ describe.skipIf(app.skipped)('Nextcloud read as the viewer, served', () => {
       expect(made.status, await made.clone().text()).toBe(201);
       const { document } = (await made.json()) as { document: { id: string; href: string; own: boolean; path: string | null } };
       expect(document).toMatchObject({ own: true, path: null });
-      // The same file in the same namespace is the same node.
+      // The same file in the same space is the same node.
       const again = await call(served, `${API}/documents`, { cookie: alice.cookie, json: { besidePageId: collection.pageId, own: { path: 'Privat/Bescheid.pdf', fileid: '510' } } });
       expect(again.status).toBe(200);
       expect(((await again.json()) as { document: { id: string } }).document.id).toBe(document.id);

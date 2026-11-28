@@ -74,7 +74,7 @@ export function nodeMetaClient(kind: NodeApiKind, id: string) {
       return { ok: res.ok };
     },
 
-    // null inherits the namespace's access level; the answer is what was stored.
+    // null inherits the space's access level; the answer is what was stored.
     async setVisibility(visibility: string | null): Promise<SetVisibilityResult> {
       const res = await patchJson(kind, id, { visibility });
       if (!res.ok) return { ok: false };
@@ -95,8 +95,8 @@ export function nodeMetaClient(kind: NodeApiKind, id: string) {
       return { ok: true, shares: body.shares ?? [] };
     },
 
-    async setNamespace(namespaceId: string): Promise<OkOrError> {
-      const res = await patchJson(kind, id, { namespaceId });
+    async setSpace(spaceId: string): Promise<OkOrError> {
+      const res = await patchJson(kind, id, { spaceId });
       if (!res.ok) return { ok: false, error: await apiErrorText(res) };
       return { ok: true };
     },

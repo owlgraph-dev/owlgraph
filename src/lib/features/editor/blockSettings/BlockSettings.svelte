@@ -29,12 +29,12 @@
   import type { ImagePicker } from '../desktop/imagePicker.svelte';
   import type { EditorOverlays } from '../desktop/overlays.svelte';
 
-  let { core, pageId = null, namespace = null, enabledPlugins = new Set(), quickLinkEmbed, onEmbedQuickLink, contentScheme = 'light', images, onRetarget, overlays }: {
+  let { core, pageId = null, space = null, enabledPlugins = new Set(), quickLinkEmbed, onEmbedQuickLink, contentScheme = 'light', images, onRetarget, overlays }: {
     core: EditorCore;
-    /** The page being edited: a plugin block's sections create what the block needs in its namespace. */
+    /** The page being edited: a plugin block's sections create what the block needs in its space. */
     pageId?: string | null;
-    /** The page's namespace, where a node made from a panel's picker goes. */
-    namespace?: { id: string; name: string; slug: string | null } | null;
+    /** The page's space, where a node made from a panel's picker goes. */
+    space?: { id: string; name: string; slug: string | null } | null;
     /** The plugins turned on (their ids): which kind shows a node an integration keeps. */
     enabledPlugins?: ReadonlySet<string>;
     /** What a quick link to a document can become (docs/architecture/blocks/node-embeds.md, "A quick link becomes a block"). */
@@ -126,7 +126,7 @@
       if (editor) setSectionSingle(editor, chain[selectedIndex].pos, single);
     },
     selectPage: () => core.selection.selectAncestor(0),
-    ...embedActions({ editor: () => editor, target: () => target, namespace: () => namespace, enabledPlugins: () => enabledPlugins }),
+    ...embedActions({ editor: () => editor, target: () => target, space: () => space, enabledPlugins: () => enabledPlugins }),
     quickLinkEmbed: (attrs) => quickLinkEmbed?.(attrs) ?? null,
     embedQuickLink: (id) => onEmbedQuickLink?.(id),
   };

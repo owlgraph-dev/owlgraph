@@ -16,13 +16,13 @@ import {
   slugify,
   cleanSlug,
   assertSlugAvailable,
-  namespaceJoin,
-  namespaceSlugColumn,
-  assertCanPlaceInNamespace,
-  assertNotWiderThanNamespace,
+  spaceJoin,
+  spaceSlugColumn,
+  assertCanPlaceInSpace,
+  assertNotWiderThanSpace,
   userCanReadNode,
 } from '#lib/features/nodes/server.ts';
-import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getSpace, getDefaultSpace } from '#lib/features/spaces/server.ts';
 import { getTypeClass } from '#lib/features/semantic/server.ts';
 import { extractText } from './extract.server';
 import { detectLocale } from './detectLocale';
@@ -45,8 +45,8 @@ export interface DocumentRow {
   id: string;
   title: string;
   slug: string;
-  namespace_id: string;
-  namespace_slug: string | null;
+  space_id: string;
+  space_slug: string | null;
   // A link has no file: mime and size null, filename ''. A plugin's document
   // has no bytes here; filename/mime/size are what its integration last saw.
   source: DocumentSource;
@@ -56,8 +56,8 @@ export interface DocumentRow {
   filename: string;
   mime: string | null;
   size: number | null;
-  visibility: string | null; // null = inherits namespace_access_level, live
-  namespace_access_level: Visibility;
+  visibility: string | null; // null = inherits space_access_level, live
+  space_access_level: Visibility;
   created_by: string | null;
   created_at: string;
   class_id: string; // the 'document' type class or a subclass of it
@@ -70,9 +70,9 @@ export interface DocumentRow {
 // Explicit columns, not `select *`: a missed nodes join fails loudly instead of
 // leaving visibility undefined. Kept apart from the FROM clause so
 // searchDocumentsFts can add its rank and snippet columns between them.
-export const DOCUMENT_COLUMNS = `d.id, n.title, n.slug, n.namespace_id, ${namespaceSlugColumn()}, d.source, d.plugin, d.external_url, d.filename, d.mime, d.size,
-    n.visibility, ns.access_level as namespace_access_level, n.created_by, n.created_at, n.class_id, n.locale, d.detected_locale`;
-export const DOCUMENT_FROM = `from documents d join nodes n on n.id = d.id ${namespaceJoin('n')}`;
+export const DOCUMENT_COLUMNS = `d.id, n.title, n.slug, n.space_id, ${spaceSlugColumn()}, d.source, d.plugin, d.external_url, d.filename, d.mime, d.size,
+    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.class_id, n.locale, d.detected_locale`;
+export const DOCUMENT_FROM = `from documents d join nodes n on n.id = d.id ${spaceJoin('n')}`;
 
 export async function getDocument(id: string): Promise<DocumentRow | null> {
   const [row] = await db<DocumentRow[]>`
@@ -94,7 +94,7 @@ export async function createDocument(opts: {
   title?: string;
   createdBy: string | null;
   user: SessionUser | null;
-  namespaceId?: string;
+  spaceId?: string;
   locale?: string;
 }): Promise<{ id: string; slug: string }> {
   const sha256 = createHash('sha256').update(opts.bytes).digest('hex');
@@ -124,7 +124,7 @@ export async function createLinkDocument(opts: {
   title: string;
   createdBy: string | null;
   user: SessionUser | null;
-  namespaceId?: string;
+  spaceId?: string;
   locale?: string;
 }): Promise<{ id: string; slug: string }> {
   const title = opts.title.trim();
@@ -150,9 +150,9 @@ export async function createPluginDocument(
     file: { filename: string; mime: string | null; size: number | null };
     createdBy: string | null;
     user: SessionUser | null;
-    namespaceId?: string;
+    spaceId?: string;
     locale?: string;
-    /** Narrower than the namespace — the page or collection it is made from — or null to inherit it. */
+    /** Narrower than the space — the page or collection it is made from — or null to inherit it. */
     visibility?: Visibility | null;
   },
   sql: TxSql
@@ -168,28 +168,28 @@ export async function createPluginDocument(
 }
 
 /**
- * The integration's document in a namespace whose source record holds every key
+ * The integration's document in a space whose source record holds every key
  * of `match`. Take lockPluginDocument for the same key first in the same
  * transaction, so two requests for one file make one node.
  */
 export async function findPluginDocument(
   sql: TxSql,
-  opts: { namespaceId: string; plugin: string; match: Readonly<Record<string, string | number>> }
+  opts: { spaceId: string; plugin: string; match: Readonly<Record<string, string | number>> }
 ): Promise<string | null> {
   const [row] = await sql<{ id: string }[]>`
     select d.id from documents d join nodes n on n.id = d.id
-    where n.namespace_id = ${opts.namespaceId} and d.source = 'plugin' and d.plugin = ${opts.plugin}
+    where n.space_id = ${opts.spaceId} and d.source = 'plugin' and d.plugin = ${opts.plugin}
       and d.source_ref @> ${sql.json(opts.match as never)}
     order by n.created_at limit 1`;
   return row?.id ?? null;
 }
 
-/** Holds, until the transaction ends, the one lock a namespace, an integration and a file's `match` share. */
+/** Holds, until the transaction ends, the one lock a space, an integration and a file's `match` share. */
 export async function lockPluginDocument(
   sql: TxSql,
-  opts: { namespaceId: string; plugin: string; match: Readonly<Record<string, string | number>> }
+  opts: { spaceId: string; plugin: string; match: Readonly<Record<string, string | number>> }
 ): Promise<void> {
-  const key = JSON.stringify([opts.namespaceId, opts.plugin, Object.entries(opts.match).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))]);
+  const key = JSON.stringify([opts.spaceId, opts.plugin, Object.entries(opts.match).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))]);
   await sql`select pg_advisory_xact_lock(hashtext('plugin-document'), hashtext(${key}))`;
 }
 
@@ -231,21 +231,21 @@ export async function listPluginDocumentsForUser(
 // default) for the documents row's search mirror.
 async function insertDocumentNode(
   sql: TxSql,
-  opts: { title: string; slug: string; createdBy: string | null; user: SessionUser | null; namespaceId?: string; locale?: string; visibility?: Visibility | null }
+  opts: { title: string; slug: string; createdBy: string | null; user: SessionUser | null; spaceId?: string; locale?: string; visibility?: Visibility | null }
 ): Promise<{ id: string; locale: string }> {
-  const namespace = opts.namespaceId ? await getNamespace(sql, opts.namespaceId) : await getDefaultNamespace(sql);
-  if (!namespace) throw new CodedError('unknown_namespace', 'Unknown namespace');
-  await assertCanPlaceInNamespace(sql, opts.user, namespace.id, namespace.access_level);
-  if (opts.visibility) assertNotWiderThanNamespace(opts.visibility, namespace.access_level);
+  const space = opts.spaceId ? await getSpace(sql, opts.spaceId) : await getDefaultSpace(sql);
+  if (!space) throw new CodedError('unknown_space', 'Unknown space');
+  await assertCanPlaceInSpace(sql, opts.user, space.id, space.access_level);
+  if (opts.visibility) assertNotWiderThanSpace(opts.visibility, space.access_level);
   // The 'document' type class carries the document metadata group, so its
   // fields render; editors may pick a subclass afterward.
   const documentClass = await getTypeClass(sql, 'document');
   const node = await insertNode(sql, {
     classId: documentClass.id,
     slug: opts.slug,
-    namespaceId: namespace.id,
+    spaceId: space.id,
     createdBy: opts.createdBy,
-    visibility: opts.visibility ?? null, // null inherits the namespace's access level, live
+    visibility: opts.visibility ?? null, // null inherits the space's access level, live
     title: opts.title,
     locale: opts.locale,
   });
@@ -340,7 +340,7 @@ export async function setDocumentSourceSearch(id: string, text: string, sql: TxS
   if (rows.length > 0) await refreshDocumentSearchMeta(id, sql);
 }
 
-// A slug is unique within its namespace across every node kind, since it lives
+// A slug is unique within its space across every node kind, since it lives
 // on `nodes` (assertSlugAvailable).
 export async function renameDocument(id: string, changes: { title?: string; slug?: string }): Promise<DocumentRow | null> {
   const title = changes.title !== undefined ? changes.title.trim() : undefined;
@@ -350,9 +350,9 @@ export async function renameDocument(id: string, changes: { title?: string; slug
   if (changes.slug !== undefined) {
     slug = cleanSlug(changes.slug);
     if (slug === '') throw new CodedError('slug_required', 'URL slug cannot be empty');
-    const [node] = await db<{ namespace_id: string }[]>`select namespace_id from nodes where id = ${id}`;
+    const [node] = await db<{ space_id: string }[]>`select space_id from nodes where id = ${id}`;
     if (!node) throw new CodedError('not_found', 'Not found');
-    await assertSlugAvailable(db, slug, id, node.namespace_id);
+    await assertSlugAvailable(db, slug, id, node.space_id);
   }
 
   if (title === undefined && slug === undefined) return getDocument(id);

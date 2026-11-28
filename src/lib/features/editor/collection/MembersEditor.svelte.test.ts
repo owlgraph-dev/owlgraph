@@ -15,14 +15,14 @@ import { stubFetch, type Call } from '#tests/component/fetch.ts';
 // what the members API stores is members.http.test.ts's.
 
 const COLLECTION = 'c0000000-0000-4000-8000-000000000001';
-const NAMESPACE = { id: 'ns-default', name: 'Default', slug: null };
+const SPACE = { id: 'ns-default', name: 'Default', slug: null };
 
 function member(id: string, title: string, extra: Partial<CollectionMember> = {}): CollectionMember {
   return { id, type: 'page', title, url: `/${id}`, position: 1, label: null, labelText: null, plugin: null, pluginLabel: null, ...extra };
 }
 
 function node(id: string, title: string, type: NodeSearchResult['type'] = 'collection'): NodeSearchResult {
-  return { type, id, title, slug: id, href: `/${id}`, namespace: NAMESPACE.name, plugin: null, pluginLabel: null };
+  return { type, id, title, slug: id, href: `/${id}`, space: SPACE.name, plugin: null, pluginLabel: null };
 }
 
 
@@ -30,7 +30,7 @@ const membersAnswer = (members: CollectionMember[], basis = 'b2') => Response.js
 const searchParams = (call: Call) => new URL(call.url, 'http://localhost').searchParams;
 
 async function editor(members: CollectionMember[]) {
-  await render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', namespace: NAMESPACE });
+  await render(MembersEditor, { collectionId: COLLECTION, members, basis: 'b1', space: SPACE });
   return screen.getByRole('region', { name: 'Contents' });
 }
 
@@ -119,7 +119,7 @@ describe("the members editor's picker", () => {
     expect(searchParams(calls.filter((c) => c.url.startsWith('/api/node-search')).at(-1)!).get('offset')).toBe('12');
   });
 
-  it("offers to make what nobody's title is — a page, a collection, a document — in the collection's namespace", async () => {
+  it("offers to make what nobody's title is — a page, a collection, a document — in the collection's space", async () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
     const token = 'Made token';
     const fresh = `${token} fresh`;
@@ -133,7 +133,7 @@ describe("the members editor's picker", () => {
         if (q === token && types.includes('page')) return Response.json({ results: [node('p-made', token, 'page')], more: false, exact: ['page'] });
         return Response.json({ results: [], more: false, exact: [] });
       }
-      if (call.method === 'POST' && call.url === '/api/pages') return Response.json({ id: 'p-fresh', slug: 'made-token-fresh', namespaceSlug: null });
+      if (call.method === 'POST' && call.url === '/api/pages') return Response.json({ id: 'p-fresh', slug: 'made-token-fresh', spaceSlug: null });
       if (call.method === 'POST' && call.url === '/api/documents') return Response.json({ id: 'd-paper', slug: 'made-token-paper' });
       if (call.method === 'POST' && call.url === `/api/collections/${COLLECTION}/members`) {
         const id = (call.body as { nodeId: string }).nodeId;
@@ -150,7 +150,7 @@ describe("the members editor's picker", () => {
     await expect.element(picker.getByRole('option').first()).toMatchTextContent(token);
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(2));
     await expect.element(picker.getByRole('option', { name: new RegExp(`^New collection “${token}”`) })).toBeVisible();
-    await expect.element(picker.getByRole('option', { name: /^New document/ })).toMatchTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(picker.getByRole('option', { name: /^New document/ })).toMatchTextContent(`in ${SPACE.name}`);
     expect(picker.getByRole('option', { name: /^New page/ }).elements()).toHaveLength(0);
     await picker.getByRole('radio', { name: 'Pages' }).click();
     await vi.waitFor(() => expect(newRows.elements()).toHaveLength(0));
@@ -169,7 +169,7 @@ describe("the members editor's picker", () => {
     await picker.getByRole('option', { name: /^New page/ }).click();
     await expect.element(picker).not.toBeInTheDocument();
     await expect.element(section.getByText(fresh, { exact: true })).toBeVisible();
-    expect(calls.find((c) => c.url === '/api/pages')?.body).toEqual({ namespaceId: NAMESPACE.id, title: fresh });
+    expect(calls.find((c) => c.url === '/api/pages')?.body).toEqual({ spaceId: SPACE.id, title: fresh });
     expect(calls.filter((c) => c.url === `/api/collections/${COLLECTION}/members`).map((c) => c.body)).toEqual([{ nodeId: 'p-fresh' }]);
 
     const { picker: again, field: field2 } = await openPicker();
@@ -182,7 +182,7 @@ describe("the members editor's picker", () => {
     await again.getByRole('button', { name: 'Create', exact: true }).click();
     await expect.element(again).not.toBeInTheDocument();
     await expect.element(section.getByText(paper, { exact: true })).toBeVisible();
-    expect(calls.find((c) => c.url === '/api/documents')?.body).toEqual({ source: 'link', externalUrl: 'https://example.org/paper', title: paper, namespaceId: NAMESPACE.id });
+    expect(calls.find((c) => c.url === '/api/documents')?.body).toEqual({ source: 'link', externalUrl: 'https://example.org/paper', title: paper, spaceId: SPACE.id });
     expect(calls.filter((c) => c.url === `/api/collections/${COLLECTION}/members`).map((c) => c.body)).toEqual([{ nodeId: 'p-fresh' }, { nodeId: 'd-paper' }]);
   });
 });

@@ -3,16 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // The async half of ./access.ts: looks up the one fact a restricted node needs,
-// namespace membership when it inherits, its share list when it overrides.
+// space membership when it inherits, its share list when it overrides.
 import { db } from '#lib/platform/db.server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { canReadNode, canWriteNode, type NodeAccess, type Visibility } from './access';
-import { isNamespaceMember } from './nodes.server';
+import { isSpaceMember } from './nodes.server';
 import type { NodeType } from './types';
 
 export interface NodeAccessRow extends NodeAccess {
-  namespace_id: string;
-  namespace_access_level: Visibility;
+  space_id: string;
+  space_access_level: Visibility;
 }
 
 // A collection has no share list: a restricted override is its owner's and an
@@ -29,12 +29,12 @@ export async function isNodeSharedWith(kind: NodeType, nodeId: string, userId: s
 }
 
 async function accessSubjects(user: SessionUser | null, node: NodeAccessRow, kind: NodeType): Promise<[boolean, boolean]> {
-  const effective = node.visibility ?? node.namespace_access_level;
+  const effective = node.visibility ?? node.space_access_level;
   const needsShareCheck = node.visibility !== null && effective === 'restricted';
   const needsMemberCheck = node.visibility === null && effective === 'restricted';
   return Promise.all([
     needsShareCheck && user ? isNodeSharedWith(kind, node.id, user.id) : Promise.resolve(false),
-    needsMemberCheck && user ? isNamespaceMember(db, node.namespace_id, user.id) : Promise.resolve(false),
+    needsMemberCheck && user ? isSpaceMember(db, node.space_id, user.id) : Promise.resolve(false),
   ]);
 }
 

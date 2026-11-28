@@ -12,10 +12,10 @@ import type { GraphEdge, GraphNode } from '../types';
 // property), to a document and to a third page; at a desktop width, where the panel floats.
 
 const NODES: GraphNode[] = [
-  { id: 'n-graph', type: 'page', slug: 'graph-test-page', namespaceSlug: null, title: 'Graph Test Page' },
-  { id: 'n-public', type: 'page', slug: 'public-page', namespaceSlug: null, title: 'Public Page' },
-  { id: 'n-document', type: 'document', slug: 'public-document', namespaceSlug: null, title: 'Public Document' },
-  { id: 'n-internal', type: 'page', slug: 'internal-page', namespaceSlug: null, title: 'Internal Page' },
+  { id: 'n-graph', type: 'page', slug: 'graph-test-page', spaceSlug: null, title: 'Graph Test Page' },
+  { id: 'n-public', type: 'page', slug: 'public-page', spaceSlug: null, title: 'Public Page' },
+  { id: 'n-document', type: 'document', slug: 'public-document', spaceSlug: null, title: 'Public Document' },
+  { id: 'n-internal', type: 'page', slug: 'internal-page', spaceSlug: null, title: 'Internal Page' },
 ];
 const MENTIONS: GraphEdge = {
   source: 'n-graph',

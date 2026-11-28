@@ -13,7 +13,7 @@ const cls = (id: string, parentId: string | null, depth: number): NodeClassOptio
 // page → article → news; document
 const classes = [cls('page', null, 1), cls('article', 'page', 2), cls('news', 'article', 3), cls('document', null, 1)];
 
-const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'page', namespaceId: 'ns1', ...over });
+const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'page', spaceId: 'ns1', ...over });
 const edge = (source: string, target: string, relationshipType?: string): GraphEdge => ({
   source, target, edgeId: `${source}-${target}`,
   ...(relationshipType ? { relationshipType, relationshipLabel: relationshipType.toUpperCase() } : {}),
@@ -22,7 +22,7 @@ const edge = (source: string, target: string, relationshipType?: string): GraphE
 const nodes = [
   node('a'),
   node('b', { classId: 'article' }),
-  node('c', { classId: 'news', namespaceId: 'ns2' }),
+  node('c', { classId: 'news', spaceId: 'ns2' }),
   node('d', { type: 'document', classId: 'document' }),
   node('lonely'),
 ];
@@ -52,8 +52,8 @@ describe('applyGraphFilter', () => {
     expect(expandClassIds(new Set(['page']), classes)).toEqual(new Set(['page', 'article', 'news']));
   });
 
-  it('filters by namespace', () => {
-    const out = applyGraphFilter(nodes, edges, filter({ namespaceIds: new Set(['ns2']) }), classes);
+  it('filters by space', () => {
+    const out = applyGraphFilter(nodes, edges, filter({ spaceIds: new Set(['ns2']) }), classes);
     expect(ids(out)).toEqual(['c']);
   });
 
@@ -71,7 +71,7 @@ describe('applyGraphFilter', () => {
   });
 
   it('combines dimensions with AND', () => {
-    const out = applyGraphFilter(nodes, edges, filter({ classIds: new Set(['page']), namespaceIds: new Set(['ns1']), types: new Set(['page']) }), classes);
+    const out = applyGraphFilter(nodes, edges, filter({ classIds: new Set(['page']), spaceIds: new Set(['ns1']), types: new Set(['page']) }), classes);
     expect(ids(out)).toEqual(['a', 'b', 'lonely']);
   });
 });
@@ -90,7 +90,7 @@ describe('activeFilterCount', () => {
     expect(activeFilterCount(EMPTY_FILTER)).toBe(0);
     expect(activeFilterCount({ ...EMPTY_FILTER, types: new Set(['document']) })).toBe(1);
     expect(
-      activeFilterCount({ types: new Set(['page']), classIds: new Set(['a', 'b']), namespaceIds: new Set(['n']), relationshipTypes: new Set(['cites']), hideUnconnected: true })
+      activeFilterCount({ types: new Set(['page']), classIds: new Set(['a', 'b']), spaceIds: new Set(['n']), relationshipTypes: new Set(['cites']), hideUnconnected: true })
     ).toBe(6);
   });
 });

@@ -5,7 +5,7 @@
 import { afterAll, describe, expect, inject, it } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
-import { call, createNamespace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
+import { call, createSpace, createPage, startApp, type ServedApp } from '#tests/integration/http.ts';
 
 const app = await startApp();
 const seed = inject('seed');
@@ -18,8 +18,8 @@ describe.skipIf(app.skipped)('search, served', () => {
   const served = app as ServedApp;
   afterAll(() => served.close());
 
-  it('an anonymous GET of /search answers the page, not a sign-in, lists only public content, and drops a namespace parameter naming an internal namespace', async () => {
-    await createNamespace(served, { name: 'Intern', slug: 'intern-search', accessLevel: 'internal' });
+  it('an anonymous GET of /search answers the page, not a sign-in, lists only public content, and drops a space parameter naming an internal space', async () => {
+    await createSpace(served, { name: 'Intern', slug: 'intern-search', accessLevel: 'internal' });
     const open = await createPage(served, 'admin', { title: 'Open to all', visibility: null });
     const signedIn = await createPage(served, 'admin', { title: 'Signed in only', visibility: 'internal' });
     await setNodeTags(open.id, ['anon']);
@@ -28,9 +28,9 @@ describe.skipIf(app.skipped)('search, served', () => {
     const res = await call(served, '/search?tag=anon');
     expect(res.status).toBe(200);
     expect(listedTitles(await res.text())).toEqual(['Open to all']);
-    const withNamespace = await call(served, '/search?namespace=intern-search&tag=anon');
-    expect(withNamespace.status).toBe(200);
-    expect(listedTitles(await withNamespace.text())).toEqual(['Open to all']);
+    const withSpace = await call(served, '/search?space=intern-search&tag=anon');
+    expect(withSpace.status).toBe(200);
+    expect(listedTitles(await withSpace.text())).toEqual(['Open to all']);
   });
 
   it('/api/search-count never counts a node the viewer cannot read, and answers no-store', async () => {

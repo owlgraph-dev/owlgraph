@@ -57,7 +57,7 @@ export async function traverse(user: SessionUser | null, args: TraverseArgs): Pr
     slug: n.slug,
     createdAt: n.createdAt,
     updatedAt: n.updatedAt,
-    namespaceId: n.namespaceId,
+    spaceId: n.spaceId,
     createdBy: n.createdBy,
     classId: n.classId,
     className: n.className,

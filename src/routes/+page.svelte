@@ -50,10 +50,10 @@
   {/if}
 {/if}
 
-{#snippet pageList(pages: { id: string; title: string; slug: string; namespace_slug: string | null }[])}
+{#snippet pageList(pages: { id: string; title: string; slug: string; space_slug: string | null }[])}
   <ul class="index">
     {#each pages as page (page.id)}
-      <li><a href={nodePath(page.namespace_slug, page.slug)}>{page.title}</a></li>
+      <li><a href={nodePath(page.space_slug, page.slug)}>{page.title}</a></li>
     {/each}
   </ul>
 {/snippet}

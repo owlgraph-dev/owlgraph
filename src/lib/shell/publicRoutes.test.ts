@@ -12,7 +12,7 @@ import { PUBLIC_ROUTES } from './publicRoutes';
 const EXPECTED = [
   '/login',
   '/',
-  '/[[namespace=namespace]]/[slug]',
+  '/[[space=space]]/[slug]',
   '/api/media/[id]',
   '/api/documents/[id]/content',
   '/share/[id]',
@@ -29,7 +29,7 @@ const EXPECTED = [
   '/api/health',
   // Browsers post CSP reports without a session.
   '/api/csp-report',
-  '/api/namespaces/slugs',
+  '/api/spaces/slugs',
   // Anonymous visitors pick the interface language too; it writes only their
   // choice cookie, for an enabled language.
   '/api/locale',

@@ -31,7 +31,7 @@ export function registerCollectionTools({ user, tool }: ToolRegistry): void {
             id: collection.id,
             title: collection.title,
             locale: collection.locale,
-            visibility: collection.visibility ?? collection.namespace_access_level,
+            visibility: collection.visibility ?? collection.space_access_level,
             plugin: collection.plugin,
             pluginLabel: collection.plugin ? pluginLabel(collection.plugin) : null,
             members,

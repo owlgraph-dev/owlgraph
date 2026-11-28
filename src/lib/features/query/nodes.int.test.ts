@@ -5,7 +5,7 @@
 import { describe, expect, inject, it } from 'vitest';
 import { graphql } from 'graphql';
 import { db } from '#lib/platform/db.server.ts';
-import { createNamespace } from '#lib/features/namespaces/server.ts';
+import { createSpace } from '#lib/features/spaces/server.ts';
 import { createPage } from '#lib/features/pages/server.ts';
 import { schema } from './server';
 import { userOf, type Role } from '#tests/integration/users.ts';
@@ -18,7 +18,7 @@ import { userOf, type Role } from '#tests/integration/users.ts';
 const seed = inject('seed');
 
 const NODES = `query($filter: NodeFilter!, $orderBy: OrderBy) {
-  nodes(filter: $filter, orderBy: $orderBy) { title slug createdAt updatedAt namespaceId properties { name value } }
+  nodes(filter: $filter, orderBy: $orderBy) { title slug createdAt updatedAt spaceId properties { name value } }
 }`;
 
 type Node = { title: string; slug: string; createdAt: string; updatedAt: string; properties: { name: string; value: string }[] };
@@ -95,16 +95,16 @@ describe('intrinsic conditions and sorting', () => {
     expect(node.updatedAt).toMatch(ISO_8601);
   });
 
-  it('a namespaceId condition naming a restricted namespace the viewer is not in answers no rows and no error; its member’s query finds its page', async () => {
+  it('a spaceId condition naming a restricted space the viewer is not in answers no rows and no error; its member’s query finds its page', async () => {
     const admin = await userOf('admin');
-    const ns = await createNamespace({ name: 'Hidden for queries', slug: 'hidden-for-queries', accessLevel: 'restricted' });
-    await createPage('In the hidden namespace', admin, { namespaceId: ns.id });
-    const inNamespace = { intrinsic: { field: 'NAMESPACE_ID', operator: 'EQ', value: ns.id } };
+    const ns = await createSpace({ name: 'Hidden for queries', slug: 'hidden-for-queries', accessLevel: 'restricted' });
+    await createPage('In the hidden space', admin, { spaceId: ns.id });
+    const inSpace = { intrinsic: { field: 'SPACE_ID', operator: 'EQ', value: ns.id } };
 
-    const viewer = await nodesAs('viewer', inNamespace);
+    const viewer = await nodesAs('viewer', inSpace);
     expect(viewer.errors).toBeUndefined();
     expect(viewer.nodes).toEqual([]);
-    expect(titles((await nodesAs('admin', inNamespace)).nodes)).toEqual(['In the hidden namespace']);
+    expect(titles((await nodesAs('admin', inSpace)).nodes)).toEqual(['In the hidden space']);
   });
 
   it('an INTRINSIC orderBy on slug ascending answers the pages in the database’s slug order', async () => {

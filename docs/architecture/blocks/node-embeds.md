@@ -28,7 +28,7 @@ content.
 The link picker — the node picker ([search.md](../search.md#the-node-picker))
 in the toolbar's popover and the phone's link sheet — finds pages and
 documents by their title, opens on the ones the editor worked on last, and
-makes a page it is asked for in the page's namespace. Choosing a card's
+makes a page it is asked for in the page's space. Choosing a card's
 target, it also offers the site's own pages (`src/lib/features/editor/shared/sitePages.ts`,
 the search page today; a new linkable route is one entry there), and turns a
 typed address — a URL, a bare domain, a `/path` — into a "Link to …" row
@@ -110,7 +110,7 @@ embedded the node — a person, an agent — each reader sees what they may read
   not its title: hidden is not protected, and a placeholder would say
   something is there. That holds for an anonymous reader, a share link's
   visitor (a link grants its page, not what the page embeds) and a reader
-  outside a restricted namespace alike. A lookup that fails hides its blocks
+  outside a restricted space alike. A lookup that fails hides its blocks
   the same way.
 - Where nothing was resolved at all — a version's preview — the block draws
   its box and a neutral line, as every addressable block draws its box.
@@ -127,11 +127,11 @@ showing it), through `GET /api/collections/<id>` and
 `GET /api/documents/<id>` — the same answer a page resolves, the same 404 for
 a node that is gone and one the editor may not read, which the block says in
 a line only the editor sees. Its settings panel picks the node from those
-the editor may read across namespaces — the node picker
+the editor may read across spaces — the node picker
 ([search.md](../search.md#the-node-picker)), on a phone a page of the block's
 settings sheet; picking one an integration keeps turns the block into that
 integration's block (below). The picker also makes the node it is asked for,
-in the page's namespace: a curated collection at once ("New collection
+in the page's space: a curated collection at once ("New collection
 “…”"), a document — an upload or a link — from its form. The Insert menu
 offers both blocks at the head of their family's group.
 

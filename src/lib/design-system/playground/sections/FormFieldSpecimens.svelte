@@ -56,7 +56,7 @@
     </FormField>
   </Specimen>
   <Specimen label="error (aria-invalid, danger border, described)" state="error">
-    <FormField label="Key" error="This key is already taken in the namespace.">
+    <FormField label="Key" error="This key is already taken in the space.">
       <Input name="slug" bind:value={taken} required />
     </FormField>
   </Specimen>

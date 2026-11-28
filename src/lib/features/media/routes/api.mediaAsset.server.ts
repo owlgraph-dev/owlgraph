@@ -28,7 +28,7 @@ export const GET: RequestHandler<Params> = async ({ params, locals, url, request
     const page = meta.owner_page_id ? await getPage(meta.owner_page_id) : null;
     if (!page || !(await userCanReadPage(locals.user, page))) return textError('not_found');
     // Effective, not raw: a page inheriting 'public' is as cacheable.
-    isPublic = (page.visibility ?? page.namespace_access_level) === 'public';
+    isPublic = (page.visibility ?? page.space_access_level) === 'public';
   } else if (meta.scope === 'user') {
     // Avatars are served by /api/media/avatar/[userId] only, never here.
     return textError('not_found');

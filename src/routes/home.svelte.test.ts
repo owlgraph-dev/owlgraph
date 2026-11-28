@@ -18,7 +18,7 @@ const ADMIN = { id: 'u-admin', email: 'admin@example.test', name: 'Admin', role:
 // The page's own share of its data; the root layout's is not read here.
 const data = {
   welcome: false,
-  pages: [{ id: 'p-1', title: 'Field notes', slug: 'field-notes', namespace_slug: null }],
+  pages: [{ id: 'p-1', title: 'Field notes', slug: 'field-notes', space_slug: null }],
   canCreate: true,
   canSetHome: true,
 } as unknown as PageData;

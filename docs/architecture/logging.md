@@ -204,14 +204,14 @@ and whole Tiptap documents via `sql.json(doc)`. It is unusable and unsafe; see
 `userId`, `actorId`, `subjectId` and `granteeIds` are the **real
 `users.id` UUIDs**, not per-session or rotating identifiers. That is
 deliberate and not a defect: an audit trail whose actor cannot be resolved
-answers nothing, and "who changed this namespace's access level" is the
+answers nothing, and "who changed this space's access level" is the
 question the subset exists for. But it means a `userId` is linkable to a named
 person by anyone who can also read the `users` table, so under Art. 4(5) GDPR
 (DSGVO) this is pseudonymisation, and the log falls in scope as personal data.
 It belongs in the record of processing activities (Verzeichnis von
 Verarbeitungstätigkeiten) and the privacy policy (Datenschutzerklärung).
 
-`nodeId`, `namespaceId` and `shareLinkId` are likewise real database ids. They
+`nodeId`, `spaceId` and `shareLinkId` are likewise real database ids. They
 identify content, not people — but a node id plus the database still resolves
 to a title and an author.
 
@@ -269,7 +269,7 @@ Fields listed are **in addition to** the [base fields](#base-fields). `audit` ma
 `listMigrationVersions()`, resolves `migrations/` relative to its own module,
 which is wrong once the app ships as a bundle under `build/` — and reading it
 from the database would put a round-trip in front of startup, which the
-namespace-cache warm beside it deliberately avoids. It is not needed anyway:
+space-cache warm beside it deliberately avoids. It is not needed anyway:
 the `migrate` one-shot logs `migrate.run`, and compose only starts `app` and
 `mcp` once that container has exited successfully.
 
@@ -318,13 +318,13 @@ record those, with the actor and the subject, which is strictly more.
 
 | event | level | fields | emitted at |
 |---|---|---|---|
-| `authz.denied` | `warn` | `action` (e.g. `page:write`, `branding:manage`), `resourceType`: `page`\|`document`\|`namespace`\|`route`\|`tool`, `resourceId`, `via`: `route`\|`api`\|`mcp` | five places, below |
+| `authz.denied` | `warn` | `action` (e.g. `page:write`, `branding:manage`), `resourceType`: `page`\|`document`\|`space`\|`route`\|`tool`, `resourceId`, `via`: `route`\|`api`\|`mcp` | five places, below |
 
 This is the "why can't I see X" line *and* the probing line, so it has to cover every
 denial path:
 
 1. `requireAction()` — the guard every `/settings` adapter's `load` and every one of its actions already calls (83 call sites across 14 adapters).
-2. `apiForbidden()` — its counterpart for the API, which every `403` in `lib/features/*/routes/api.*.server.ts` now returns. A helper rather than a guard because those checks are per-resource (`userCanWritePage` / `userCanWriteDocument`), so only the caller knows *which* resource was refused; the log line looks identical wherever it came from. It also covers the `NAMESPACE_MEMBERSHIP_REQUIRED` refusals surfaced from the model.
+2. `apiForbidden()` — its counterpart for the API, which every `403` in `lib/features/*/routes/api.*.server.ts` now returns. A helper rather than a guard because those checks are per-resource (`userCanWritePage` / `userCanWriteDocument`), so only the caller knows *which* resource was refused; the log line looks identical wherever it came from. It also covers the `SPACE_MEMBERSHIP_REQUIRED` refusals surfaced from the model.
 3. `hooks.server.ts`'s unauthenticated gate — `action: 'session:required'`, `userId: 'anon'`.
 4. `src/mcp/registry.ts` — every denial in `tool`/`pageTool`/`documentTool`, plus the MCP bearer-token rejection (`action: 'token:required'`).
 
@@ -404,13 +404,13 @@ belongs to.
 
 | event | level | fields | emitted at |
 |---|---|---|---|
-| `node.created` | `info` | `nodeId`, `nodeType`, `namespaceId`, `actorId`, and for a document `source` (`upload`/`link`) | `createPage`/`createBlankPage`, `createDocument`/`createLinkDocument` (the documents route and MCP `create_document_link`) |
+| `node.created` | `info` | `nodeId`, `nodeType`, `spaceId`, `actorId`, and for a document `source` (`upload`/`link`) | `createPage`/`createBlankPage`, `createDocument`/`createLinkDocument` (the documents route and MCP `create_document_link`) |
 | `document.source_changed` | `info` | `nodeId`, `from`, `to`, `actorId` — never the address, which is content | `api.documentContent.server.ts`, when a `PUT` of the content switches a document between an upload and a link ([documents.md](documents.md#choosing-and-switching-the-source)) |
 | `node.deleted` | `info` | `nodeId`, `nodeType`, `actorId` | `deletePage`, `deleteNode` (via their adapters) |
-| `node.visibility_changed` | `info` | `nodeId`, `nodeType`, `from`, `to` (`null`: inherits the namespace), `actorId` | `api.page.server.ts`, `api.document.server.ts` |
+| `node.visibility_changed` | `info` | `nodeId`, `nodeType`, `from`, `to` (`null`: inherits the space), `actorId` | `api.page.server.ts`, `api.document.server.ts` |
 | `node.shares_changed` | `info` | `nodeId`, `nodeType`, `granteeIds`, `addedIds`, `removedIds`, `actorId` | `setPageShares`, `setDocumentShares` (via their adapters) |
-| `namespace.access_changed` | `info` | `namespaceId`, `from`, `to`, `actorId` | `setNamespaceAccessLevel` |
-| `namespace.membership_changed` | `info` | `namespaceId`, `addedIds`, `removedIds`, `actorId` | `setNamespaceMembers` |
+| `space.access_changed` | `info` | `spaceId`, `from`, `to`, `actorId` | `setSpaceAccessLevel` |
+| `space.membership_changed` | `info` | `spaceId`, `addedIds`, `removedIds`, `actorId` | `setSpaceMembers` |
 | `user.created` | `info` | `userId`, `role`, `actorId` | `settings.users.server.ts`'s `create` |
 | `user.role_changed` | `info` | `userId`, `from`, `to`, `actorId` | `settings.users.server.ts`'s `update` |
 | `user.activation_changed` | `info` | `userId`, `from`, `to`, `actorId` | `settings.users.server.ts`'s `setActive` |
@@ -441,8 +441,8 @@ once, so they cannot drift apart across its actions, and `operation` is the
 action's own name.
 
 Two of the 17 adapters do **not** use it: `/settings/users` and
-`/settings/namespaces` mutations have dedicated audit events (`user.*`,
-`namespace.*`) carrying the subject and its before/after, which is strictly
+`/settings/spaces` mutations have dedicated audit events (`user.*`,
+`space.*`) carrying the subject and its before/after, which is strictly
 more than `settings.changed` would say. The other 15, and their permissions:
 
 | adapter | `section` | `permission` |
@@ -471,7 +471,7 @@ different hashes mean something did, and the payload itself is in the database w
 belongs.
 
 In practice `from`/`to` is carried by the dedicated events — `user.role_changed`,
-`user.activation_changed`, `node.visibility_changed`, `namespace.access_changed` —
+`user.activation_changed`, `node.visibility_changed`, `space.access_changed` —
 which are the ones with a cheap before-value to read.
 
 ### Errors

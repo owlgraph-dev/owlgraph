@@ -13,9 +13,9 @@ const labels = {
   other: 'Andere',
   classLabel: (id: string) => ({ c1: 'Artikel', c2: 'Bericht', c3: 'Zettel' })[id] ?? null,
   classKey: (id: string) => ({ c1: 'article', c2: 'report', c3: 'slip' })[id] ?? null,
-  namespaceLabel: (id: string) => ({ ns1: 'Default', ns2: 'Team' })[id] ?? null,
+  spaceLabel: (id: string) => ({ ns1: 'Default', ns2: 'Team' })[id] ?? null,
 };
-const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'c1', namespaceId: 'ns1', ...over });
+const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'c1', spaceId: 'ns1', ...over });
 
 describe('buildColorScheme', () => {
   it('colors by type with the fixed page/document colors and a two-entry legend', () => {
@@ -53,8 +53,8 @@ describe('buildColorScheme', () => {
   });
 
   it('folds categories beyond the palette into "other"', () => {
-    const many = Array.from({ length: 10 }, (_, i) => node(`n${i}`, { namespaceId: `ns${i}` }));
-    const scheme = buildColorScheme('namespace', many, labels);
+    const many = Array.from({ length: 10 }, (_, i) => node(`n${i}`, { spaceId: `ns${i}` }));
+    const scheme = buildColorScheme('space', many, labels);
     const colors = many.map((n) => scheme.colorOf(n));
     expect(colors.filter((c) => c === OTHER_COLOR)).toHaveLength(2);
     const legend = scheme.legend(many);

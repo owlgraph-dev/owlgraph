@@ -15,7 +15,7 @@ import { stubFetch } from '#tests/component/fetch.ts';
 // The panel alone: its target and actions as the block settings panel hands them, the
 // target re-rendered with each update; the routes answered by a stand-in.
 
-const NAMESPACE = { id: 'ns-default', name: 'Default', slug: null };
+const SPACE = { id: 'ns-default', name: 'Default', slug: null };
 // A block holds its collection by a UUID (collectionConfig).
 const SECOND = 'c0000000-0000-4000-8000-000000000002';
 const MADE = 'c0000000-0000-4000-8000-000000000003';
@@ -28,7 +28,7 @@ async function panel(enabledPlugins: ReadonlySet<string> = new Set()) {
   const swapEmbed = vi.fn();
   const actions: BlockSettingsActions = {
     overlayOpenChange: overlay,
-    createIn: () => NAMESPACE,
+    createIn: () => SPACE,
     embedKindFor: (family, source) => embedKindFor(family, source, enabledPlugins),
     swapEmbed,
   };
@@ -70,7 +70,7 @@ describe('the collection block', () => {
       if (call.url.startsWith('/api/node-search')) return Response.json({ results: [], more: false, exact: [] });
       if (call.method === 'POST' && call.url === '/api/collections') {
         attempts++;
-        return attempts === 1 ? Response.json({}, { status: 500 }) : Response.json({ id: SECOND, slug: 'made-at-the-second-try', namespaceSlug: null }, { status: 201 });
+        return attempts === 1 ? Response.json({}, { status: 500 }) : Response.json({ id: SECOND, slug: 'made-at-the-second-try', spaceSlug: null }, { status: 201 });
       }
       if (call.url === `/api/collections/${SECOND}`) return embed(SECOND, title);
     });
@@ -88,17 +88,17 @@ describe('the collection block', () => {
     expect(updates).toEqual([{ nodeId: SECOND }]);
     await expect.element(screen.getByText(title, { exact: true })).toBeVisible();
     expect(calls.filter((c) => c.url === '/api/collections').map((c) => c.body)).toEqual([
-      { namespaceId: NAMESPACE.id, title },
-      { namespaceId: NAMESPACE.id, title },
+      { spaceId: SPACE.id, title },
+      { spaceId: SPACE.id, title },
     ]);
   });
 
-  it("makes a new curated collection from the picker, in the page's namespace, and shows it", async () => {
+  it("makes a new curated collection from the picker, in the page's space, and shows it", async () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
     const title = 'Made in the picker';
     const calls = stubFetch((call) => {
       if (call.url.startsWith('/api/node-search')) return Response.json({ results: [], more: false, exact: [] });
-      if (call.method === 'POST' && call.url === '/api/collections') return Response.json({ id: MADE, slug: 'made-in-the-picker', namespaceSlug: null }, { status: 201 });
+      if (call.method === 'POST' && call.url === '/api/collections') return Response.json({ id: MADE, slug: 'made-in-the-picker', spaceSlug: null }, { status: 201 });
       if (call.url === `/api/collections/${MADE}`) return embed(MADE, title);
     });
     const { updates, overlay } = await panel();
@@ -106,17 +106,17 @@ describe('the collection block', () => {
     expect(overlay).toHaveBeenLastCalledWith(true);
 
     await userEvent.type(picker.getByPlaceholder('Search collections'), title);
-    // One type, so one row — named for the page's namespace.
+    // One type, so one row — named for the page's space.
     const make = picker.getByRole('option', { name: /^New / });
     await vi.waitFor(() => expect(make.elements()).toHaveLength(1));
     await expect.element(make).toMatchTextContent(`New collection “${title}”`);
-    await expect.element(make).toMatchTextContent(`in ${NAMESPACE.name}`);
+    await expect.element(make).toMatchTextContent(`in ${SPACE.name}`);
     expect(new URL(calls.find((c) => c.url.startsWith('/api/node-search'))!.url, 'http://localhost').searchParams.get('types')).toBe('collection');
     await make.click();
 
     await expect.element(picker).not.toBeInTheDocument();
     expect(overlay).toHaveBeenLastCalledWith(false);
-    expect(calls.find((c) => c.url === '/api/collections' && c.method === 'POST')?.body).toEqual({ namespaceId: NAMESPACE.id, title });
+    expect(calls.find((c) => c.url === '/api/collections' && c.method === 'POST')?.body).toEqual({ spaceId: SPACE.id, title });
     expect(updates).toEqual([{ nodeId: MADE }]);
     await expect.element(screen.getByText(title, { exact: true })).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Change…' })).toBeVisible();
@@ -131,7 +131,7 @@ describe('a plugin’s collections in the collection block’s picker', () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
     const source = pluginKind!.source!;
     const label = pluginLabel(source);
-    const mirrored = { type: 'collection', id: MIRRORED, title: 'Ablage', slug: 'ablage', href: '/ablage', namespace: NAMESPACE.name, plugin: source, pluginLabel: label };
+    const mirrored = { type: 'collection', id: MIRRORED, title: 'Ablage', slug: 'ablage', href: '/ablage', space: SPACE.name, plugin: source, pluginLabel: label };
     stubFetch((call) => (call.url.startsWith('/api/node-search') ? Response.json({ results: [mirrored], more: false, exact: ['collection'] }) : undefined));
     const { updates, swapEmbed } = await panel(new Set());
     const picker = await openPicker();

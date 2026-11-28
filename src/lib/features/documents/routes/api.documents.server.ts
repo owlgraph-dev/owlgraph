@@ -20,8 +20,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   const form = await readFormData(request);
   if (form === 'too-large') return uploadTooLarge(locals);
-  const namespaceId = form?.get('namespaceId');
-  const placement = typeof namespaceId === 'string' && namespaceId ? namespaceId : undefined;
+  const spaceId = form?.get('spaceId');
+  const placement = typeof spaceId === 'string' && spaceId ? spaceId : undefined;
   if (form?.get('source') === 'link') return createLink(locals, form, placement);
   if (form?.get('source') === 'plugin') return apiError('plugin_document');
 
@@ -34,12 +34,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       title: String(form?.get('title') ?? ''),
       createdBy: locals.user!.id,
       user: locals.user!,
-      namespaceId: placement,
+      spaceId: placement,
     });
     logEvent(locals.log, 'node.created', {
       nodeId: id,
       nodeType: 'document',
-      namespaceId: placement ?? null,
+      spaceId: placement ?? null,
       actorId: locals.user?.id ?? null,
       source: 'upload',
     });
@@ -50,7 +50,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 };
 
 // The title is required: there is no filename to fall back on.
-async function createLink(locals: App.Locals, form: FormData | null, namespaceId: string | undefined): Promise<Response> {
+async function createLink(locals: App.Locals, form: FormData | null, spaceId: string | undefined): Promise<Response> {
   const parsed = parseExternalUrl(String(form?.get('externalUrl') ?? ''));
   if (!parsed.ok) return apiError('invalid_address', { reason: parsed.reason });
   const title = String(form?.get('title') ?? '').trim();
@@ -61,12 +61,12 @@ async function createLink(locals: App.Locals, form: FormData | null, namespaceId
       title,
       createdBy: locals.user!.id,
       user: locals.user!,
-      namespaceId,
+      spaceId,
     });
     logEvent(locals.log, 'node.created', {
       nodeId: id,
       nodeType: 'document',
-      namespaceId: namespaceId ?? null,
+      spaceId: spaceId ?? null,
       actorId: locals.user?.id ?? null,
       source: 'link',
     });
@@ -77,8 +77,8 @@ async function createLink(locals: App.Locals, form: FormData | null, namespaceId
 }
 
 function createFailed(locals: App.Locals, e: unknown): Response {
-  if (isCodedError(e, 'namespace_membership_required')) {
-    return apiForbidden(locals.log, { action: 'namespace:place', resourceType: 'namespace', code: 'namespace_membership_required' });
+  if (isCodedError(e, 'space_membership_required')) {
+    return apiForbidden(locals.log, { action: 'space:place', resourceType: 'space', code: 'space_membership_required' });
   }
   return apiErrorFrom(e);
 }

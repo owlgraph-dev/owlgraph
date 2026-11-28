@@ -8,7 +8,7 @@ import { NODE_TYPES, type NodeType } from '#lib/features/nodes/index.ts';
 // (docs/architecture/search.md). Syntax only: what a value names, and whether the viewer may
 // use it, is searchQuery.server.ts's. An invalid value silently falls back to
 // its default, so a stale link still lists something. Values are slugs, never labels.
-//   /search?q=&class=&exact=1&tag=&tag=&type=&namespace=&sort=&view=&page=
+//   /search?q=&class=&exact=1&tag=&tag=&type=&space=&sort=&view=&page=
 
 export type SearchSort = 'relevance' | 'updated' | 'created' | 'title';
 export type SearchView = 'list' | 'grid';
@@ -22,8 +22,8 @@ export interface SearchParams {
   /** Any of these tags (case-insensitive). */
   tags: string[];
   type: NodeType | null;
-  /** DEFAULT_NAMESPACE_PARAM for the default namespace, which has no slug. */
-  namespace: string | null;
+  /** DEFAULT_SPACE_PARAM for the default space, which has no slug. */
+  space: string | null;
   /** null: relevance with a term, most recently updated without one. */
   sort: SearchSort | null;
   view: SearchView;
@@ -37,14 +37,14 @@ export const SEARCH_MAX_TAGS = 10;
 const MAX_Q = 200;
 const MAX_TAG = 64;
 
-/** Namespace slugs are [a-z0-9-], so the underscore never names a real one. */
-export const DEFAULT_NAMESPACE_PARAM = '_default';
+/** Space slugs are [a-z0-9-], so the underscore never names a real one. */
+export const DEFAULT_SPACE_PARAM = '_default';
 
 const SORTS: readonly SearchSort[] = ['relevance', 'updated', 'created', 'title'];
 const CLASS_SLUG_RE = /^[\w-]{1,100}$/; // the class key's form (properties.server.ts NAME_RE)
-const NAMESPACE_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const SPACE_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export const EMPTY_SEARCH: SearchParams = { q: '', class: null, exact: false, tags: [], type: null, namespace: null, sort: null, view: 'list', page: 1 };
+export const EMPTY_SEARCH: SearchParams = { q: '', class: null, exact: false, tags: [], type: null, space: null, sort: null, view: 'list', page: 1 };
 
 /** Relevance needs a term; without one, the default is most recently updated. */
 export function effectiveSort(params: Pick<SearchParams, 'q' | 'sort'>): SearchSort {
@@ -75,7 +75,7 @@ export function parseSearchParams(sp: URLSearchParams): SearchParams {
   const q = (sp.get('q') ?? '').trim().replace(/\s+/g, ' ').slice(0, MAX_Q);
   const classSlug = sp.get('class')?.trim() ?? '';
   const cls = CLASS_SLUG_RE.test(classSlug) ? classSlug : null;
-  const namespace = sp.get('namespace')?.trim() ?? '';
+  const space = sp.get('space')?.trim() ?? '';
   const pageRaw = sp.get('page') ?? '';
   const page = /^\d{1,4}$/.test(pageRaw) ? Number(pageRaw) : 1;
   const params: SearchParams = {
@@ -84,7 +84,7 @@ export function parseSearchParams(sp: URLSearchParams): SearchParams {
     exact: cls !== null && sp.get('exact') === '1',
     tags: cleanSearchTags(sp.getAll('tag')),
     type: oneOf(sp.get('type'), NODE_TYPES),
-    namespace: namespace === DEFAULT_NAMESPACE_PARAM || NAMESPACE_SLUG_RE.test(namespace) ? namespace : null,
+    space: space === DEFAULT_SPACE_PARAM || SPACE_SLUG_RE.test(space) ? space : null,
     sort: oneOf(sp.get('sort'), SORTS),
     view: sp.get('view') === 'grid' ? 'grid' : 'list',
     page: page >= 1 && page <= SEARCH_MAX_PAGE ? page : 1,
@@ -109,7 +109,7 @@ export function searchHref(params: Partial<SearchParams>): string {
   }
   for (const tag of cleanSearchTags(p.tags)) sp.append('tag', tag);
   if (p.type) sp.set('type', p.type);
-  if (p.namespace) sp.set('namespace', p.namespace);
+  if (p.space) sp.set('space', p.space);
   if (p.sort && effectiveSort({ q, sort: p.sort }) !== effectiveSort({ q, sort: null })) sp.set('sort', effectiveSort({ q, sort: p.sort }));
   if (p.view === 'grid') sp.set('view', 'grid');
   if (p.page > 1) sp.set('page', String(p.page));

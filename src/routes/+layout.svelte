@@ -91,7 +91,7 @@
   // Page and document reads share a route id, so the page chrome keys off
   // data.kind; a share link reads onto the same shape.
   const isPageRead = $derived(
-    (page.route.id === '/[[namespace=namespace]]/[slug]' || page.route.id === '/share/[id]') &&
+    (page.route.id === '/[[space=space]]/[slug]' || page.route.id === '/share/[id]') &&
       page.data.kind === 'page'
   );
   // On a phone the panel overlays the page, and the CSS zeroes the reflow.
@@ -100,18 +100,18 @@
   // scheme, which would leave the panel light in a dark app.
   const localGraph = $derived(isPageRead ? (page.data.localGraph as { nodes: []; edges: []; focusId: string | null } | undefined) : undefined);
   // A share link shows the panel but offers no tab.
-  const showSidebarToggle = $derived(!!localGraph && page.route.id === '/[[namespace=namespace]]/[slug]');
+  const showSidebarToggle = $derived(!!localGraph && page.route.id === '/[[space=space]]/[slug]');
   const canvasRoute = $derived(isPageRead);
   // The Mermaid render frame gets this layout's head and no chrome.
   const frameRoute = $derived(page.route.id === MERMAID_FRAME_ROUTE);
   // The editor brings its own fixed shell (DesktopEditor.svelte).
-  const showAppBar = $derived(page.route.id !== '/[[namespace=namespace]]/[slug]/edit' && !frameRoute);
+  const showAppBar = $derived(page.route.id !== '/[[space=space]]/[slug]/edit' && !frameRoute);
   // Settings and dev tooling bring their own frame and render no footer.
   const settingsRoute = $derived(page.route.id?.startsWith('/settings') ?? false);
   const devRoute = $derived(page.route.id?.startsWith('/dev/') ?? false);
   const chromeRoute = $derived(settingsRoute || devRoute);
   // A grid of results or a collection's contents widen the reading column.
-  const browseRoute = $derived(page.route.id === '/search' || (page.route.id === '/[[namespace=namespace]]/[slug]' && page.data.kind === 'collection'));
+  const browseRoute = $derived(page.route.id === '/search' || (page.route.id === '/[[space=space]]/[slug]' && page.data.kind === 'collection'));
 </script>
 
 <svelte:head>

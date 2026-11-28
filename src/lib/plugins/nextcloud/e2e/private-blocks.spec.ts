@@ -20,7 +20,7 @@ import { blockSettings } from '#tests/e2e/editor.ts';
 const API = '/api/plugins/nextcloud';
 
 const team = { a: { content: 'A from the team', mime: 'text/plain', fileid: 501 }, b: { content: 'B', mime: 'text/plain', fileid: 502 }, secret: { content: 'S', mime: 'text/plain', fileid: 503 } };
-// A file per test that makes a document of it: one document per file in a namespace, and every
+// A file per test that makes a document of it: one document per file in a space, and every
 // test's pages share the default one (private.http.test.ts uses 510).
 const pdf = (fileid: number) => ({ content: `%PDF-1.4 ${fileid}`, mime: 'application/pdf', fileid });
 const RECHNUNG = pdf(511);

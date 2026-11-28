@@ -7,7 +7,7 @@ import sharp from 'sharp';
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { createPage, getPage, saveDoc } from '#lib/features/pages/server.ts';
 import { createShareLink, getNodeBySlug } from '#lib/features/nodes/server.ts';
-import { getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getDefaultSpace } from '#lib/features/spaces/server.ts';
 import { createImageAsset } from '#lib/features/media/server.ts';
 import { logger } from '#lib/platform/logger.server.ts';
 import { renderPage } from './server';
@@ -88,7 +88,7 @@ beforeAll(async () => {
 });
 
 async function queryPageId(): Promise<string> {
-  const ns = await getDefaultNamespace();
+  const ns = await getDefaultSpace();
   const node = await getNodeBySlug(ns!.id, seed.queryTestSlug);
   return node!.id;
 }

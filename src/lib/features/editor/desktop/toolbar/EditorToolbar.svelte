@@ -33,7 +33,7 @@
     overlays,
     insert,
     enabledPlugins,
-    linkNamespace = null,
+    linkSpace = null,
     locale,
     propertyGroups = [],
     propSuggestions = [],
@@ -48,8 +48,8 @@
     insert: InsertCommands;
     /** The plugins turned on (their ids): the Insert menu offers their blocks. */
     enabledPlugins: ReadonlySet<string>;
-    /** The page's namespace, where the link picker makes a page it is asked for. */
-    linkNamespace?: NodePickerCreate['namespace'] | null;
+    /** The page's space, where the link picker makes a page it is asked for. */
+    linkSpace?: NodePickerCreate['space'] | null;
     /** The content language a site page's card is labelled in. */
     locale?: string;
     propertyGroups?: { slug: string; label: string; description: string }[];
@@ -199,7 +199,7 @@
   </div>
   <BitsToolbar.Button>
     {#snippet child({ props: toolbarProps }: { props: Record<string, unknown> })}
-      <LinkPickerPopover {core} {overlays} namespace={linkNamespace} {locale} {toolbarProps} />
+      <LinkPickerPopover {core} {overlays} space={linkSpace} {locale} {toolbarProps} />
     {/snippet}
   </BitsToolbar.Button>
   <ToolbarButton title={m.editor_toolbar_insert_image()} aria-label={m.editor_toolbar_insert_image()} onclick={images.pickToInsert}><Icon name="image" /></ToolbarButton>

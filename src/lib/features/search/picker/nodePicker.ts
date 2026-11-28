@@ -17,8 +17,8 @@ export interface NodeMark {
 /** Making a node from the picker: of which types (in this order), and where. */
 export interface NodePickerCreate {
   types: readonly NodeType[];
-  /** The namespace new nodes go into, named in their rows; `slug` null for the default namespace. */
-  namespace: { id: string; name: string; slug: string | null };
+  /** The space new nodes go into, named in their rows; `slug` null for the default space. */
+  space: { id: string; name: string; slug: string | null };
 }
 
 /** A caller's own row before the matches ("Link to …"); picking it is the caller's. */
@@ -33,12 +33,12 @@ export interface PickerRow {
   onSelect: () => void;
 }
 
-/** Null when `id` is not among the route's namespaces. */
-export function pickerNamespace(
-  namespaces: readonly { id: string; name: string; slug: string | null; isDefault: boolean }[],
+/** Null when `id` is not among the route's spaces. */
+export function pickerSpace(
+  spaces: readonly { id: string; name: string; slug: string | null; isDefault: boolean }[],
   id: string | null | undefined
-): NodePickerCreate['namespace'] | null {
-  const ns = id ? namespaces.find((n) => n.id === id) : undefined;
+): NodePickerCreate['space'] | null {
+  const ns = id ? spaces.find((n) => n.id === id) : undefined;
   return ns ? { id: ns.id, name: ns.name, slug: ns.isDefault ? null : ns.slug } : null;
 }
 

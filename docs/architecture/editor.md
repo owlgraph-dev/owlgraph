@@ -40,7 +40,7 @@ of named parts), then `core/editorCore.svelte.ts` (the document).
 
 ## The edit route
 
-`src/routes/[[namespace=namespace]]/[slug]/edit/+page.svelte` is a one-line
+`src/routes/[[space=space]]/[slug]/edit/+page.svelte` is a one-line
 adapter around `editor/routes/EditPage.svelte`, which takes the load's data
 (`routes/edit.server.ts`, typed from the load itself) and owns what only a
 route can: the route's lifecycle (`onMount`, `onDestroy`, `beforeNavigate`,
@@ -161,7 +161,7 @@ access and more menus), and the mirror of the node's stored metadata
 (`meta/metaMirror.svelte.ts`: tags, manual properties, visibility and shares,
 each shown at once, then as stored). The node actions a route wires to the
 node client — rename, tags, properties, class, language, visibility, shares,
-share links, namespace move, delete — are `meta/nodeActions.ts`'s, with
+share links, space move, delete — are `meta/nodeActions.ts`'s, with
 navigation passed in; the delete confirmation's state is
 `meta/deleteRequest.svelte.ts`'s.
 

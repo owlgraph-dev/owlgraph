@@ -9,7 +9,7 @@
   // phone's bottom sheet, where every section folds so the sheet stays short.
   import { SegmentedControl, SegmentedControlItem, MultiSelect, Select, Switch, Button, Accordion, AccordionItem, Slider } from '#lib/design-system/index.ts';
   import * as m from '#lib/paraglide/messages.js';
-  import { typeItems, classItems, namespaceItems, type NamespaceOption, type PickerItem } from '#lib/features/query/index.ts';
+  import { typeItems, classItems, spaceItems, type SpaceOption, type PickerItem } from '#lib/features/query/index.ts';
   import type { NodeClassOption } from '#lib/features/semantic/index.ts';
   import { LABEL_MODES, NODE_SIZES, type ColorBy, type GraphSettings, type LabelMode, type NodeSize } from '../settings';
   import { EMPTY_FILTER, isFilterEmpty, type GraphFilter } from '../graphFilter';
@@ -25,7 +25,7 @@
     filter,
     onFilter,
     classOptions = [],
-    namespaces = [],
+    spaces = [],
     relationshipTypes = [],
     presentation = 'panel',
   }: {
@@ -34,7 +34,7 @@
     filter: GraphFilter;
     onFilter: (next: GraphFilter) => void;
     classOptions?: NodeClassOption[];
-    namespaces?: NamespaceOption[];
+    spaces?: SpaceOption[];
     // The relationship types on the loaded edges.
     relationshipTypes?: PickerItem[];
     /** The floating panel (default) or the phone's bottom sheet. */
@@ -71,12 +71,12 @@
   const colorByItems: { value: ColorBy; label: string }[] = [
     { value: 'type', label: m.graph_panel_filter_type() },
     { value: 'class', label: m.graph_panel_filter_class() },
-    { value: 'namespace', label: m.graph_panel_filter_namespace() },
+    { value: 'space', label: m.graph_panel_filter_space() },
   ];
 
   const typeOptions = typeItems();
   const classPickerItems = $derived(classItems(classOptions));
-  const namespacePickerItems = $derived(namespaceItems(namespaces));
+  const spacePickerItems = $derived(spaceItems(spaces));
   const filterActive = $derived(!isFilterEmpty(filter));
 </script>
 
@@ -104,8 +104,8 @@
     <MultiSelect items={classPickerItems} value={[...filter.classIds]} onValueChange={(v) => onFilter({ ...filter, classIds: new Set(v) })} placeholder={m.graph_panel_filter_class_placeholder()} ariaLabel={m.graph_panel_filter_class()} width="full" disabled={classPickerItems.length === 0} />
   </label>
   <label class="gp-field">
-    <span class="gp-label">{m.graph_panel_filter_namespace()}</span>
-    <MultiSelect items={namespacePickerItems} value={[...filter.namespaceIds]} onValueChange={(v) => onFilter({ ...filter, namespaceIds: new Set(v) })} placeholder={m.graph_panel_filter_namespace_placeholder()} ariaLabel={m.graph_panel_filter_namespace()} width="full" disabled={namespacePickerItems.length === 0} />
+    <span class="gp-label">{m.graph_panel_filter_space()}</span>
+    <MultiSelect items={spacePickerItems} value={[...filter.spaceIds]} onValueChange={(v) => onFilter({ ...filter, spaceIds: new Set(v) })} placeholder={m.graph_panel_filter_space_placeholder()} ariaLabel={m.graph_panel_filter_space()} width="full" disabled={spacePickerItems.length === 0} />
   </label>
   <label class="gp-field">
     <span class="gp-label">{m.graph_panel_filter_relationship()}</span>

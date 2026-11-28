@@ -59,7 +59,7 @@ describe('the Nextcloud integration', () => {
       collectionId: COLLECTION_ID,
       title: 'Intern',
       slug: 'intern',
-      namespaceSlug: null,
+      spaceSlug: null,
       source: source(t('status_unauthorized')),
       onSourceConnected,
       members: [MEMBER],
@@ -68,9 +68,9 @@ describe('the Nextcloud integration', () => {
       manualProperties: [],
       locale: 'en',
       visibility: null,
-      namespaceAccessLevel: 'public',
-      namespaceId: 'ns-default',
-      namespaces: [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }],
+      spaceAccessLevel: 'public',
+      spaceId: 'ns-default',
+      spaces: [{ id: 'ns-default', name: 'Default', slug: null, isDefault: true }],
     });
 
     const section = view.container.querySelector('section.source') as HTMLElement;

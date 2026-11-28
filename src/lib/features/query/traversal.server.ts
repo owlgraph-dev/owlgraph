@@ -10,7 +10,7 @@ import { logEvent, logger, timed } from '#lib/platform/logger.server.ts';
 import { db } from '#lib/platform/db.server.ts';
 import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { filterFragment, edgePropertyPredicate } from './filterSql.server';
 import type { EdgeConditionInput, EdgeDirection, NodeFilterInput } from './nodeFilter';
 import type { TraversalStartInput, TraversalStepInput, TraversalQueryInput } from './traversal';
@@ -186,7 +186,7 @@ export interface TraversalNodeHit {
   slug: string;
   createdAt: string;
   updatedAt: string;
-  namespaceId: string;
+  spaceId: string;
   createdBy: string | null;
   classId: string;
   className: string;
@@ -204,11 +204,11 @@ export function hydrateContentNodes(...args: Parameters<typeof hydrateContentNod
 async function hydrateContentNodesImpl(ids: string[]): Promise<TraversalNodeHit[]> {
   if (ids.length === 0) return [];
   const rows = await db<
-    { id: string; type: NodeType; slug: string; namespace_slug: string | null; title: string; created_at: Date; updated_at: Date; namespace_id: string; created_by: string | null; class_id: string; class_slug: string; class_label: LocalizedText; external_url: string | null; locale: string }[]
+    { id: string; type: NodeType; slug: string; space_slug: string | null; title: string; created_at: Date; updated_at: Date; space_id: string; created_by: string | null; class_id: string; class_slug: string; class_label: LocalizedText; external_url: string | null; locale: string }[]
   >`
-    select n.id, n.type, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.namespace_id, n.created_by,
+    select n.id, n.type, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.space_id, n.created_by,
            n.class_id, nc.slug as class_slug, nc.label as class_label, d.external_url, n.locale
-    from nodes n ${db.unsafe(namespaceJoin('n'))}
+    from nodes n ${db.unsafe(spaceJoin('n'))}
     join node_classes nc on nc.id = n.class_id
     left join documents d on d.id = n.id
     where n.id = any(${ids}::uuid[])`;
@@ -222,11 +222,11 @@ async function hydrateContentNodesImpl(ids: string[]): Promise<TraversalNodeHit[
       id: r.id,
       type: r.type,
       title: r.title,
-      url: nodePath(r.namespace_slug, r.slug),
+      url: nodePath(r.space_slug, r.slug),
       slug: r.slug,
       createdAt: r.created_at.toISOString(),
       updatedAt: r.updated_at.toISOString(),
-      namespaceId: r.namespace_id,
+      spaceId: r.space_id,
       createdBy: r.created_by,
       classId: r.class_id,
       className: label(r.class_slug, r.class_label),

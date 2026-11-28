@@ -44,22 +44,22 @@ async function send(url: string, init: RequestInit): Promise<MembersResult> {
 const membersUrl = (collectionId: string, nodeId?: string) =>
   `/api/collections/${encodeURIComponent(collectionId)}/members${nodeId ? `/${encodeURIComponent(nodeId)}` : ''}`;
 
-/** null places it in the default namespace; without a title it gets the default one. */
+/** null places it in the default space; without a title it gets the default one. */
 export async function createCuratedCollection(
-  namespaceId: string | null,
+  spaceId: string | null,
   title?: string
-): Promise<{ ok: true; id: string; slug: string; namespaceSlug: string | null } | { ok: false; error: string | null }> {
+): Promise<{ ok: true; id: string; slug: string; spaceSlug: string | null } | { ok: false; error: string | null }> {
   const res = await fetch('/api/collections', {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/json' },
-    body: JSON.stringify({ namespaceId, ...(title?.trim() ? { title: title.trim() } : {}) }),
+    body: JSON.stringify({ spaceId, ...(title?.trim() ? { title: title.trim() } : {}) }),
   });
   if (!res.ok) {
     const error = await readApiError(res);
     return { ok: false, error: error.code === 'unknown' ? null : error.message };
   }
   const body = await res.json();
-  return { ok: true, id: body.id, slug: body.slug, namespaceSlug: body.namespaceSlug ?? null };
+  return { ok: true, id: body.id, slug: body.slug, spaceSlug: body.spaceSlug ?? null };
 }
 
 export const loadCollectionMembers = (collectionId: string): Promise<MembersResult> => send(membersUrl(collectionId), { method: 'GET' });

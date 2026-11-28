@@ -67,7 +67,7 @@ mirrored through an integration ([plugins.md](plugins.md)). It is a node like
 any other — a class (its L1 type or a domain class below it), properties,
 tags, an access level, a place in search, the graph and queries — and is
 written like a page: an editor may change a public or internal one, a
-restricted one its owner, its namespace's members while it inherits, or an
+restricted one its owner, its space's members while it inherits, or an
 admin. It has no per-user share list.
 
 Its row (`collections`) says where its members come from — its **membership
@@ -85,7 +85,7 @@ source**, derived, never stored as such:
 - a query's results, kept live, are a membership source the model reserves
   but nothing makes yet.
 
-Namespaces and classes structure the graph; a collection is a curated,
+Spaces and classes structure the graph; a collection is a curated,
 sequenced set across it — a reading list, a dossier, the parts of a
 course — and a query derives a set from what nodes are. Reach for a
 collection where the order and the choice are someone's.
@@ -105,9 +105,9 @@ or a test run empties the catalog. A quick link never types an edge
 `contains`: membership is the collection's own.
 
 A curated collection's editor adds a member — any node they may read, a
-collection included, found by its title across every namespace, or made
+collection included, found by its title across every space, or made
 there under the title they searched for: a page, a collection or a document
-in the collection's own namespace ([search.md](search.md#the-node-picker)) —
+in the collection's own space ([search.md](search.md#the-node-picker)) —
 at the end, gives it a label, moves the members, takes one out (the node stays),
 each a request of its own (`/api/collections/<id>/members`) that the editor
 shows the answer of. A member moves by its handle — dragged, or with ↑ and ↓
@@ -144,7 +144,7 @@ A collection's own page opens with the **node header**
 (`reader/routes/NodeHeader.svelte`), read from the node and its graph for the
 viewer by the read route:
 
-- where it sits — its namespace, then its title — and its title, in the
+- where it sits — its space, then its title — and its title, in the
   node's language;
 - what it is, where its source is and who may read it: its class (a link to
   the class's overview page when it has one), the integration that mirrors
@@ -268,7 +268,7 @@ with no group is a pure type — useful for querying alone.
 ### Querying by class
 
 The class is an **intrinsic query condition** (`classId`, next to
-`type`/`namespaceId`/`createdBy` — see
+`type`/`spaceId`/`createdBy` — see
 [dynamic-rendering.md](dynamic-rendering.md)), available wherever a node
 filter is: the query builder's field conditions, the GraphQL `nodes` and
 `traverse` queries, and the MCP tools. It filters on the **explicit

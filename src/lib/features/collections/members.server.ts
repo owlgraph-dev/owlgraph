@@ -16,7 +16,7 @@ import { nodePath } from '#lib/features/nodes/index.ts';
 import { LOCALIZED_TEXT_DATATYPE, MEMBERSHIP_PROPERTY_GROUP, MEMBERSHIP_RELATIONSHIP } from '#lib/features/semantic/index.ts';
 import { pluginLabel } from '#lib/plugins/index.ts';
 import type { NodeType } from '#lib/features/nodes/server.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { compareMembers, isReorderOf, mergeVisibleOrder, nextPosition, positionOf } from './members';
 import type { CollectionMember } from './types';
 import { CodedError } from '#lib/platform/codedError.ts';
@@ -116,7 +116,7 @@ export interface MemberDocumentRow {
   id: string;
   title: string;
   slug: string;
-  namespace_slug: string | null;
+  space_slug: string | null;
   filename: string;
   mime: string | null;
   size: number | null;
@@ -127,9 +127,9 @@ export interface MemberDocumentRow {
 /** One integration's documents in a collection that a viewer may read, in the collection's order. */
 export async function memberDocumentsOf(collectionId: string, plugin: string, user: SessionUser | null): Promise<MemberDocumentRow[]> {
   const rows = await db<(Omit<MemberDocumentRow, 'position'> & { position: string | null })[]>`
-    select n.id, n.title, n.slug, ${db.unsafe(namespaceSlugColumn())}, d.filename, d.mime, d.size, d.source_ref, lp.value as position
+    select n.id, n.title, n.slug, ${db.unsafe(spaceSlugColumn())}, d.filename, d.mime, d.size, d.source_ref, lp.value as position
     from edges l
-    join nodes n on n.id = l.target_id ${db.unsafe(namespaceJoin('n'))}
+    join nodes n on n.id = l.target_id ${db.unsafe(spaceJoin('n'))}
     join documents d on d.id = n.id
     left join edge_properties lp on lp.edge_id = l.id and lp.name = ${POSITION_PROPERTY}
     where l.source_id = ${collectionId} and l.relationship_type = ${CONTAINS}
@@ -166,19 +166,19 @@ export async function membersOfMany(collectionIds: readonly string[], user: Sess
       id: string;
       type: NodeType;
       slug: string;
-      namespace_slug: string | null;
+      space_slug: string | null;
       title: string;
       position: string | null;
       label: string | null;
       plugin: string | null;
     }[]
   >`
-    select l.source_id as collection_id, n.id, n.type, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title,
+    select l.source_id as collection_id, n.id, n.type, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title,
       (select value from edge_properties where edge_id = l.id and name = ${POSITION_PROPERTY} order by value limit 1) as position,
       (select value from edge_properties where edge_id = l.id and name = ${LABEL_PROPERTY} limit 1) as label,
       coalesce(d.plugin, mc.plugin) as plugin
     from edges l
-    join nodes n on n.id = l.target_id ${db.unsafe(namespaceJoin('n'))}
+    join nodes n on n.id = l.target_id ${db.unsafe(spaceJoin('n'))}
     left join documents d on d.id = n.id and d.source = 'plugin'
     left join collections mc on mc.id = n.id
     where l.source_id = any(${[...collectionIds]}::uuid[]) and l.relationship_type = ${CONTAINS} and ${readableNodes(user, 'n')}`;
@@ -188,7 +188,7 @@ export async function membersOfMany(collectionIds: readonly string[], user: Sess
       id: r.id,
       type: r.type,
       title: r.title,
-      url: nodePath(r.namespace_slug, r.slug),
+      url: nodePath(r.space_slug, r.slug),
       position: positionOf(r.position),
       label: labelText ? localize(labelText, '') || null : null,
       labelText,

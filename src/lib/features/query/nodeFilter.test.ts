@@ -181,12 +181,12 @@ describe('validateIntrinsicCondition()', () => {
     expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'type', operator: 'eq', value: 'spreadsheet' }))).toThrow(GraphQLError);
   });
 
-  it('namespaceId/createdBy: allows only eq/neq/in, requires a UUID-shaped value', () => {
+  it('spaceId/createdBy: allows only eq/neq/in, requires a UUID-shaped value', () => {
     const uuid = '11111111-1111-1111-1111-111111111111';
-    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'namespaceId', operator: 'eq', value: uuid }))).not.toThrow();
+    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'spaceId', operator: 'eq', value: uuid }))).not.toThrow();
     expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'createdBy', operator: 'eq', value: uuid }))).not.toThrow();
-    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'namespaceId', operator: 'contains', value: uuid }))).toThrow(GraphQLError);
-    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'namespaceId', operator: 'eq', value: 'not-a-uuid' }))).toThrow(GraphQLError);
+    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'spaceId', operator: 'contains', value: uuid }))).toThrow(GraphQLError);
+    expect(() => validateIntrinsicCondition(intrinsicCond({ field: 'spaceId', operator: 'eq', value: 'not-a-uuid' }))).toThrow(GraphQLError);
   });
 
   it('"in" requires "values" (and not "value"); every other operator requires "value" (and not "values")', () => {
@@ -212,7 +212,7 @@ describe('validateIntrinsicCondition()', () => {
     });
 
     it('exists/notExists are rejected on every nodes-column field', () => {
-      for (const field of ['slug', 'title', 'type', 'namespaceId', 'createdBy', 'createdAt', 'updatedAt', 'classId'] as const) {
+      for (const field of ['slug', 'title', 'type', 'spaceId', 'createdBy', 'createdAt', 'updatedAt', 'classId'] as const) {
         expect(() => validateIntrinsicCondition(intrinsicCond({ field, operator: 'exists', value: undefined }))).toThrow(GraphQLError);
       }
     });

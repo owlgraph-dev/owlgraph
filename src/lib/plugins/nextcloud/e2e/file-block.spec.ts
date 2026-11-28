@@ -48,7 +48,7 @@ test.beforeEach(() => {
 
 test.use({ lock: 'integration-settings', storageState: authState('admin') });
 
-/** In the public default namespace, like the pages here. */
+/** In the public default space, like the pages here. */
 async function connect(request: APIRequestContext) {
   const n = ++shares;
   const token = `E2eFile${process.pid}x${n}`;

@@ -33,9 +33,9 @@ export function apiForbidden(
   log: Logger,
   opts: {
     action: string;
-    resourceType: NodeType | 'namespace' | 'route' | 'tool';
+    resourceType: NodeType | 'space' | 'route' | 'tool';
     resourceId?: string;
-    code?: 'forbidden' | 'namespace_membership_required';
+    code?: 'forbidden' | 'space_membership_required';
   }
 ): Response {
   logEvent(log, 'authz.denied', {

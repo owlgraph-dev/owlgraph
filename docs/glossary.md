@@ -175,8 +175,8 @@ the site's capability defaults are set for
 ([Groups](architecture/blocks/capabilities.md#groups)). A **property group**
 gathers a schema's properties under a slug
 ([semantic-layer.md](architecture/semantic-layer.md)). A restricted
-namespace's **members** are the group of users it is open to
-([authorization.md](architecture/authorization.md#group-as-access-subject-restricted-namespace-membership)).
+space's **members** are the group of users it is open to
+([authorization.md](architecture/authorization.md#group-as-access-subject-restricted-space-membership)).
 
 ### Gutter
 
@@ -217,13 +217,6 @@ its group's, set in the theme layer of its stylesheet
 
 One run of the end-to-end suite under one configuration, such as the branded
 lane under an extreme brand colour ([testing.md](guides/testing.md#lanes)).
-
-### Namespace
-
-A part of the site with its own URL prefix and its own default access level;
-every node belongs to one
-([routing.md](architecture/routing.md#namespaces),
-[authorization.md](architecture/authorization.md)).
 
 ### Node
 
@@ -344,8 +337,17 @@ around one core ([editor.md](architecture/editor.md)).
 
 ### Slug
 
-A node's name in its address, unique within its namespace
-([routing.md](architecture/routing.md#slug-identity-is-per-namespace-not-global)).
+A node's name in its address, unique within its space
+([routing.md](architecture/routing.md#slug-identity-is-per-space-not-global)).
+
+### Space
+
+A part of the site with its own URL prefix and its own default access level;
+every node belongs to one
+([routing.md](architecture/routing.md#spaces),
+[authorization.md](architecture/authorization.md)). The word *namespace* is
+left to RDF, where it is the IRI behind a vocabulary's prefix
+([decision 0022](adr/0022-namespaces-are-called-spaces.md)).
 
 ### Sparse
 

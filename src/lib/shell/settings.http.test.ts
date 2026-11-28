@@ -82,7 +82,7 @@ describe.skipIf(app.skipped)('settings — editor sees only the personal group',
   });
 
   it('a hidden section is still forbidden on GET and on a direct POST', async () => {
-    for (const path of ['/settings/users', '/settings/navigation', '/settings/home', '/settings/branding', '/settings/schema/groups', '/settings/namespaces', '/settings/integrations/no-such-plugin']) {
+    for (const path of ['/settings/users', '/settings/navigation', '/settings/home', '/settings/branding', '/settings/schema/groups', '/settings/spaces', '/settings/integrations/no-such-plugin']) {
       expect((await call(served, path, { as: 'editorA' })).status, path).toBe(403);
     }
     // Posted as a form without JavaScript does, not an enhanced one.

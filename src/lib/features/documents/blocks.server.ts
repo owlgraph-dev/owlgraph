@@ -9,7 +9,7 @@ import { db } from '#lib/platform/db.server.ts';
 import { errorClass, logEvent, type Logger } from '#lib/platform/logger.server.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { nodePath } from '#lib/features/nodes/index.ts';
-import { readableNodes, namespaceJoin, namespaceSlugColumn } from '#lib/features/nodes/server.ts';
+import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { collectBlocks, documentConfig, DOCUMENT_BLOCK, type DocumentBlockData } from '#lib/features/content/index.ts';
 import { documentContentPath } from './client';
 import { externalHost, safeExternalHref } from './externalUrl';
@@ -27,7 +27,7 @@ async function documentEmbeds(ids: readonly string[], user: SessionUser | null):
       id: string;
       title: string;
       slug: string;
-      namespace_slug: string | null;
+      space_slug: string | null;
       source: 'upload' | 'link' | 'plugin';
       filename: string | null;
       mime: string | null;
@@ -36,11 +36,11 @@ async function documentEmbeds(ids: readonly string[], user: SessionUser | null):
       updated_at: string | Date | null;
     }[]
   >`
-    select n.id, n.title, n.slug, ${db.unsafe(namespaceSlugColumn())}, d.source, d.filename, d.mime, d.size, d.external_url, n.updated_at
-    from documents d join nodes n on n.id = d.id ${db.unsafe(namespaceJoin('n'))}
+    select n.id, n.title, n.slug, ${db.unsafe(spaceSlugColumn())}, d.source, d.filename, d.mime, d.size, d.external_url, n.updated_at
+    from documents d join nodes n on n.id = d.id ${db.unsafe(spaceJoin('n'))}
     where d.id = any(${[...ids]}::uuid[]) and ${readableNodes(user, 'n')}`;
   for (const r of rows) {
-    const node = { id: r.id, title: r.title, href: nodePath(r.namespace_slug, r.slug) };
+    const node = { id: r.id, title: r.title, href: nodePath(r.space_slug, r.slug) };
     if (r.source === 'plugin') {
       out.set(r.id, { state: 'unavailable', node });
     } else if (r.source === 'link') {

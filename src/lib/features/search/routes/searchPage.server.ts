@@ -8,7 +8,7 @@
 import { redirect, type ServerLoadEvent } from '@sveltejs/kit';
 import { listNodes } from '#lib/features/query/server.ts';
 import { getPropertyByLocalName, getTagsForNodes, listClassIdsInUse, listNodeClassOptions, listTagsForUser } from '#lib/features/semantic/server.ts';
-import { getDefaultNamespace, resolveNamespaceLabels } from '#lib/features/namespaces/server.ts';
+import { getDefaultSpace, resolveSpaceLabels } from '#lib/features/spaces/server.ts';
 import { resolveSearchParams, searchCardExtras } from '#lib/features/search/server.ts';
 import { SEARCH_PAGE_SIZE, clipText, linkHost, parseSearchParams, searchHref, type SearchResultCard } from '#lib/features/search/index.ts';
 
@@ -30,12 +30,12 @@ export const load = async ({ url, locals }: ServerLoadEvent) => {
   if (applied.page > pageCount) redirect(303, searchHref({ ...applied, page: pageCount }));
 
   const ids = items.map((i) => i.id);
-  const [tags, descriptions, extras, namespaceNames, defaultNamespace] = await Promise.all([
+  const [tags, descriptions, extras, spaceNames, defaultSpace] = await Promise.all([
     getTagsForNodes(ids),
     getPropertyByLocalName(ids, DESCRIPTION_NAMES),
     searchCardExtras(ids),
-    resolveNamespaceLabels([...new Set(items.map((i) => i.namespaceId))]),
-    getDefaultNamespace(),
+    resolveSpaceLabels([...new Set(items.map((i) => i.spaceId))]),
+    getDefaultSpace(),
   ]);
   const classKind = new Map(classOptions.map((c) => [c.id, c.kind]));
 
@@ -58,8 +58,8 @@ export const load = async ({ url, locals }: ServerLoadEvent) => {
       excerpt,
       highlighted,
       updatedAt: item.updatedAt,
-      // The default namespace is the site's root, not worth naming on every card.
-      namespaceName: item.namespaceId === defaultNamespace.id ? '' : (namespaceNames.get(item.namespaceId) ?? ''),
+      // The default space is the site's root, not worth naming on every card.
+      spaceName: item.spaceId === defaultSpace.id ? '' : (spaceNames.get(item.spaceId) ?? ''),
       tags: tags.get(item.id) ?? [],
     };
   });
@@ -70,10 +70,10 @@ export const load = async ({ url, locals }: ServerLoadEvent) => {
     total,
     pageCount,
     classLabel: resolved.classLabel,
-    namespaceName: resolved.namespaceName,
+    spaceName: resolved.spaceName,
     // Those readable content carries, plus the applied one so the picker shows it.
     classOptions: classOptions.filter((c) => classesInUse.has(c.id) || c.slug === applied.class),
     tagOptions,
-    namespaces: resolved.namespaces,
+    spaces: resolved.spaces,
   };
 };

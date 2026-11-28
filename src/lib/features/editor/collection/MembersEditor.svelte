@@ -31,13 +31,13 @@
     collectionId,
     members: initialMembers,
     basis: initialBasis,
-    namespace,
+    space,
   }: {
     collectionId: string;
     members: CollectionMember[];
     basis: string;
-    /** The collection's namespace, where a member made from the picker goes; null offers no making. */
-    namespace: { id: string; name: string; slug: string | null } | null;
+    /** The collection's space, where a member made from the picker goes; null offers no making. */
+    space: { id: string; name: string; slug: string | null } | null;
   } = $props();
 
   let members = $state<CollectionMember[]>(untrack(() => initialMembers));
@@ -193,7 +193,7 @@
   exclude={itself}
   mark={(node) => (memberIds.has(node.id) ? { note: m.collection_picker_already() } : null)}
   rowAction={m.collection_picker_add()}
-  create={namespace ? { types: ['page', 'collection', 'document'], namespace } : undefined}
+  create={space ? { types: ['page', 'collection', 'document'], space } : undefined}
   onPick={(node) => void add(node)}
 />
 

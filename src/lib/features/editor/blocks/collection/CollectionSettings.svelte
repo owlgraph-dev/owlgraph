@@ -45,7 +45,7 @@
     !config.nodeId ? m.editor_embed_none() : data === undefined ? m.editor_embed_loading() : data.state === 'hidden' ? m.editor_embed_hidden() : data.node.title
   );
 
-  const namespace = $derived(actions.createIn?.() ?? null);
+  const space = $derived(actions.createIn?.() ?? null);
 
   const MODIFIED_KEYS = ['limit', 'density', 'showLabels', 'columns'];
 </script>
@@ -89,7 +89,7 @@
   types={['collection']}
   mark={(node: NodeSearchResult) => embedMark('collection', node, actions, config.nodeId)}
   rowAction={(node: NodeSearchResult) => embedRowAction('collection', node, actions)}
-  create={namespace ? { types: ['collection'], namespace } : undefined}
+  create={space ? { types: ['collection'], space } : undefined}
   onPick={(node: NodeSearchResult) => pickEmbed('collection', node, target, actions)}
 />
 

@@ -16,17 +16,17 @@ import { isCodedError } from '#lib/platform/codedError.ts';
 export const POST: RequestHandler = async ({ request, locals }) => {
   if (!can(locals.user, 'page:write')) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'route' });
   const body = await request.json().catch(() => ({}));
-  const namespaceId = typeof body.namespaceId === 'string' && body.namespaceId ? body.namespaceId : undefined;
-  if (namespaceId !== undefined && !isUuid(namespaceId)) return apiError('unknown_namespace');
+  const spaceId = typeof body.spaceId === 'string' && body.spaceId ? body.spaceId : undefined;
+  if (spaceId !== undefined && !isUuid(spaceId)) return apiError('unknown_space');
   const title = typeof body.title === 'string' && body.title.trim() ? body.title.trim() : m.collection_new_title();
   try {
-    const { id, slug } = await createCollection({ title, createdBy: locals.user!.id, user: locals.user, namespaceId });
+    const { id, slug } = await createCollection({ title, createdBy: locals.user!.id, user: locals.user, spaceId });
     const created = await getCollection(id);
-    logEvent(locals.log, 'node.created', { nodeId: id, nodeType: 'collection', namespaceId: created?.namespace_id ?? null, actorId: locals.user?.id ?? null });
-    return Response.json({ id, slug, namespaceSlug: created?.namespace_slug ?? null }, { status: 201 });
+    logEvent(locals.log, 'node.created', { nodeId: id, nodeType: 'collection', spaceId: created?.space_id ?? null, actorId: locals.user?.id ?? null });
+    return Response.json({ id, slug, spaceSlug: created?.space_slug ?? null }, { status: 201 });
   } catch (e) {
-    if (isCodedError(e, 'namespace_membership_required')) {
-      return apiForbidden(locals.log, { action: 'namespace:place', resourceType: 'namespace', code: 'namespace_membership_required' });
+    if (isCodedError(e, 'space_membership_required')) {
+      return apiForbidden(locals.log, { action: 'space:place', resourceType: 'space', code: 'space_membership_required' });
     }
     return apiErrorFrom(e);
   }

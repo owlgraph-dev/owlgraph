@@ -97,24 +97,24 @@ export function registerDocumentTools({ user, log, tool, documentTool }: ToolReg
       inputSchema: {
         title: z.string().min(1).max(500),
         url: z.string().max(MAX_EXTERNAL_URL_LENGTH + 100),
-        namespaceId: z.guid().optional(),
+        spaceId: z.guid().optional(),
         locale: z.string().optional().describe("The language the content is in — an enabled language code such as 'de' or 'en' (not the interface language); it decides how full-text search indexes the content. Default: the site default language."),
       },
     },
     'page:write',
-    async ({ title, url, namespaceId, locale }) => {
+    async ({ title, url, spaceId, locale }) => {
       const parsed = parseExternalUrl(url);
       if (!parsed.ok) return errText(`Invalid url (${parsed.reason}): use an http(s) address or a DOI.`);
       if (!title.trim()) return errText('A title is required.');
       try {
-        const { id, slug } = await createLinkDocument({ url: parsed.url, title, createdBy: user.id, user, namespaceId, locale });
-        logEvent(log, 'node.created', { nodeId: id, nodeType: 'document', namespaceId: namespaceId ?? null, actorId: user.id, source: 'link' });
+        const { id, slug } = await createLinkDocument({ url: parsed.url, title, createdBy: user.id, user, spaceId, locale });
+        logEvent(log, 'node.created', { nodeId: id, nodeType: 'document', spaceId: spaceId ?? null, actorId: user.id, source: 'link' });
         return text(JSON.stringify({ id, slug, sourceKind: 'link', externalUrl: parsed.url }, null, 2));
       } catch (e) {
         const err = e as Error & { code?: string };
-        if (err.code === 'namespace_membership_required') return errText(`Forbidden: ${err.message}`);
+        if (err.code === 'space_membership_required') return errText(`Forbidden: ${err.message}`);
         if (err.code === 'locale_not_enabled') return errText(err.message);
-        if (err.message === 'Unknown namespace') return errText('Unknown namespace');
+        if (err.message === 'Unknown space') return errText('Unknown space');
         throw e;
       }
     }

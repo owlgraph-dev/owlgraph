@@ -39,7 +39,7 @@ as the person whose token it carries, with exactly that person's permissions.
 
 **One permission model, enforced on the server.** Roles decide what someone
 may do; visibility decides what they may see. Visibility is public, internal
-or restricted, set per node or inherited from its namespace. The browser, the
+or restricted, set per node or inherited from its space. The browser, the
 API and agents are checked the same way, for the person asking. What someone
 may not read never reaches them, and what a page publishes is sanitized.
 

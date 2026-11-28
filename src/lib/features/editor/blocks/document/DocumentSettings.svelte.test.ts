@@ -14,7 +14,7 @@ import { stubFetch } from '#tests/component/fetch.ts';
 // The panel alone: its target and actions as the block settings panel hands them, the
 // target re-rendered with each update; the routes answered by a stand-in.
 
-const NAMESPACE = { id: 'ns-default', name: 'Default', slug: null };
+const SPACE = { id: 'ns-default', name: 'Default', slug: null };
 // A block holds its document by a UUID (documentConfig).
 const MADE = 'd0000000-0000-4000-8000-000000000001';
 
@@ -22,7 +22,7 @@ async function panel() {
   const updates: Record<string, unknown>[] = [];
   const actions: BlockSettingsActions = {
     overlayOpenChange: vi.fn(),
-    createIn: () => NAMESPACE,
+    createIn: () => SPACE,
     embedKindFor: (family, source) => embedKindFor(family, source, new Set()),
     swapEmbed: vi.fn(),
   };
@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 describe('the document block', () => {
-  it("makes the document it shows from the picker — a link, under the title searched for, in the page's namespace", async () => {
+  it("makes the document it shows from the picker — a link, under the title searched for, in the page's space", async () => {
     page.data = { user: { id: 'u-admin', role: 'admin' } };
     const title = 'Made as a link';
     const calls = stubFetch((call) => {
@@ -82,7 +82,7 @@ describe('the document block', () => {
       source: 'link',
       externalUrl: 'https://example.org/made-as-a-link',
       title,
-      namespaceId: NAMESPACE.id,
+      spaceId: SPACE.id,
     });
     expect(updates).toEqual([{ nodeId: MADE }]);
     await expect.element(screen.getByText(title, { exact: true })).toBeVisible();

@@ -14,7 +14,7 @@ export interface PickerItem {
   label: string;
 }
 
-export interface NamespaceOption {
+export interface SpaceOption {
   id: string;
   name: string;
 }
@@ -40,6 +40,6 @@ export function classItems(classOptions: readonly NodeClassOption[]): PickerItem
   return classOptions.map((c) => ({ value: c.id, label: `${INDENT.repeat(Math.max(0, c.depth - 1))}${c.label}` }));
 }
 
-export function namespaceItems(namespaces: readonly NamespaceOption[]): PickerItem[] {
-  return namespaces.map((n) => ({ value: n.id, label: n.name }));
+export function spaceItems(spaces: readonly SpaceOption[]): PickerItem[] {
+  return spaces.map((n) => ({ value: n.id, label: n.name }));
 }

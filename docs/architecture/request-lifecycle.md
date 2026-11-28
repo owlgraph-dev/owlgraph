@@ -1,7 +1,7 @@
 # A request, from address to page
 
 One request for a page — `GET /handbook/onboarding`, the page `onboarding` in
-the namespace `handbook` — followed from the moment it reaches the app to what
+the space `handbook` — followed from the moment it reaches the app to what
 the browser shows, with the module that does each step. Each step's own page
 has the detail; this one is the order they run in.
 
@@ -34,11 +34,11 @@ reader's route ([Content Security Policy](overview.md#content-security-policy))
 
 ## 2. The route
 
-The address matches `src/routes/[[namespace=namespace]]/[slug]/`: an optional
-namespace segment, then the slug. The `namespace` matcher
+The address matches `src/routes/[[space=space]]/[slug]/`: an optional
+space segment, then the slug. The `space` matcher
 (`src/params.ts`) accepts the first segment only if it is a known
-namespace's slug, from an in-memory registry; otherwise the address belongs
-to the default namespace, which has no prefix
+space's slug, from an in-memory registry; otherwise the address belongs
+to the default space, which has no prefix
 ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).
 
 The route's `+page.server.ts` is an adapter of one line: it re-exports the
@@ -46,7 +46,7 @@ reader feature's `load` (`src/lib/features/reader/routes/read.server.ts`).
 
 ## 3. The node, and whether this viewer may read it
 
-The load resolves the namespace and the node by its slug (unknown: 404), and
+The load resolves the space and the node by its slug (unknown: 404), and
 branches on the node's type: a page, a collection or a document. For a page
 it asks `userCanReadPage`, which is the role check and the node check
 ([authorization.md](authorization.md#two-checks)). A page the viewer may not
@@ -81,7 +81,7 @@ rule ids of the canvas and of the reading area around it.
 
 The root layout's load (`src/lib/shell/layout.server.ts`) runs beside the
 page's, for every page: the navigation and the footer as this viewer may see
-them, the namespaces they may see, the site theme, the fonts and the custom
+them, the spaces they may see, the site theme, the fonts and the custom
 stylesheet's address.
 
 The page component (`+page.svelte`) puts the page's CSS into the head as one
@@ -94,7 +94,7 @@ element carries a `style` attribute
 
 ## 6. In the browser
 
-- Before hydration, `src/hooks.client.ts`'s `init()` loads the namespace
+- Before hydration, `src/hooks.client.ts`'s `init()` loads the space
   slugs, so the client router resolves the address to the same route the
   server did.
 - `RenderedContent` hydrates the islands — a quick link's card, a diagram,

@@ -5,7 +5,7 @@
 // Route ids viewable without a session, composed into the sign-in gate by
 // src/lib/shell/publicRoutes.ts. Each route still enforces its own visibility.
 export const publicRoutes = [
-  '/[[namespace=namespace]]/[slug]',
+  '/[[space=space]]/[slug]',
   // The unguessable token is the access check (nodes/shareLinks.server.ts).
   '/share/[id]',
   '/share/[id]/content',

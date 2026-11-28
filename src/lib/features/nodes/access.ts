@@ -10,27 +10,27 @@ import type { NodeType } from './types';
 
 export type Visibility = 'public' | 'internal' | 'restricted';
 
-// A null visibility inherits the namespace's access_level, live; a value is an
-// override. namespace_access_level is optional only for fixtures with a concrete
+// A null visibility inherits the space's access_level, live; a value is an
+// override. space_access_level is optional only for fixtures with a concrete
 // visibility; real callers always supply it.
 export interface NodeAccess {
   id: string;
   visibility: string | null;
   created_by: string | null;
-  namespace_access_level?: Visibility;
+  space_access_level?: Visibility;
 }
 
 // Falls back to 'restricted': a caller that forgot to join
-// namespace_access_level must fail closed.
+// space_access_level must fail closed.
 export function effectiveVisibility(node: NodeAccess): Visibility {
-  return (node.visibility as Visibility | null) ?? node.namespace_access_level ?? 'restricted';
+  return (node.visibility as Visibility | null) ?? node.space_access_level ?? 'restricted';
 }
 
 export function canReadNode(
   user: SessionUser | null | undefined,
   node: NodeAccess,
   isShared = false,
-  isNamespaceMember = false
+  isSpaceMember = false
 ): boolean {
   const effective = effectiveVisibility(node);
   if (effective === 'public') return true;
@@ -38,9 +38,9 @@ export function canReadNode(
   if (user.role === 'admin') return true;
   if (effective === 'internal') return true;
   if (node.created_by === user.id) return true;
-  // Restricted: an inheriting node's readers are its namespace's members, an
+  // Restricted: an inheriting node's readers are its space's members, an
   // overriding node's its share list.
-  return node.visibility === null ? isNamespaceMember : isShared;
+  return node.visibility === null ? isSpaceMember : isShared;
 }
 
 export function canWriteNode(
@@ -50,7 +50,7 @@ export function canWriteNode(
   // written like a page, since its members are curated together.
   kind: NodeType,
   isShared = false,
-  isNamespaceMember = false
+  isSpaceMember = false
 ): boolean {
   if (!user) return false;
   if (user.role === 'admin') return true;
@@ -64,7 +64,7 @@ export function canWriteNode(
   // readers as canReadNode, who may write as well as read.
   if (effectiveVisibility(node) === 'restricted') {
     if (node.created_by === user.id) return true;
-    return node.visibility === null ? isNamespaceMember : isShared;
+    return node.visibility === null ? isSpaceMember : isShared;
   }
   return true;
 }

@@ -12,53 +12,53 @@
   let {
     open,
     visibility,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     shares = [],
     users = [],
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
+    spaceId,
+    spaces = [],
     onSetVisibility,
     onSetShares,
-    onSetNamespace,
+    onSetSpace,
     shareList = true,
     shareLinkSection = true,
     onClose,
   }: {
     open: boolean;
-    // As stored: null inherits the namespace's access level, live.
+    // As stored: null inherits the space's access level, live.
     visibility: string | null;
     // What "inherit" means here.
-    namespaceAccessLevel: string;
-    // Read-only context; membership is managed at /settings/namespaces.
-    namespaceMembers?: { id: string; name: string; email: string }[];
+    spaceAccessLevel: string;
+    // Read-only context; membership is managed at /settings/spaces.
+    spaceMembers?: { id: string; name: string; email: string }[];
     shares?: string[];
     users?: { id: string; name: string; email: string }[];
     // Share links widen access past the visibility, so they show whatever it is.
     shareLinks?: { id: string; label: string; createdAt: string }[];
     onCreateShareLink?: (label: string) => Promise<{ ok: boolean; id?: string; token?: string; label?: string; createdAt?: string; error?: string } | undefined>;
     onRevokeShareLink?: (id: string) => Promise<{ ok: boolean } | undefined>;
-    namespaceId?: string;
-    namespaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
+    spaceId?: string;
+    spaces?: { id: string; name: string; slug: string | null; isDefault: boolean }[];
     onSetVisibility?: (visibility: string | null) => Promise<{ ok: boolean; visibility?: string | null } | undefined>;
     onSetShares?: (shares: string[]) => Promise<{ ok: boolean; shares?: string[] } | undefined>;
-    onSetNamespace?: (namespaceId: string) => Promise<{ ok: boolean; error?: string } | undefined>;
+    onSetSpace?: (spaceId: string) => Promise<{ ok: boolean; error?: string } | undefined>;
     // Off for a node kind without a share list (a collection) or share links.
     shareList?: boolean;
     shareLinkSection?: boolean;
     onClose: () => void;
   } = $props();
 
-  // Inherit, or an override never wider than the namespace; the server refuses
+  // Inherit, or an override never wider than the space; the server refuses
   // a wider one too. 'public' is never an override, and 'inherit' stands for null.
   const VISIBILITY_RANK: Record<string, number> = { public: 0, internal: 1, restricted: 2 };
-  function widerThanNamespace(level: string): boolean {
-    return VISIBILITY_RANK[level] < VISIBILITY_RANK[namespaceAccessLevel];
+  function widerThanSpace(level: string): boolean {
+    return VISIBILITY_RANK[level] < VISIBILITY_RANK[spaceAccessLevel];
   }
-  // A stored 'public' amounts to the namespace's level at best.
+  // A stored 'public' amounts to the space's level at best.
   function choiceOf(stored: string | null): string {
     return stored === null || stored === 'public' ? 'inherit' : stored;
   }
@@ -70,7 +70,7 @@
 
   let draftVisibility = $state(untrack(() => choiceOf(visibility)));
   let draftShares = $state<string[]>(untrack(() => [...shares]));
-  let draftNamespaceId = $state(untrack(() => namespaceId));
+  let draftSpaceId = $state(untrack(() => spaceId));
   let busy = $state(false);
   let error = $state<string | null>(null);
 
@@ -94,7 +94,7 @@
     untrack(() => {
       draftVisibility = choiceOf(visibility);
       draftShares = [...shares];
-      draftNamespaceId = namespaceId;
+      draftSpaceId = spaceId;
       error = null;
       if (shareLinks !== seededLinks) {
         linksVal = [...shareLinks];
@@ -164,10 +164,10 @@
     error = null;
     const visChanged = draftVisibility !== choiceOf(visibility);
     const sharesChanged = JSON.stringify(draftShares) !== JSON.stringify(shares);
-    const namespaceChanged = draftNamespaceId !== undefined && draftNamespaceId !== namespaceId;
+    const spaceChanged = draftSpaceId !== undefined && draftSpaceId !== spaceId;
     try {
       // Sequential: both PATCH the same record and shares only matter once it is
-      // restricted. Namespace last: the caller may navigate to the new URL.
+      // restricted. Space last: the caller may navigate to the new URL.
       if (visChanged) {
         const r = await onSetVisibility?.(draftVisibility === 'inherit' ? null : draftVisibility);
         if (!r?.ok) { error = m.editor_access_control_error_visibility(); busy = false; return; }
@@ -176,9 +176,9 @@
         const r = await onSetShares?.(draftShares);
         if (!r?.ok) { error = m.editor_access_control_error_shares(); busy = false; return; }
       }
-      if (namespaceChanged) {
-        const r = await onSetNamespace?.(draftNamespaceId!);
-        if (!r?.ok) { error = r?.error ?? m.editor_access_control_error_namespace(); busy = false; return; }
+      if (spaceChanged) {
+        const r = await onSetSpace?.(draftSpaceId!);
+        if (!r?.ok) { error = r?.error ?? m.editor_access_control_error_space(); busy = false; return; }
       }
       busy = false;
       onClose();
@@ -201,8 +201,8 @@
     width="full"
     ariaLabel={m.editor_access_control_who_can_view()}
     items={[
-      { value: 'inherit', label: m.editor_access_control_visibility_inherit_option({ level: levelLabel(namespaceAccessLevel) }) },
-      { value: 'internal', label: m.editor_access_control_visibility_internal_option(), disabled: widerThanNamespace('internal') },
+      { value: 'inherit', label: m.editor_access_control_visibility_inherit_option({ level: levelLabel(spaceAccessLevel) }) },
+      { value: 'internal', label: m.editor_access_control_visibility_internal_option(), disabled: widerThanSpace('internal') },
       { value: 'restricted', label: m.editor_access_control_visibility_restricted_option() },
     ]}
     value={draftVisibility}
@@ -211,16 +211,16 @@
   {#if draftVisibility === 'inherit'}
     <p class="prop-hint">{m.editor_access_control_inherit_hint()}</p>
   {/if}
-  {#if namespaceAccessLevel !== 'public'}
-    <p class="prop-hint">{m.editor_access_control_public_needs_namespace()}</p>
+  {#if spaceAccessLevel !== 'public'}
+    <p class="prop-hint">{m.editor_access_control_public_needs_space()}</p>
   {/if}
-  {#if draftVisibility === 'inherit' && namespaceAccessLevel === 'restricted'}
-    <p class="prop-label">{m.editor_access_control_namespace_members_label()}</p>
-    {#if namespaceMembers.length === 0}
-      <div class="ac-empty"><EmptyState size="sm">{m.editor_access_control_namespace_members_none()}</EmptyState></div>
+  {#if draftVisibility === 'inherit' && spaceAccessLevel === 'restricted'}
+    <p class="prop-label">{m.editor_access_control_space_members_label()}</p>
+    {#if spaceMembers.length === 0}
+      <div class="ac-empty"><EmptyState size="sm">{m.editor_access_control_space_members_none()}</EmptyState></div>
     {:else}
       <ul class="member-list">
-        {#each namespaceMembers as nm (nm.id)}
+        {#each spaceMembers as nm (nm.id)}
           <li>{nm.name || nm.email}</li>
         {/each}
       </ul>
@@ -245,17 +245,17 @@
       </ul>
     {/if}
   {/if}
-  {#if namespaces.length > 0}
-    <p class="prop-label">{m.editor_access_control_namespace_label()}</p>
+  {#if spaces.length > 0}
+    <p class="prop-label">{m.editor_access_control_space_label()}</p>
     <Select
       size="sm"
       width="full"
-      ariaLabel={m.editor_access_control_namespace_label()}
-      items={namespaces.map((ns) => ({ value: ns.id, label: ns.isDefault ? m.editor_access_control_namespace_default_option() : ns.name }))}
-      value={draftNamespaceId ?? ''}
-      onValueChange={(v) => (draftNamespaceId = v)}
+      ariaLabel={m.editor_access_control_space_label()}
+      items={spaces.map((ns) => ({ value: ns.id, label: ns.isDefault ? m.editor_access_control_space_default_option() : ns.name }))}
+      value={draftSpaceId ?? ''}
+      onValueChange={(v) => (draftSpaceId = v)}
     />
-    <p class="prop-hint">{m.editor_access_control_namespace_hint()}</p>
+    <p class="prop-hint">{m.editor_access_control_space_hint()}</p>
   {/if}
   {#if error}<div class="ac-alert"><Alert tone="danger">{error}</Alert></div>{/if}
 

@@ -27,7 +27,7 @@ export interface BlockSettingsActions {
   /** Switches a page section to one column or back to the page's template, as one undo step. */
   setSectionSingle?: (single: boolean) => void;
   selectPage?: () => void;
-  /** The namespace a node made from a panel's picker goes into (the page's); null when not known. */
+  /** The space a node made from a panel's picker goes into (the page's); null when not known. */
   createIn?: () => { id: string; name: string; slug: string | null } | null;
   /** Which kind shows a node of a family from a source (its plugin; null for none), with the plugins turned on now. */
   embedKindFor?: (family: EmbedFamily, source: string | null) => EmbedDispatch;

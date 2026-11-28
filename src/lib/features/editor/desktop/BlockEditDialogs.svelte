@@ -18,13 +18,13 @@
   let {
     edit,
     propSuggestions = [],
-    namespaces = [],
+    spaces = [],
     users = [],
     nodeClasses = [],
     tagSuggestions = [],
   }: {
     edit: BlockEdit;
-  } & Pick<PageEditorProps, 'propSuggestions' | 'namespaces' | 'users' | 'nodeClasses' | 'tagSuggestions'> = $props();
+  } & Pick<PageEditorProps, 'propSuggestions' | 'spaces' | 'users' | 'nodeClasses' | 'tagSuggestions'> = $props();
 
   let htmlTextareaHost = $state<HTMLDivElement>();
   // Both kinds: an html block may put a block-kind class on its own wrapper.
@@ -112,7 +112,7 @@
   initialValue={edit.queryDraft}
   params={edit.queryParams}
   propertyOptions={propSuggestions}
-  namespaceOptions={namespaces}
+  spaceOptions={spaces}
   userOptions={users}
   classOptions={nodeClasses}
   {tagSuggestions}

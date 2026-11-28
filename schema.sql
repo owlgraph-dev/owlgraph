@@ -323,33 +323,6 @@ CREATE TABLE public.footer_links (
 
 
 --
--- Name: namespace_members; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.namespace_members (
-    namespace_id uuid NOT NULL,
-    user_id uuid NOT NULL
-);
-
-
---
--- Name: namespaces; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.namespaces (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    slug text,
-    name text NOT NULL,
-    access_level text DEFAULT 'internal'::text NOT NULL,
-    is_default boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT namespaces_access_level_check CHECK ((access_level = ANY (ARRAY['public'::text, 'internal'::text, 'restricted'::text]))),
-    CONSTRAINT namespaces_slug_null_iff_default_check CHECK (((slug IS NULL) = is_default))
-);
-
-
---
 -- Name: nav_tree_entries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -461,7 +434,7 @@ CREATE TABLE public.nodes (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     slug text NOT NULL,
-    namespace_id uuid NOT NULL,
+    space_id uuid NOT NULL,
     title text DEFAULT ''::text NOT NULL,
     class_id uuid NOT NULL,
     locale text NOT NULL,
@@ -494,7 +467,7 @@ CREATE TABLE public.page_layout_presets (
     CONSTRAINT page_layout_presets_mode_check CHECK ((mode = ANY (ARRAY['flow'::text, 'columns'::text]))),
     CONSTRAINT page_layout_presets_protected_check CHECK (((NOT protected) OR enabled)),
     CONSTRAINT page_layout_presets_scope_id_check CHECK (((scope_kind = 'site'::text) = (scope_id IS NULL))),
-    CONSTRAINT page_layout_presets_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'namespace'::text]))),
+    CONSTRAINT page_layout_presets_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'space'::text]))),
     CONSTRAINT page_layout_presets_template_check CHECK (((mode = 'flow'::text) = (template IS NULL)))
 );
 
@@ -678,6 +651,33 @@ CREATE TABLE public.site_settings (
 
 
 --
+-- Name: space_members; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.space_members (
+    space_id uuid NOT NULL,
+    user_id uuid NOT NULL
+);
+
+
+--
+-- Name: spaces; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.spaces (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    slug text,
+    name text NOT NULL,
+    access_level text DEFAULT 'internal'::text NOT NULL,
+    is_default boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT spaces_access_level_check CHECK ((access_level = ANY (ARRAY['public'::text, 'internal'::text, 'restricted'::text]))),
+    CONSTRAINT spaces_slug_null_iff_default_check CHECK (((slug IS NULL) = is_default))
+);
+
+
+--
 -- Name: stylesheets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -691,7 +691,7 @@ CREATE TABLE public.stylesheets (
     free_css text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT stylesheets_scope_id_check CHECK (((scope_kind = 'site'::text) = (scope_id IS NULL))),
-    CONSTRAINT stylesheets_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'namespace'::text])))
+    CONSTRAINT stylesheets_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'space'::text])))
 );
 
 
@@ -706,7 +706,7 @@ CREATE TABLE public.themes (
     tokens jsonb DEFAULT '{"version": 1}'::jsonb NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT themes_scope_id_check CHECK (((scope_kind = 'site'::text) = (scope_id IS NULL))),
-    CONSTRAINT themes_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'namespace'::text])))
+    CONSTRAINT themes_scope_kind_check CHECK ((scope_kind = ANY (ARRAY['site'::text, 'space'::text])))
 );
 
 
@@ -905,30 +905,6 @@ ALTER TABLE ONLY public.footer_links
 
 
 --
--- Name: namespace_members namespace_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.namespace_members
-    ADD CONSTRAINT namespace_members_pkey PRIMARY KEY (namespace_id, user_id);
-
-
---
--- Name: namespaces namespaces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.namespaces
-    ADD CONSTRAINT namespaces_pkey PRIMARY KEY (id);
-
-
---
--- Name: namespaces namespaces_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.namespaces
-    ADD CONSTRAINT namespaces_slug_key UNIQUE (slug);
-
-
---
 -- Name: nav_tree_entries nav_tree_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1001,19 +977,19 @@ ALTER TABLE ONLY public.node_versions
 
 
 --
--- Name: nodes nodes_namespace_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nodes
-    ADD CONSTRAINT nodes_namespace_slug_key UNIQUE (namespace_id, slug);
-
-
---
 -- Name: nodes nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nodes
     ADD CONSTRAINT nodes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nodes nodes_space_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nodes
+    ADD CONSTRAINT nodes_space_slug_key UNIQUE (space_id, slug);
 
 
 --
@@ -1126,6 +1102,30 @@ ALTER TABLE ONLY public.share_links
 
 ALTER TABLE ONLY public.site_settings
     ADD CONSTRAINT site_settings_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: space_members space_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.space_members
+    ADD CONSTRAINT space_members_pkey PRIMARY KEY (space_id, user_id);
+
+
+--
+-- Name: spaces spaces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.spaces
+    ADD CONSTRAINT spaces_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: spaces spaces_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.spaces
+    ADD CONSTRAINT spaces_slug_key UNIQUE (slug);
 
 
 --
@@ -1318,20 +1318,6 @@ CREATE INDEX footer_links_target_page_idx ON public.footer_links USING btree (ta
 
 
 --
--- Name: namespace_members_user_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX namespace_members_user_idx ON public.namespace_members USING btree (user_id);
-
-
---
--- Name: namespaces_one_default_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX namespaces_one_default_idx ON public.namespaces USING btree (is_default) WHERE is_default;
-
-
---
 -- Name: nav_tree_entries_siblings_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1462,6 +1448,20 @@ CREATE INDEX sessions_user_idx ON public.sessions USING btree (user_id);
 --
 
 CREATE INDEX share_links_node_idx ON public.share_links USING btree (node_id);
+
+
+--
+-- Name: space_members_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX space_members_user_idx ON public.space_members USING btree (user_id);
+
+
+--
+-- Name: spaces_one_default_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX spaces_one_default_idx ON public.spaces USING btree (is_default) WHERE is_default;
 
 
 --
@@ -1653,22 +1653,6 @@ ALTER TABLE ONLY public.footer_links
 
 
 --
--- Name: namespace_members namespace_members_namespace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.namespace_members
-    ADD CONSTRAINT namespace_members_namespace_id_fkey FOREIGN KEY (namespace_id) REFERENCES public.namespaces(id) ON DELETE CASCADE;
-
-
---
--- Name: namespace_members namespace_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.namespace_members
-    ADD CONSTRAINT namespace_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
-
-
---
 -- Name: nav_tree_entries nav_tree_entries_parent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1797,11 +1781,11 @@ ALTER TABLE ONLY public.nodes
 
 
 --
--- Name: nodes nodes_namespace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: nodes nodes_space_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.nodes
-    ADD CONSTRAINT nodes_namespace_id_fkey FOREIGN KEY (namespace_id) REFERENCES public.namespaces(id);
+    ADD CONSTRAINT nodes_space_id_fkey FOREIGN KEY (space_id) REFERENCES public.spaces(id);
 
 
 --
@@ -1809,7 +1793,7 @@ ALTER TABLE ONLY public.nodes
 --
 
 ALTER TABLE ONLY public.page_layout_presets
-    ADD CONSTRAINT page_layout_presets_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.namespaces(id) ON DELETE CASCADE;
+    ADD CONSTRAINT page_layout_presets_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.spaces(id) ON DELETE CASCADE;
 
 
 --
@@ -1917,11 +1901,27 @@ ALTER TABLE ONLY public.share_links
 
 
 --
+-- Name: space_members space_members_space_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.space_members
+    ADD CONSTRAINT space_members_space_id_fkey FOREIGN KEY (space_id) REFERENCES public.spaces(id) ON DELETE CASCADE;
+
+
+--
+-- Name: space_members space_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.space_members
+    ADD CONSTRAINT space_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: stylesheets stylesheets_scope_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.stylesheets
-    ADD CONSTRAINT stylesheets_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.namespaces(id) ON DELETE CASCADE;
+    ADD CONSTRAINT stylesheets_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.spaces(id) ON DELETE CASCADE;
 
 
 --
@@ -1929,7 +1929,7 @@ ALTER TABLE ONLY public.stylesheets
 --
 
 ALTER TABLE ONLY public.themes
-    ADD CONSTRAINT themes_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.namespaces(id) ON DELETE CASCADE;
+    ADD CONSTRAINT themes_scope_id_fkey FOREIGN KEY (scope_id) REFERENCES public.spaces(id) ON DELETE CASCADE;
 
 
 --

@@ -26,7 +26,7 @@ export interface TreeNodeRow {
 export interface TreeNodeAdminRow extends TreeNodeRow {
   page_title: string | null;
   page_slug: string | null;
-  namespace_slug: string | null;
+  space_slug: string | null;
 }
 
 export interface TreeNodeAdminWithChildren extends TreeNodeAdminRow {
@@ -83,7 +83,7 @@ export interface FooterLinkRow {
 export interface FooterLinkAdminRow extends FooterLinkRow {
   page_title: string | null;
   page_slug: string | null;
-  namespace_slug: string | null;
+  space_slug: string | null;
 }
 
 export interface FooterLinkInput {

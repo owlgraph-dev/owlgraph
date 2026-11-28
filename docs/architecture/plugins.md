@@ -186,7 +186,7 @@ for its own routes is kept there, once, whatever the plugin does.
   collection whose `plugin` is the plugin): another source's are neither
   readable nor writable through it, and a malformed id is simply absent. A
   read is checked for the viewer, a write for the writer. The host makes the
-  plugin's collections — in the namespace of a page the viewer writes, owned
+  plugin's collections — in the space of a page the viewer writes, owned
   by them, their credential sealed beside them when they have one of their
   own — and its documents: members of a collection the viewer writes, holding
   its credential; or, beside a page the viewer writes, documents of their own
@@ -195,8 +195,8 @@ for its own routes is kept there, once, whatever the plugin does.
   page's own visibility (a member, the collection's), so a share connected
   on a restricted page is restricted too.
   Asking twice for the same file makes one node — one per collection, or one
-  per namespace beside a page — decided under a lock on the collection, or on
-  the namespace and the file. Whether the viewer may make one beside a page
+  per space beside a page — decided under a lock on the collection, or on
+  the space and the file. Whether the viewer may make one beside a page
   (`mayCreateBeside`) is asked before anything goes to the service on their
   behalf, so a caller who may not learns nothing from it — not whether a
   password was right. A
@@ -331,7 +331,7 @@ to the node's credential.
 
 A person may connect their own account at a plugin's service, once; the
 plugin then reads that service as them, and the service keeps enforcing its
-own permissions while owlgraph keeps enforcing its namespaces. The manifest
+own permissions while owlgraph keeps enforcing its spaces. The manifest
 says so in plain data (`connections`: the credential kinds, a line for the
 connections page); the server half carries the handshake
 (`PluginConnectionFlow`: begin, poll, verify, revoke) — the core runs the

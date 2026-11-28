@@ -172,7 +172,7 @@ None blocks the work.
   storage record, so the publishing job needs no permission beyond
   `packages`, `id-token` and `attestations`. BuildKit's own unsigned
   provenance is off.
-- **A fork publishes to its own namespace:** the image is
+- **A fork publishes to its own space:** the image is
   `ghcr.io/<owner>/<repository>`, built with that repository as its source.
 - **A run whose push succeeded and whose attestation failed cannot be re-run:**
   the already-published check stops it, and the version stays without an

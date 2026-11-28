@@ -33,8 +33,8 @@ export interface RelationshipGroupView {
 
 /** The header of a node's own page. */
 export interface NodeHeaderView {
-  /** The namespace it sits in, by name — the breadcrumb's first step. */
-  namespace: string;
+  /** The space it sits in, by name — the breadcrumb's first step. */
+  space: string;
   title: string;
   /** The language of its title and its field values (docs/architecture/languages.md). */
   locale: string;

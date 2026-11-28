@@ -24,9 +24,9 @@ const word = () => `zq${Math.random().toString(36).slice(2, 8)}`;
 
 async function listedPage(
   request: APIRequestContext,
-  setup: { title: string; tags?: string[]; visibility?: 'public' | 'internal'; nodeClassId?: string; namespaceId?: string; body?: string }
+  setup: { title: string; tags?: string[]; visibility?: 'public' | 'internal'; nodeClassId?: string; spaceId?: string; body?: string }
 ): Promise<string> {
-  const { id } = await createPage(request, { namespaceId: setup.namespaceId, doc: setup.body ? doc(para(setup.body)) : undefined });
+  const { id } = await createPage(request, { spaceId: setup.spaceId, doc: setup.body ? doc(para(setup.body)) : undefined });
   await patchPage(request, id, {
     title: setup.title,
     tags: setup.tags ?? [],

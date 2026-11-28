@@ -17,7 +17,7 @@
 
   // `value` doubles as the filter text, so it is the visible label.
   const commands = [
-    { value: 'New page', hint: 'Create a page in this namespace' },
+    { value: 'New page', hint: 'Create a page in this space' },
     { value: 'New document', hint: 'Upload a PDF or markdown file' },
     { value: 'Open graph', hint: 'Show the local graph of the current page' },
     { value: 'Toggle sidebar', hint: 'Show or hide the utility sidebar' },

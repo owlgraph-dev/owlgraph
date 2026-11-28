@@ -18,7 +18,7 @@ const MANAGE_ACTIONS = [
   'property-group:manage',
   'relationship:manage',
   'class:manage',
-  'namespace:manage',
+  'space:manage',
   'navigation:manage',
   'homepage:manage',
   'footer:manage',

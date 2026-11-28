@@ -16,7 +16,7 @@
     href,
     type,
     className = null,
-    namespaceName = null,
+    spaceName = null,
     connections,
     x,
     y,
@@ -27,7 +27,7 @@
     href: string;
     type: NodeType;
     className?: string | null;
-    namespaceName?: string | null;
+    spaceName?: string | null;
     connections: number;
     // In the wrapper's CSS pixels: the node's bottom centre, or its top centre when flipped.
     x: number;
@@ -45,7 +45,7 @@
   <dl class="node-card-meta">
     <div><dt>{m.graph_panel_filter_type()}</dt><dd><Badge tone={type === 'document' ? 'info' : 'accent'}>{type === 'document' ? m.graph_view_legend_document() : type === 'collection' ? m.graph_view_legend_collection() : m.graph_view_legend_page()}</Badge></dd></div>
     {#if className}<div><dt>{m.graph_panel_filter_class()}</dt><dd>{className}</dd></div>{/if}
-    {#if namespaceName}<div><dt>{m.graph_panel_filter_namespace()}</dt><dd>{namespaceName}</dd></div>{/if}
+    {#if spaceName}<div><dt>{m.graph_panel_filter_space()}</dt><dd>{spaceName}</dd></div>{/if}
     <div><dt>{m.graph_node_card_connections()}</dt><dd>{connections}</dd></div>
   </dl>
   <div class="node-card-actions">

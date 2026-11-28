@@ -97,7 +97,7 @@ const DOC = '44444444-4444-4444-8444-444444444444';
 const MADE = '55555555-5555-4555-8555-555555555555';
 
 function row(id: string, plugin: string) {
-  return { id, plugin, title: id, slug: id.slice(0, 8), namespace_id: 'ns', namespace_slug: null, visibility: null, namespace_access_level: 'internal', locale: 'en' };
+  return { id, plugin, title: id, slug: id.slice(0, 8), space_id: 'ns', space_slug: null, visibility: null, space_access_level: 'internal', locale: 'en' };
 }
 
 const quiet: Logger = (() => {
@@ -118,7 +118,7 @@ beforeEach(() => {
   fake.types.set(COL, 'collection').set(OTHER, 'collection').set(PAGE, 'page').set(DOC, 'document');
   fake.collections.set(COL, row(COL, 'acme')).set(OTHER, row(OTHER, 'other'));
   fake.documents.set(DOC, { ...row(DOC, 'acme'), source: 'plugin', filename: 'a.pdf', mime: 'application/pdf', size: 1 });
-  fake.pages.set(PAGE, { id: PAGE, namespace_id: 'ns', locale: 'en', visibility: 'restricted' });
+  fake.pages.set(PAGE, { id: PAGE, space_id: 'ns', locale: 'en', visibility: 'restricted' });
   for (const id of [COL, OTHER, DOC]) fake.readers.add(`alice:${id}`);
   for (const id of [COL, OTHER, DOC, PAGE]) fake.writers.add(`alice:${id}`);
   fake.readers.add(`bob:${COL}`);

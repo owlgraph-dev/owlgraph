@@ -8,4 +8,4 @@
 export { default as NodePicker } from './picker/NodePicker.svelte';
 export { default as NodePickerPanel } from './picker/NodePickerPanel.svelte';
 export { default as PagePicker } from './picker/PagePicker.svelte';
-export { pickerNamespace, type NodeMark, type NodePickerCreate, type PickerRow } from './picker/nodePicker';
+export { pickerSpace, type NodeMark, type NodePickerCreate, type PickerRow } from './picker/nodePicker';

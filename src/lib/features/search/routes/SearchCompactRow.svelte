@@ -11,7 +11,7 @@
   import { BottomSheet, BottomSheetItem, Button, Chip } from '#lib/design-system/index.ts';
   import Icon from '#lib/design-system/Icon.svelte';
   import type { NodeClassOption } from '#lib/features/semantic/index.ts';
-  import { effectiveSort, type SearchNamespaceOption, type SearchParams } from '#lib/features/search/index.ts';
+  import { effectiveSort, type SearchSpaceOption, type SearchParams } from '#lib/features/search/index.ts';
   import { activeFilters } from './activeFilters';
   import { sortItems } from './filterItems';
   import SearchFilterSheet from './SearchFilterSheet.svelte';
@@ -20,23 +20,23 @@
     applied,
     total,
     classLabel,
-    namespaceName,
+    spaceName,
     classOptions,
     tagOptions,
-    namespaceOptions,
+    spaceOptions,
     go,
   }: {
     applied: SearchParams;
     total: number;
     classLabel: string | null;
-    namespaceName: string | null;
+    spaceName: string | null;
     classOptions: NodeClassOption[];
     tagOptions: string[];
-    namespaceOptions: SearchNamespaceOption[];
+    spaceOptions: SearchSpaceOption[];
     go: (change: Partial<SearchParams>) => Promise<void>;
   } = $props();
 
-  const chips = $derived(activeFilters(applied, { classLabel, namespaceName }));
+  const chips = $derived(activeFilters(applied, { classLabel, spaceName }));
   const sorts = $derived(sortItems(!!applied.q));
   const currentSort = $derived(effectiveSort(applied));
   const sortLabel = $derived(sorts.find((s) => s.value === currentSort)?.label ?? '');
@@ -88,7 +88,7 @@
   </Button>
 </div>
 
-<SearchFilterSheet bind:open={filterOpen} bind:pending {applied} {total} {classOptions} {tagOptions} {namespaceOptions} onApply={apply} />
+<SearchFilterSheet bind:open={filterOpen} bind:pending {applied} {total} {classOptions} {tagOptions} {spaceOptions} onApply={apply} />
 
 <BottomSheet bind:open={sortOpen} title={m.search_page_sort()}>
   <div class="sc-sorts">

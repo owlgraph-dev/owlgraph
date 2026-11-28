@@ -11,7 +11,7 @@ import {
   saveDoc,
   renamePage,
   setPageVisibility,
-  setPageNamespace,
+  setPageSpace,
   setPageShares,
   setPageContentScheme,
   userCanWritePage,
@@ -117,9 +117,9 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       await setPageContentScheme(params.id, body.contentScheme);
       out.contentScheme = body.contentScheme;
     }
-    if (typeof body.namespaceId === 'string') {
-      await setPageNamespace(params.id, body.namespaceId, locals.user);
-      out.namespaceId = body.namespaceId;
+    if (typeof body.spaceId === 'string') {
+      await setPageSpace(params.id, body.spaceId, locals.user);
+      out.spaceId = body.spaceId;
     }
     // null resets to the page's type class; echoes the resolved id.
     if (body.nodeClassId === null || typeof body.nodeClassId === 'string') {
@@ -134,8 +134,8 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
   } catch (e) {
     // A slug taken in a race is the unique index's refusal.
     if ((e as { code?: string }).code === '23505') return apiError('slug_taken');
-    if (isCodedError(e, 'namespace_membership_required')) {
-      return apiForbidden(locals.log, { action: 'namespace:place', resourceType: 'namespace', code: 'namespace_membership_required' });
+    if (isCodedError(e, 'space_membership_required')) {
+      return apiForbidden(locals.log, { action: 'space:place', resourceType: 'space', code: 'space_membership_required' });
     }
     // A model's refusal answers with its code; anything else is the 500 path,
     // which logs it and answers without detail.

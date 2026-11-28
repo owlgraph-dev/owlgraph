@@ -13,7 +13,7 @@ type Writes = Pick<NodeMetaActions, 'onSetTags' | 'onSetManualProperties' | 'onS
 export class MetaMirror {
   tags = $state<string[]>([]);
   manualProperties = $state<NodeProperty[]>([]);
-  // Stored visibility: null inherits the namespace's access level.
+  // Stored visibility: null inherits the space's access level.
   visibility = $state<string | null>(null);
   shares = $state<string[]>([]);
   #writes: Writes;

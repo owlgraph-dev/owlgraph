@@ -115,7 +115,7 @@ describe.skipIf(app.skipped)('the app bar a page is served with', () => {
   }
 
   it('offers Edit only to a viewer who may write the page: none for a viewer or a visitor, one for its owner', async () => {
-    // Public (the test seed's default namespace), so every role may read it.
+    // Public (the test seed's default space), so every role may read it.
     const { slug } = await createPage(served, 'editorA', { title: 'App bar edit probe' });
     expect(await editLinks(slug, 'viewer')).toEqual([]);
     expect(await editLinks(slug)).toEqual([]);

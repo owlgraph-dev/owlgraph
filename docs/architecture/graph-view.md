@@ -116,7 +116,7 @@ always labelled. The panel exposes this as *On zoom* (default) / *Always* /
 
 Hovering a node highlights it and its neighbours and dims the rest (both
 chromes). In the `full` chrome a **click** makes that focus sticky and opens
-a node card (title, type, class, namespace, degree, an *Open* link); a
+a node card (title, type, class, space, degree, an *Open* link); a
 double-click or Enter opens the node; Escape or a click on empty canvas
 clears the focus. The card is a plain positioned element that follows the
 node while the layout settles — deliberately not a floating-UI overlay,
@@ -127,7 +127,7 @@ click navigates.
 
 `graphFilter.ts` narrows the loaded (already viewer-scoped) graph on the
 client, in the **query model's vocabulary** (see
-[dynamic-rendering.md](dynamic-rendering.md)): node type, class, namespace
+[dynamic-rendering.md](dynamic-rendering.md)): node type, class, space
 and relationship type are the same dimensions the query builder's intrinsic
 and edge conditions use, and the pickers render the same items — the item
 builders live in the query feature (`filterOptions.ts`) and both UIs call
@@ -149,7 +149,7 @@ next visit, so they are never persisted.
 accent, document square in indigo, collection diamond in the neutral colour,
 which spends no categorical slot on a node type; the shape encodes type in
 every mode),
-or by **class** or **namespace** as an analytic overlay. Categorical hues
+or by **class** or **space** as an analytic overlay. Categorical hues
 come from a fixed, validated eight-colour order (adjacent pairs clear the
 colour-vision-deficiency gates on the app's light surface); they are
 assigned over the whole loaded graph, so a filter never repaints the
@@ -164,8 +164,8 @@ or uniform; typed-edge labels can be switched off (the hover card stays).
 
 Unchanged and server-enforced: `getGraph`/`getLocalGraph` return only nodes
 the viewer may read and edges whose both endpoints are readable
-([authorization.md](authorization.md)). The namespace filter and legend use
-the viewer-scoped namespace list the root layout already provides; the
+([authorization.md](authorization.md)). The space filter and legend use
+the viewer-scoped space list the root layout already provides; the
 class catalogue is schema, not content. Filtering, colouring and the legend
 only ever narrow that set.
 

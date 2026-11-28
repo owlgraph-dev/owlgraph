@@ -60,7 +60,7 @@ describe('a form field', () => {
 
     // As assistive technology reads them.
     await expect.element(specimen('hint').getByRole('textbox', { name: 'Description (optional)' })).toHaveAccessibleDescription('One sentence; shown as a tooltip in the catalog.');
-    await expect.element(specimen('error').getByRole('textbox', { name: 'Key' })).toHaveAccessibleDescription('This key is already taken in the namespace.');
+    await expect.element(specimen('error').getByRole('textbox', { name: 'Key' })).toHaveAccessibleDescription('This key is already taken in the space.');
     await expect.element(specimen('error').getByRole('textbox', { name: 'Key' })).toHaveAttribute('aria-invalid', 'true');
     await expect.element(specimen('required').getByRole('textbox', { name: 'Key' })).not.toHaveAttribute('aria-invalid');
     await expect.element(screen.getByRole('group', { name: 'Links to' })).toBeVisible();

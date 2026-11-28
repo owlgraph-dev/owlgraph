@@ -21,10 +21,10 @@ export interface PageSetup {
   doc?: unknown;
   title?: string;
   contentScheme?: 'light' | 'dark' | 'adaptive';
-  namespaceId?: string;
+  spaceId?: string;
   /**
    * `restricted` unless the spec says otherwise: the test database's default
-   * namespace is public, and one spec's pages must never turn up in another's
+   * space is public, and one spec's pages must never turn up in another's
    * lists. `null` inherits.
    */
   visibility?: 'internal' | 'restricted' | null;
@@ -35,8 +35,8 @@ export interface PageSetup {
  * editor takes the page's edit lock, which outlives the test.
  */
 export async function createPage(request: APIRequestContext, setup: PageSetup = {}): Promise<{ id: string; slug: string }> {
-  const { doc, title, contentScheme, namespaceId, visibility = 'restricted' } = setup;
-  const created = await request.post('/api/pages', { headers: sameOrigin(), ...(namespaceId ? { data: { namespaceId } } : {}) });
+  const { doc, title, contentScheme, spaceId, visibility = 'restricted' } = setup;
+  const created = await request.post('/api/pages', { headers: sameOrigin(), ...(spaceId ? { data: { spaceId } } : {}) });
   expect(created.ok(), 'create a page').toBe(true);
   const { id, slug } = (await created.json()) as { id: string; slug: string };
   if (visibility) await patchPage(request, id, { visibility });
@@ -65,17 +65,17 @@ export async function uploadImage(request: APIRequestContext, pageId: string, si
   return { id, ...size };
 }
 
-/** A text document of the test's own, uploaded into `namespaceId` (the default namespace without one). */
+/** A text document of the test's own, uploaded into `spaceId` (the default space without one). */
 export async function createDocument(
   request: APIRequestContext,
-  setup: { title: string; namespaceId?: string }
+  setup: { title: string; spaceId?: string }
 ): Promise<{ id: string; slug: string }> {
   const res = await request.post('/api/documents', {
     headers: sameOrigin(),
     multipart: {
       file: { name: `${setup.title}.txt`, mimeType: 'text/plain', buffer: Buffer.from(`e2e: ${setup.title}`) },
       title: setup.title,
-      ...(setup.namespaceId ? { namespaceId: setup.namespaceId } : {}),
+      ...(setup.spaceId ? { spaceId: setup.spaceId } : {}),
     },
   });
   expect(res.ok(), 'upload a document').toBe(true);
@@ -85,7 +85,7 @@ export async function createDocument(
 /** A link document of the test's own: an external URL instead of a file. */
 export async function createLinkDocument(
   request: APIRequestContext,
-  setup: { title: string; url: string; namespaceId?: string }
+  setup: { title: string; url: string; spaceId?: string }
 ): Promise<{ id: string; slug: string }> {
   const res = await request.post('/api/documents', {
     headers: sameOrigin(),
@@ -93,26 +93,26 @@ export async function createLinkDocument(
       source: 'link',
       externalUrl: setup.url,
       title: setup.title,
-      ...(setup.namespaceId ? { namespaceId: setup.namespaceId } : {}),
+      ...(setup.spaceId ? { spaceId: setup.spaceId } : {}),
     },
   });
   expect(res.ok(), 'create a link document').toBe(true);
   return (await res.json()) as { id: string; slug: string };
 }
 
-/** A namespace, through the settings so the server's route matcher learns of it. Returns its id. */
-export async function createNamespace(
+/** A space, through the settings so the server's route matcher learns of it. Returns its id. */
+export async function createSpace(
   request: APIRequestContext,
   ns: { name: string; slug: string; accessLevel?: 'public' | 'internal' | 'restricted' }
 ): Promise<string> {
-  const result = await formAction(request, '/settings/namespaces?/create', { name: ns.name, slug: ns.slug, accessLevel: ns.accessLevel ?? 'internal' });
-  expect(result.type, `create namespace ${ns.slug}`).toBe('success');
-  const [row] = await db<{ id: string }[]>`select id from namespaces where slug = ${ns.slug}`;
+  const result = await formAction(request, '/settings/spaces?/create', { name: ns.name, slug: ns.slug, accessLevel: ns.accessLevel ?? 'internal' });
+  expect(result.type, `create space ${ns.slug}`).toBe('success');
+  const [row] = await db<{ id: string }[]>`select id from spaces where slug = ${ns.slug}`;
   return row.id;
 }
 
-export async function deleteNamespace(request: APIRequestContext, id: string): Promise<void> {
-  expect((await formAction(request, '/settings/namespaces?/delete', { id })).type, 'delete namespace').toBe('success');
+export async function deleteSpace(request: APIRequestContext, id: string): Promise<void> {
+  expect((await formAction(request, '/settings/spaces?/delete', { id })).type, 'delete space').toBe('success');
 }
 
 /** A domain class under `parent` (a node type or another class, by key). Returns its id. */

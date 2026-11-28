@@ -19,7 +19,7 @@
   let {
     title = '',
     slug = '',
-    namespaceSlug = null,
+    spaceSlug = null,
     onRename,
     tags = [],
     onSetTags,
@@ -35,7 +35,7 @@
   }: {
     title?: string;
     slug?: string;
-    namespaceSlug?: string | null;
+    spaceSlug?: string | null;
     onRename?: (changes: { title?: string; slug?: string }) => Promise<{ ok: boolean; title?: string; slug?: string; error?: string }>;
     tags?: string[];
     onSetTags?: (tags: string[]) => void;
@@ -121,7 +121,7 @@
         {#snippet trigger()}
           <TriggerFace variant="ghost" size="sm" icon><Icon name="more" /></TriggerFace>
         {/snippet}
-        <DropdownMenuItem href={slugVal ? nodePath(namespaceSlug, slugVal) : '#'} target="_blank" rel="noopener">
+        <DropdownMenuItem href={slugVal ? nodePath(spaceSlug, slugVal) : '#'} target="_blank" rel="noopener">
           <span class="menu-item-row"><Icon name="eye" size={16} /><span>{m.editor_header_view_page()}</span></span>
         </DropdownMenuItem>
         {#if onRequestContentScheme}

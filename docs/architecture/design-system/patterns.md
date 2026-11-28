@@ -142,7 +142,7 @@ on to avoid losing work (a lost lock stays a banner).
 Every settings page lives under `/settings` ([settings.md](../settings.md)):
 the semantic-schema catalogues (properties, property groups, relationship
 types, classes; see [semantic-layer.md](../semantic-layer.md)), the site
-settings, user and namespace management, and the personal profile and API
+settings, user and space management, and the personal profile and API
 tokens. A page there is composed from the [primitives](primitives.md) rather than
 hand-rolled per route, in one of two shapes: a **settings page** (rows of
 label + description beside a control — `SettingsGroup`/`SettingsRow`/
@@ -184,15 +184,15 @@ All four schema catalogues are list pages (`/settings/schema/properties` is the
 simplest reference; `/settings/schema/classes` shows tree rows, locked core
 rows and a picker-heavy modal; `/settings/schema/relationships` a second
 per-row action with its own dialog), and so are `/settings/users`,
-`/settings/namespaces` and `/settings/api-tokens` — edit is a modal per row, a
-namespace's members are a modal of their own, deletion is a
+`/settings/spaces` and `/settings/api-tokens` — edit is a modal per row, a
+space's members are a modal of their own, deletion is a
 `variant="danger"` Dialog confirm rather than a browser `confirm()`. The
 settings pages (branding, footer, home, profile) are on the row pattern —
 branding's paragraph styles are a `Table` inside a wide row, with this
 list grammar's row controls and modal; navigation and fonts keep their
 section-shaped content (a tree editor, a card per font family) under the
 same head. A modal that edits several
-server-side aspects of one row (a user's role *and* password, a namespace's
+server-side aspects of one row (a user's role *and* password, a space's
 name, prefix *and* access level) posts one `update` action; it is one form,
 so it gets one action, instead of fanning out to the per-field actions an
 inline cell control needed.

@@ -42,7 +42,7 @@ test.describe('the link picker', () => {
     await expect(page.locator('.ProseMirror')).toBeFocused();
   });
 
-  test("makes the page it is asked for, in the page's namespace, and links to it", async ({ page }) => {
+  test("makes the page it is asked for, in the page's space, and links to it", async ({ page }) => {
     const title = unique('Made from a link').name;
     const { slug } = await createPage(page.request, { visibility: null, doc: doc({ type: 'paragraph', content: [txt('Before ')] }) });
     await page.goto(`/${slug}/edit`);
@@ -57,7 +57,7 @@ test.describe('the link picker', () => {
     await expect(page.getByPlaceholder('Search pages & documents…')).toBeHidden();
     const made = async () =>
       (await db<{ id: string; is_default: boolean }[]>`
-        select n.id, ns.is_default from nodes n join namespaces ns on ns.id = n.namespace_id where n.title = ${title} and n.type = 'page'`)[0];
+        select n.id, ns.is_default from nodes n join spaces ns on ns.id = n.space_id where n.title = ${title} and n.type = 'page'`)[0];
     await expect.poll(made).toMatchObject({ is_default: true });
     await expect(page.locator(`.ProseMirror a[data-page-id="${(await made()).id}"]`)).toHaveText(title);
   });

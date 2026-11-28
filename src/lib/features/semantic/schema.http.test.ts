@@ -69,7 +69,7 @@ describe.skipIf(app.skipped)('the class catalog', () => {
 describe.skipIf(app.skipped)('a document’s fields', () => {
   const served = app as ServedApp;
 
-  /** A document of the test's own, uploaded as `as` (it inherits the public default namespace), its properties set. */
+  /** A document of the test's own, uploaded as `as` (it inherits the public default space), its properties set. */
   async function document(as: Role, properties: { name: string; value: string }[]) {
     const form = new FormData();
     form.append('title', `HTTP Labels Doc ${++n}`);

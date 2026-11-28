@@ -15,7 +15,7 @@
 
   let {
     id,
-    namespaceId,
+    spaceId,
     initialTitle = '',
     busy = $bindable(false),
     source = $bindable('upload'),
@@ -23,8 +23,8 @@
   }: {
     /** The form element's id, for a submit button outside it. */
     id: string;
-    /** Where the document is made; null for the default namespace. */
-    namespaceId: string | null;
+    /** Where the document is made; null for the default space. */
+    spaceId: string | null;
     /** The title the form opens with (what a picker was searching for). */
     initialTitle?: string;
     busy?: boolean;
@@ -58,7 +58,7 @@
     busy = true;
     error = null;
     try {
-      const res = await createLinkDocument(parsed.url, title, namespaceId);
+      const res = await createLinkDocument(parsed.url, title, spaceId);
       if (!res.ok) {
         error = res.error ?? m.create_modal_error_generic_link();
         return;
@@ -79,7 +79,7 @@
     busy = true;
     error = null;
     try {
-      const res = await uploadDocument(file, title, namespaceId);
+      const res = await uploadDocument(file, title, spaceId);
       if (!res.ok) {
         error = res.error ?? m.create_modal_error_generic_upload();
         return;

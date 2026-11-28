@@ -47,21 +47,21 @@ import {
   insertNode,
   deleteNodeTx,
   setNodeVisibility,
-  setNodeNamespace,
+  setNodeSpace,
   touchNode,
   readableNodes,
   slugify,
   cleanSlug,
   assertSlugAvailable,
-  namespaceJoin,
-  namespaceSlugColumn,
-  assertCanPlaceInNamespace,
-  assertNotWiderThanNamespace,
+  spaceJoin,
+  spaceSlugColumn,
+  assertCanPlaceInSpace,
+  assertNotWiderThanSpace,
   userCanReadNode,
   userCanWriteNode,
   type NodeAccessRow,
 } from '#lib/features/nodes/server.ts';
-import { getNamespace, getDefaultNamespace } from '#lib/features/namespaces/server.ts';
+import { getSpace, getDefaultSpace } from '#lib/features/spaces/server.ts';
 import { getTypeClass } from '#lib/features/semantic/server.ts';
 import { captureVersion, registerVersionedType, type VersionKind } from './versions.server';
 import { applyPicks, type BlockPick } from './pageDiff';
@@ -90,18 +90,18 @@ import { CodedError } from '#lib/platform/codedError.ts';
 export interface PageListRow {
   id: string;
   slug: string;
-  namespace_slug: string | null;
+  space_slug: string | null;
   title: string;
   updated_at: string;
-  visibility: string | null; // as stored, null = inherits its namespace; display only
+  visibility: string | null; // as stored, null = inherits its space; display only
   created_by: string | null;
   locale: string; // the content language (docs/architecture/languages.md)
 }
 
 export async function listPagesForUser(user: { id: string; role: string } | null) {
   return db<PageListRow[]>`
-    select p.id, n.slug, ${db.unsafe(namespaceSlugColumn())}, n.title, n.updated_at, n.visibility, n.created_by, n.locale
-    from pages p join nodes n on n.id = p.id ${db.unsafe(namespaceJoin('n'))}
+    select p.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.updated_at, n.visibility, n.created_by, n.locale
+    from pages p join nodes n on n.id = p.id ${db.unsafe(spaceJoin('n'))}
     where ${readableNodes(user, 'n')}
     order by n.updated_at desc`;
 }
@@ -117,24 +117,24 @@ export async function readablePageIds(user: { id: string; role: string } | null)
 export interface PageRow {
   id: string;
   slug: string;
-  namespace_id: string;
-  namespace_slug: string | null;
+  space_id: string;
+  space_slug: string | null;
   title: string;
-  visibility: string | null; // null = inherits namespace_access_level, live
-  namespace_access_level: Visibility;
+  visibility: string | null; // null = inherits space_access_level, live
+  space_access_level: Visibility;
   created_by: string | null;
   created_at: string;
   updated_at: string;
   class_id: string; // at least the 'page' type class
-  content_scheme: ContentScheme | null; // null = inherit (namespace slot, then the site default)
+  content_scheme: ContentScheme | null; // null = inherit (space slot, then the site default)
   locale: string; // the content language, never the interface language (docs/architecture/languages.md)
   doc: JsonDoc;
 }
 
 // Explicit columns, not `select *`: a missed nodes join is then an SQL error,
 // not a silently undefined visibility.
-const PAGE_SELECT = `p.id, n.slug, n.namespace_id, ${namespaceSlugColumn()}, n.title, p.doc, n.visibility, ns.access_level as namespace_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, p.content_scheme, n.locale
-    from pages p join nodes n on n.id = p.id ${namespaceJoin('n')}`;
+const PAGE_SELECT = `p.id, n.slug, n.space_id, ${spaceSlugColumn()}, n.title, p.doc, n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, p.content_scheme, n.locale
+    from pages p join nodes n on n.id = p.id ${spaceJoin('n')}`;
 
 export async function getPage(id: string): Promise<PageRow | null> {
   const [page] = await db<PageRow[]>`select ${db.unsafe(PAGE_SELECT)} where p.id = ${id}`;
@@ -144,32 +144,32 @@ export async function getPage(id: string): Promise<PageRow | null> {
 export async function createPage(
   title: string,
   user: SessionUser | null = null,
-  opts?: { namespaceId?: string; visibility?: Visibility; locale?: string }
+  opts?: { spaceId?: string; visibility?: Visibility; locale?: string }
 ) {
   return db.begin(async (sql) => {
-    const namespace = opts?.namespaceId ? await getNamespace(sql, opts.namespaceId) : await getDefaultNamespace(sql);
-    if (!namespace) throw new CodedError('unknown_namespace', 'Unknown namespace');
-    await assertCanPlaceInNamespace(sql, user, namespace.id, namespace.access_level);
-    // An explicit visibility may only narrow the namespace's; null inherits it live.
-    if (opts?.visibility) assertNotWiderThanNamespace(opts.visibility, namespace.access_level);
+    const space = opts?.spaceId ? await getSpace(sql, opts.spaceId) : await getDefaultSpace(sql);
+    if (!space) throw new CodedError('unknown_space', 'Unknown space');
+    await assertCanPlaceInSpace(sql, user, space.id, space.access_level);
+    // An explicit visibility may only narrow the space's; null inherits it live.
+    if (opts?.visibility) assertNotWiderThanSpace(opts.visibility, space.access_level);
     const visibility = opts?.visibility ?? null;
     // Every node carries at least its type class (docs/architecture/semantic-layer.md).
     const pageClass = await getTypeClass(sql, 'page');
     // No locale: insertNode takes the site default.
-    const node = await insertNode(sql, { classId: pageClass.id, slug: slugify(title), namespaceId: namespace.id, createdBy: user?.id ?? null, visibility, title, locale: opts?.locale });
+    const node = await insertNode(sql, { classId: pageClass.id, slug: slugify(title), spaceId: space.id, createdBy: user?.id ?? null, visibility, title, locale: opts?.locale });
     await sql`insert into pages (id, doc, search_title, search_locale) values (${node.id}, ${sql.json(emptyDoc() as unknown as JsonArg)}, ${title}, ${node.locale})`;
     const [page] = await sql<PageRow[]>`select ${sql.unsafe(PAGE_SELECT)} where p.id = ${node.id}`;
     return page;
   });
 }
 
-// Inherits its namespace's access level like every new node: a draft that must
+// Inherits its space's access level like every new node: a draft that must
 // stay closed is set to Restricted in its access panel.
-export async function createBlankPage(user: SessionUser, namespaceId?: string, title?: string) {
-  return createPage(title?.trim() || 'Untitled', user, { namespaceId });
+export async function createBlankPage(user: SessionUser, spaceId?: string, title?: string) {
+  return createPage(title?.trim() || 'Untitled', user, { spaceId });
 }
 
-// null inherits the namespace's access level; returns what was stored.
+// null inherits the space's access level; returns what was stored.
 export async function setPageVisibility(pageId: string, visibility: Visibility | null): Promise<Visibility | null> {
   return setNodeVisibility(pageId, visibility);
 }
@@ -186,12 +186,12 @@ export async function setPageContentScheme(pageId: string, scheme: ContentScheme
   if (rows.length === 0) throw new CodedError('not_found', 'Page not found');
 }
 
-// Changes the page's route (identity is namespace + slug). A restricted target
+// Changes the page's route (identity is space + slug). A restricted target
 // needs the acting user's membership (or admin); a visibility wider than the
-// target's is narrowed (setNodeNamespace). Gated as a page edit
-// (userCanWritePage), not namespace:manage.
-export async function setPageNamespace(pageId: string, namespaceId: string, user: SessionUser | null): Promise<void> {
-  await setNodeNamespace(pageId, namespaceId, user);
+// target's is narrowed (setNodeSpace). Gated as a page edit
+// (userCanWritePage), not space:manage.
+export async function setPageSpace(pageId: string, spaceId: string, user: SessionUser | null): Promise<void> {
+  await setNodeSpace(pageId, spaceId, user);
 }
 
 export async function getPageShares(pageId: string): Promise<string[]> {
@@ -490,7 +490,7 @@ export async function listBlocks(id: string) {
 }
 
 // Links reference the id, so a rename leaves them intact. A slug taken in the
-// namespace throws SLUG_TAKEN, a reserved one SLUG_RESERVED (assertSlugAvailable).
+// space throws SLUG_TAKEN, a reserved one SLUG_RESERVED (assertSlugAvailable).
 export async function renamePage(id: string, changes: { title?: string; slug?: string }) {
   const title = changes.title !== undefined ? changes.title.trim() : undefined;
   if (title !== undefined && title === '') throw new CodedError('title_required', 'Title cannot be empty');
@@ -499,9 +499,9 @@ export async function renamePage(id: string, changes: { title?: string; slug?: s
   if (changes.slug !== undefined) {
     slug = cleanSlug(changes.slug);
     if (slug === '') throw new CodedError('slug_required', 'URL slug cannot be empty');
-    const [node] = await db<{ namespace_id: string }[]>`select namespace_id from nodes where id = ${id}`;
+    const [node] = await db<{ space_id: string }[]>`select space_id from nodes where id = ${id}`;
     if (!node) throw new CodedError('not_found', 'Not found');
-    await assertSlugAvailable(db, slug, id, node.namespace_id);
+    await assertSlugAvailable(db, slug, id, node.space_id);
   }
 
   if (title === undefined && slug === undefined) return getPage(id);

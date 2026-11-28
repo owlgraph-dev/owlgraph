@@ -27,7 +27,7 @@
     <Badge tone="info" title="Value comes from the document's HTML">HTML</Badge>
   </Specimen>
   <Specimen label="long label (never wraps)" state="long">
-    <Badge tone="accent">inherited from namespace</Badge>
+    <Badge tone="accent">inherited from space</Badge>
   </Specimen>
 </SpecimenGrid>
 

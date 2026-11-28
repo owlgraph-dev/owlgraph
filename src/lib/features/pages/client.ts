@@ -147,19 +147,19 @@ export async function renderPageBlocks(pageId: string, blocks: unknown[]): Promi
 }
 
 export type CreatePageResult =
-  | { ok: true; id: string; slug: string; namespaceSlug: string | null }
+  | { ok: true; id: string; slug: string; spaceSlug: string | null }
   | { ok: false; error: string | null };
 
-export async function createBlankPageViaApi(namespaceId: string | null, title?: string): Promise<CreatePageResult> {
+export async function createBlankPageViaApi(spaceId: string | null, title?: string): Promise<CreatePageResult> {
   const res = await fetch('/api/pages', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ namespaceId, title }),
+    body: JSON.stringify({ spaceId, title }),
   });
   if (!res.ok) {
     const error = await readApiError(res);
     return { ok: false, error: error.code === 'unknown' ? null : error.message };
   }
   const body = await res.json();
-  return { ok: true, id: body.id, slug: body.slug, namespaceSlug: body.namespaceSlug ?? null };
+  return { ok: true, id: body.id, slug: body.slug, spaceSlug: body.spaceSlug ?? null };
 }

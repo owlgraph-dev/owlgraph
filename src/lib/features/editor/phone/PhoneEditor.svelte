@@ -22,7 +22,7 @@
   import PhoneCanvasOverlay from './PhoneCanvasOverlay.svelte';
   import PhoneBlockSettingsSheet from './PhoneBlockSettingsSheet.svelte';
   import { embedActions } from '../blocks/embedPicker';
-  import { pickerNamespace } from '#lib/features/search/picker.ts';
+  import { pickerSpace } from '#lib/features/search/picker.ts';
   import type { BlockSettingsActions } from '../blockSettings/types';
   import { embedTarget } from '../blockSettings/target';
 
@@ -49,8 +49,8 @@
     onSetLocale,
     classFields = null,
     visibility = null,
-    namespaceAccessLevel,
-    namespaceMembers = [],
+    spaceAccessLevel,
+    spaceMembers = [],
     shares = [],
     users = [],
     onSetVisibility,
@@ -58,9 +58,9 @@
     shareLinks = [],
     onCreateShareLink,
     onRevokeShareLink,
-    namespaceId,
-    namespaces = [],
-    onSetNamespace,
+    spaceId,
+    spaces = [],
+    onSetSpace,
     onUploadImage,
     lockLost = false,
     onLockLost,
@@ -112,7 +112,7 @@
   const settingsActions: BlockSettingsActions = embedActions({
     editor: () => core.editor,
     target: () => settingsTarget,
-    namespace: () => pickerNamespace(namespaces, namespaceId),
+    space: () => pickerSpace(spaces, spaceId),
     enabledPlugins: () => enabledPluginSet,
   });
   let blockSettingsOpen = $state(false);
@@ -148,8 +148,8 @@
       classDefinitions={classFields?.definitions ?? []}
       classGroups={classFields?.groups ?? []}
       visibility={meta.visibility}
-      {namespaceAccessLevel}
-      {namespaceMembers}
+      {spaceAccessLevel}
+      {spaceMembers}
       shares={meta.shares}
       {users}
       onSetVisibility={meta.commitVisibility}
@@ -157,9 +157,9 @@
       {shareLinks}
       {onCreateShareLink}
       {onRevokeShareLink}
-      {namespaceId}
-      {namespaces}
-      {onSetNamespace}
+      {spaceId}
+      {spaces}
+      {onSetSpace}
     />
   </div>
   <div class="m-editor-scroll">
@@ -173,7 +173,7 @@
     {core}
     save={editing.save}
     {scheme}
-    linkNamespace={pickerNamespace(namespaces, namespaceId)}
+    linkSpace={pickerSpace(spaces, spaceId)}
     {locale}
     onDeleteBlock={core.selection.selected && !STRUCTURAL_BLOCK_TYPES.has(core.selection.selected.type) ? core.removeSelectedBlock : null}
     onBlockSettings={settingsTarget ? () => (blockSettingsOpen = true) : null}

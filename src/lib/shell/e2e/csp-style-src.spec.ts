@@ -308,7 +308,7 @@ test.describe('loose routes: the links back to a reader page', () => {
     await expectStrict(documents[0]);
   }
 
-  /** A page's path carries its namespace, so read it off the link. */
+  /** A page's path carries its space, so read it off the link. */
   async function pathOf(link: ReturnType<Page['getByRole']>): Promise<string> {
     return new URL((await link.getAttribute('href'))!, 'http://app.test').pathname;
   }

@@ -86,7 +86,7 @@ Access:
 4. A request with no token, or a token that names nobody, is refused with the
    API's error body.
 5. A node the client may not read is answered as not found by every
-   endpoint, as [spec 002](002-visibility-and-namespaces.md) requires of
+   endpoint, as [spec 002](002-visibility-and-spaces.md) requires of
    every way in. Lists leave it out, and their counts do too.
 6. A browser on an origin the operator allows can call the API with a token.
    Any other origin is refused, and no other origin is ever sent the
@@ -95,7 +95,7 @@ Access:
 Nodes:
 
 7. A client creates a node with no body and any classes, or none, choosing
-   its namespace, slug, title, content language and visibility, and sets its
+   its space, slug, title, content language and visibility, and sets its
    properties and tags.
 8. A client changes and deletes a node it may write, its classes included.
    Changing a node's classes never deletes a property value.
@@ -186,8 +186,7 @@ Identifiers and the source:
   the model of the schema this API serves, and inference scoped to what the
   reader may read.
 - [0022. Namespaces are called spaces](../adr/0022-namespaces-are-called-spaces.md):
-  the rename comes before this API's first version; this spec says
-  "namespace" until it is made.
+  the API ships with the word space, never namespace.
 - What this spec takes from the records that settle its details:
   - [0024](../adr/0024-a-statement-records-its-origin.md): a statement's
     origin, and that what a body states is changed through the body
@@ -210,7 +209,7 @@ Identifiers and the source:
     headless instance turns off and what it keeps (criteria 1 and 21).
 - [0002. Authorization is server-enforced and viewer-scoped](../adr/0002-authorization-is-server-enforced-and-viewer-scoped.md):
   the API checks every request as the token's person, and
-  [spec 002](002-visibility-and-namespaces.md) holds unchanged.
+  [spec 002](002-visibility-and-spaces.md) holds unchanged.
 - [0014. AGPL with a plugin exception](../adr/0014-agpl-with-a-plugin-exception.md):
   a client that uses only the public network API is a separate work, so every
   endpoint of a version must be designated public in the documentation, and
