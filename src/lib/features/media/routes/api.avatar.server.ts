@@ -6,6 +6,7 @@
 import { getUserAvatarMeta } from '#lib/features/media/server.ts';
 import { getAssetBytes, servePublicAssetBytes } from '#lib/features/media/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { userId: string };
@@ -13,7 +14,7 @@ type Params = { userId: string };
 // Public, unauthenticated. Keyed by user id so the URL survives a replace; the
 // `?v=` the callers add (avatarUrl) only busts caches and is never read here.
 export const GET: RequestHandler<Params> = async ({ params }) => {
-  const meta = await getUserAvatarMeta(params.userId);
+  const meta = isUuid(params.userId) ? await getUserAvatarMeta(params.userId) : null;
   if (!meta) return textError('not_found');
 
   const data = await getAssetBytes(meta.id);

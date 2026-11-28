@@ -3,26 +3,22 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/share-links/+server.ts.
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { createShareLink, listShareLinks } from '#lib/features/nodes/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '#lib/platform/apiErrors.ts';
+import { writablePage } from './writable.server';
 
 type Params = { id: string };
 
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   return Response.json(await listShareLinks(params.id));
 };
 
 // Returns the raw token once; it can never be retrieved again.
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   const body = await request.json().catch(() => ({}));
   const link = await createShareLink(params.id, locals.user?.id ?? null, String(body.label ?? ''), locals.log);
   return Response.json(link);

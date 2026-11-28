@@ -6,23 +6,17 @@
 // Connects a mirrored collection to its source anew (docs/architecture/plugins.md, "Sources"): its writers may, and each
 // check spends the writer's failed credential checks, as a plugin route's does.
 import { logEvent } from '#lib/platform/logger.server.ts';
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getCollection, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { writableCollection } from '#lib/features/nodes/routes/writable.server.ts';
 import { connectCollectionSource, credentialChecks } from '#lib/features/pluginHost/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
 import { apiError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export const PUT: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const collection = UUID.test(params.id) ? await getCollection(params.id) : null;
   // 404, not 403, for one the viewer may not read: its existence is not theirs to learn.
-  if (!collection || !(await userCanReadCollection(locals.user, collection))) return apiError('not_found', { kind: 'collection' });
-  if (!(await userCanWriteCollection(locals.user, collection))) {
-    return apiForbidden(locals.log, { action: 'page:write', resourceType: 'collection', resourceId: params.id });
-  }
+  const collection = await writableCollection(locals, params.id);
+  if (collection instanceof Response) return collection;
   if (!(request.headers.get('content-type') ?? '').startsWith('application/json')) return apiError('json_required');
   const checker = `user:${locals.user!.id}`;
   const checks = credentialChecks.allowed(checker);

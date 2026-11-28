@@ -60,17 +60,17 @@ describe.skipIf(app.skipped)('a page write by someone who may not write the page
     expect(await stored(page.id)).toEqual(before);
   });
 
-  it('answers the PUT and PATCH of an editor neither owning nor shared on a restricted page with 403 and stores nothing', async () => {
+  it('answers the PUT and PATCH of an editor neither owning nor shared on a restricted page with 404, as a page that does not exist, and stores nothing', async () => {
     const editorB = await userOf('editorB');
     const page = await createPage(served, 'editorA', { title: 'Restricted write probe', doc: docOf('kept private'), visibility: 'restricted', shares: [editorB.id] });
     const before = await stored(page.id);
     expect(before).toMatchObject({ visibility: 'restricted', shares: [editorB.id] });
 
     const { put, patch } = await attempt(page.id, 'editorC');
-    expect(put.status).toBe(403);
-    expect(await put.json()).toEqual({ error: { code: 'forbidden', message: expect.any(String) } });
-    expect(patch.status).toBe(403);
-    expect(await patch.json()).toEqual({ error: { code: 'forbidden', message: expect.any(String) } });
+    expect(put.status).toBe(404);
+    expect(await put.json()).toEqual({ error: { code: 'not_found', message: expect.any(String) } });
+    expect(patch.status).toBe(404);
+    expect(await patch.json()).toEqual({ error: { code: 'not_found', message: expect.any(String) } });
     expect(await stored(page.id)).toEqual(before);
 
     // The share writes it: the refusal is the page's, not the route's.

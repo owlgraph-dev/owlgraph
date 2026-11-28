@@ -262,6 +262,11 @@ Every JSON error the HTTP API answers has one body:
   internals — no database text, no stack, no path — and no client parses it.
 - **The status** comes with the code: the same code always answers the same
   status. `ok: false` is not part of an error body; the status says it.
+- **An id that is none** — not a UUID where a route takes one — names
+  nothing, so it answers what a missing one does (`not_found`, or the
+  route's own code for what it names), never the 500 path. A node the caller
+  may not read answers the same
+  ([authorization.md](authorization.md#two-checks)).
 
 One table, `src/lib/platform/apiErrors.ts`, maps each code to its status and
 its message, and builds every body: `apiError(code, details)` for a request

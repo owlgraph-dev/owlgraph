@@ -5,6 +5,7 @@
 // Route adapter for /api/media/fonts/[id], re-exported by src/routes/api/media/fonts/[id]/+server.ts.
 import { getAssetMeta, getAssetBytes, servePublicAssetBytes } from '#lib/features/media/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { textError } from '#lib/platform/apiErrors.ts';
 
 type Params = { id: string };
@@ -15,7 +16,7 @@ type Params = { id: string };
 // Always font/woff2, never the stored mime: uploads are checked by signature.
 // A variant's row is never changed in place, so the bytes cache immutably.
 export const GET: RequestHandler<Params> = async ({ params }) => {
-  const meta = await getAssetMeta(params.id);
+  const meta = isUuid(params.id) ? await getAssetMeta(params.id) : null;
   if (!meta || meta.kind !== 'font' || meta.scope !== 'global') return textError('not_found');
 
   const data = await getAssetBytes(params.id);

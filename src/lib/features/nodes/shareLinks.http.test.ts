@@ -45,9 +45,9 @@ describe.skipIf(app.skipped)('share links', () => {
       expect((await call(served, `/share/${link.token}`)).status).toBe(404);
     });
 
-    it('an editor who neither owns the restricted page nor is on its share list is refused making one with 403', async () => {
+    it('an editor who neither owns the restricted page nor is on its share list is refused making one with 404, as for a page that does not exist', async () => {
       const before = await linkCount(seed.restrictedId);
-      expect((await call(served, `/api/pages/${seed.restrictedId}/share-links`, { as: 'editorC', json: {} })).status).toBe(403);
+      expect((await call(served, `/api/pages/${seed.restrictedId}/share-links`, { as: 'editorC', json: {} })).status).toBe(404);
       expect(await linkCount(seed.restrictedId)).toBe(before);
     });
   });
@@ -79,12 +79,12 @@ describe.skipIf(app.skipped)('share links', () => {
   });
 
   describe('who may manage them', () => {
-    it('only a writer of the node lists, makes or revokes its share links — every other caller gets 403 and nothing changes', async () => {
+    it('only a writer of the node lists, makes or revokes its share links — a reader gets 403, one who may not read it 404, and nothing changes', async () => {
       const link = await makeLink('pages', seed.restrictedId);
       const before = await linkCount(seed.restrictedId);
 
       expect((await call(served, `/api/pages/${seed.publicId}/share-links`, { as: 'viewer' })).status).toBe(403);
-      expect((await call(served, `/api/pages/${seed.restrictedId}/share-links/${link.id}`, { as: 'editorC', method: 'DELETE' })).status).toBe(403);
+      expect((await call(served, `/api/pages/${seed.restrictedId}/share-links/${link.id}`, { as: 'editorC', method: 'DELETE' })).status).toBe(404);
       expect(await linkCount(seed.restrictedId)).toBe(before);
       expect((await call(served, `/share/${link.token}`)).status).toBe(200);
       // A document the viewer reads, and may not change.

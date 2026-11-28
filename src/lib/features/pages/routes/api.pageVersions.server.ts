@@ -3,8 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/versions/+server.ts.
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { writablePage } from '#lib/features/nodes/routes/writable.server.ts';
 import { listVersions, captureStandaloneVersion } from '#lib/features/pages/server.ts';
 import { unwrapUnknown, type JsonDoc } from '#lib/features/content/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
@@ -14,18 +13,16 @@ type Params = { id: string };
 
 // Gated on write access: only an editor has use for the history.
 export const GET: RequestHandler<Params> = async ({ params, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   return Response.json({ versions: await listVersions(params.id) });
 };
 
 // Keeps an unsaved doc whose edit lock was taken over, without touching the
 // page; returns the current doc to diff against.
 export const POST: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   const body = await request.json().catch(() => ({}));
   if (!body?.doc || typeof body.doc !== 'object') return apiError('invalid_request', { field: 'doc' });
   const versionId = await captureStandaloneVersion({

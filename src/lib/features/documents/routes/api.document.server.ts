@@ -5,14 +5,8 @@
 // Route adapter, re-exported by src/routes/api/documents/[id]/+server.ts.
 import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import {
-  documentEmbed,
-  getDocument,
-  renameDocument,
-  userCanWriteDocument,
-  refreshDocumentSearchMeta,
-  clearDocumentLocaleSuggestion,
-} from '#lib/features/documents/server.ts';
+import { writableDocument } from '#lib/features/nodes/routes/writable.server.ts';
+import { documentEmbed, renameDocument, refreshDocumentSearchMeta, clearDocumentLocaleSuggestion } from '#lib/features/documents/server.ts';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
 import { setNodeClass } from '#lib/features/semantic/server.ts';
@@ -37,9 +31,8 @@ export const GET: RequestHandler<Params> = async ({ params, locals }) => {
 
 // Mirrors PATCH /api/pages/[id].
 export const PATCH: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const doc = await getDocument(params.id);
-  if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  const doc = await writableDocument(locals, params.id);
+  if (doc instanceof Response) return doc;
 
   const body = await request.json().catch(() => ({}));
   try {
@@ -118,9 +111,8 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
 };
 
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
-  const doc = await getDocument(params.id);
-  if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  const doc = await writableDocument(locals, params.id);
+  if (doc instanceof Response) return doc;
   await deleteNode(doc.id);
   logEvent(locals.log, 'node.deleted', { nodeId: doc.id, nodeType: 'document', actorId: locals.user?.id ?? null });
   return Response.json({ ok: true });

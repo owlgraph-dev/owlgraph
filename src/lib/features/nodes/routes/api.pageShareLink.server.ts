@@ -3,19 +3,16 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/api/pages/[id]/share-links/[linkId]/+server.ts.
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
 import { logEvent } from '#lib/platform/logger.server.ts';
-import { getPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { revokeShareLink } from '#lib/features/nodes/server.ts';
 import type { RequestHandler } from '@sveltejs/kit';
-import { apiError } from '#lib/platform/apiErrors.ts';
+import { writablePage } from './writable.server';
 
 type Params = { id: string; linkId: string };
 
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   await revokeShareLink(params.linkId, params.id);
   // Logged here: the adapter knows the actor, revokeShareLink doesn't.
   logEvent(locals.log, 'share.revoked', {

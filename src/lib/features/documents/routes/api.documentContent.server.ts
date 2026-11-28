@@ -5,14 +5,14 @@
 // Route adapter, re-exported by src/routes/api/documents/[id]/content/+server.ts
 // (docs/architecture/documents.md, "The content endpoint").
 import { logEvent } from '#lib/platform/logger.server.ts';
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
+import { writableDocument } from '#lib/features/nodes/routes/writable.server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import {
   getDocument,
   getDocumentBytes,
   replaceDocumentBytes,
   setDocumentLink,
   userCanReadDocument,
-  userCanWriteDocument,
   documentBytesResponse,
   externalContentResponse,
   type DocumentRow,
@@ -29,7 +29,7 @@ type Params = { id: string };
 // 404, not 403, for a reader who may not read it, so existence isn't revealed.
 // Gated bytes are never cached: a cached copy would outlive the session.
 export const GET: RequestHandler<Params> = async ({ params, url, locals }) => {
-  const doc = await getDocument(params.id);
+  const doc = isUuid(params.id) ? await getDocument(params.id) : null;
   if (!doc) return textError('not_found', { kind: 'document' });
   if (!(await userCanReadDocument(locals.user, doc))) return textError('not_found', { kind: 'document' });
 
@@ -56,10 +56,11 @@ export const GET: RequestHandler<Params> = async ({ params, url, locals }) => {
 
 // A multipart `file` or JSON `{ externalUrl }`, switching the source when it
 // differs: a switch to 'link' deletes the stored file, so the editor confirms it first.
+// Reachable without a session: a caller who may not read the document, signed
+// out or not, is answered as for one that does not exist.
 export const PUT: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const doc = await getDocument(params.id);
-  if (!doc) return apiError('not_found', { kind: 'document' });
-  if (!(await userCanWriteDocument(locals.user, doc))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'document', resourceId: params.id });
+  const doc = await writableDocument(locals, params.id);
+  if (doc instanceof Response) return doc;
   // A document from an integration keeps its source.
   if (doc.source === 'plugin') return apiError('source_fixed');
 

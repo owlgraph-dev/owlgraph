@@ -3,9 +3,8 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Shared by api.collectionMembers.server.ts and api.collectionMember.server.ts.
-import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import { getCollection, userCanReadCollection, userCanWriteCollection, type CollectionRow } from '#lib/features/collections/server.ts';
-import { isUuid } from '#lib/features/nodes/index.ts';
+import { writableCollection } from '#lib/features/nodes/routes/writable.server.ts';
+import type { CollectionRow } from '#lib/features/collections/server.ts';
 import { apiError } from '#lib/platform/apiErrors.ts';
 
 /**
@@ -13,12 +12,8 @@ import { apiError } from '#lib/platform/apiErrors.ts';
  * they may read but not write, 409 for one an integration mirrors.
  */
 export async function arrangeableCollection(locals: App.Locals, id: string): Promise<CollectionRow | Response> {
-  if (!isUuid(id)) return apiError('not_found', { kind: 'collection' });
-  const collection = await getCollection(id);
-  if (!collection || !(await userCanReadCollection(locals.user, collection))) return apiError('not_found', { kind: 'collection' });
-  if (!(await userCanWriteCollection(locals.user, collection))) {
-    return apiForbidden(locals.log, { action: 'page:write', resourceType: 'collection', resourceId: id });
-  }
+  const collection = await writableCollection(locals, id);
+  if (collection instanceof Response) return collection;
   if (collection.plugin !== null) return apiError('mirrored');
   return collection;
 }

@@ -90,6 +90,17 @@ describe.skipIf(app.skipped)('creating content through the Create dialog’s rou
       expect(Buffer.from(stored.bytes).toString('utf8')).toBe('hi');
     });
 
+    it('answers a page or a document made in a space whose id is none with 400 unknown_space, and makes neither', async () => {
+      const before = await nodeCount();
+      const form = upload('note.txt', 'text/plain', 'hi');
+      form.append('spaceId', 'not-an-id');
+      for (const res of [await call(served, '/api/pages', { as: 'editorA', json: { spaceId: 'not-an-id' } }), await uploadAs('editorA', form)]) {
+        expect(res.status).toBe(400);
+        expect(((await res.json()) as { error: { code: string } }).error.code).toBe('unknown_space');
+      }
+      expect(await nodeCount()).toBe(before);
+    });
+
     it('answers an upload over the body limit production sets with 413, and one under it — past the adapter’s own default — with 200', async () => {
       const before = await nodeCount();
       const oversized = await uploadAs('editorA', upload('big.txt', 'text/plain', new Uint8Array(26 * 1024 * 1024)));

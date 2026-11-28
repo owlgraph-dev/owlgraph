@@ -5,16 +5,8 @@
 // Route adapter, re-exported by src/routes/api/pages/[id]/+server.ts.
 import { logEvent } from '#lib/platform/logger.server.ts';
 import { apiForbidden } from '#lib/features/auth/routes/requireAction.server.ts';
-import {
-  getPage,
-  saveDoc,
-  renamePage,
-  setPageVisibility,
-  setPageSpace,
-  setPageContentScheme,
-  userCanWritePage,
-  deletePage,
-} from '#lib/features/pages/server.ts';
+import { writablePage } from '#lib/features/nodes/routes/writable.server.ts';
+import { saveDoc, renamePage, setPageVisibility, setPageSpace, setPageContentScheme, deletePage } from '#lib/features/pages/server.ts';
 import { getHomePageId } from '#lib/features/site/server.ts';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
@@ -33,9 +25,8 @@ type Params = { id: string };
 const VISIBILITIES = ['public', 'internal', 'restricted'];
 
 export const PUT: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   const doc = await request.json();
   const lockToken = request.headers.get('x-edit-lock');
   // A header, so the body stays the document itself (unknownGuard.ts).
@@ -60,9 +51,8 @@ export const PUT: RequestHandler<Params> = async ({ params, request, locals }) =
 
 // Page metadata. An absent field is left alone; an explicit null inherits.
 export const PATCH: RequestHandler<Params> = async ({ params, request, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
 
   const body = await request.json().catch(() => ({}));
   try {
@@ -140,9 +130,8 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
 };
 
 export const DELETE: RequestHandler<Params> = async ({ params, locals }) => {
-  const page = await getPage(params.id);
-  if (!page) return apiError('not_found', { kind: 'page' });
-  if (!(await userCanWritePage(locals.user, page))) return apiForbidden(locals.log, { action: 'page:write', resourceType: 'page', resourceId: params.id });
+  const page = await writablePage(locals, params.id);
+  if (page instanceof Response) return page;
   if ((await getHomePageId()) === page.id) {
     return apiError('home_page');
   }

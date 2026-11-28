@@ -4,11 +4,11 @@
 
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { SessionUser } from '#lib/features/auth/server.ts';
-import { createCollection, getCollection, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
-import { createLinkDocument, getDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { createCollection, getCollection, renameCollection, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { createLinkDocument, getDocument, renameDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
 import { createSpace, getDefaultSpace, setSpaceMembers } from '#lib/features/spaces/server.ts';
 import { setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
-import { createPage, getPage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
+import { createPage, getPage, renamePage, userCanReadPage, userCanWritePage } from '#lib/features/pages/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 
 // Who may change a node, and who may place one in a restricted space
@@ -56,7 +56,9 @@ async function may(what: 'read' | 'write', kind: Kind, id: string, user: Session
   return what === 'read' ? userCanReadCollection(user, collection) : userCanWriteCollection(user, collection);
 }
 
-const spaceOf = async (kind: Kind, id: string) => (kind === 'page' ? await getPage(id) : kind === 'document' ? await getDocument(id) : await getCollection(id))!.space_id;
+const rowOf = async (kind: Kind, id: string) => (kind === 'page' ? await getPage(id) : kind === 'document' ? await getDocument(id) : await getCollection(id))!;
+const spaceOf = async (kind: Kind, id: string) => (await rowOf(kind, id)).space_id;
+const renamed = (kind: Kind, id: string, slug: string) => (kind === 'page' ? renamePage : kind === 'document' ? renameDocument : renameCollection)(id, { slug });
 
 describe('who may change a node', () => {
   it('002.12 a viewer changes no node; an editor changes any node they may read, a document they did not make included', async () => {
@@ -102,7 +104,9 @@ describe('who may change a node', () => {
     const elsewhere = (await getDefaultSpace()).id;
     for (const kind of KINDS) {
       await expect(make(kind, askers.shared, restricted), `an editor who is no member, making a ${kind}`).rejects.toMatchObject(refused);
+      // Its slug is taken there, which is not theirs to learn: the refusal is the same.
       const outside = await make(kind, askers.shared);
+      await renamed(kind, outside, (await rowOf(kind, await make(kind, askers.member, restricted))).slug);
       await expect(setNodeSpace(outside, restricted, askers.shared), `an editor who is no member, moving a ${kind} in`).rejects.toMatchObject(refused);
       expect(await spaceOf(kind, outside), `the ${kind} they could not move`).toBe(elsewhere);
 

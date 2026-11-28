@@ -324,7 +324,7 @@ This is the "why can't I see X" line *and* the probing line, so it has to cover 
 denial path:
 
 1. `requireAction()` — the guard every `/settings` adapter's `load` and every one of its actions already calls (83 call sites across 14 adapters).
-2. `apiForbidden()` — its counterpart for the API, which every `403` in `lib/features/*/routes/api.*.server.ts` now returns. A helper rather than a guard because those checks are per-resource (`userCanWritePage` / `userCanWriteDocument`), so only the caller knows *which* resource was refused; the log line looks identical wherever it came from. It also covers the `SPACE_MEMBERSHIP_REQUIRED` refusals surfaced from the model.
+2. `apiForbidden()` — its counterpart for the API, which every `403` in `lib/features/*/routes/api.*.server.ts` now returns. A helper rather than a guard because those checks are per-resource (`userCanWritePage` / `userCanWriteDocument`), so only the caller knows *which* resource was refused; the log line looks identical wherever it came from. It also covers the `SPACE_MEMBERSHIP_REQUIRED` refusals surfaced from the model. The write gate (`nodes/routes/writable.server.ts`) logs the same line for a write to a node its caller may not read, which it answers as not found ([authorization.md](authorization.md#two-checks)).
 3. `hooks.server.ts`'s unauthenticated gate — `action: 'session:required'`, `userId: 'anon'`.
 4. `src/mcp/registry.ts` — every denial in `tool`/`pageTool`/`documentTool`, plus the MCP bearer-token rejection (`action: 'token:required'`).
 
