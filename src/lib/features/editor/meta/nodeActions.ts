@@ -40,8 +40,8 @@ export function nodeActions(
     onSetManualProperties: (properties) => client.setManualProperties(properties),
     // The class decides which fields render, from the server's definitions,
     // so the data is reloaded; the editor reads `doc` only at mount.
-    async onSetNodeClass(nodeClassId) {
-      const res = await client.setNodeClass(nodeClassId);
+    async onSetNodeClasses(classIds) {
+      const res = await client.setNodeClasses(classIds);
       if (res.ok) await refreshAll();
       return res;
     },

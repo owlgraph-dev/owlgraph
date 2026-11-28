@@ -15,7 +15,7 @@ const labels = {
   classKey: (id: string) => ({ c1: 'article', c2: 'report', c3: 'slip' })[id] ?? null,
   spaceLabel: (id: string) => ({ ns1: 'Default', ns2: 'Team' })[id] ?? null,
 };
-const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classId: 'c1', spaceId: 'ns1', ...over });
+const node = (id: string, over: Partial<GraphNode> = {}): GraphNode => ({ id, title: id, type: 'page', classIds: ['c1'], spaceId: 'ns1', ...over });
 
 describe('buildColorScheme', () => {
   it('colors by type with the fixed page/document colors and a two-entry legend', () => {
@@ -33,23 +33,31 @@ describe('buildColorScheme', () => {
   });
 
   it('assigns class colors by slug and lists only present classes in the legend, by label', () => {
-    const all = [node('a', { classId: 'c3' }), node('b', { classId: 'c1' }), node('c', { classId: 'c2' })];
+    const all = [node('a', { classIds: ['c3'] }), node('b', { classIds: ['c1'] }), node('c', { classIds: ['c2'] })];
     const scheme = buildColorScheme('class', all, labels);
-    expect(scheme.colorOf(node('b', { classId: 'c1' }))).toBe(VIZ_COLORS[0]); // article
-    expect(scheme.colorOf(node('c', { classId: 'c2' }))).toBe(VIZ_COLORS[1]); // report
-    expect(scheme.colorOf(node('a', { classId: 'c3' }))).toBe(VIZ_COLORS[2]); // slip
+    expect(scheme.colorOf(node('b', { classIds: ['c1'] }))).toBe(VIZ_COLORS[0]); // article
+    expect(scheme.colorOf(node('c', { classIds: ['c2'] }))).toBe(VIZ_COLORS[1]); // report
+    expect(scheme.colorOf(node('a', { classIds: ['c3'] }))).toBe(VIZ_COLORS[2]); // slip
     const legend = scheme.legend([all[0], all[1]]);
     expect(legend.map((e) => e.label)).toEqual(['Artikel', 'Zettel']);
     expect(legend[1].color).toBe(VIZ_COLORS[2]); // its own slot, not its rank among the visible
   });
 
   it('keeps every class on its colour when the labels change with the locale', () => {
-    const all = [node('a', { classId: 'c1' }), node('b', { classId: 'c2' }), node('c', { classId: 'c3' })];
+    const all = [node('a', { classIds: ['c1'] }), node('b', { classIds: ['c2'] }), node('c', { classIds: ['c3'] })];
     const german = buildColorScheme('class', all, labels);
     // These labels sort in a different order.
     const english = buildColorScheme('class', all, { ...labels, classLabel: (id: string) => ({ c1: 'Zebra article', c2: 'A report', c3: 'Memo' })[id] ?? null });
     expect(all.map((n) => english.colorOf(n))).toEqual(all.map((n) => german.colorOf(n)));
     expect(english.legend(all).map((e) => e.label)).toEqual(['A report', 'Memo', 'Zebra article']);
+  });
+
+  it('gives a node with several classes the colour and the legend entry of that combination, its classes in any order', () => {
+    const all = [node('a', { classIds: ['c1'] }), node('b', { classIds: ['c2', 'c1'] }), node('c', { classIds: ['c1', 'c2'] })];
+    const scheme = buildColorScheme('class', all, labels);
+    expect(scheme.colorOf(all[1])).toBe(scheme.colorOf(all[2]));
+    expect(scheme.colorOf(all[1])).not.toBe(scheme.colorOf(all[0]));
+    expect(scheme.legend(all).map((e) => e.label)).toEqual(['Artikel', 'Artikel + Bericht']);
   });
 
   it('folds categories beyond the palette into "other"', () => {
@@ -63,8 +71,8 @@ describe('buildColorScheme', () => {
   });
 
   it('treats a node without the dimension as "other"', () => {
-    const scheme = buildColorScheme('class', [node('a', { classId: undefined })], labels);
-    expect(scheme.colorOf(node('a', { classId: undefined }))).toBe(OTHER_COLOR);
-    expect(scheme.legend([node('a', { classId: undefined })]).map((e) => e.label)).toEqual(['Andere']);
+    const scheme = buildColorScheme('class', [node('a', { classIds: undefined })], labels);
+    expect(scheme.colorOf(node('a', { classIds: undefined }))).toBe(OTHER_COLOR);
+    expect(scheme.legend([node('a', { classIds: undefined })]).map((e) => e.label)).toEqual(['Andere']);
   });
 });

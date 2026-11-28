@@ -35,8 +35,7 @@ const nodeHit = (overrides: Record<string, unknown> = {}) => ({
   updatedAt: '2026-01-02T00:00:00.000Z',
   spaceId: 'ns-1',
   createdBy: 'user-1',
-  classId: 'class-1',
-  className: 'Work package',
+  classes: [{ id: 'class-1', slug: 'work-package', name: 'Work package', kind: 'domain' as const }],
   externalUrl: null,
   locale: 'en',
   ...overrides
@@ -138,6 +137,20 @@ describe('resolveQueryBlocks()', () => {
     expect(mockedGetNodeProperties).toHaveBeenCalledWith('p1');
     expect(mockedResolveSpaceLabels).toHaveBeenCalledWith(['ns-1']);
     expect(mockedResolveUserLabels).toHaveBeenCalledWith(['user-1']);
+  });
+
+  it('a node with several classes binds their names, comma-joined in their order', async () => {
+    mockedGetNodes.mockResolvedValue([
+      nodeHit({
+        classes: [
+          { id: 'class-1', slug: 'report', name: 'Report', kind: 'domain' },
+          { id: 'class-2', slug: 'work-package', name: 'Work package', kind: 'domain' },
+        ],
+      }),
+    ]);
+    const doc = { type: 'doc', content: [queryBlockNode('a')] };
+    const result = await resolveQueryBlocks(doc, null, PAGE_ID);
+    expect(result.a).toMatchObject({ state: 'ok', items: [{ classLabel: 'Report, Work package' }] });
   });
 
   it('a null createdBy resolves to an empty creatorLabel, without calling resolveUserLabels for it', async () => {

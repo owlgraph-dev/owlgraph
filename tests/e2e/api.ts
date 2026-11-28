@@ -48,7 +48,7 @@ export async function createPage(request: APIRequestContext, setup: PageSetup = 
   return { id, slug: ((await patched.json()) as { slug?: string }).slug ?? slug };
 }
 
-/** Changes a node through the page API (title, tags, properties, visibility, nodeClassId, …). */
+/** Changes a node through the page API (title, tags, properties, visibility, classIds, …). */
 export async function patchPage(request: APIRequestContext, id: string, data: Record<string, unknown>): Promise<void> {
   expect((await request.patch(`/api/pages/${id}`, { data })).ok(), `patch page ${Object.keys(data).join(', ')}`).toBe(true);
 }

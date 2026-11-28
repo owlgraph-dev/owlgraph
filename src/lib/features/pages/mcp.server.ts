@@ -25,6 +25,7 @@ import {
   setPageSettings,
 } from '#lib/features/pages/server.ts';
 import { setNodeLocale } from '#lib/features/nodes/server.ts';
+import { getNodeClassRefs } from '#lib/features/semantic/server.ts';
 import { listPageLayoutPresets } from './pageLayoutPresets.server';
 import { pageAttrsOf, pageColumnsOf, pageGround, pageGutter, pageWidth, CUSTOM_PRESET_ID, STANDARD_PRESET_ID, EMBED_KINDS } from '#lib/features/content/index.ts';
 import { presetName, resolvePageLayoutPreset } from './pageLayoutPresets';
@@ -136,7 +137,7 @@ export function registerPageTools({ user, log, tool, pageTool }: ToolRegistry): 
     {
       title: 'Get page',
       description:
-        "Return a page title, its content language (locale: the language the content is in, e.g. 'de' — see set_page_locale), its colour scheme (contentScheme: 'light' | 'dark' | 'adaptive', or null for the site default — see set_page_content_scheme), its own page settings (settings: layout — the id of the site's page layout its values came from, 'standard' for a flow or 'custom' — with layoutLabel and layoutCustomized (true when the page's values differ from that layout's), its columns and columnGap on a columns page, readWidth, wideWidth, gutters per tier, background, blockSpace — each 'auto' when the page follows the site; see set_page_layout) and its blocks (id, type, preview). Use block ids with update_block / delete_block.",
+        "Return a page title, its classes (every class it has: id, slug, name — see the schema tool's class catalog), its content language (locale: the language the content is in, e.g. 'de' — see set_page_locale), its colour scheme (contentScheme: 'light' | 'dark' | 'adaptive', or null for the site default — see set_page_content_scheme), its own page settings (settings: layout — the id of the site's page layout its values came from, 'standard' for a flow or 'custom' — with layoutLabel and layoutCustomized (true when the page's values differ from that layout's), its columns and columnGap on a columns page, readWidth, wideWidth, gutters per tier, background, blockSpace — each 'auto' when the page follows the site; see set_page_layout) and its blocks (id, type, preview). Use block ids with update_block / delete_block.",
       inputSchema: { pageId: z.string() },
     },
     'read',
@@ -162,12 +163,12 @@ export function registerPageTools({ user, log, tool, pageTool }: ToolRegistry): 
         blockSpace: own.spacing.desktop?.blockSpace ?? 'auto',
       };
       // Embedded nodes are named as the agent may read them.
-      const [blocks, collections, documents] = await Promise.all([listBlocks(page.id), resolveCollectionBlocks(page.doc, user, log), resolveDocumentBlocks(page.doc, user, log)]);
+      const [blocks, collections, documents, classes] = await Promise.all([listBlocks(page.id), resolveCollectionBlocks(page.doc, user, log), resolveDocumentBlocks(page.doc, user, log), getNodeClassRefs(page.id)]);
       const described = blocks.map((block) => {
         const id = String(block.blockId);
         return collections[id] ? { ...block, preview: collectionPreview(collections[id]) } : documents[id] ? { ...block, preview: documentPreview(documents[id]) } : block;
       });
-      return text(JSON.stringify({ title: page.title, locale: page.locale, contentScheme: page.content_scheme, settings, blocks: described }, null, 2));
+      return text(JSON.stringify({ title: page.title, classes: classes.map(({ id, slug, name }) => ({ id, slug, name })), locale: page.locale, contentScheme: page.content_scheme, settings, blocks: described }, null, 2));
     }
   );
 

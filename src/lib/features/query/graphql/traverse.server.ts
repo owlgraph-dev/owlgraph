@@ -59,8 +59,7 @@ export async function traverse(user: SessionUser | null, args: TraverseArgs): Pr
     updatedAt: n.updatedAt,
     spaceId: n.spaceId,
     createdBy: n.createdBy,
-    classId: n.classId,
-    className: n.className,
+    classes: n.classes,
     externalUrl: n.externalUrl,
     locale: n.locale
   }));

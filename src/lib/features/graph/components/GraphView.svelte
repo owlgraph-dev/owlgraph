@@ -289,7 +289,9 @@
   // A hover wins while it lasts, the sticky selection otherwise.
   const activeId = $derived(hovered ?? selectedId);
   const selected = $derived(selectedId ? (pos.get(selectedId) ?? null) : null);
-  const selectedClassLabel = $derived(selected?.classId ? (classOptions.find((c) => c.id === selected.classId)?.label ?? null) : null);
+  const selectedClassLabel = $derived(
+    (selected?.classIds ?? []).map((id) => classOptions.find((c) => c.id === id)?.label ?? null).filter((l): l is string => l != null).join(', ') || null
+  );
   const selectedSpaceName = $derived(selected?.spaceId ? (spaces.find((ns) => ns.id === selected.spaceId)?.name ?? null) : null);
   // In the wrapper's CSS pixels. The card hangs below the node (its label sits
   // to the right) and flips above near the bottom edge.

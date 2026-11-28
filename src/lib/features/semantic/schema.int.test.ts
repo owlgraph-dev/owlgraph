@@ -14,7 +14,7 @@ import {
   getNodeClassFields,
   listNodeClasses,
   setManualProperties,
-  setNodeClass,
+  setNodeClasses,
   upsertNodeClass,
   upsertPropertyDefinition,
   upsertPropertyGroup,
@@ -66,15 +66,15 @@ describe('the class catalog', () => {
     await expect(refused).rejects.toMatchObject({ code: 'reserved_key', message: expect.stringContaining('reserved') });
   });
 
-  it('refuses to delete a class while a node carries it, counting the node meanwhile, and deletes it once the node is reset to its type', async () => {
+  it('refuses to delete a class while a node has it, counting the node meanwhile, and deletes it once the node is back to its type', async () => {
     const cls = await domainClass('assigned', await typeId('page'));
     const page = await createPage(`Assigned ${n}`, await userOf('admin'), { visibility: 'restricted' });
-    await setNodeClass(page.id, cls.id);
+    await setNodeClasses(page.id, [cls.id]);
 
     await expect(deleteNodeClass(cls.id)).rejects.toMatchObject({ code: 'class_in_use', message: 'Cannot delete a class that is still assigned to nodes.' });
     expect((await rowOf(cls.slug))?.node_count).toBe(1);
 
-    expect((await setNodeClass(page.id, null)).slug).toBe('page');
+    expect((await setNodeClasses(page.id, [])).map((c) => c.slug)).toEqual(['page']);
     expect((await rowOf(cls.slug))?.node_count).toBe(0);
     await deleteNodeClass(cls.id);
     expect(await rowOf(cls.slug)).toBeUndefined();
@@ -106,7 +106,7 @@ describe('moving a class', () => {
     }
 
     const page = await createPage(`Carries the child ${n}`, await userOf('admin'), { visibility: 'restricted' });
-    await setNodeClass(page.id, child.id);
+    await setNodeClasses(page.id, [child.id]);
     await expect(move(await typeId('document'))).rejects.toMatchObject({
       code: 'class_reparent_blocked',
       message: 'Cannot move this class under a different node type while nodes still carry it or one of its subclasses.',
@@ -119,7 +119,7 @@ describe('moving a class', () => {
     }
 
     // Nothing carries it any more: it moves, its subtree with it.
-    await setNodeClass(page.id, null);
+    await setNodeClasses(page.id, []);
     await move(await typeId('document'));
     expect(await rowOf(parent.slug)).toMatchObject({ parent_slug: 'document', node_type: 'document' });
     expect(await rowOf(child.slug)).toMatchObject({ parent_slug: parent.slug, node_type: 'document' });
@@ -131,11 +131,11 @@ describe('fields on a classified node', () => {
     const parent = await domainClass('fields-parent', await typeId('page'), 'core');
     const child = await domainClass('fields-child', parent.id, 'edge');
     const page = await corePage();
-    await setNodeClass(page.id, child.id);
+    await setNodeClasses(page.id, [child.id]);
 
     // What the page properties dialog renders.
-    const fields = (await getNodeClassFields(child.id))!;
-    expect(fields.nodeClass).toMatchObject({ id: child.id, label: child.label });
+    const fields = (await getNodeClassFields(page.id))!;
+    expect(fields.classes).toMatchObject([{ id: child.id, label: child.label }]);
     expect(fields.groups.map((g) => [g.slug, g.fromClass.id, g.fromClass.label])).toEqual([
       ['edge', child.id, child.label],
       ['core', parent.id, parent.label],
@@ -152,6 +152,22 @@ describe('fields on a classified node', () => {
     const excluded = subtreeOf(catalog, parent.id);
     expect([...excluded].sort()).toEqual([parent.id, child.id].sort());
     expect(excluded.has(await typeId('page'))).toBe(false);
+  });
+
+  it('gives a node with several classes the groups of each, a group their chains share once, and names each group after the class that carries it', async () => {
+    const shared = await domainClass('fields-shared', await typeId('page'), 'core');
+    const left = await domainClass('fields-left', shared.id, 'edge');
+    const right = await domainClass('fields-right', shared.id);
+    const page = await corePage();
+    await setNodeClasses(page.id, [left.id, right.id]);
+
+    const fields = (await getNodeClassFields(page.id))!;
+    expect(fields.classes.map((c) => c.id).sort()).toEqual([left.id, right.id].sort());
+    expect(fields.groups.map((g) => [g.slug, g.fromClass.id])).toEqual([
+      ['edge', left.id],
+      ['core', shared.id],
+    ]);
+    expect(fields.definitions.filter((d) => d.name === 'core:status')).toHaveLength(1);
   });
 });
 

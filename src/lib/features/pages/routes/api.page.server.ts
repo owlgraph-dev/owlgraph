@@ -10,7 +10,7 @@ import { saveDoc, renamePage, setPageVisibility, setPageSpace, setPageContentSch
 import { getHomePageId } from '#lib/features/site/server.ts';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
-import { setNodeClass } from '#lib/features/semantic/server.ts';
+import { setNodeClasses } from '#lib/features/semantic/server.ts';
 import { setNodeLocale, setNodeShares } from '#lib/features/nodes/server.ts';
 import { getLock } from '#lib/features/pages/server.ts';
 import { isContentScheme } from '#lib/features/content/index.ts';
@@ -107,9 +107,10 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       await setPageSpace(params.id, body.spaceId, locals.user);
       out.spaceId = body.spaceId;
     }
-    // null resets to the page's type class; echoes the resolved id.
-    if (body.nodeClassId === null || typeof body.nodeClassId === 'string') {
-      out.nodeClassId = (await setNodeClass(params.id, body.nodeClassId)).id;
+    // Every class the page has, none for its type alone; echoes what it states.
+    if (Array.isArray(body.classIds)) {
+      if (!body.classIds.every((id: unknown) => typeof id === 'string')) return apiError('invalid_request', { field: 'classIds' });
+      out.classIds = (await setNodeClasses(params.id, body.classIds)).map((c) => c.id);
     }
     // An enabled language; reindexes this node's search only (docs/architecture/languages.md).
     if (typeof body.locale === 'string') {

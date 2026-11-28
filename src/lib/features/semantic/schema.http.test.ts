@@ -32,29 +32,34 @@ const fieldValue = (document: Document, label: string) => {
   return found?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea')?.value;
 };
 
-describe.skipIf(app.skipped)('a node’s class, through the page API', () => {
+describe.skipIf(app.skipped)('a node’s classes, through the page API', () => {
   const served = app as ServedApp;
-  const patch = (id: string, nodeClassId: string | null) => call(served, `/api/pages/${id}`, { as: 'admin', method: 'PATCH', json: { nodeClassId } });
+  const patch = (id: string, classIds: unknown) => call(served, `/api/pages/${id}`, { as: 'admin', method: 'PATCH', json: { classIds } });
 
-  it('an unknown class id answers 400', async () => {
+  it('an unknown class id answers 400 class_not_found, and a list of anything but ids 400 invalid_request', async () => {
     const { id } = await createPage(served, 'admin', { visibility: 'restricted' });
-    expect((await patch(id, '00000000-0000-0000-0000-000000000000')).status).toBe(400);
+    const unknown = await patch(id, ['00000000-0000-0000-0000-000000000000']);
+    expect(unknown.status).toBe(400);
+    expect(((await unknown.json()) as { error: { code: string } }).error.code).toBe('class_not_found');
+    const malformed = await patch(id, [42]);
+    expect(malformed.status).toBe(400);
+    expect(((await malformed.json()) as { error: { code: string } }).error.code).toBe('invalid_request');
   });
 
-  it('a document class answers 400 class_type_mismatch, and null resets the page to the page type', async () => {
+  it('a document class answers 400 class_type_mismatch, and an empty list leaves the page its page type alone', async () => {
     const slug = unique('http-docclass');
     const saved = await formAction(served, '/settings/schema/classes?/save', { slug, 'label.en': 'HTTP document class', parentId: await typeId('document'), propertyGroup: '' }, { as: 'admin' });
     expect(saved.type, JSON.stringify(saved.data)).toBe('success');
     const [docClass] = await db<{ id: string }[]>`select id from node_classes where slug = ${slug}`;
     const { id } = await createPage(served, 'admin', { visibility: 'restricted' });
 
-    const mismatch = await patch(id, docClass.id);
+    const mismatch = await patch(id, [docClass.id]);
     expect(mismatch.status).toBe(400);
     expect(((await mismatch.json()) as { error: { code: string } }).error.code).toBe('class_type_mismatch');
 
-    const reset = await patch(id, null);
+    const reset = await patch(id, []);
     expect(reset.status).toBe(200);
-    expect(((await reset.json()) as { nodeClassId: string }).nodeClassId).toBe(await typeId('page'));
+    expect(((await reset.json()) as { classIds: string[] }).classIds).toEqual([await typeId('page')]);
   });
 });
 
@@ -106,7 +111,7 @@ describe.skipIf(app.skipped)('a document’s fields', () => {
 
   it('carry the documents group through the document node type: its class is Document, and its Author value is kept and shown', async () => {
     const doc = await document('admin', [{ name: 'documents:author', value: 'Ada Lovelace' }]);
-    const [{ slug }] = await db<{ slug: string }[]>`select c.slug from nodes n join node_classes c on c.id = n.class_id where n.id = ${doc.id}`;
+    const [{ slug }] = await db<{ slug: string }[]>`select c.slug from node_class_statements s join node_classes c on c.id = s.class_id where s.node_id = ${doc.id}`;
     expect(slug).toBe('document');
 
     const editor = await dom(await call(served, `/${doc.slug}/edit`, { as: 'admin', headers: EN }));

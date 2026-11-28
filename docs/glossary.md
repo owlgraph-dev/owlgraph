@@ -97,9 +97,10 @@ tokens instead ([Design system](architecture/design-system/overview.md)).
 
 ### Class
 
-In the semantic layer, a node's place in the class hierarchy, which decides
-its node type and the fields it carries
-([semantic-layer.md](architecture/semantic-layer.md#the-class-hierarchy)). Not
+In the semantic layer, a kind of thing a node is: a place in the class
+hierarchy that decides the fields the node carries. A node has any number of
+classes, all of its node type
+([semantic-layer.md](architecture/semantic-layer.md#a-nodes-classes)). Not
 a CSS class.
 
 ### Collection
@@ -221,13 +222,13 @@ lane under an extreme brand colour ([testing.md](guides/testing.md#lanes)).
 ### Node
 
 Anything in the graph: a page, a document, a collection, or a node of any
-other class. Its node type is derived from its class
-([semantic-layer.md](architecture/semantic-layer.md)).
+other class. Its node type is its own, and every class it has is one of that
+type ([semantic-layer.md](architecture/semantic-layer.md)).
 
 ### Node type
 
 Two names that look alike. A node's **node type** (page, document,
-collection) is derived from its class. A block's **node type** is the name its
+collection) is set when it is made and bounds its classes. A block's **node type** is the name its
 page's document stores it under (`quickLink`, `gridCell`)
 ([the block name map](architecture/blocks/overview.md#the-block-name-map)).
 

@@ -289,8 +289,8 @@ chain above, the request's interface language when the argument is omitted —
 and `labels: [LocalizedString!]!`, every translation there is
 (`description`/`descriptions`, `inverseLabel`/`inverseLabels` likewise). The
 `Locale` enum lists the supported languages (`EN`, `DE`). A result node
-carries `locale: Locale!` (its content language) and `className`, a
-convenience string in the interface language; `LOCALE` is an intrinsic filter
+carries `locale: Locale!` (its content language) and its `classes`, each
+named by a convenience string in the interface language; `LOCALE` is an intrinsic filter
 field. The `search` query reads the text in every content language.
 
 **MCP.** Catalogue entries (`list_property_definitions`, the `schema` tool's

@@ -6,11 +6,13 @@
 //   L0  node                         kind 'root'    abstract, never assigned
 //   L1  page, document, collection   kind 'type'    the node types
 //   L2+ domain classes               kind 'domain'  admin-defined, any depth
-// nodes.type caches the class's L1 slug and composite FKs keep the two in step,
-// so the rules below are friendly errors over what the database enforces anyway.
+// A node states any number of classes (node_class_statements), all of its own
+// type: composite FKs hold a statement's type to its node's and its class's, so
+// the rules below are friendly errors over what the database enforces anyway.
 import { db, type TxSql } from '#lib/platform/db.server.ts';
+import { isUuid } from '#lib/features/nodes/index.ts';
 import { readableNodes, type NodeType } from '#lib/features/nodes/server.ts';
-import { localize, compareLabels, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { labelCache, localize, compareLabels, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
 import { localizedJson, parseLocalizedText } from '#lib/platform/i18n/localizedText.server.ts';
 import { NAME_RE } from './properties.server';
 import { PARAMETER_GROUP, mergeChainDefinitions } from './propertyGroups';
@@ -18,7 +20,7 @@ import { orderClassTree } from './nodeClassTree';
 import { localizeDefinition } from './localizeSchema';
 import { ROOT_CLASS_SEED, TYPE_CLASS_SEEDS } from './schemaSeeds.server';
 import { nodePath } from '#lib/features/nodes/index.ts';
-import type { ClassFields, ClassFieldGroup, NodeClassKind, NodeClassOption } from './nodeClass';
+import type { ClassFields, ClassFieldGroup, NodeClassKind, NodeClassOption, NodeClassRef } from './nodeClass';
 import { CodedError } from '#lib/platform/codedError.ts';
 
 export const ROOT_CLASS_SLUG = 'node';
@@ -80,7 +82,7 @@ export async function listNodeClasses(): Promise<NodeClassListRow[]> {
       from node_classes c join tree on c.parent_id = tree.id
     )
     select ${db.unsafe(CLASS_COLUMNS)}, tree.depth,
-           (select count(*)::int from nodes n where n.class_id = c.id) as node_count,
+           (select count(*)::int from node_class_statements s where s.class_id = c.id) as node_count,
            o.title as overview_title, o.slug as overview_slug, ons.slug as overview_space_slug,
            p.slug as parent_slug
     from node_classes c
@@ -115,7 +117,7 @@ export async function getNodeClassBySlug(slug: string): Promise<NodeClassRow | n
 export async function listClassIdsInUse(user: { id: string; role: string } | null): Promise<Set<string>> {
   const rows = await db<{ id: string }[]>`
     with recursive used as (
-      select distinct n.class_id as id from nodes n where ${readableNodes(user, 'n')}
+      select distinct s.class_id as id from node_class_statements s join nodes n on n.id = s.node_id where ${readableNodes(user, 'n')}
       union
       select c.parent_id from node_classes c join used on used.id = c.id where c.parent_id is not null
     )
@@ -123,7 +125,7 @@ export async function listClassIdsInUse(user: { id: string; role: string } | nul
   return new Set(rows.map((r) => r.id));
 }
 
-// What new nodes are classified with and setNodeClass(null) resets to. Missing
+// What a new node states, and a node with no class of its own has. Missing
 // means an unmigrated database, or a test truncate without ensureCoreClasses.
 export async function getTypeClass(sql: TxSql, type: NodeType): Promise<NodeClassRow> {
   const [row] = await sql<NodeClassRow[]>`select ${sql.unsafe(CLASS_COLUMNS)} from node_classes c where c.kind = 'type' and c.slug = ${type}`;
@@ -184,8 +186,8 @@ async function validateClassRefs(sql: TxSql, propertyGroup: string | null, overv
 
 // Creates only domain classes, whose parent fixes the node type they may be
 // assigned to. A core class keeps its slug, kind and parent; the rest stays
-// editable. A move to another node type is refused (nodes_class_type_fkey) once
-// any node carries the subtree: a page can't become a document by moving its class.
+// editable. A move to another node type is refused (node_class_statements_class_type_fkey)
+// once any node has the subtree: a page can't become a document by moving its class.
 export async function upsertNodeClass(def: {
   id?: string | null;
   slug: string;
@@ -247,7 +249,7 @@ export async function upsertNodeClass(def: {
   } catch (e) {
     const err = e as Error & { code?: string; constraint_name?: string };
     if (err.code === '23505') throw new CodedError('class_slug_taken', 'A class with that key already exists.');
-    if (isFkViolationOn(err, 'nodes_class_type_fkey')) {
+    if (isFkViolationOn(err, 'node_class_statements_class_type_fkey')) {
       throw new CodedError('class_reparent_blocked', 'Cannot move this class under a different node type while nodes still carry it or one of its subclasses.');
     }
     throw e;
@@ -284,7 +286,7 @@ export async function deleteNodeClass(id: string): Promise<void> {
     }
   } catch (e) {
     const err = e as Error & { code?: string; constraint_name?: string };
-    if (isFkViolationOn(err, 'nodes_class_id_fkey', 'nodes_class_type_fkey')) {
+    if (isFkViolationOn(err, 'node_class_statements_class_fkey', 'node_class_statements_class_type_fkey')) {
       throw new CodedError('class_in_use', 'Cannot delete a class that is still assigned to nodes.');
     }
     if (isFkViolationOn(err, 'node_classes_parent_id_fkey', 'node_classes_parent_kind_fkey', 'node_classes_parent_node_type_fkey')) {
@@ -294,51 +296,111 @@ export async function deleteNodeClass(id: string): Promise<void> {
   }
 }
 
-// null resets to the node's own type: there is no unclassified state. An
+// Replaces the node's classes with `classIds`, each once. A node with no class
+// of its own has its type class until the type classes go, so an empty list
+// states that one, and beside any other class the type class is dropped. An
 // ordinary node write, gated by the caller, not by class:manage. Property
-// values stay; a class only changes which groups render as fields.
-export async function setNodeClass(id: string, classId: string | null): Promise<NodeClassRow> {
+// values and relationships stay: a class only changes which groups render as
+// fields (docs/features/006-semantic-layer.md, criterion 6).
+export async function setNodeClasses(id: string, classIds: readonly string[]): Promise<NodeClassRow[]> {
+  const ids = [...new Set(classIds)];
+  if (!ids.every(isUuid)) throw new CodedError('class_not_found', 'Unknown class');
   return db.begin(async (sql) => {
     const [node] = await sql<{ type: NodeType }[]>`select type from nodes where id = ${id} for update`;
     if (!node) throw new CodedError('not_found', 'Not found');
-    const target = classId === null ? await getTypeClass(sql, node.type) : await getNodeClass(classId, sql);
-    if (!target) throw new CodedError('class_not_found', 'Unknown class');
-    if (target.kind === 'root') throw new CodedError('class_not_assignable', 'The root class is abstract and cannot be assigned.');
-    if (target.node_type !== node.type) {
-      throw new CodedError('class_type_mismatch', `"${localize(target.label, target.slug)}" is a ${target.node_type} class and cannot be assigned to a ${node.type}.`);
+    const found = ids.length ? await sql<NodeClassRow[]>`select ${sql.unsafe(CLASS_COLUMNS)} from node_classes c where c.id = any(${ids}::uuid[])` : [];
+    if (found.length !== ids.length) throw new CodedError('class_not_found', 'Unknown class');
+    for (const target of found) {
+      if (target.kind === 'root') throw new CodedError('class_not_assignable', 'The root class is abstract and cannot be assigned.');
+      if (target.node_type !== node.type) {
+        throw new CodedError('class_type_mismatch', `"${localize(target.label, target.slug)}" is a ${target.node_type} class and cannot be assigned to a ${node.type}.`);
+      }
     }
-    await sql`update nodes set class_id = ${target.id}, type = ${target.node_type}, updated_at = now() where id = ${id}`;
-    return target;
+    const own = found.filter((c) => c.kind === 'domain');
+    const stated = own.length ? own : [await getTypeClass(sql, node.type)];
+    await sql`delete from node_class_statements where node_id = ${id}`;
+    for (const c of stated) await sql`insert into node_class_statements (node_id, class_id, node_type) values (${id}, ${c.id}, ${node.type})`;
+    await sql`update nodes set updated_at = now() where id = ${id}`;
+    return stated;
   });
 }
 
-// The union of every property group on the class chain, the own class first;
-// on a collision the nearer class wins (docs/architecture/semantic-layer.md). Labels are
-// resolved here, for the request's locale.
-export async function getNodeClassFields(classId: string | null | undefined): Promise<ClassFields | null> {
-  if (!classId) return null;
-  const chain = await db<(NodeClassRow & { distance: number; group_label: LocalizedText | null; overview_slug: string | null; overview_space_slug: string | null })[]>`
+// A node's classes as a list query selects them, `as classes`, for the node
+// under `alias`: read with toClassRefs. A node with none selects an empty list.
+const ALIAS_RE = /^[a-z_][a-z0-9_]*$/i;
+export function nodeClassesColumn(alias = 'n'): string {
+  if (!ALIAS_RE.test(alias)) throw new Error('nodeClassesColumn: invalid alias');
+  return `coalesce((select json_agg(json_build_object('id', c.id, 'slug', c.slug, 'label', c.label, 'kind', c.kind) order by c.slug)
+    from node_class_statements s join node_classes c on c.id = s.class_id where s.node_id = ${alias}.id), '[]'::json) as classes`;
+}
+
+// The ids of a node's classes, `as class_ids`, for the node under `alias`: what
+// the graph filters and colours by.
+export function nodeClassIdsColumn(alias = 'n'): string {
+  if (!ALIAS_RE.test(alias)) throw new Error('nodeClassIdsColumn: invalid alias');
+  return `array(select s.class_id from node_class_statements s where s.node_id = ${alias}.id order by s.class_id) as class_ids`;
+}
+
+/** A class as nodeClassesColumn selects it. */
+export interface StoredClassRef {
+  id: string;
+  slug: string;
+  label: LocalizedText;
+  kind: NodeClassKind;
+}
+
+/** Named in the request's language, in the order of their names. */
+export function toClassRefs(stored: readonly StoredClassRef[], label = labelCache()): NodeClassRef[] {
+  return stored
+    .map((c) => ({ id: c.id, slug: c.slug, name: label(c.slug, c.label), kind: c.kind }))
+    .sort((a, b) => compareLabels(a.name, b.name) || a.slug.localeCompare(b.slug));
+}
+
+/** Every class a node has, named in the request's language. */
+export async function getNodeClassRefs(nodeId: string): Promise<NodeClassRef[]> {
+  const [row] = await db<{ classes: StoredClassRef[] }[]>`select ${db.unsafe(nodeClassesColumn())} from nodes n where n.id = ${nodeId}`;
+  return toClassRefs(row?.classes ?? []);
+}
+
+// The union of every property group on the chains of the node's classes: each
+// class's own first, then its ancestors', a group once, the nearer winning
+// (docs/architecture/semantic-layer.md). Null for a node with no class. Labels
+// are resolved here, for the request's locale.
+export async function getNodeClassFields(nodeId: string): Promise<ClassFields | null> {
+  const chain = await db<(NodeClassRow & { start_id: string; distance: number; group_label: LocalizedText | null; overview_slug: string | null; overview_space_slug: string | null })[]>`
     with recursive up as (
-      select c.id, c.parent_id, 0 as distance from node_classes c where c.id = ${classId}
+      select s.class_id as start_id, c.id, c.parent_id, 0 as distance
+      from node_class_statements s join node_classes c on c.id = s.class_id where s.node_id = ${nodeId}
       union all
-      select c.id, c.parent_id, up.distance + 1 from node_classes c join up on c.id = up.parent_id
+      select up.start_id, c.id, c.parent_id, up.distance + 1 from node_classes c join up on c.id = up.parent_id
     )
-    select ${db.unsafe(CLASS_COLUMNS)}, up.distance, g.label as group_label, o.slug as overview_slug, ons.slug as overview_space_slug
+    select ${db.unsafe(CLASS_COLUMNS)}, up.start_id, up.distance, g.label as group_label, o.slug as overview_slug, ons.slug as overview_space_slug
     from up
     join node_classes c on c.id = up.id
     left join property_groups g on g.slug = c.property_group
     left join nodes o on o.id = c.overview_node_id
     left join spaces ons on ons.id = o.space_id
     order by up.distance`;
-  const own = chain[0];
-  if (!own) return null;
-  const groups: ClassFieldGroup[] = chain
-    .filter((c) => c.property_group)
+  const own = chain.filter((c) => c.distance === 0);
+  if (own.length === 0) return null;
+  const classes = own
     .map((c) => ({
-      slug: c.property_group!,
-      label: localize(c.group_label, c.property_group!),
-      fromClass: { id: c.id, slug: c.slug, label: localize(c.label, c.slug) },
-    }));
+      // A chain runs own class -> root, so its length - 1 is the depth.
+      ...toNodeClassOption(c, chain.filter((r) => r.start_id === c.id).length - 1),
+      overviewPath: c.overview_slug ? nodePath(c.overview_space_slug, c.overview_slug) : null,
+    }))
+    .sort((a, b) => compareLabels(a.label, b.label) || a.slug.localeCompare(b.slug));
+  const groups: ClassFieldGroup[] = [];
+  for (const cls of classes) {
+    for (const c of chain.filter((r) => r.start_id === cls.id && r.property_group)) {
+      if (groups.some((g) => g.slug === c.property_group)) continue;
+      groups.push({
+        slug: c.property_group!,
+        label: localize(c.group_label, c.property_group!),
+        fromClass: { id: c.id, slug: c.slug, label: localize(c.label, c.slug) },
+      });
+    }
+  }
   const rows = groups.length
     ? await db<{ name: string; label: LocalizedText; datatype: string; description: LocalizedText; group: string }[]>`
         select name, label, datatype, description, group_slug as "group" from property_definitions
@@ -346,13 +408,5 @@ export async function getNodeClassFields(classId: string | null | undefined): Pr
     : [];
   const defs = rows.map((d) => localizeDefinition(d));
   const definitions = mergeChainDefinitions(groups.map((g) => ({ slug: g.slug, definitions: defs.filter((d) => d.group === g.slug) })));
-  return {
-    nodeClass: {
-      // The chain runs own class -> root, so its length - 1 is the depth.
-      ...toNodeClassOption(own, chain.length - 1),
-      overviewPath: own.overview_slug ? nodePath(own.overview_space_slug, own.overview_slug) : null,
-    },
-    groups,
-    definitions,
-  };
+  return { classes, groups, definitions };
 }

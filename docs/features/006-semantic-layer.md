@@ -1,8 +1,8 @@
 ---
-status: ready
+status: in-progress
 issue:
 adrs: ['0001', '0002', '0020', '0021', '0024', '0026', '0027', '0028']
-updated: 2026-11-25
+updated: 2026-11-28
 ---
 
 # 006. The semantic layer
@@ -276,4 +276,8 @@ None blocks the work.
 
 ## Implementation notes
 
-None yet.
+- 006.6 holds but for "or none" while the node types are classes: a node with
+  no class of its own has its node type's class, and the classes it can be
+  given are those under its type. Decision 0026 retires the type classes.
+- 006.9 is proven for the classes a node states. Nothing is inferred yet, so
+  no class is marked as inferred.

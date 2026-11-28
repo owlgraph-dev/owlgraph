@@ -9,7 +9,7 @@ import { writableDocument } from '#lib/features/nodes/routes/writable.server.ts'
 import { documentEmbed, renameDocument, refreshDocumentSearchMeta, clearDocumentLocaleSuggestion } from '#lib/features/documents/server.ts';
 import { setNodeTags } from '#lib/features/semantic/server.ts';
 import { setManualProperties } from '#lib/features/semantic/server.ts';
-import { setNodeClass } from '#lib/features/semantic/server.ts';
+import { setNodeClasses } from '#lib/features/semantic/server.ts';
 import { deleteNode, setNodeLocale, setNodeShares, setNodeSpace, setNodeVisibility } from '#lib/features/nodes/server.ts';
 import { isUuid, type Visibility } from '#lib/features/nodes/index.ts';
 import type { RequestHandler } from '@sveltejs/kit';
@@ -82,9 +82,10 @@ export const PATCH: RequestHandler<Params> = async ({ params, request, locals })
       await setNodeSpace(params.id, body.spaceId, locals.user);
       out.spaceId = body.spaceId;
     }
-    // null resets to the document type class.
-    if (body.nodeClassId === null || typeof body.nodeClassId === 'string') {
-      out.nodeClassId = (await setNodeClass(params.id, body.nodeClassId)).id;
+    // As PATCH /api/pages/[id] takes them.
+    if (Array.isArray(body.classIds)) {
+      if (!body.classIds.every((id: unknown) => typeof id === 'string')) return apiError('invalid_request', { field: 'classIds' });
+      out.classIds = (await setNodeClasses(params.id, body.classIds)).map((c) => c.id);
     }
     // Must be an enabled language; reindexes this node's search and answers a
     // detected-language suggestion (docs/architecture/languages.md).

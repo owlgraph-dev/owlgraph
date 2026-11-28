@@ -23,9 +23,9 @@
     tags = [],
     onSetTags,
     tagSuggestions = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     pageProperties = [],
@@ -54,9 +54,9 @@
     tags?: string[];
     onSetTags?: (tags: string[]) => void;
     tagSuggestions?: string[];
-    nodeClassId?: string | null;
+    nodeClassIds?: string[];
     nodeClasses?: NodeClassOption[];
-    onSetNodeClass?: (id: string | null) => Promise<{ ok: boolean; error?: string } | undefined>;
+    onSetNodeClasses?: (ids: string[]) => Promise<{ ok: boolean; error?: string } | undefined>;
     locale?: string;
     onSetLocale?: (locale: string) => Promise<{ ok: boolean; error?: string }>;
     pageProperties?: { name: string; value: string }[];
@@ -136,7 +136,7 @@
   onClose={() => (accessOpen = false)}
 />
 
-<PagePropertiesDialog bind:open={propertiesOpen} {pageProperties} {manualProperties} {onSetManualProperties} {propSuggestions} {propertyGroups} {nodeClassId} {nodeClasses} {onSetNodeClass} {locale} {onSetLocale} {classDefinitions} {classGroups} />
+<PagePropertiesDialog bind:open={propertiesOpen} {pageProperties} {manualProperties} {onSetManualProperties} {propSuggestions} {propertyGroups} {nodeClassIds} {nodeClasses} {onSetNodeClasses} {locale} {onSetLocale} {classDefinitions} {classGroups} />
 
 <style>
   .m-head-row {

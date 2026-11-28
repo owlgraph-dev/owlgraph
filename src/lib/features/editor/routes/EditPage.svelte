@@ -160,7 +160,7 @@
           propSuggestions: data.propSuggestions,
           propertyGroups: data.propertyGroups,
           tagSuggestions: data.tagSuggestions,
-          nodeClassId: data.nodeClassId,
+          nodeClassIds: data.nodeClassIds,
           locale: data.locale,
           nodeClasses: data.nodeClasses,
           classFields: data.classFields,
@@ -201,7 +201,7 @@
     manualProperties={data.manualProperties}
     propSuggestions={data.propSuggestions}
     propertyGroups={data.propertyGroups}
-    nodeClassId={data.nodeClassId}
+    nodeClassIds={data.nodeClassIds}
     locale={data.locale}
     localeSuggestion={data.localeSuggestion}
     nodeClasses={data.nodeClasses}
@@ -233,7 +233,7 @@
     manualProperties={data.manualProperties}
     propSuggestions={data.propSuggestions}
     propertyGroups={data.propertyGroups}
-    nodeClassId={data.nodeClassId}
+    nodeClassIds={data.nodeClassIds}
     locale={data.locale}
     nodeClasses={data.nodeClasses}
     classFields={data.classFields}

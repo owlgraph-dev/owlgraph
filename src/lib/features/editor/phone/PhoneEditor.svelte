@@ -42,9 +42,9 @@
     propSuggestions = [],
     propertyGroups = [],
     tagSuggestions = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     classFields = null,
@@ -135,9 +135,9 @@
       tags={meta.tags}
       onSetTags={meta.commitTags}
       {tagSuggestions}
-      {nodeClassId}
+      {nodeClassIds}
       {nodeClasses}
-      {onSetNodeClass}
+      {onSetNodeClasses}
       {locale}
       {onSetLocale}
       pageProperties={core.properties.pageProperties}

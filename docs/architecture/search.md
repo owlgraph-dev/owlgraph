@@ -123,9 +123,9 @@ One card serves pages, documents and collections, in both views
 (`SearchResultCard`):
 
 - the title, the card's one link;
-- what the node is: its class; for a document, its kind instead — PDF, text,
-  Markdown, or a link with its host — and the class too when it is a document
-  subclass, which says more than "Document";
+- what the node is: its classes, a badge each; for a document, its kind
+  instead — PDF, text, Markdown, or a link with its host — and its classes
+  too when they are document subclasses, which say more than "Document";
 - a collection — which has no text of its own — is found by its title and
   its metadata, and leads with no excerpt unless one of those matched; and
   by what it holds: the title of a member the viewer may read

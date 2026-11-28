@@ -14,9 +14,9 @@ export interface SearchResultCard {
   url: string;
   /** The content language: `lang` on the title and the excerpt. */
   locale: string;
-  /** The class's name in the interface language. Null on a document of the
-   * plain document type, whose kind says more than "Document" would. */
-  className: string | null;
+  /** Its classes' names in the interface language. None for the plain
+   * document type on a document, whose kind says more than "Document" would. */
+  classNames: string[];
   documentKind: DocumentKind | null;
   /** A link document's host, shown with its kind. */
   linkHost: string;

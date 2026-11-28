@@ -23,9 +23,9 @@
     onSetManualProperties,
     propSuggestions = [],
     propertyGroups = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     classDefinitions = [],
@@ -39,10 +39,10 @@
     onSetManualProperties?: (props: { name: string; value: string }[]) => void;
     propSuggestions?: { name: string; label: string; datatype: string }[];
     propertyGroups?: { slug: string; label: string; description: string }[];
-    // Without onSetNodeClass, no class selector.
-    nodeClassId?: string | null;
+    // Without onSetNodeClasses, no class selector.
+    nodeClassIds?: string[];
     nodeClasses?: NodeClassOption[];
-    onSetNodeClass?: (id: string | null) => Promise<{ ok: boolean; error?: string } | undefined>;
+    onSetNodeClasses?: (ids: string[]) => Promise<{ ok: boolean; error?: string } | undefined>;
     // The content language (docs/architecture/languages.md); without onSetLocale, no selector.
     locale?: string;
     onSetLocale?: (locale: string) => Promise<{ ok: boolean; error?: string }>;
@@ -62,7 +62,7 @@
   // Collapsed by default; collapses again whenever the class changes.
   let classFieldsOpen = $state<string[]>([]);
   $effect(() => {
-    nodeClassId; // track
+    nodeClassIds; // track
     classFieldsOpen = [];
   });
 
@@ -113,8 +113,8 @@
 </script>
 
 <Dialog {open} onOpenChange={(o) => (open = o)} size="md" title={m.editor_properties_dialog_title()}>
-  {#if onSetNodeClass}
-    <NodeClassField {nodeClassId} {nodeClasses} {onSetNodeClass} />
+  {#if onSetNodeClasses}
+    <NodeClassField {nodeClassIds} {nodeClasses} {onSetNodeClasses} />
   {/if}
   {#if onSetLocale && locale}
     <NodeLocaleField {locale} {onSetLocale} />
@@ -124,7 +124,7 @@
     <Accordion bind:value={classFieldsOpen} class="class-fields-accordion">
       <AccordionItem value="class-fields" size="sm" title={m.editor_properties_class_fields_title({ count: slots.length })}>
         <p class="prop-hint class-fields-hint">{m.editor_properties_class_fields_hint()}</p>
-        <ClassFieldsPanel heading={false} layout="stack" {slots} groups={classGroups} ownClassId={nodeClassId} onSetField={setSlot} />
+        <ClassFieldsPanel heading={false} layout="stack" {slots} groups={classGroups} ownClassIds={nodeClassIds} onSetField={setSlot} />
       </AccordionItem>
     </Accordion>
   {/if}

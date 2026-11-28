@@ -101,8 +101,8 @@ const INTRINSIC_OPERATORS_BY_CATEGORY: Record<IntrinsicFieldCategory, ReadonlySe
   type: new Set(['eq', 'neq', 'in']),
   space: new Set(['eq', 'neq', 'in']),
   creator: new Set(['eq', 'neq', 'in']),
-  // The explicit class (nodes.class_id), never class-implied properties; read
-  // as "is a X" (X or a subclass) unless classMatch is 'exact'.
+  // The node's stated classes, never class-implied properties; read as "is a X"
+  // (one of them X or a subclass) unless classMatch is 'exact'.
   class: new Set(['eq', 'neq', 'in']),
   externalUrl: new Set(['exists', 'notExists', 'eq', 'neq', 'contains', 'startsWith']),
   // A language code (de, en): a closed set, like a node type.
@@ -494,5 +494,7 @@ export function fromWireOrderBy(o: WireOrderByInput | null | undefined): OrderBy
   if (!o) return null;
   // An unknown column is the caller's mistake, said as such, not as a database error.
   if (o.kind === 'INTRINSIC' && !isIntrinsicField(o.name)) badInput(`"${o.name}" is not an intrinsic field to sort by`);
+  // A node may have several classes, so there is nothing to sort by.
+  if (o.kind === 'INTRINSIC' && o.name === 'classId') badInput('"classId" is not an intrinsic field to sort by: a node may have several classes');
   return { kind: o.kind === 'INTRINSIC' ? 'intrinsic' : 'property', name: o.name, direction: o.direction === 'ASC' ? 'asc' : 'desc' };
 }

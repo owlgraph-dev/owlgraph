@@ -8,7 +8,7 @@ import { createLinkDocument } from '#lib/features/documents/server.ts';
 import { createSpace } from '#lib/features/spaces/server.ts';
 import { searchNodesForUser } from '#lib/features/nodes/server.ts';
 import { createPage, saveDoc } from '#lib/features/pages/server.ts';
-import { setNodeClass, setNodeTags, upsertNodeClass } from '#lib/features/semantic/server.ts';
+import { setNodeClasses, setNodeTags, upsertNodeClass } from '#lib/features/semantic/server.ts';
 import { db } from '#lib/platform/db.server.ts';
 import { parseNodeSearchParams } from './nodeSearchParams';
 import { HL_START, HL_STOP } from './searchSnippet';
@@ -41,7 +41,7 @@ async function listedPage(setup: { title: string; tags?: string[]; visibility?: 
   const page = await createPage(setup.title, await userOf('admin'), { visibility, spaceId: setup.spaceId });
   if (setup.tags) await setNodeTags(page.id, setup.tags);
   if (setup.body) await saveDoc(page.id, { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: setup.body }] }] });
-  if (setup.classId) await setNodeClass(page.id, setup.classId);
+  if (setup.classId) await setNodeClasses(page.id, [setup.classId]);
   return page;
 }
 

@@ -61,7 +61,6 @@ export interface DocumentRow {
   space_access_level: Visibility;
   created_by: string | null;
   created_at: string;
-  class_id: string; // the 'document' type class or a subclass of it
   locale: string;
   // The language detected in an upload's text while it differs from `locale`
   // and the author has neither taken nor dismissed it; only ever a suggestion.
@@ -72,7 +71,7 @@ export interface DocumentRow {
 // leaving visibility undefined. Kept apart from the FROM clause so
 // searchDocumentsFts can add its rank and snippet columns between them.
 export const DOCUMENT_COLUMNS = `d.id, n.title, n.slug, n.space_id, ${spaceSlugColumn()}, d.source, d.plugin, d.external_url, d.filename, d.mime, d.size,
-    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.class_id, n.locale, d.detected_locale`;
+    n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.locale, d.detected_locale`;
 export const DOCUMENT_FROM = `from documents d join nodes n on n.id = d.id ${spaceJoin('n')}`;
 
 export async function getDocument(id: string): Promise<DocumentRow | null> {

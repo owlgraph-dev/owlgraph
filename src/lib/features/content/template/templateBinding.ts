@@ -21,7 +21,8 @@ export interface ResultProperties {
   updatedAt: string;
   type: string;
   // Labels, never ids: a template author never sees a UUID. creatorLabel is ''
-  // without a creator; classLabel is never empty (at least the type class).
+  // without a creator; classLabel names every class the node has, comma-joined
+  // in the order of their names (a node with no class of its own: its type's).
   spaceLabel: string;
   creatorLabel: string;
   classLabel: string;

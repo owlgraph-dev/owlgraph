@@ -36,9 +36,9 @@
     isHomePage = false,
     propSuggestions = [],
     propertyGroups = [],
-    nodeClassId = null,
+    nodeClassIds = [],
     nodeClasses = [],
-    onSetNodeClass,
+    onSetNodeClasses,
     locale,
     onSetLocale,
     classFields = null,
@@ -64,9 +64,9 @@
     | 'isHomePage'
     | 'propSuggestions'
     | 'propertyGroups'
-    | 'nodeClassId'
+    | 'nodeClassIds'
     | 'nodeClasses'
-    | 'onSetNodeClass'
+    | 'onSetNodeClasses'
     | 'locale'
     | 'onSetLocale'
     | 'classFields'
@@ -117,9 +117,9 @@
   onSetManualProperties={meta.commitManualProperties}
   {propSuggestions}
   {propertyGroups}
-  {nodeClassId}
+  {nodeClassIds}
   {nodeClasses}
-  {onSetNodeClass}
+  {onSetNodeClasses}
   {locale}
   {onSetLocale}
   classDefinitions={classFields?.definitions ?? []}

@@ -8,7 +8,7 @@
 import type postgres from 'postgres';
 import { timed } from '#lib/platform/logger.server.ts';
 import { db } from '#lib/platform/db.server.ts';
-import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { labelCache } from '#lib/platform/i18n/localizedText.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { collectionHeadline, containsSnippet, documentHeadline, ftsMatches, ftsMatchingIds, ftsRank, memberTitleHeadline, memberTitleMatches, pageHeadline } from '#lib/features/search/server.ts';
@@ -23,6 +23,8 @@ import {
   type TagConditionInput,
 } from './nodeFilter';
 import type { NodeType } from '#lib/features/nodes/index.ts';
+import { nodeClassesColumn, toClassRefs, type StoredClassRef } from '#lib/features/semantic/server.ts';
+import type { NodeClassRef } from '#lib/features/semantic/index.ts';
 
 function castLiteral(v: string, datatype: string): string | number | Date {
   if (datatype === 'number') return Number(v); // format validated in nodeFilter.ts
@@ -147,8 +149,9 @@ function edgeLeafFragment(cond: EdgeConditionInput, datatypes: Map<string, strin
   return db`exists (select 1 from edges l where ${dirPred} and l.relationship_type = ${cond.type} ${propertyPred})`;
 }
 
-// A fixed whitelist, read into SQL unquoted; values are always parameters.
-const INTRINSIC_EXPR: Record<IntrinsicField, string> = {
+// A fixed whitelist, read into SQL unquoted; values are always parameters. A
+// node's classes are a set, no column: classLeafFragment reads them.
+const INTRINSIC_EXPR: Record<Exclude<IntrinsicField, 'classId'>, string> = {
   slug: 'n.slug',
   title: 'n.title',
   createdAt: 'n.created_at',
@@ -156,7 +159,6 @@ const INTRINSIC_EXPR: Record<IntrinsicField, string> = {
   type: 'n.type',
   spaceId: 'n.space_id',
   createdBy: 'n.created_by',
-  classId: 'n.class_id',
   externalUrl: '(select d.external_url from documents d where d.id = n.id)',
   locale: 'n.locale',
 };
@@ -179,15 +181,21 @@ function classSubtreeFragment(ids: string[]): postgres.Fragment {
   )`;
 }
 
+// A node's classes are a set (node_class_statements): "is a X" asks whether one
+// of them is X or a class below it, "exactly" whether one is X itself, and
+// "is not" whether none is (docs/architecture/semantic-layer.md, "Querying by class").
+function classLeafFragment(cond: IntrinsicConditionInput): postgres.Fragment {
+  const ids = cond.operator === 'in' ? cond.values! : [cond.value!];
+  const among = cond.classMatch === 'exact' ? db`s.class_id = any(${ids}::uuid[])` : db`s.class_id in ${classSubtreeFragment(ids)}`;
+  const has = db`exists (select 1 from node_class_statements s where s.node_id = n.id and ${among})`;
+  return cond.operator === 'neq' ? db`not ${has}` : has;
+}
+
 // Reads the alias `n` whatever filterFragment's alias: every caller selects
-// `from nodes n`. A class is "is a X", X or a subclass, unless classMatch is
-// 'exact'. externalUrl is the one nullable field, so its neq is null-safe.
+// `from nodes n`. externalUrl is the one nullable field, so its neq is null-safe.
 function intrinsicLeafFragment(cond: IntrinsicConditionInput): postgres.Fragment {
+  if (cond.field === 'classId') return classLeafFragment(cond);
   const col = db.unsafe(INTRINSIC_EXPR[cond.field]);
-  if (INTRINSIC_FIELD_CATEGORY[cond.field] === 'class' && cond.classMatch !== 'exact') {
-    const subtree = classSubtreeFragment(cond.operator === 'in' ? cond.values! : [cond.value!]);
-    return cond.operator === 'neq' ? db`${col} not in ${subtree}` : db`${col} in ${subtree}`;
-  }
   switch (cond.operator) {
     case 'exists':
       return db`${col} is not null`;
@@ -262,8 +270,9 @@ function orderByFragment(orderBy: ListOrder, datatype: string): postgres.Fragmen
   if (orderBy === 'relevance') return db`rank desc, ${ties}`;
   const dir = orderBy.direction === 'asc' ? db`asc` : db`desc`;
   if (orderBy.kind === 'intrinsic') {
-    const col = db.unsafe(INTRINSIC_EXPR[orderBy.name as IntrinsicField]);
-    return db`${col} ${dir}, ${ties}`;
+    // No order by a set of classes: fromWireOrderBy refuses it.
+    const expr = INTRINSIC_EXPR[orderBy.name as keyof typeof INTRINSIC_EXPR];
+    return expr ? db`${db.unsafe(expr)} ${dir}, ${ties}` : ties;
   }
   const valueExpr =
     datatype === 'number'
@@ -294,9 +303,8 @@ export interface NodeFilterRow {
   type: NodeType;
   space_id: string;
   created_by: string | null;
-  class_id: string;
-  // The class label in the request's locale, or its slug when untranslated.
-  class_name: string;
+  // Every class it has, named in the request's locale, in the order of their names.
+  classes: NodeClassRef[];
   locale: string; // the content language (nodes.locale)
   external_url: string | null; // a link document's address; null otherwise
   // HL_START/HL_STOP-highlighted excerpt around the term's match; '' without one.
@@ -333,7 +341,6 @@ function listFromWhere(
   const documents = opts.scope === 'node' ? db`left join documents d on d.id = n.id left join collections cl on cl.id = n.id` : db``;
   return db`
     from nodes n left join pages p on p.id = n.id ${documents} ${db.unsafe(spaceJoin('n'))}
-    join node_classes nc on nc.id = n.class_id
     where ${scope} and (${tree}) and ${text} and ${readableNodes(user, 'n')}`;
 }
 
@@ -365,16 +372,16 @@ async function findNodesByFilterImpl(
   const orderBy = opts.orderBy === 'relevance' && !opts.text ? null : opts.orderBy;
   const sortDatatype = orderBy && orderBy !== 'relevance' && orderBy.kind !== 'intrinsic' ? (datatypes.get(orderBy.name) ?? 'text') : 'text';
   const externalUrl = opts.scope === 'node' ? db`d.external_url` : db`null::text as external_url`;
-  const rows = await db<(Omit<NodeFilterRow, 'class_name'> & { class_slug: string; class_label: LocalizedText; member_snippet: string })[]>`
+  const rows = await db<(Omit<NodeFilterRow, 'classes'> & { classes: StoredClassRef[]; member_snippet: string })[]>`
     select n.id, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.type, n.space_id, n.created_by,
-           n.class_id, nc.slug as class_slug, nc.label as class_label, n.locale, ${externalUrl}, ${textColumns(user, opts.scope, opts.text)}
+           ${db.unsafe(nodeClassesColumn())}, n.locale, ${externalUrl}, ${textColumns(user, opts.scope, opts.text)}
     ${listFromWhere(user, filter, datatypes, opts)}
     order by ${orderByFragment(orderBy, sortDatatype)} limit ${opts.first} offset ${opts.offset}`;
   const label = labelCache();
-  return rows.map(({ class_slug, class_label, member_snippet, ...r }) => ({
+  return rows.map(({ classes, member_snippet, ...r }) => ({
     ...r,
     snippet: r.snippet || containsSnippet(member_snippet),
-    class_name: label(class_slug, class_label),
+    classes: toClassRefs(classes, label),
   }));
 }
 

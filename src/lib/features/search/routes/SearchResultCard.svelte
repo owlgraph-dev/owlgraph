@@ -33,12 +33,12 @@
 
 <Card as="li" class="sr-card" data-testid="search-result">
   <h2 class="sr-title"><a href={result.url} lang={result.locale}>{result.title}</a></h2>
-  {#if result.documentKind || result.className}
+  {#if result.documentKind || result.classNames.length > 0}
     <div class="sr-badges">
       {#if result.documentKind}
         <Badge tone="info">{KIND_LABEL[result.documentKind]()}{#if result.linkHost}&nbsp;· {result.linkHost}{/if}</Badge>
       {/if}
-      {#if result.className}<Badge>{result.className}</Badge>{/if}
+      {#each result.classNames as name (name)}<Badge>{name}</Badge>{/each}
     </div>
   {/if}
   {#if result.excerpt}

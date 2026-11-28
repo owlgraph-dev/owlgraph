@@ -8,7 +8,7 @@
 import type postgres from 'postgres';
 import { logEvent, logger, timed } from '#lib/platform/logger.server.ts';
 import { db } from '#lib/platform/db.server.ts';
-import { labelCache, type LocalizedText } from '#lib/platform/i18n/localizedText.ts';
+import { labelCache } from '#lib/platform/i18n/localizedText.ts';
 import type { SessionUser } from '#lib/features/auth/server.ts';
 import { readableNodes, spaceJoin, spaceSlugColumn } from '#lib/features/nodes/server.ts';
 import { filterFragment, edgePropertyPredicate } from './filterSql.server';
@@ -16,6 +16,8 @@ import type { EdgeConditionInput, EdgeDirection, NodeFilterInput } from './nodeF
 import type { TraversalStartInput, TraversalStepInput, TraversalQueryInput } from './traversal';
 import { MAX_HOP_CANDIDATES, MAX_STEP_ACCUMULATED, MAX_START_NODE_IDS } from './traversal';
 import { nodePath, type NodeType } from '#lib/features/nodes/index.ts';
+import { nodeClassesColumn, toClassRefs, type StoredClassRef } from '#lib/features/semantic/server.ts';
+import type { NodeClassRef } from '#lib/features/semantic/index.ts';
 
 // No result returns these yet; runOneHop keeps them for a path result.
 export interface WalkedEdge {
@@ -188,8 +190,8 @@ export interface TraversalNodeHit {
   updatedAt: string;
   spaceId: string;
   createdBy: string | null;
-  classId: string;
-  className: string;
+  // Every class it has, named in the request's locale, in the order of their names.
+  classes: NodeClassRef[];
   // A link document's address; null for any other node.
   externalUrl: string | null;
   // The content language (docs/architecture/languages.md).
@@ -204,12 +206,11 @@ export function hydrateContentNodes(...args: Parameters<typeof hydrateContentNod
 async function hydrateContentNodesImpl(ids: string[]): Promise<TraversalNodeHit[]> {
   if (ids.length === 0) return [];
   const rows = await db<
-    { id: string; type: NodeType; slug: string; space_slug: string | null; title: string; created_at: Date; updated_at: Date; space_id: string; created_by: string | null; class_id: string; class_slug: string; class_label: LocalizedText; external_url: string | null; locale: string }[]
+    { id: string; type: NodeType; slug: string; space_slug: string | null; title: string; created_at: Date; updated_at: Date; space_id: string; created_by: string | null; classes: StoredClassRef[]; external_url: string | null; locale: string }[]
   >`
     select n.id, n.type, n.slug, ${db.unsafe(spaceSlugColumn())}, n.title, n.created_at, n.updated_at, n.space_id, n.created_by,
-           n.class_id, nc.slug as class_slug, nc.label as class_label, d.external_url, n.locale
+           ${db.unsafe(nodeClassesColumn())}, d.external_url, n.locale
     from nodes n ${db.unsafe(spaceJoin('n'))}
-    join node_classes nc on nc.id = n.class_id
     left join documents d on d.id = n.id
     where n.id = any(${ids}::uuid[])`;
   const byId = new Map(rows.map((r) => [r.id, r]));
@@ -228,8 +229,7 @@ async function hydrateContentNodesImpl(ids: string[]): Promise<TraversalNodeHit[
       updatedAt: r.updated_at.toISOString(),
       spaceId: r.space_id,
       createdBy: r.created_by,
-      classId: r.class_id,
-      className: label(r.class_slug, r.class_label),
+      classes: toClassRefs(r.classes, label),
       externalUrl: r.external_url,
       locale: r.locale
     }));

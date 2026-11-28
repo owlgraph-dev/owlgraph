@@ -125,7 +125,6 @@ export interface PageRow {
   created_by: string | null;
   created_at: string;
   updated_at: string;
-  class_id: string; // at least the 'page' type class
   content_scheme: ContentScheme | null; // null = inherit (space slot, then the site default)
   locale: string; // the content language, never the interface language (docs/architecture/languages.md)
   doc: JsonDoc;
@@ -133,7 +132,7 @@ export interface PageRow {
 
 // Explicit columns, not `select *`: a missed nodes join is then an SQL error,
 // not a silently undefined visibility.
-const PAGE_SELECT = `p.id, n.slug, n.space_id, ${spaceSlugColumn()}, n.title, p.doc, n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, n.class_id, p.content_scheme, n.locale
+const PAGE_SELECT = `p.id, n.slug, n.space_id, ${spaceSlugColumn()}, n.title, p.doc, n.visibility, ns.access_level as space_access_level, n.created_by, n.created_at, n.updated_at, p.content_scheme, n.locale
     from pages p join nodes n on n.id = p.id ${spaceJoin('n')}`;
 
 export async function getPage(id: string): Promise<PageRow | null> {

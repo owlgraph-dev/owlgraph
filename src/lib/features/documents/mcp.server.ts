@@ -9,7 +9,7 @@ import { text, errText } from '../../../mcp/registry';
 import { logEvent } from '#lib/platform/logger.server.ts';
 import { listDocumentsForUser, getDocumentText, createLinkDocument } from '#lib/features/documents/server.ts';
 import { parseExternalUrl, MAX_EXTERNAL_URL_LENGTH } from '#lib/features/documents/index.ts';
-import { getNodeProperties } from '#lib/features/semantic/server.ts';
+import { getNodeClassRefs, getNodeProperties } from '#lib/features/semantic/server.ts';
 import { pluginLabel } from '#lib/plugins/index.ts';
 
 export function registerDocumentTools({ user, log, tool, documentTool }: ToolRegistry): void {
@@ -36,11 +36,11 @@ export function registerDocumentTools({ user, log, tool, documentTool }: ToolReg
     {
       title: 'Get document',
       description:
-        "Get a document's metadata: title, author, source, sourceKind, plugin, externalUrl, mime, size, visibility, created date, and locale (the language its content is in). `source` and `author` are its bibliographic documents: properties (publisher/journal, author), if set. `sourceKind` says where its content lives: 'upload' (a stored file — read it with get_document_text), 'link' (no stored file; `externalUrl` is the address it points to, which you cannot fetch through this server) or 'plugin' (a file another service keeps, reached through the integration `plugin` names — no stored file; mime and size are what it last reported). Cite any kind on a page with [[doc:<documentId>|link text]].",
+        "Get a document's metadata: title, classes (every class it has: id, slug, name), author, source, sourceKind, plugin, externalUrl, mime, size, visibility, created date, and locale (the language its content is in). `source` and `author` are its bibliographic documents: properties (publisher/journal, author), if set. `sourceKind` says where its content lives: 'upload' (a stored file — read it with get_document_text), 'link' (no stored file; `externalUrl` is the address it points to, which you cannot fetch through this server) or 'plugin' (a file another service keeps, reached through the integration `plugin` names — no stored file; mime and size are what it last reported). Cite any kind on a page with [[doc:<documentId>|link text]].",
       inputSchema: { documentId: z.string() },
     },
     async (doc) => {
-      const props = await getNodeProperties(doc.id);
+      const [props, classes] = await Promise.all([getNodeProperties(doc.id), getNodeClassRefs(doc.id)]);
       const author = props.find((p) => p.name === 'documents:author')?.value ?? null;
       const source = props.find((p) => p.name === 'documents:source')?.value ?? null;
       return text(
@@ -48,6 +48,7 @@ export function registerDocumentTools({ user, log, tool, documentTool }: ToolReg
           {
             id: doc.id,
             title: doc.title,
+            classes: classes.map(({ id, slug, name }) => ({ id, slug, name })),
             author,
             source,
             sourceKind: doc.source,

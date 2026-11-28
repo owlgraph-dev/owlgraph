@@ -11,6 +11,7 @@ import { NodeProperty, registerSemanticQueryFields, LocaleType } from '#lib/feat
 import { registerSearchQueryFields } from '#lib/features/search/graphql.server.ts';
 import { registerPageNodeFields } from '#lib/features/pages/graphql.server.ts';
 import { getNodes, type ContentNodeHit } from './nodes.server';
+import type { NodeClassRef } from '#lib/features/semantic/index.ts';
 import { traverse } from './traverse.server';
 import type { NodeFilterInput, PropertyOperator, OrderByInput, OrderByKind, OrderDirection, EdgeDirection, IntrinsicField, ClassMatch, TagOperator } from '../nodeFilter';
 import type { TraversalQueryInput } from '../traversal';
@@ -82,7 +83,7 @@ const IntrinsicFieldType = builder.enumType('IntrinsicField', {
 
 const ClassMatchType = builder.enumType('ClassMatch', {
   description:
-    'How a CLASS_ID condition reads its class id(s) against the class hierarchy. IS_A (the default): the class or any of its subclasses — "is a document" includes every document subclass, and a node type id selects every node of that type. EXACT: precisely that class, no subclasses.',
+    'How a CLASS_ID condition reads its class id(s) against the class hierarchy, over every class a node has. IS_A (the default): one of them is the class or any of its subclasses — "is a document" includes every document subclass, and a node type id selects every node of that type. EXACT: one of them is precisely that class, no subclasses; a node type id then selects the nodes of that type with no class of their own. NEQ: none of them matches.',
   values: { IS_A: { value: 'isA' }, EXACT: { value: 'exact' } } satisfies Record<string, { value: ClassMatch }>
 });
 
@@ -97,7 +98,7 @@ const IntrinsicConditionInputType = builder.inputType('IntrinsicCondition', {
     classMatch: t.field({
       type: ClassMatchType,
       required: false,
-      description: 'CLASS_ID only. Omitted = IS_A (the class and its subclasses); EXACT compares the assigned class alone.'
+      description: 'CLASS_ID only. Omitted = IS_A (the class and its subclasses); EXACT compares the classes a node states alone.'
     })
   })
 });
@@ -190,6 +191,17 @@ const OrderByInputType = builder.inputType('OrderBy', {
   })
 });
 
+const NodeClassOfNode = builder.objectRef<NodeClassRef>('NodeClassOfNode').implement({
+  description: "A class a node has. Its whole definition — label in every language, description, parent, overview page — is in nodeClasses under the same id.",
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    slug: t.exposeString('slug'),
+    name: t.exposeString('name', {
+      description: "The class's label, resolved for the request's interface language (the viewer's chosen language, else Accept-Language among the enabled languages, else the site default language), else its slug.",
+    }),
+  }),
+});
+
 const ContentNode = builder.objectRef<ContentNodeHit>('ContentNode').implement({
   description: 'A knowledge-graph node (a page or document) matching a NodeFilter or reached by a traversal. `id` is the node\'s id, which is also its page\'s or document\'s id — the one links, MCP and every other query use. `nodes` stays page-scoped (only pages currently have a properties write-path/UI); `traverse` is node-generic, since edges connect nodes of any type.',
   fields: (t) => ({
@@ -202,9 +214,10 @@ const ContentNode = builder.objectRef<ContentNodeHit>('ContentNode').implement({
     updatedAt: t.exposeString('updatedAt', { description: 'ISO timestamp.' }),
     spaceId: t.exposeID('spaceId'),
     createdBy: t.exposeID('createdBy', { nullable: true }),
-    classId: t.exposeID('classId', { description: "The node's class (see nodeClasses) — always set: every node carries a class, at least its node type." }),
-    className: t.exposeString('className', {
-      description: "The node's class display name, resolved for the request's interface language (the viewer's chosen language, else Accept-Language among the enabled languages, else the site default language) — a node with no domain class carries its node type's class, e.g. \"Page\". For every translation, read the class from nodeClasses by classId."
+    classes: t.field({
+      type: [NodeClassOfNode],
+      description: "Every class the node has, in the order of their names — a node has any number of them. One with no class of its own has its node type's class, e.g. \"Page\". A condition on the intrinsic field classId matches a node when one of its classes does.",
+      resolve: (n) => n.classes,
     }),
     externalUrl: t.exposeString('externalUrl', {
       nullable: true,

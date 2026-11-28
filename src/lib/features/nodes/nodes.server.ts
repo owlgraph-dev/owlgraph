@@ -108,9 +108,11 @@ export async function assertCanPlaceInSpace(
   throw new CodedError('space_membership_required', 'You are not a member of this restricted space');
 }
 
-// `type` is the class's nearest L1 type, cached for routing and held consistent
-// by nodes_class_type_fkey. The locale defaults to the site's (docs/architecture/languages.md); the
-// caller mirrors the returned one into its table's search_locale.
+// The node's type is its class's: a new node states one class, its type class
+// (docs/architecture/semantic-layer.md, "A node's classes"), and
+// node_class_statements holds the two to the same type. The locale defaults to
+// the site's (docs/architecture/languages.md); the caller mirrors the returned
+// one into its table's search_locale.
 export async function insertNode(
   sql: TxSql,
   opts: { classId: string; slug: string; spaceId: string; createdBy: string | null; visibility: Visibility | null; title: string; locale?: string | null }
@@ -120,9 +122,10 @@ export async function insertNode(
     select id, node_type from node_classes where id = ${opts.classId} and kind <> 'root'`;
   if (!cls) throw new CodedError('class_not_found', 'Unknown class');
   const [row] = await sql<{ id: string }[]>`
-    insert into nodes (type, slug, space_id, created_by, visibility, title, class_id, locale)
-    values (${cls.node_type}, ${opts.slug}, ${opts.spaceId}, ${opts.createdBy}, ${opts.visibility}, ${opts.title}, ${cls.id}, ${locale})
+    insert into nodes (type, slug, space_id, created_by, visibility, title, locale)
+    values (${cls.node_type}, ${opts.slug}, ${opts.spaceId}, ${opts.createdBy}, ${opts.visibility}, ${opts.title}, ${locale})
     returning id`;
+  await sql`insert into node_class_statements (node_id, class_id, node_type) values (${row.id}, ${cls.id}, ${cls.node_type})`;
   return { id: row.id, type: cls.node_type, locale };
 }
 

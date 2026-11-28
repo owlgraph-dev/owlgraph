@@ -37,8 +37,7 @@ opting a route out of SSR entirely (no route in this app does).
 
 Pages, documents and collections are **specializations of a common `nodes`
 identity**: `nodes` holds what's genuinely shared across content types — id,
-**class** (`class_id`, required; see [semantic-layer.md](semantic-layer.md)),
-the **type** (`page`/`document`/`collection`) derived from that class, space + slug,
+the **type** (`page`/`document`/`collection`), space + slug,
 visibility, the **content language** (`locale`, see [languages.md](languages.md#content-language)),
 `created_by` and timestamps (`src/lib/features/nodes/nodes.server.ts`) — while
 `pages`, `documents` and `collections` hold their type-specific columns
@@ -46,10 +45,11 @@ visibility, the **content language** (`locale`, see [languages.md](languages.md#
 a link's `external_url`, see [documents.md](documents.md); a collection's
 `plugin` and `source_ref`, see [semantic-layer.md](semantic-layer.md#collections))
 keyed by the same id (each row shares its primary key with its node row). A
-node's class sits somewhere in one hierarchy
-`node → page | document | collection → domain classes`; its type is the node
-type that class descends from, cached on the row (and held consistent by a
-foreign key) so routing stays one lookup. Every node belongs to exactly one
+node has any number of classes (`node_class_statements`, see
+[semantic-layer.md](semantic-layer.md#a-nodes-classes)), each somewhere in one hierarchy
+`node → page | document | collection → domain classes` and all of its own
+type — foreign keys hold the two in step — so routing stays one lookup on the
+type. Every node belongs to exactly one
 **space** (`space_id`, required — see
 [routing.md](routing.md#spaces)); identity is `(space_id, slug)`,
 unique per space rather than globally, and resolvable with a single
