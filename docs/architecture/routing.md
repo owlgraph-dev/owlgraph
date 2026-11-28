@@ -97,9 +97,11 @@ independent copies exist:
 - **Server** (`src/lib/features/spaces/spaces.server.ts`'s `refreshSpaceCache`):
   warmed once at server startup (`src/hooks.server.ts`, not awaited — a
   slow/unavailable DB at boot shouldn't block the server from starting) and
-  refreshed after every space create/rename/delete. Always correct
+  refreshed after every space create/rename/delete and every change of a
+  space's access level. Always correct
   within one request of a change. It holds every space, whoever is
-  asking, so `refreshSpaceCache` is its only writer: the browser layers
+  asking — a restricted one routed only under a stamp, below — so
+  `refreshSpaceCache` is its only writer: the browser layers
   below never write it during server rendering, where they would narrow it to
   one viewer's spaces for every request. Refreshes that overlap (two
   space changes at once) can finish out of order, so only a read newer
@@ -119,7 +121,7 @@ independent copies exist:
     button disappearing). `init()` is SvelteKit's own hook for async setup
     before hydration starts, so it closes that race by construction.
   - **`src/routes/+layout.ts`**, populated from `+layout.server.ts`'s
-    viewer-scoped `spaces`, in the browser only (the load is universal,
+    viewer-scoped `spaceSlugs`, in the browser only (the load is universal,
     and also runs during server rendering): keeps the registry fresh across the *rest* of a live SPA
     session (e.g. picking up a space created in another tab on this
     tab's next navigation) — `init()` only runs once, at boot. If this
@@ -131,6 +133,41 @@ independent copies exist:
     every mutation, so the acting admin's own client cache is refreshed
     immediately; other users' already-open tabs pick it up on their next
     hard navigation.
+
+The browser's slugs — `/api/spaces/slugs`, and the layout's `spaceSlugs`
+— are the spaces the viewer's addresses route under
+(`listSpaceSlugsForUser`): public ones for everyone, internal ones once
+signed in, a restricted one to its members and to whoever may read a node
+in it (its owner after they left the space, someone it is shared with);
+an admin, all of them. That is wider than the spaces offered to them,
+which a restricted space joins only by membership.
+
+### A restricted space's addresses
+
+An address under a restricted space is answered exactly as an address
+under no space, unless the space admits the asker or holds a node they may
+read ([spec 002](../features/002-visibility-and-spaces.md), criterion 21) —
+status, redirect, headers and page. A route that matched would give it
+away in a dozen ways a route that did not match cannot copy: its own
+not-found, the editor's style policy and frame, the sign-in redirect of a
+route that needs a session, the trailing-slash redirect, the data
+address's `200`. So the route is chosen per asker:
+
+- The server registry routes a public or internal space by its plain slug,
+  a restricted one only under a **stamp** in front of it — a random prefix
+  made once a process, which never leaves the server. The matcher hands the
+  route the plain slug.
+- The **`reroute` hook** (`src/hooks.ts`, SvelteKit's universal hook, run
+  before the route is chosen) stamps the first segment of a path under a
+  restricted space when the asker's own `/api/spaces/slugs`, fetched in
+  process with their session, lists it; a failed lookup stamps nothing.
+  Anyone else's address under it matches no route, the same as one under
+  no space. In the browser the hook does nothing: that registry is the
+  viewer's own already.
+
+Only an address under a restricted space costs the extra lookup. An
+internal space routes for everyone, so a signed-out visitor following a
+link into one is sent to sign in, as criterion 5 asks.
 
 ### Building a node's URL
 

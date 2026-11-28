@@ -272,12 +272,17 @@ Two enforcement layers, both membership-driven:
   viewer-facing space picker (the create modal, `AccessControlPanel`).
   `/settings/spaces`'s own listing stays unfiltered — admins manage
   everything. `/api/spaces/slugs` (the client-side routing
-  params-matcher's data source) answers per viewer with the same rule —
+  params-matcher's data source) answers per viewer —
   public spaces for everyone, internal ones once signed in, restricted
-  ones to members — so a space's existence is not revealed to someone
-  who cannot reach it. The default space has no slug and routes at the
-  root without it. The server's own matcher registry holds every slug
-  ([routing.md](routing.md#spaces)).
+  ones to members and to whoever may read a node in one, who sees its
+  slug in that node's address anyway — so a space's existence is not
+  revealed to someone who cannot reach it. The default space has no slug
+  and routes at the root without it. The server's own matcher registry
+  holds every slug, and routes a restricted space only for the people that
+  list names: anyone else's address under it answers as an address under
+  no space ([routing.md](routing.md#a-restricted-spaces-addresses)). For
+  the same reason a root node renamed or moved to a space's name is
+  refused as `slug_taken`, the answer a slug held by a node gives.
 
 **Known limitation, not a bug:** a removed member who is also a node's
 *owner* keeps read/write access to their own nodes after removal — the

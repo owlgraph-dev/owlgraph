@@ -74,8 +74,10 @@ export async function assertSlugAvailable(
   const [ns] = await sql<{ is_default: boolean }[]>`select is_default from spaces where id = ${spaceId}`;
   if (ns?.is_default) {
     const [nsConflict] = await sql`select 1 from spaces where slug = ${slug}`;
+    // Taken, as by a node: a space the asker may not reach answers as one of
+    // its nodes would (docs/features/002-visibility-and-spaces.md, criterion 21).
     if (nsConflict) {
-      throw new CodedError('slug_reserved', 'That URL is reserved for a space');
+      throw new CodedError('slug_taken', 'That URL is already taken');
     }
   }
   const [conflict] = excludeId

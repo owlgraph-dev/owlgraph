@@ -13,7 +13,7 @@ import type { LayoutLoad } from './$types';
 
 // The site's languages (docs/architecture/languages.md), the same way.
 export const load: LayoutLoad = async ({ data }) => {
-  if (browser) setKnownSpaceSlugs(data.spaces.filter((n) => !n.isDefault).map((n) => n.slug as string));
+  if (browser) setKnownSpaceSlugs(data.spaceSlugs);
   if (browser) setSiteLocaleConfig(data.siteLocales);
   return data;
 };

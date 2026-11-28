@@ -79,12 +79,12 @@ describe('the names an address may take', () => {
       await expect(createSpace({ name: 'Clash', slug, accessLevel: 'internal' }), `a space named as a root ${kind}`).rejects.toMatchObject({ code: 'space_slug_taken' });
       await expect(renameSpace(elsewhere.id, { slug }), `a space renamed to a root ${kind}'s slug`).rejects.toMatchObject({ code: 'space_slug_taken' });
       // The other way round: a root node may not take a space's name.
-      await expect(rename(kind, atRoot, 'guild'), `a root ${kind} renamed to a space's name`).rejects.toMatchObject({ code: 'slug_reserved' });
+      await expect(rename(kind, atRoot, 'guild'), `a root ${kind} renamed to a space's name`).rejects.toMatchObject({ code: 'slug_taken' });
       expect((await node(kind, atRoot)).slug).toBe(slug);
       // Nor arrive at the root under it: inside another space the name is free.
       const inside = await make(kind, elsewhere.id);
       await rename(kind, inside, 'guild');
-      await expect(setNodeSpace(inside, root, admin), `a ${kind} named as a space, moved to the root`).rejects.toMatchObject({ code: 'slug_reserved' });
+      await expect(setNodeSpace(inside, root, admin), `a ${kind} named as a space, moved to the root`).rejects.toMatchObject({ code: 'slug_taken' });
       expect((await node(kind, inside)).space_id).toBe(elsewhere.id);
       await rename(kind, inside, `guild-${kind}`);
     }

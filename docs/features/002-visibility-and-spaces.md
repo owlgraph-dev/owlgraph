@@ -110,6 +110,12 @@ What a link shows:
 20. A link to a node its reader may not read is shown as a link to a node
     that does not exist, and carries no address of it.
 
+What an address tells:
+
+21. An address under a restricted space is answered exactly as an address
+    under no space, unless the space admits the asker or holds a node they
+    may read.
+
 ## Affected components
 
 - [Authorization and visibility](../architecture/authorization.md): the two
@@ -158,6 +164,11 @@ None blocks the work.
 - 002.10 has no acceptance test: only a browser shows it, and the gate runs
   no component test. The space journey sees the notice, and a component
   test holds it beside the silence when a space is narrowed.
+- 002.15 holds for what offers a space. A restricted space holding a node
+  someone outside it may read is in the slugs their browser routes by, as it
+  is in that node's address; it is offered to them nowhere.
 - 002.20 holds for a page as it is read: at its address, through a share
   link, by an agent. In the editor a link still carries the slug it was made
   with, for whoever may edit the page.
+- 002.21 holds for what an answer says, not for how long it takes: only an
+  address under a restricted space asks whom the space opens to.

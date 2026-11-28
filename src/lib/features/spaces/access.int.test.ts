@@ -6,12 +6,13 @@ import { describe, expect, inject, it } from 'vitest';
 import { db } from '#lib/platform/db.server.ts';
 import { createLinkDocument } from '#lib/features/documents/server.ts';
 import { createPage, renamePage, userCanWritePage } from '#lib/features/pages/server.ts';
-import { setNodeVisibility, userCanReadNode, type NodeAccessRow } from '#lib/features/nodes/server.ts';
+import { setNodeShares, setNodeVisibility, userCanReadNode, type NodeAccessRow } from '#lib/features/nodes/server.ts';
 import { userOf } from '#tests/integration/users.ts';
 import {
   createSpace,
   deleteSpace,
   listSpaces,
+  listSpaceSlugsForUser,
   renameSpace,
   setSpaceAccessLevel,
   setSpaceMembers,
@@ -40,6 +41,27 @@ describe('a space as an admin manages it', () => {
     const ns = await createSpace({ name: 'To delete', slug: 'to-delete', accessLevel: 'internal' });
     await deleteSpace(ns.id);
     expect((await listSpaces()).map((n) => n.id)).not.toContain(ns.id);
+  });
+
+  it('the slugs a user routes by hold a restricted space for its members, for whoever may read a node in it, and for no one else', async () => {
+    const [admin, editorA, editorB, editorC, viewer] = await Promise.all((['admin', 'editorA', 'editorB', 'editorC', 'viewer'] as const).map((role) => userOf(role)));
+    const ns = await createSpace({ name: 'Routed for some', slug: 'routed-for-some', accessLevel: 'restricted' });
+    await setSpaceMembers(ns.id, [editorA.id, editorC.id]);
+    await createPage('Kept by its owner', editorC, { spaceId: ns.id });
+    const shared = await createPage('Shared beyond', admin, { spaceId: ns.id });
+    await setNodeVisibility(shared.id, 'restricted');
+    await setNodeShares(shared.id, [editorB.id]);
+    // editorC leaves and keeps their page; editorB never was a member.
+    await setSpaceMembers(ns.id, [editorA.id]);
+    const routes = async (user: typeof admin | null) => (await listSpaceSlugsForUser(user)).includes(ns.slug!);
+    expect({ admin: await routes(admin), member: await routes(editorA), owner: await routes(editorC), shared: await routes(editorB), viewer: await routes(viewer), visitor: await routes(null) }).toEqual({
+      admin: true,
+      member: true,
+      owner: true,
+      shared: true,
+      viewer: false,
+      visitor: false,
+    });
   });
 
   it('a node named like the space deleted keeps its name at the root: that space is gone', async () => {

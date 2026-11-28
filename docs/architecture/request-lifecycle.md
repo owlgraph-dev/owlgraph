@@ -41,6 +41,13 @@ space's slug, from an in-memory registry; otherwise the address belongs
 to the default space, which has no prefix
 ([routing.md](routing.md#the-routing-ambiguity-and-the-params-matcher-that-resolves-it)).
 
+Which route matches is settled before the hook's `handle` runs — its
+sign-in gate reads the route — and before that, SvelteKit's `reroute` hook
+(`src/hooks.ts`) lets an address under a restricted space match only for an
+asker the space admits or who may read a node in it; for anyone else it
+matches no route, as an address under no space does
+([routing.md](routing.md#a-restricted-spaces-addresses)).
+
 The route's `+page.server.ts` is an adapter of one line: it re-exports the
 reader feature's `load` (`src/lib/features/reader/routes/read.server.ts`).
 

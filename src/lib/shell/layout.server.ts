@@ -8,7 +8,7 @@ import { resolveTreeForUser } from '#lib/features/site/server.ts';
 import { getCurrentLogo, getUiFontFamily, getSiteTheme, customStylesHref, listCustomStyleRefs } from '#lib/features/site/server.ts';
 import { resolveFooterForUser } from '#lib/features/site/server.ts';
 import { getUserAvatarMeta } from '#lib/features/media/server.ts';
-import { listSpacesForUser } from '#lib/features/spaces/server.ts';
+import { listSpacesForUser, listSpaceSlugsForUser } from '#lib/features/spaces/server.ts';
 import { connectionsOffered } from '#lib/features/pluginHost/server.ts';
 import { getFontFaceCss, getCustomFontEntries } from '#lib/features/content/server.ts';
 import { getParagraphStyles } from '#lib/features/content/server.ts';
@@ -21,9 +21,11 @@ export const load = async ({ locals }: ServerLoadEvent) => {
   // Here, not on SessionUser: that would cost every authenticated request
   // (API, GraphQL, MCP), not just the ones that render it.
   const avatar = locals.user ? await getUserAvatarMeta(locals.user.id) : null;
-  // Viewer-scoped: only the spaces this viewer may see. +layout.ts also
-  // feeds them to the browser's [space] matcher (docs/architecture/routing.md).
-  const spaces = (await listSpacesForUser(locals.user)).map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default }));
+  // Viewer-scoped: only the spaces this viewer may see; and what +layout.ts
+  // feeds the browser's [space] matcher (docs/architecture/routing.md), which
+  // also holds a restricted space with a node this viewer may read, offered nowhere.
+  const [spaceRows, spaceSlugs] = await Promise.all([listSpacesForUser(locals.user), listSpaceSlugsForUser(locals.user)]);
+  const spaces = spaceRows.map((n) => ({ id: n.id, name: n.name, slug: n.slug, isDefault: n.is_default }));
   const [customFonts, paragraphStyles, uiFontFamily, siteTheme, stylesHref, customStyles, footer, offered] = await Promise.all([
     getCustomFontEntries(),
     getParagraphStyles(),
@@ -54,6 +56,7 @@ export const load = async ({ locals }: ServerLoadEvent) => {
     footerLogoRuleId,
     shellCss: shell.css(),
     spaces,
+    spaceSlugs,
     fontFaceCss: await getFontFaceCss(),
     customFonts,
     paragraphStyles,

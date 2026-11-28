@@ -5,7 +5,7 @@
 // The [space] params matcher (src/params.ts). SvelteKit's build also loads
 // it with Node, outside Vite, so it imports only by paths Node resolves: the
 // registry, which imports nothing.
-import { isKnownSpaceSlug } from './spaceRegistry.ts';
+import { spaceOfParam } from './spaceRegistry.ts';
 
-/** A known space slug matches as itself; anything else is undefined, which doesn't match (false would be a value, and would). */
-export const matchSpace = (param: string): string | undefined => (isKnownSpaceSlug(param) ? param : undefined);
+/** A space slug the registry routes matches as that slug; anything else is undefined, which doesn't match (false would be a value, and would). */
+export const matchSpace = (param: string): string | undefined => spaceOfParam(param);
