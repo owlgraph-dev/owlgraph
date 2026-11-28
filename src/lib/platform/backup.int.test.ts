@@ -286,6 +286,8 @@ describe.skipIf(pg.skipped)('restore', () => {
 
     const { tables } = await targetState();
     expect(tables).toEqual(expect.arrayContaining(['schema_migrations', 'pages', 'documents', 'collections', 'node_source_secrets']));
+    // What the target held beside the dump's tables is gone.
+    expect(tables).not.toContain('restore_marker');
     const sql = postgres(urlFor(fileUrl, target), { max: 1, onnotice: () => {} });
     try {
       expect(await count('select count(*) from schema_migrations', sql)).toBe(await count('select count(*) from schema_migrations'));
@@ -295,10 +297,81 @@ describe.skipIf(pg.skipped)('restore', () => {
     }
   }, 120_000);
 
-  it('restores a dump from before the baseline that applied every migration it replaces, and migrate then records the baseline in their place', async () => {
-    // Into an empty target: the one before holds this checkout's schema, which
-    // the migrations after the baseline have changed.
+  /** Runs `change` on the target, through a pool that is closed afterwards. */
+  async function onTarget<T>(change: (sql: postgres.Sql) => Promise<T>): Promise<T> {
+    const sql = postgres(urlFor(fileUrl, target), { max: 1, onnotice: () => {} });
+    try {
+      return await change(sql);
+    } finally {
+      await sql.end({ timeout: 5 });
+    }
+  }
+  const tablesOf = async (sql: postgres.Sql) =>
+    (await sql<{ name: string }[]>`select table_name as name from information_schema.tables where table_schema = 'public' order by 1`).map((t) => t.name);
+
+  it('restores a backup over a target a later migration changed: what that migration made is gone, and the app role reads and writes what was restored', async () => {
+    // As going back after an upgrade finds a deployment's database: built by
+    // the migrations, which gave the app role its default privileges there,
+    // then changed by a later one — a table referring to one the dump
+    // restores, and a column the dump's table lacks.
     await createEmptyDatabase(runUrl, target);
+    await onTarget(async (sql) => {
+      await runMigrations(sql);
+      await sql`create table later_things (id uuid primary key default gen_random_uuid(), owner uuid references users(id))`;
+      await sql`alter table pages add column later_note text`;
+    });
+
+    const run = await restore([`--file=${dump}`, `--db=${target}`, '--yes']);
+    expect(run.code, run.stdout + run.stderr).toBe(0);
+    expect(run.stdout).toContain(`Restored into "${target}".`);
+
+    await onTarget(async (sql) => {
+      expect(await tablesOf(sql)).toEqual(await tablesOf(db));
+      expect(await sql`select 1 from information_schema.columns where table_name = 'pages' and column_name = 'later_note'`).toHaveLength(0);
+      expect(await count('select count(*) from nodes', sql)).toBe(await count('select count(*) from nodes'));
+    });
+
+    // Its access comes from the schema's default privileges, which the restore keeps.
+    await onTarget(async (sql) => {
+      const app = await sql.reserve();
+      try {
+        await app`set session authorization app_user`;
+        expect(await count('select count(*) from nodes', app as unknown as postgres.Sql)).toBe(await count('select count(*) from nodes'));
+        await app`insert into site_settings (key, value) values ('restore-check', 'written')`;
+        await app`delete from site_settings where key = 'restore-check'`;
+      } finally {
+        app.release();
+      }
+    });
+  }, 120_000);
+
+  it('a restore that fails partway changes nothing in the target', async () => {
+    // A view outside the public schema that needs the dump's extension, which
+    // the restore drops and makes again: the drop fails after the public
+    // schema was emptied.
+    await onTarget(async (sql) => {
+      await sql`create table later_things (id uuid primary key)`;
+      await sql`create schema hold`;
+      await sql`create view hold.v as select public.digest('x', 'sha256') as d`;
+    });
+    const before = await onTarget(tablesOf);
+
+    const run = await restore([`--file=${dump}`, `--db=${target}`, '--yes']);
+    expect(run.code).toBe(1);
+    expect(run.stderr).toContain(`The restore into "${target}" failed, and nothing was changed: the database is as it was before.`);
+    expect(run.stdout).not.toContain('Restored into');
+
+    await onTarget(async (sql) => {
+      expect(await tablesOf(sql)).toEqual(before);
+      expect(await count('select count(*) from nodes', sql)).toBe(await count('select count(*) from nodes'));
+      await sql`drop schema hold cascade`;
+      await sql`drop table later_things`;
+    });
+  }, 120_000);
+
+  it('restores a dump from before the baseline that applied every migration it replaces, and migrate then records the baseline in their place', async () => {
+    // Over the target, which holds this checkout's schema: the migrations
+    // after the baseline have changed it.
     const run = await restore([`--file=${complete}`, `--db=${target}`, '--yes']);
     expect(run.code, run.stdout + run.stderr).toBe(0);
     expect(run.stdout).toContain(`Restored into "${target}".`);
