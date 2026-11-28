@@ -71,10 +71,10 @@ describe.skipIf(app.skipped)('a page’s address', () => {
       expect((await call(served, `/${slug}/edit`, { as: 'editorB' })).status).toBe(200);
     });
 
-    it('sends an editor the restricted page is not shared with home, not to its read view', async () => {
+    it('answers an editor the restricted page is not shared with as an edit address no page has: 404, no redirect', async () => {
       const res = await call(served, `/${seed.restrictedSlug}/edit`, { as: 'editorC' });
-      expect(res.status).toBe(303);
-      expect(new URL(res.headers.get('location')!, served.origin).pathname).toBe('/');
+      expect(res.status).toBe(404);
+      expect(res.headers.get('location')).toBeNull();
     });
 
     it('opens for the owner of a restricted page', async () => {

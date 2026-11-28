@@ -3,7 +3,7 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/share/[id]/+page.server.ts.
-import { error } from '@sveltejs/kit';
+import { notFound } from '#lib/features/auth/routes/requireAction.server.ts';
 import { resolveShareLink } from '#lib/features/nodes/server.ts';
 import { getNodeType } from '#lib/features/nodes/server.ts';
 import { getPage } from '#lib/features/pages/server.ts';
@@ -23,14 +23,14 @@ export const load = async ({ params, locals, setHeaders }: ServerLoadEvent<Param
   setHeaders({ 'cache-control': 'private, no-store' });
   const shareId = params.id;
   const resolved = await resolveShareLink(params.id, locals.log);
-  if (!resolved) throw error(404, 'Not found'); // unknown and revoked answer alike
+  if (!resolved) notFound(); // unknown and revoked answer alike
 
   const type = await getNodeType(resolved.nodeId);
-  if (!type) throw error(404, 'Not found');
+  if (!type) notFound();
 
   if (type === 'page') {
     const page = await getPage(resolved.nodeId);
-    if (!page) throw error(404, 'Not found');
+    if (!page) notFound();
     // Every block's data as nobody: the link grants the page, not what its blocks show.
     const rendered = await renderPage(page, { kind: 'share', locale: locals.locale, log: locals.log });
     return {
@@ -51,10 +51,10 @@ export const load = async ({ params, locals, setHeaders }: ServerLoadEvent<Param
   }
 
   // A collection is shared through the pages that show it, never by a link.
-  if (type !== 'document') throw error(404, 'Not found');
+  if (type !== 'document') notFound();
 
   const doc = await getDocument(resolved.nodeId);
-  if (!doc) throw error(404, 'Not found');
+  if (!doc) notFound();
   return {
     kind: 'document' as const,
     shareId,

@@ -3,14 +3,13 @@
 // This file is part of owlgraph. See LICENSE and PLUGIN-EXCEPTION.md.
 
 // Route adapter, re-exported by src/routes/[[space=space]]/[slug]/edit/+page.server.ts.
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import { notFound } from '#lib/features/auth/routes/requireAction.server.ts';
 import { getNodeBySlug } from '#lib/features/nodes/server.ts';
 import { resolveSpaceParam, listSpacesForUser, getSpaceMembers } from '#lib/features/spaces/server.ts';
-import { nodePath } from '#lib/features/nodes/index.ts';
 import {
   getPage,
   listPagesForUser,
-  userCanReadPage,
   userCanWritePage,
 } from '#lib/features/pages/server.ts';
 import { getHomePageId } from '#lib/features/site/server.ts';
@@ -18,8 +17,8 @@ import { listEnabledPageLayoutPresets } from '#lib/features/pages/server.ts';
 import { collectAssetIds, type JsonNode } from '#lib/features/content/index.ts';
 import { getAssetSizes } from '#lib/features/media/server.ts';
 import { getNodeTags, listTags } from '#lib/features/semantic/server.ts';
-import { listDocumentsForUser, getDocument, userCanReadDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
-import { getCollection, membersWithBasis, userCanReadCollection, userCanWriteCollection } from '#lib/features/collections/server.ts';
+import { listDocumentsForUser, getDocument, userCanWriteDocument } from '#lib/features/documents/server.ts';
+import { getCollection, membersWithBasis, userCanWriteCollection } from '#lib/features/collections/server.ts';
 import { describeCollectionSource, enabledPlugins } from '#lib/features/pluginHost/server.ts';
 // Labels arrive resolved for the request's locale (docs/architecture/languages.md).
 import { getManualProperties, listPropertySuggestionOptions, listPropertyGroupOptions } from '#lib/features/semantic/server.ts';
@@ -35,20 +34,22 @@ import type { ServerLoadEvent } from '@sveltejs/kit';
 
 type Params = { space?: string; slug: string };
 
+// A viewer, who changes no node, is sent home before any lookup, whatever the
+// address. Past that the asker is an editor or an admin, who changes every node
+// they may read (docs/adr/0027-one-rule-says-who-may-change-a-node.md): a node
+// they may not change is one they may not read, answered as one that does not
+// exist (docs/features/002-visibility-and-spaces.md, criterion 5).
 export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
   if (!can(locals.user, 'page:write')) throw redirect(303, '/');
   const space = await resolveSpaceParam(params.space);
-  if (!space) throw error(404, 'Page not found');
+  if (!space) notFound();
   const node = await getNodeBySlug(space.id, params.slug);
-  if (!node) throw error(404, 'Page not found');
+  if (!node) notFound();
 
   if (node.type === 'document') {
     const doc = await getDocument(node.id);
-    if (!doc) throw error(404, 'Document not found');
-    if (!(await userCanWriteDocument(locals.user, doc))) {
-      if (await userCanReadDocument(locals.user, doc)) throw redirect(303, nodePath(doc.space_slug, doc.slug));
-      throw redirect(303, '/');
-    }
+    if (!doc) notFound();
+    if (!(await userCanWriteDocument(locals.user, doc))) notFound();
     const allUsers = await listUsers();
     const spaceMembers =
       doc.space_access_level === 'restricted'
@@ -84,11 +85,8 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
 
   if (node.type === 'collection') {
     const collection = await getCollection(node.id);
-    if (!collection) throw error(404, 'Page not found');
-    if (!(await userCanWriteCollection(locals.user, collection))) {
-      if (await userCanReadCollection(locals.user, collection)) throw redirect(303, nodePath(collection.space_slug, collection.slug));
-      throw redirect(303, '/');
-    }
+    if (!collection) notFound();
+    if (!(await userCanWriteCollection(locals.user, collection))) notFound();
     const allUsers = await listUsers();
     const spaceMembers =
       collection.space_access_level === 'restricted'
@@ -125,11 +123,8 @@ export const load = async ({ params, locals }: ServerLoadEvent<Params>) => {
   }
 
   const page = await getPage(node.id);
-  if (!page) throw error(404, 'Page not found');
-  if (!(await userCanWritePage(locals.user, page))) {
-    if (await userCanReadPage(locals.user, page)) throw redirect(303, nodePath(page.space_slug, page.slug));
-    throw redirect(303, '/');
-  }
+  if (!page) notFound();
+  if (!(await userCanWritePage(locals.user, page))) notFound();
   const all = await listPagesForUser(locals.user);
   // Load-time id -> path snapshots for the in-doc link hrefs. A document's
   // plugin picks the block a quick link to it becomes (docs/architecture/blocks/node-embeds.md, "A quick link becomes a block").

@@ -49,9 +49,10 @@ reader feature's `load` (`src/lib/features/reader/routes/read.server.ts`).
 The load resolves the space and the node by its slug (unknown: 404), and
 branches on the node's type: a page, a collection or a document. For a page
 it asks `userCanReadPage`, which is the role check and the node check
-([authorization.md](authorization.md#two-checks)). A page the viewer may not
-read answers 404, unless the viewer is signed out and the page is open to
-every signed-in user: then they are sent to sign in, and come back to it.
+([authorization.md](authorization.md#two-checks)). A node the viewer may not
+read, of whatever type, answers 404 in the words of an address no node has,
+unless the viewer is signed out and the node is open to every signed-in user:
+then they are sent to sign in, and come back to it.
 
 ## 4. Rendering for this reader
 

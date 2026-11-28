@@ -24,6 +24,16 @@ export function requireAction(user: SessionUser | null | undefined, action: Acti
 }
 
 /**
+ * The one not-found answer of a node's address, its edit address and a share
+ * link: a node the asker may not read is answered in the words of an address
+ * no node has (docs/features/002-visibility-and-spaces.md, criterion 5). The
+ * words are the log's; the error page shows the interface's own.
+ */
+export function notFound(): never {
+  throw error(404, 'Not found');
+}
+
+/**
  * The API's counterpart to requireAction: logs the same `authz.denied` and
  * returns the 403, `forbidden` unless the refusal has a code of its own. A
  * helper, not a guard: API checks are per resource, so only the caller knows
